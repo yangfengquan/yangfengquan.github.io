@@ -1,0 +1,246 @@
+/* General Setting */
+
+/* Small screens (default) */
+html { font-size: 100%; }
+
+/* Medium screens (640px) */
+@media (min-width: 40rem) {
+  html { font-size: 112%; }
+}
+
+/* Large screens (1024px) */
+@media (min-width: 64rem) {
+  html { font-size: 120%; }
+}
+
+body {
+    color: #333;
+    margin: 0;
+    padding: 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+h1 {
+    font-weight: normal;
+}
+#sidebar {
+    margin-top: 0;
+    padding-left: 25px;
+	padding-bottom:25px;
+    padding-top: 25px;
+
+    box-shadow: 0 0 40px #CCC;
+    -webkit-box-shadow: 0 0 40px #CCC;
+    -moz-box-shadow: 0 0 40px #CCC;
+    border-right: 1px solid #BBB;
+}
+
+@media (min-width: 40rem) {
+	#sidebar {
+	width: 280px;
+    position: fixed;
+    height: 100%;
+    margin-right: 20px;
+	padding-bottom:0px;
+    padding-top: 0px;
+    overflow-y: scroll;
+    overflow: -moz-scrollbars-vertical;
+	}
+}
+
+#sidebar h1 {
+    /*font-size: 25px;*/
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+#sidebar h1 a:link, #sidebar h1 a:visited {
+    color: #333;
+}
+
+#sidebar h2 {
+    /*font-size: 0.7rem;*/
+}
+
+#sidebar h5 {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+#sidebar a:visited, #sidebar a:link {
+    color: #4682BE;
+    text-decoration: none;
+}
+
+#sidebar ul {
+    list-style-type: none;
+    margin: 0;
+    padding-left: 10px;
+    padding-top: 0;
+}
+
+#sidebar ol {
+    margin: 0;
+    padding-left: 30px;
+    padding-top: 0;
+}
+
+#sidebar ul li:before {  /* a hack to have dashes as a list style */
+    content: "-";
+    position: relative;
+    left: -5px;
+}
+
+#sidebar ul li,
+#sidebar ol li {
+    margin-top: 0;
+    margin-bottom: 0.2rem;
+    margin-left: 10px;
+    padding: 0;
+
+    text-indent: -5px;  /* to compensate for the padding for the dash */
+    /*font-size: 0.7rem;*/
+}
+
+#content {
+    padding-top: 10px;
+    padding-bottom: 150px;
+	margin-left: 20px;
+	margin-right: 20px;
+    /*font-size: 0.8rem;*/
+	line-height:1.3rem;
+    /*border: 1px solid black;*/
+}
+
+@media (min-width: 40rem) {
+	#content {
+		width: 580px;
+		padding-left:330px;
+		margin-left: 0px;
+		margin-right: 0px;
+	}
+}
+
+#content h1 {
+    margin-bottom: 50px;
+    border-bottom: 2px solid #666;
+}
+
+#content h3 {
+    margin-top: 50px;
+    margin-bottom: 0px;
+
+    padding-top: 20px;
+    padding-bottom: 0px;
+
+    text-align: left;
+    border-top: 1px dotted #666;
+}
+
+#content h3:hover {
+  color: #ED1C24;
+}
+
+#content img {
+    max-width: 90%;
+    display: block;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    border-radius: 5px;
+}
+
+#content ul {
+    display: block;
+    list-style-type: none;
+}
+
+
+#content ul li {
+    display: inline-block;
+    padding: 5px;
+    /*width: 120px;*/
+    /*border-radius: 3px;
+    padding: 5px;
+    background-color: #1E90FF;
+    color: #FFF;
+    font-size: 18px;
+    text-align: center;*/
+}
+/*
+#content ul li:hover {
+    cursor: pointer;
+    background-color: #5599FF;
+}
+#content ul li.link {
+    color: #2980b9;
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#content a:link, #content a:visited {
+    color: #4682BE;
+    text-decoration: none;
+}*/
+
+#content .content-toc {
+    background: #bdc3c7;
+    border-radius: 5px;
+}
+
+#content .label-before {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    padding-right: 10px;
+}
+#content .label-after {
+    padding-left: 10px;
+    margin-right: 20px;
+}
+
+#content input[type="text"],
+#content input[type="number"]{
+    width: 150px;
+    height: 18px;
+    text-align: left;
+    /*border: none;*/
+    outline: none;
+    border: red 1px solid;
+}
+
+#content input[type="text"]:read-only,
+#content input[type="number"]:read-only{
+    width: 150px;
+    height: 18px;
+    text-align: left;
+    /*border: none;*/
+    outline: none;
+    border: #000 1px solid;
+}
+
+#content input[type="radio"] {
+    /*margin-right: 110px;*/
+    /*border: none;*/
+    outline: none;
+}
+
+#content input[type="checkbox"] {
+    /*margin-right: 110px;*/
+    /*border: none;*/
+    margin-left: 140px;
+    outline: none;
+}
+
+#content select {
+    width: 158px;
+    height: 25px;
+    border: red 1px solid;
+}
