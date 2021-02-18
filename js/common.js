@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -247,7 +247,7 @@ var State2 = /** @class */ (function (_super) {
         _this.kt = 0; //等温压缩性，1/MPa(单位待核实)
         _this.w = 0; //声速，m/s
         _this.epsilon = 0; //介电常数
-        _this.ic = 0; //电离常数
+        _this.kw = 0; //电离常数
         _this.region = 0; //区间
         _this.properties = {
             name: {
@@ -355,7 +355,7 @@ var State2 = /** @class */ (function (_super) {
                 name: "介电常数",
                 ename: "Dielectric Constant"
             },
-            ic: {
+            kw: {
                 name: "电离常数",
                 ename: "Ionisation constant"
             },
@@ -373,6 +373,13 @@ var State2 = /** @class */ (function (_super) {
     }
     return State2;
 }(Yang));
+var Desuperheater = /** @class */ (function () {
+    function Desuperheater() {
+        this.flowsMass = [];
+        this.flowsState = [];
+    }
+    return Desuperheater;
+}());
 var Mixer = /** @class */ (function (_super) {
     __extends(Mixer, _super);
     function Mixer() {
@@ -389,7 +396,9 @@ var Mixer = /** @class */ (function (_super) {
         _this.op = 0; //流出介质压力
         _this.ot = 0; //流出介质温度
         _this.oh = 0; //流出介质比焓
-        _this.properties = {};
+        _this.properties = {
+            im1: { name: "蒸汽流量", unit: "kg/s" }
+        };
         _this.inputs = [];
         return _this;
     }
@@ -426,10 +435,11 @@ function initSiderbar(mlist, mnlist) {
     else {
         //网站header
         var h1 = document.createElement("h1");
-        var a = document.createElement("a");
-        a.text = "Yang.shu";
-        a.href = "./";
-        h1.appendChild(a);
+        // var a = document.createElement("a");
+        // a.text = "Yang.shu";
+        // a.href = "./";
+        // h1.appendChild(a);
+        h1.textContent = "Yang.shu";
         html.appendChild(h1);
         // 网站目录
         var listTitle = document.createElement("h2");
@@ -639,7 +649,7 @@ function run(m) {
             var v = Number(document.getElementsByName("v")[0].value);
             var pipe = new Pipe("", { f: f, v: v });
             pipe.getDimByV();
-            document.getElementsByName("dim")[0].value = pipe.dim.toString();
+            document.getElementsByName("dim")[0].value = round(pipe.dim).toString();
             break;
         case "getDimByDropP":
             var f = Number(document.getElementsByName("f")[0].value);
@@ -648,7 +658,7 @@ function run(m) {
             var visc = Number(document.getElementsByName("visc")[0].value);
             var pipe = new Pipe("", { f: f, dropp: dropp, rho: rho, visc: visc });
             pipe.getDimByDropP();
-            document.getElementsByName("dim")[0].value = pipe.dim.toString();
+            document.getElementsByName("dim")[0].value = round(pipe.dim).toString();
             break;
         case "getDimBySCH":
             var dn = document.getElementsByName("dn")[0].value;
@@ -658,9 +668,9 @@ function run(m) {
             pipe.getDimBySCH();
             document.getElementsByName("do")[0].value = pipe.do.toString();
             if (pipe.thk != undefined) {
-                document.getElementsByName("thk")[0].value = pipe.thk.toString();
-                document.getElementsByName("pw")[0].value = pipe.pw.toString();
-                document.getElementsByName("wgt")[0].value = pipe.wgt.toString();
+                document.getElementsByName("thk")[0].value = round(pipe.thk).toString();
+                document.getElementsByName("pw")[0].value = round(pipe.pw).toString();
+                document.getElementsByName("wgt")[0].value = round(pipe.wgt).toString();
             }
             else {
                 document.getElementsByName("thk")[0].value = "0";
@@ -672,8 +682,8 @@ function run(m) {
             var l = Number(document.getElementsByName("l")[0].value);
             var pipe = new Pipe("", { do: dom, thk: thk, l: l });
             pipe.getWeight();
-            document.getElementsByName("pw")[0].value = pipe.pw.toString();
-            document.getElementsByName("wgt")[0].value = pipe.wgt.toString();
+            document.getElementsByName("pw")[0].value = round(pipe.pw).toString();
+            document.getElementsByName("wgt")[0].value = round(pipe.wgt).toString();
             break;
         case "getInsultionVandS":
             var dom = Number(document.getElementsByName("do")[0].value);
@@ -682,8 +692,8 @@ function run(m) {
             var pipe = new Pipe("", { do: dom, ithk: ithk, l: l });
             pipe.getVOfInsultion();
             pipe.getSOfInsultion();
-            document.getElementsByName("iv")[0].value = pipe.iv.toString();
-            document.getElementsByName("is")[0].value = pipe.is.toString();
+            document.getElementsByName("iv")[0].value = round(pipe.iv).toString();
+            document.getElementsByName("is")[0].value = round(pipe.is).toString();
             break;
         case "water":
             var s = new State2();
@@ -697,10 +707,15 @@ function run(m) {
             if (Object.keys(inputs).length == 2) {
                 var w = new IAPWS97();
                 var s2 = w.solve(inputs);
-                console.log(s2);
                 Object.keys(s2.properties).forEach(function (v) {
-                    document.getElementsByName(v)[0].value = s2[v];
-                    console.log(v);
+                    var value;
+                    if (typeof s2[v] == "number") {
+                        value = round(s2[v]).toString();
+                    }
+                    else {
+                        value = s2[v];
+                    }
+                    document.getElementsByName(v)[0].value = value;
                 });
             }
             else {
@@ -748,6 +763,10 @@ function isRunable(m) {
     else {
         document.getElementById("runbtn").disabled = true;
     }
+}
+function round(num, digits) {
+    if (digits === void 0) { digits = 10; }
+    return Math.round(num * Math.pow(10, digits)) / Math.pow(10, digits);
 }
 //网页载入时，初始化侧边栏
 (function () { initSiderbar(mlist, mnlist); })();
