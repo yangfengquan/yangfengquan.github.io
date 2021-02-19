@@ -464,7 +464,7 @@ function initSiderbar(mlist, mnlist) {
         var mail = document.createElement("li");
         var mailLink = document.createElement("a");
         mailLink.text = "错误反馈";
-        mailLink.href = "mailto: yangfengquan@126.com";
+        mailLink.href = "mailto:yangfengquan@126.com";
         mail.appendChild(mailLink);
         ul.appendChild(mail);
         var about = document.createElement("li");
