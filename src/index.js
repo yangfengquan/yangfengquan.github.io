@@ -1,4 +1,4 @@
-const navdata = [
+const catalog = [
     {text: "水和水蒸气", child: [
         {text: "物性查询", url: "/waterProperty"},
         {text: "混合器", url: "/waterMixer"}
@@ -8,8 +8,13 @@ const navdata = [
     ]}
 ];
 
+const content = {
+    first: [
+        {text: "压力", subtext: "MPa", type: "number", el: "input", required: true}
+    ]
+}
 
-function initNav(data) {
+function initCatalog(data) {
     var ul = document.createElement("ul");
     
     data.forEach(plist => {
@@ -37,8 +42,8 @@ function initNav(data) {
 }
 
 var home = function () {
-    document.getElementById("nav").innerHTML = '';
-    document.getElementById("nav").appendChild(initNav(navdata));
+    document.getElementById("catalog").innerHTML = '';
+    document.getElementById("catalog").appendChild(initCatalog(catalog));
 }();
 
 window.Router.route("/", function () {

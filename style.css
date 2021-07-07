@@ -8,6 +8,13 @@ h1 {
     font-weight: normal;
 }
 
+table,table tr th, table tr td { 
+    border: 1px solid #000; 
+}
+
+table {
+    border-collapse: collapse;
+}
 #sidebar {
     margin-top: 0;
     padding-left: 25px;
@@ -25,18 +32,7 @@ h1 {
 	}
 }
 
-#sidebar h1 {
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-}
-
-#sidebar a:visited, #sidebar a:link {
-    -color: #4682BE;
-    -text-decoration: none;
-}
-
 #sidebar ul {
-    -list-style-type: none;
     margin: 0;
     padding-left: 10px;
     padding-top: 0;
@@ -44,13 +40,8 @@ h1 {
 
 #sidebar ol {
     margin: 0;
-    padding-left: 30px;
+    padding-left: 20px;
     padding-top: 0;
-}
-
-#sidebar ul li:before {
-    position: relative;
-    left: -5px;
 }
 
 #sidebar ul li,
