@@ -46,5 +46,5 @@ window.Router.route("/", function () {
 });
 
 window.Router.route("/test", function () {
-    alert("test");
+    //alert("test");
 });
