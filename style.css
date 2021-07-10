@@ -97,7 +97,7 @@ table {
     height: 18px;
     text-align: left;
     outline: none;
-    border: red 1px solid;
+    -border: red 1px solid;
 }
 
 #tab input[type="text"]:read-only,
