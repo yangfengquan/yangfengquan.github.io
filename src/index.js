@@ -1,14 +1,17 @@
 const catalog = [
-    {text: "水和水蒸气", child: [
-        {text: "物性查询", url: "/waterProperty"},
-        {text: "混合器", url: "/waterMixer"}
+    {text: "管子", child: [
+        {text: "管径计算(流速)", url: "/dim_v"},
+        {text: "管径计算(压降)", url: "/dim_dP"}
     ]},
-    {text: "测试", child: [
-        {text: "测试", url: "/test"}
+    {text: "水蒸气", child: [
+        {text: "物性", url: "/waterProp"}
     ]}
 ];
 
 const unit = {
+    f: "m3/h",
+    ve: "m/s",
+    dim: "mm",
     p: "MPa(a)",
     t: "C",
     h: "kJ/kg",
@@ -16,10 +19,14 @@ const unit = {
 }
 
 const propName = {
+    f: "流量",
+    ve: "流速",
+    dim: "管子内径",
     p: "压力",
     t: "温度",
     h: "焓值",
-    s: "熵" 
+    s: "熵",
+    x: "干度 "
 }
 function createInput(data, callback) {
     var input = document.createElement("input");
@@ -64,9 +71,32 @@ function addTableRow(table, rowdata) {
     
 }
 
+function dim_vTable() {
+    var cells = ["f","ve"];
+    
+    var head = [];
+    cells.forEach((el) => {
+        head.push((propName[el] || '') + "\n" + (unit[el] || ''));
+    });
+
+    var table = document.createElement("table");
+    createTableHeader(table, head);
+    var tbody = table.createTBody()
+    var row = tbody.insertRow();
+    cells.forEach((el) => {
+        var cell = row.insertCell();
+        cell.appendChild(createInput({name: el}));
+    })
+    return table;
+}
 function waterTable() {
-    var head = ["压力","温度","焓值","熵","干度"];
-    var header = (arr) => {return}
+    var head = [];
+    
+    ["p","t","h","s","x"].forEach((el) => {
+        //head.push((propName.hasOwnProperty(el) ? propName[el] : '') + "\n" + (unit.hasOwnProperty(el) ? unit[el] : ''));
+        head.push((propName[el] || '') + "\n" + (unit[el] || ''));
+    });
+    
     var cells = ["p","t","h","s","x"];
     var table = document.createElement("table");
     createTableHeader(table, head);
@@ -77,7 +107,6 @@ function waterTable() {
         cell.appendChild(createInput({name: el}));
     })
     return table;
-    //document.querySelector("#tab-panel").appendChild(table);
 }
 
 function initCatalog(data) {
@@ -115,11 +144,17 @@ window.Router.route("/", function () {
     home();
 });
 
-window.Router.route("/waterProperty",function () {
+window.Router.route("/dim_v",function () {
+    document.querySelector("#tab-panel").innerHTML = '';
+    document.querySelector("#tab-panel").appendChild(dim_vTable());
+});
+
+window.Router.route("/waterProp",function () {
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(waterTable());
 });
 
 window.Router.route("/test", function () {
     //alert("test");
+    document.querySelector("#tab-panel").innerHTML = '';
 });

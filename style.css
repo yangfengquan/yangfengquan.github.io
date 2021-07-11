@@ -52,74 +52,10 @@ table {
     padding: 0;
 }
 
-#tab {
-    padding-top: 1px;
-}
-
 @media (min-width: 40rem) {
 	#tab {
-		width: 580px;
 		padding-left:330px;
 		margin-left: 0px;
 		margin-right: 0px;
 	}
-}
-
-#tab h1 {
-    margin-bottom: 20px;
-    border-bottom: 2px solid #666;
-}
-
-#tab ul {
-    display: block;
-    list-style-type: none;
-}
-
-#tab ul li {
-    display: inline-block;
-    padding: 5px;
-}
-
-#tab .label-before {
-    display: inline-block;
-    width: 120px;
-    text-align: right;
-    padding-right: 10px;
-}
-#tab .label-after {
-    padding-left: 10px;
-    margin-right: 20px;
-}
-
-#tab input[type="text"],
-#tab input[type="number"]{
-    width: 120px;
-    height: 18px;
-    text-align: left;
-    outline: none;
-    -border: red 1px solid;
-}
-
-#tab input[type="text"]:read-only,
-#tab input[type="number"]:read-only{
-    width: 120px;
-    height: 18px;
-    text-align: left;
-    outline: none;
-    border: #000 1px solid;
-}
-
-#tab input[type="radio"] {
-    outline: none;
-}
-
-#tab input[type="checkbox"] {
-    margin-left: 110px;
-    outline: none;
-}
-
-#tab select {
-    width: 128px;
-    height: 25px;
-    border: red 1px solid;
 }
