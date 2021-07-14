@@ -8,12 +8,21 @@ h1 {
     font-weight: normal;
 }
 
-table,table tr th, table tr td { 
-    border: 1px solid #000; 
+p {
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    border-bottom: solid 1px #000;
 }
 
-table {
-    border-collapse: collapse;
+button {
+    margin: 15px;
+}
+label {
+    width: 120px;
+    margin-right: 15px;
+    text-align: right;
 }
 #sidebar {
     margin-top: 0;
@@ -57,6 +66,5 @@ table {
 		padding-left:330px;
 		margin-left: 0px;
 		margin-right: 0px;
-        width: 1200px;
 	}
 }
