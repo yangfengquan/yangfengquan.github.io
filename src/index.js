@@ -1,10 +1,10 @@
 const catalog = [
     {text: "管子", child: [
-        {text: "管径计算(流速)", url: "/dim_v"},
-        {text: "管径计算(压降)", url: "/dim_dP"}
+        {text: "管径计算(流速)", url: "dim_v"},
+        {text: "管径计算(压降)", url: "dim_dP"}
     ]},
     {text: "水蒸气", child: [
-        {text: "物性", url: "/waterProp"}
+        {text: "物性", url: "waterProp"}
     ]}
 ];
 
@@ -92,12 +92,12 @@ function dim_vTable() {
 function waterTable() {
     var head = [];
     
-    ["p","t","h","s","x"].forEach((el) => {
+    ["p","t","h","s","x","dim","ve"].forEach((el) => {
         //head.push((propName.hasOwnProperty(el) ? propName[el] : '') + "\n" + (unit.hasOwnProperty(el) ? unit[el] : ''));
         head.push((propName[el] || '') + "\n" + (unit[el] || ''));
     });
     
-    var cells = ["p","t","h","s","x"];
+    var cells = ["p","t","h","s","x","dim","ve"];
     var table = document.createElement("table");
     createTableHeader(table, head);
     var tbody = table.createTBody()
@@ -144,17 +144,17 @@ window.Router.route("/", function () {
     home();
 });
 
-window.Router.route("/dim_v",function () {
+window.Router.route("dim_v",function () {
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(dim_vTable());
 });
 
-window.Router.route("/waterProp",function () {
+window.Router.route("waterProp",function () {
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(waterTable());
 });
 
-window.Router.route("/test", function () {
+window.Router.route("test", function () {
     //alert("test");
     document.querySelector("#tab-panel").innerHTML = '';
 });
