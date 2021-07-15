@@ -5543,7 +5543,7 @@ class IAPWS97 extends EquationOfState{
     }
 }
 
-export {IAPWS97};
+//export {IAPWS97};
 
  //var w = new IAPWS97();
  //console.log(w.solve({p:1,t:250+273.15}));

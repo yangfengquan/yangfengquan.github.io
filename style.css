@@ -9,11 +9,10 @@ h1 {
 }
 
 p {
-    margin: 0;
+    margin: 5px;
     padding: 5px;
     display: flex;
     align-items: center;
-    border-bottom: solid 1px #000;
 }
 
 button {

@@ -1,3 +1,4 @@
+"use strict";
 /*IAPWS-IF97 standard implementation
 
 .. image:: https://raw.githubusercontent.com/jjgomera/iapws/master/images/iapws97.png
@@ -5060,6 +5061,6 @@ class IAPWS97 extends EquationOfState {
         return _Region4(P, x);
     }
 }
-export { IAPWS97 };
+//export {IAPWS97};
 //var w = new IAPWS97();
 //console.log(w.solve({p:1,t:250+273.15}));

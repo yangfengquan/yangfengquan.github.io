@@ -1,8 +1,11 @@
+const Digits = 2;
 const catalog = [
     {text: "管子", child: [
         {text: "管径计算（流速）", url: "dim_v"},
         {text: "管径计算（压降）", url: "dim_dP"},
-        {text: "管子重量", url: "pipeWgt_thk"}
+        {text: "管子重量", url: "pipeWgt_thk"},
+        {text: "钢管尺寸系列SH/T3405", url: "pipeSeries_SHT3405"},
+        {text: "管子保温", url: "pipeInsultion"},
     ]},
     {text: "水蒸气", child: [
         {text: "物性", url: "waterProp"}
@@ -22,12 +25,25 @@ const unit = {
     wgt: "kg/m",
     wgtt: "kg",
 
+    ithk: "mm",
+    Vi: "m3",
+    Si:"m2",
+
+    m: "kg/mol",
     p: "MPa(a)",
     t: "C",
     h: "kJ/kg",
     s: "kJ/kg",
     rho: "kg/m3",
-    nu: "m2/s"
+    cp: "kJ/(kg·K)",
+    cv: "kJ/(kg·K)",
+    mu: "Pa·s",
+    nu: "m2/s",
+    k: "W/(m·K)",
+    st: "N/m",
+    alfav: "1/K",
+    kt: "1/MPa",
+    w: "m/s"
 }
 
 const propName = {
@@ -43,18 +59,36 @@ const propName = {
     wgt: "管子单重",
     wgtt: "管子总重",
 
+    ithk: "保温厚度",
+    Vi: "保温体积",
+    Si:"保温外表面积",
+
+    m: "摩尔质量",
+    phase: "相态",
     p: "压力",
     t: "温度",
-    h: "焓值",
-    s: "熵",
+    h: "比焓",
+    s: "比熵",
     x: "干度",
     rho: "密度",
-    nu: "运动粘度"
+    cp: "定压比热容",
+    cv: "定容比热容",
+    mu: "动力粘度",
+    nu: "运动粘度",
+    k: "导热系数",
+    st: "表面张力",
+    ie: "等熵指数",
+    alfav: "膨胀系数",
+    kt: "等温压缩性",
+    w: "声速",
+    epsilon: "介电常数",
+    kw: "电离常数",
+    region: "区间"
 }
 function createInput(data) {
     var input = document.createElement("input");
     input.name = data.name || '';
-    input.id = data.id || '';
+    //input.id = data.id || '';
     input.type = data.type || "text";
     input.readOnly = data.readOnly || false;
     input.required = data.required || false;
@@ -66,15 +100,16 @@ function createInput(data) {
 
 function createSelect(data, callback) {
     var select = document.createElement("select");
-    select.name = data.name;
-    select.id = data.id;
-    select.required = data.required;
-    data.option.forEach((el) => {
+    select.name = data.name || '';
+    //select.id = data.id;
+    select.required = data.required || false;
+    data.option.forEach((el, index) => {
         var option = document.createElement("option");
-        option.innerText = option[0];
-        option.value = option[1];
+        option.innerText = Array.isArray(el) ? el[0] : el;
+        option.value = Array.isArray(el) ? el[0] : index;
         select.appendChild(option);
     });
+    select.addEventListener("change", callback);
 
     return select;
 }
@@ -120,7 +155,7 @@ function dim_v_run() {
     var f = Number(document.getElementsByName("f")[0].value);
     var v = Number(document.getElementsByName("ve")[0].value);
 
-    var dim = dim_v(f, v).toFixed(2);
+    var dim = dim_v(f, v).toFixed(Digits);
     document.querySelector("#tab-panel").appendChild(createRes([{name: "dim", value: dim}]))
 }
 
@@ -130,7 +165,7 @@ function dim_dP_run() {
     var rho = Number(document.getElementsByName("rho")[0].value);
     var nu = Number(document.getElementsByName("nu")[0].value);
 
-    var dim = dim_dP(f, dP, rho, nu).toFixed(2);
+    var dim = dim_dP(f, dP, rho, nu).toFixed(Digits);
     document.querySelector("#tab-panel").appendChild(createRes([{name: "dim", value: dim}]))
 }
 
@@ -139,9 +174,59 @@ function pipeWgt_thk_run() {
     var thk = Number(document.getElementsByName("thk")[0].value);
     var l = Number(document.getElementsByName("l")[0].value);
 
-    var wgt = pipeWgt_thk(don, thk).toFixed(2);
+    var wgt = pipeWgt_thk(don, thk).toFixed(Digits);
     var wgtt = l * Number(wgt);
     document.querySelector("#tab-panel").appendChild(createRes([{name: "wgt", value: wgt},{name: "wgtt", value: wgtt}]))
+}
+
+function pipeSeries_SHT3405_run() {
+    var dn = Number(document.getElementsByName("dn")[0].value);
+    var sch = Number(document.getElementsByName("sch")[0].value);
+
+    var thk = SHT3405[Object.keys(Do)[dn]][sch] === undefined ? "不存在该系列" : SHT3405[Object.keys(Do)[dn]][sch];
+    document.querySelector("#tab-panel").appendChild(createRes([{name: "don", value: Object.keys(Do)[dn]},{name: "thk", value: thk}]));
+}
+
+function pipeInsultion_run() {
+    var don = Number(document.getElementsByName("don")[0].value);
+    var ithk = Number(document.getElementsByName("ithk")[0].value);
+    var l = Number(document.getElementsByName("l")[0].value);
+
+    var vi = VInsultion(don, ithk, l).toFixed(Digits);
+    var si = SInsultion(don, ithk, l).toFixed(Digits);
+    document.querySelector("#tab-panel").appendChild(createRes([{name: "Vi", value: vi},{name: "Si", value: si}]));
+}
+function waterProp_run(mode) {
+    //console.log(mode);
+    var length = mode.length, arg0, arg1;
+    
+    if (length === 1) {
+        arg0 = Number(document.getElementsByName(mode[0])[0].value);
+        if (mode[0] === "t") arg0 += 273.15;
+        var args = {};
+        args[mode[0]] = arg0;
+    }else{
+        arg0 = Number(document.getElementsByName(mode[0])[0].value);
+        arg1 = Number(document.getElementsByName(mode[1])[0].value);
+        var w = new IAPWS97();
+        if (mode[0] === "t") arg0 += 273.15;
+        if (mode[1] === "t") arg1 += 273.15;
+        var args = {};
+        args[mode[0]] = arg0;
+        args[mode[1]] = arg1;
+    }
+    var w = new IAPWS97();
+    var s = w.solve(args);
+    console.log(s);
+    document.querySelector("#tab-panel").appendChild(createRes([
+        {name: "phase", value: s.phase},
+        {name: "p", value: s.p},
+        {name: "t", value: s.t - 273.15},
+        {name: "region", value: s.region},
+        {name: "region", value: s.region},
+        {name: "region", value: s.region},
+    ]));
+
 }
 function initCatalog(data) {
     var ul = document.createElement("ul");
@@ -193,6 +278,57 @@ window.Router.route("pipeWgt_thk",function () {
     document.querySelector("#tab-title").innerHTML = "管子重量"
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","thk","l"], pipeWgt_thk_run));
+});
+window.Router.route("pipeSeries_SHT3405",function () {
+    document.querySelector("#tab-title").innerHTML = "钢管尺寸系列SH/T3405"
+    document.querySelector("#tab-panel").innerHTML = '';
+    var form = document.createElement("div");
+    var p = document.createElement("p");
+    var label = document.createElement("label");
+    label.innerText = "公称直径";
+    p.appendChild(label);
+    p.appendChild(createSelect({name: "dn", option: Object.keys(Do)}));
+    form.appendChild(p);
+    var p = document.createElement("p");
+    var label = document.createElement("label");
+    label.innerText = "SCH";
+    p.appendChild(label);
+    p.appendChild(createSelect({name: "sch", option: Sch}));
+    form.appendChild(p);
+    form.appendChild(createButton("计算", pipeSeries_SHT3405_run))
+    document.querySelector("#tab-panel").appendChild(form);
+});
+window.Router.route("pipeInsultion",function () {
+    document.querySelector("#tab-title").innerHTML = "管子保温"
+    document.querySelector("#tab-panel").innerHTML = '';
+    document.querySelector("#tab-panel").appendChild(createForm(["don","ithk","l"], pipeInsultion_run));
+});
+window.Router.route("waterProp",function () {
+    document.querySelector("#tab-title").innerHTML = "水蒸气物性"
+    document.querySelector("#tab-panel").innerHTML = '';
+    var p = document.createElement("p");
+    var label = document.createElement("label");
+    label.innerText = "选择";
+    p.appendChild(label)
+    p.appendChild(createSelect({name: "mode", option: ["","压力-温度","压力-饱和","温度-饱和","压力-比焓","压力-比熵","比焓-比熵","压力-干度","温度-干度"]},function (e) {
+        console.log((typeof e.target.selectedIndex));
+
+        var modes = [
+            ['p','t'],
+            ['p'],
+            ['t'],
+            ['p','h'],
+            ['p','s'],
+            ['h','s'],
+            ['p','x'],
+            ['t','x']
+        ];
+        var mode = modes[e.target.selectedIndex - 1];
+        document.querySelector("#tab-panel").appendChild(createForm(mode,function (e) {
+            waterProp_run(mode);
+        }));
+    }));
+    document.querySelector("#tab-panel").appendChild(p);
 });
 window.Router.route("test", function () {
 
