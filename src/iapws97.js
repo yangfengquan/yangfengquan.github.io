@@ -4925,25 +4925,27 @@ class IAPWS97 extends EquationOfState {
             default:
                 throw new Error('This mode is not available');
         }
-        r.name = "water|水";
+        //r.name = "water|水";
         r.phase = getphase(Tc, Pc, r.t, r.p, r.x, r.region);
         r.m = M;
-        // Calculate the density from the specific volume
-        r.rho = 1 / r.v;
-        // Caculate additional properties using the auxillary equations
-        r.u = r.h - r.p * 1000 * r.v;
-        // Viscosity Pa·s,
-        r.mu = viscosity(r.rho, r.t);
-        r.nu = r.mu / r.rho;
-        // Thermal Conductivity W/m.K
-        r.k = thermal_conductivity(r.t, r.rho) / 1000;
+        if (Object.hasOwnProperty.call(r, "v")) {
+            // Calculate the density from the specific volume
+            r.rho = 1 / r.v;
+            // Caculate additional properties using the auxillary equations
+            r.u = r.h - r.p * 1000 * r.v;
+            // Viscosity Pa·s,
+            r.mu = viscosity(r.rho, r.t);
+            r.nu = r.mu / r.rho;
+            // Thermal Conductivity W/m.K
+            r.k = thermal_conductivity(r.t, r.rho) / 1000;
+            // Dielectric constant
+            r.epsilon = dielectric_constant(r.t, r.rho);
+            // Ionisation constant
+            r.kw = kw(r.t, r.rho);
+            r.ie = isoentropic_exponent(r.w, r.p, r.v);
+        }
         // Surface Tension mN/m
         r.st = surface_tension(r.t);
-        // Dielectric constant
-        r.epsilon = dielectric_constant(r.t, r.rho);
-        // Ionisation constant
-        r.kw = kw(r.t, r.rho);
-        r.ie = isoentropic_exponent(r.w, r.p, r.v);
         return r;
     }
     PT(P, T) {
