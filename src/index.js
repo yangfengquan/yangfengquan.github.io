@@ -184,11 +184,11 @@ window.Router.route("pipeSeries_SHT3405",function () {
     p.appendChild(createSelect({name: "sch", option: Sch}));
     form.appendChild(p);
     form.appendChild(createButton("计算", function () {
-        var dn = Number(document.getElementsByName("dn")[0].value);
-        var sch = Number(document.getElementsByName("sch")[0].value);
-
-        var thk = SHT3405[Object.keys(Do)[dn]][sch] === undefined ? "不存在该系列" : SHT3405[Object.keys(Do)[dn]][sch];
-        document.querySelector("#tab-panel").appendChild(createRes([{name: "don", value: Do[Object.keys(Do)[dn]]},{name: "thk", value: thk}]));
+        //var dn = Number(document.getElementsByName("dn")[0].value);
+        var schIndex = document.getElementsByName("sch")[0].selectedIndex;
+        var dn= document.getElementsByName("dn")[0].options[document.getElementsByName("dn")[0].selectedIndex].text;
+        var thk = SHT3405[dn][schIndex] === undefined ? "不存在该系列" : SHT3405[dn][schIndex];
+        document.querySelector("#tab-panel").appendChild(createRes([{name: "don", value: Do[dn]},{name: "thk", value: thk}]));
     }));
     document.querySelector("#tab-panel").appendChild(form);
 });
