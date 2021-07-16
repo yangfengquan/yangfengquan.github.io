@@ -1,11 +1,12 @@
 const Digits = 2;
 const catalog = [
-    {text: "管子", child: [
+    {text: "管道", child: [
         {text: "管径计算[流速]", url: "dim_v"},
         {text: "管径计算[压降]", url: "dim_dP"},
+        {text: "管道阻力", url: "pipePressureDrop"},
         {text: "管子重量", url: "pipeWgt_thk"},
         {text: "钢管尺寸系列[SH/T3405]", url: "pipeSeries_SHT3405"},
-        {text: "管子保温", url: "pipeInsultion"},
+        {text: "管道保温", url: "pipeInsultion"},
     ]},
     {text: "水蒸气", child: [
         {text: "物性", url: "waterProp"}
@@ -18,7 +19,9 @@ const unit = {
     f: "m3/h",
     ve: "m/s",
 
-    dP: "kPa/100m",
+    dP: "kPa",
+    dp0: "kPa",
+    dp1: "kPa",
     dim: "mm",
     don: "mm",
     thk: "mm",
@@ -55,6 +58,8 @@ const propName = {
     ve: "流速",
 
     dP: "允许压降",
+    dp0: "直管阻力降",
+    dp1: "局部阻力降",
     dim: "管子内径",
     don: "管子外径",
     thk: "管子壁厚",
@@ -149,7 +154,7 @@ function createSelect(data, callback) {
     data.option.forEach((el, index) => {
         var option = document.createElement("option");
         option.innerText = Array.isArray(el) ? el[0] : el;
-        option.value = Array.isArray(el) ? el[0] : index;
+        option.value = Array.isArray(el) ? el[1] : index;
         select.appendChild(option);
     });
     select.addEventListener("change", callback);
@@ -209,19 +214,70 @@ window.Router.route("dim_v",function () {
 window.Router.route("dim_dP",function () {
     document.querySelector("#tab-title").innerHTML =  catalog[0].child[1].text
     document.querySelector("#tab-panel").innerHTML = '';
-    document.querySelector("#tab-panel").appendChild(createForm(["f","dP","rho","nu"], function () {
+    document.querySelector("#tab-panel").appendChild(createForm(["f","l","dP","rho","nu"], function () {
         var f = Number(document.getElementsByName("f")[0].value);
+        var l = Number(document.getElementsByName("l")[0].value);
         var dP = Number(document.getElementsByName("dP")[0].value);
         var rho = Number(document.getElementsByName("rho")[0].value);
         var nu = Number(document.getElementsByName("nu")[0].value);
 
-        var dim = dim_dP(f, dP, rho, nu).toFixed(Digits);
+        var dim = dim_dP(f, l, dP, rho, nu).toFixed(Digits);
         document.querySelector("#tab-panel").appendChild(createRes([{name: "dim", value: dim}]));
     }));
 });
 
+window.Router.route("pipePressureDrop",function () {
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[2].text
+    document.querySelector("#tab-panel").innerHTML = '';
+    var form = createForm(["dim","l","f","rho","mu"], function () {
+        var e = Number(document.getElementsByName("e")[0].value);
+        var dim = Number(document.getElementsByName("dim")[0].value) / 1000;
+        var f = Number(document.getElementsByName("f")[0].value);
+        var l = Number(document.getElementsByName("l")[0].value);
+        var rho = Number(document.getElementsByName("rho")[0].value);
+        var mu = Number(document.getElementsByName("mu")[0].value);
+
+        var ksum = 0;
+
+        Object.keys(LocalResistace).forEach(el => {
+            if (LocalResistace.hasOwnProperty(el)) {
+                ksum += Number(document.getElementsByName(el)[0].value) * LocalResistace[el];
+            }
+        });
+        
+        var ve = f / 3600 / (Pi * (dim / 2) ** 2);
+        var dp0 = pipeDp0(f, e, dim, l, rho, mu);
+        var dp1 = pipeDp1(ksum, ve, rho);
+        document.querySelector("#tab-panel").appendChild(createRes([{name: "ve", value: ve},{name: "dp0", value: dp0},{name: "dp1", value: dp1}]));
+    });
+
+    var p = document.createElement("p");
+    var label = document.createElement("label");
+    label.innerText = "管子类别";
+    p.appendChild(label);
+    p.appendChild(createSelect({name: "e",option: Roughness}));
+    form.insertBefore(p, form.childNodes[0]);
+
+    Object.keys(LocalResistace).forEach(el => {
+        var p = document.createElement("p");
+        var label = document.createElement("label");
+        //var name;
+        if (PipeFitting.hasOwnProperty(el)) {
+            label.innerText = (PipeFitting[el] + "\n个");
+        } else {
+            label.innerText = (Gate[el] + "\n个");
+        }
+        
+        p.appendChild(label);
+        p.appendChild(createInput({name: el}));
+        form.insertBefore(p, form.childNodes[form.children.length - 1]);
+    });
+
+    document.querySelector("#tab-panel").appendChild(form);
+});
+
 window.Router.route("pipeWgt_thk",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[2].text;
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[3].text;
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","thk","l"], function () {
         var don = Number(document.getElementsByName("don")[0].value);
@@ -235,7 +291,7 @@ window.Router.route("pipeWgt_thk",function () {
 });
 
 window.Router.route("pipeSeries_SHT3405",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[3].text;
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[4].text;
     document.querySelector("#tab-panel").innerHTML = '';
     var form = document.createElement("div");
     var p = document.createElement("p");
@@ -261,7 +317,7 @@ window.Router.route("pipeSeries_SHT3405",function () {
 });
 
 window.Router.route("pipeInsultion",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[4].text
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[5].text
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","ithk","l"], function name(params) {
         var don = Number(document.getElementsByName("don")[0].value);

@@ -4942,7 +4942,9 @@ class IAPWS97 extends EquationOfState {
             r.epsilon = dielectric_constant(r.t, r.rho);
             // Ionisation constant
             r.kw = kw(r.t, r.rho);
-            r.ie = isoentropic_exponent(r.w, r.p, r.v);
+            if (r.region > 2) {
+                r.ie = isoentropic_exponent(r.w, r.p, r.v);
+            }
         }
         // Surface Tension mN/m
         r.st = surface_tension(r.t);

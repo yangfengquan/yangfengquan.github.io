@@ -54,6 +54,45 @@ const SHT3405 = {
     DN550: [4.78, 6.35, 9.53, 12.7, , 22.23, 28.58, 34.93, 41.28, 47.63, 53.98, 9.53, 12.7, , 4.78, 5.54, 9.53, 12.7],
     DN600: [5.54, 6.35, 9.53, 14.27, 17.48, 24.61, 30.96, 38.89, 46.02, 52.37, 59.54, 9.53, 12.7, , 5.54, 6.35, 9.53, 12.7],
 };
+const Roughness = [
+    ["无缝黄铜、铜及铅管", (0.005 + 0.01) / 2],
+    ["操作中基本无腐蚀的无缝钢管", (0.05 + 0.1) / 2],
+    ["操作中有轻度腐蚀的无缝钢管", (0.1 + 0.2) / 2],
+    ["操作中有显著腐蚀的无缝钢管", (0.2 + 0.5) / 2],
+    ["钢板卷管", 0.33],
+    ["铸铁管", (0.5 + 0.85) / 2],
+    ["干净的玻璃管", (0.0015 + 0.01) / 2]
+];
+const LocalResistace = {
+    elbow45: 0.35,
+    elbow: 0.75,
+    elbow2: 1.30,
+    elbow180: 1.5,
+    globeValve: 6.00,
+    angleValve: 3.00,
+    gateValve: 0.17,
+    plugValve: 0.05,
+    butterflyValve: 0.24,
+    checkValve0: 2.00,
+    checkValve1: 10.00,
+    footValve: 15.00,
+};
+const PipeFitting = {
+    elbow45: "45°弯头",
+    elbow: "90°弯头",
+    elbow2: "90°斜接弯头",
+    elbow180: "180°弯头"
+};
+const Gate = {
+    globeValve: "截止阀",
+    angleValve: "角阀",
+    gateValve: "闸阀",
+    plugValve: "旋塞阀",
+    butterflyValve: "蝶阀",
+    checkValve0: "旋启式止回阀",
+    checkValve1: "升降式止回阀",
+    footValve: "底阀"
+};
 /**
  * 计算管道内径（流速）
  * @param f flow [m3/h]
@@ -64,16 +103,18 @@ function dim_v(f, v) {
     return 18.8 * Math.sqrt(f / v);
 }
 /**
- * 计算管道内径（允许压降）
+ * 计算管道内径（允许压降） 依据SH/T3405-2018
  * @param f flow [m3/h]
  * @param dP allow pressure drop [kPa/100m]
  * @param rho density [kg/m3]
  * @param nu Kinematic viscosity[m2/s]
  * @returns Pipe Internal diameter [mm]
  */
-function dim_dP(f, dP, rho, nu) {
-    nu = nu * 10000;
-    return 11.4 * Math.pow(rho, 0.207) * Math.pow(nu, 0.033) * Math.pow(f, 0.38) * Math.pow(dP, -0.207);
+function dim_dP(f, l, dP, rho, nu) {
+    //nu = nu * 10000;
+    //return 11.4 * rho ** 0.207 * nu ** 0.033 * f ** 0.38 * dP **-0.207;
+    var di = 0.007 * Math.pow(rho, 0.207) * Math.pow(nu, 0.033) * Math.pow(l, 0.207) * Math.pow(f, 0.38) * Math.pow(dP, -0.207);
+    return di * 1000;
 }
 /**
  * 计算管子重量
@@ -103,3 +144,83 @@ function VInsultion(don, ithk, l) {
 function SInsultion(don, ithk, l) {
     return Pi * (don + 2.1 * ithk + 8.2) / 1e3 * l;
 }
+/**
+ * 雷诺数
+ * @param dim Pipe Internal diameter [m]
+ * @param ve flow rate [m/s]
+ * @param rho density [kg/m3]
+ * @param mu Dynamic viscosity [Ps.s]
+ * @returns reynolds number
+ */
+function reynolds(dim, ve, rho, mu) {
+    return dim * ve * rho / mu;
+}
+/**
+ * 阻力系数
+ * @param re reynolds number
+ * @param dim  Pipe Internal diameter [m]
+ * @param e Roughness [m]
+ * @returns resistance coefficient
+ */
+function resistace(re, dim = 0, e = 0) {
+    var lambda;
+    if (re <= 2000) {
+        lambda = 64 / re;
+    }
+    else if (re > 2000 && re <= 4000) {
+        lambda = 0.3164 * Math.pow(re, -0.25);
+    }
+    else if (re > 4000 && re < 396 * dim / e * Math.log10(3.7 * dim / e)) {
+        var x0 = 0, x1 = 0.1;
+        do {
+            var mid = (x0 + x1) / 2;
+            if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(e / (3.7 * dim) + 2.51 / (re * Math.pow(mid, 0.5))) > 0) {
+                x0 = mid;
+            }
+            else {
+                x1 = mid;
+            }
+        } while (Math.abs(x0 - x1) > 1e-6);
+        lambda = (x0 + x1) / 2;
+    }
+    else {
+        var x0 = 0, x1 = 0.1;
+        do {
+            var mid = (x0 + x1) / 2;
+            if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(e / (3.7 * dim)) > 0) {
+                x0 = mid;
+            }
+            else {
+                x1 = mid;
+            }
+            console.log(mid);
+        } while (Math.abs(x0 - x1) > 1e-6);
+        lambda = (x0 + x1) / 2;
+    }
+    return lambda;
+}
+/**
+ * 直管阻力
+ * @param f f flow [m3/h]
+ * @param e Roughness [m]
+ * @param dim Pipe Internal diameter [m]
+ * @param l length [m]
+ * @param rho density [kg/m3]
+ * @param mu Dynamic viscosity [Ps.s]
+ * @returns dp [kPa]
+ */
+function pipeDp0(f, e, dim, l, rho, mu) {
+    var ve = f / 3600 / (Pi * Math.pow((dim / 2), 2));
+    var re = reynolds(dim, ve, rho, mu);
+    var lambda = resistace(re, dim, e);
+    var dp0 = lambda * (l / dim) * (rho * Math.pow(ve, 2) / 2) * 0.001;
+    console.log("ve:", ve, "\nre", re, "\nlambda", lambda);
+    return dp0;
+}
+function pipeDp1(ksum, ve, rho) {
+    var dp1 = ksum * rho * Math.pow(ve, 2) / 2 * 0.001;
+    return dp1;
+}
+//console.log(resistace(4100, 0.5, 0.000075));
+//console.log(396 * 0.2 / 0.000075 * Math.log10(3.7 * 0.2 / 0.000075));
+console.log(pipeDp0(100, 0.075 / 1000, 0.2, 200, 1000, 0.001));
