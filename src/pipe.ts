@@ -206,7 +206,6 @@ function resistace(re:number, dim:number = 0, e:number = 0) {
             else {
                 x1 = mid;
             }
-            console.log(mid);
         } while (Math.abs(x0 - x1) > 1e-6);
 
         lambda = (x0 + x1) / 2;
@@ -215,7 +214,7 @@ function resistace(re:number, dim:number = 0, e:number = 0) {
 }
 
 /**
- * 直管阻力
+ * 直管阻力 SHT3035-2018
  * @param f f flow [m3/h]
  * @param e Roughness [m]
  * @param dim Pipe Internal diameter [m]
@@ -229,19 +228,292 @@ function pipeDp0(f:number, e:number, dim:number, l:number, rho:number, mu:number
     var re = reynolds(dim, ve, rho, mu);
     var lambda = resistace(re, dim, e);
     var dp0 = lambda * (l / dim) * (rho * ve ** 2 / 2) * 0.001;
-    console.log("ve:",ve,"\nre",re,"\nlambda",lambda);
 
     return dp0;
 }
 
+/**
+ * 局部阻力 SHT3035-2018
+ * @param ksum 
+ * @param ve 
+ * @param rho 
+ * @returns 
+ */
 function pipeDp1(ksum:number, ve:number, rho:number) {
     var dp1 = ksum * rho * ve ** 2 / 2 * 0.001;
     return dp1;
 }
 
+/**
+ GB50264-2013
+ t0  管道或设备的外表面温度[C]
+ ta  环境温度[C]
+ tm  平均温度（绝热材料内外表面温度的算术平均值）[C]
+ tA  介质（上游）A点处的温度[C]
+ tB  介质（下游）B点处的温度[C]
+ ts  绝热层外表面温度[C]
+ d0  管道或设备外径[m]
+ d1  内层绝热层外径[m]
+ lambda  绝热材料在平均温度下的导热系数[W/(m*K)]
+ lambda0 常用导热系数[W/(m*K)]
+ alphas  绝热层外表面与周围空气的换热系数[W/(m2*K)]
+ alphar  绝热结构外表面材料换热系数 [W/(m2*K)]
+ alphac  对流换热系数 [W/(m2*K)]
+ epsilon 绝热结构外面材料的黑度
+ kr 管道通过吊架处的热损失附加系数，kr=1.1-1.2，大管取值应靠下限，小管取值应靠上限
+ Lc 特征长度，d1log(d1/d0)
+ w 风速[m/s]
+ */
 
-//console.log(resistace(4100, 0.5, 0.000075));
-//console.log(396 * 0.2 / 0.000075 * Math.log10(3.7 * 0.2 / 0.000075));
+ //GB50264-2018 表5.8.9
+ const BlackDegree = [
+    ["铝合金薄板", (0.15 + 0.3) / 2],
+    ["不锈钢薄板", (0.20 + 0.4) / 2],
+    ["有光泽的镀锌钢板", (0.23 + 0.27) / 2],
+    ["已氧化的镀锌钢板", (0.28 + 0.32) / 2],
+    ["纤维织物", (0.70 + 0.80) / 2],
+    ["水泥砂浆", 0.69],
+    ["铝粉漆", 0.41],
+    ["黑漆（有光泽）", 0.88],
+    ["黑漆（无光泽）", 0.96],
+    ["油漆", (0.80 + 0.90) / 2]
+ ]
+
+ /**
+  * 外表面温度计算，公式5.3.11，假定外表面温度，迭代计算
+  * @param ta 
+  * @param d0 
+  * @param d1 
+  * @param epsilon 
+  * @param w 
+  * @returns 
+  */
+function getTs_delta(t0:number,ta:number, d0:number, d1:number, epsilon:number, w:number) {
+    
+    let tm_tmp, ts_tmp, tss = 20, lambda_tmp, alphas_tmp
+    do {
+        ts_tmp = tss
+        tm_tmp = (t0 + ts_tmp) / 2
+        lambda_tmp = getLambda(tm_tmp)
+        alphas_tmp = getAlphar(epsilon, ta, ts_tmp) + getAlphac(w,d1,ta,ts_tmp)
+        tss = (2 * lambda_tmp * t0 + d1 * Math.log(d1 / d0) * alphas_tmp * ta) / (2 * lambda_tmp + d1 * Math.log(d1 / d0) * alphas_tmp)
+    } while (Math.abs(tss - ts_tmp) > 0.01)
+
+    return tss
+}
+
+/**
+ * 已知Q，计算绝热结构的外表面温度，公式5.5.1
+ * @param Q 
+ * @param ta 
+ * @param alphas 
+ * @returns 
+ */
+ function getTs_Q(Q:number, ta:number, alphas:number){
+    return Q / alphas + ta
+}
+
+/**
+ * 已知最大允许热损失，计算Lc，公式5.3.3-1
+ * @param t0 
+ * @param ta 
+ * @param Q 
+ * @param lambda 
+ * @param alphas 
+ * @returns 
+ */
+function getLc_Q(t0:number, ta:number, Q:number, lambda:number, alphas:number) {
+    return 2 * lambda * ((t0 - ta) / Q - 1 / alphas)
+}
+
+/**
+ * 已知表面温度，计算特征长度，公式5.3.11
+ * @param t0 
+ * @param ta 
+ * @param ts 
+ * @param lambda 
+ * @param alphas 
+ * @returns 
+ */
+function getLc_ts(t0:number, ta:number, ts:number, lambda:number, alphas:number) {
+    return 2 * lambda / alphas * (t0 - ts) / (ts - ta)
+}
+
+/**
+ * 圆筒型单层绝热结构热、冷损失量计算，公式：5.4.3-1
+ * @param t0 
+ * @param ta 
+ * @param d0 
+ * @param d1 
+ * @param lambda 
+ * @param alphas 
+ * @returns 每平方米绝热层外表面积的热损失量[W/m2]
+ */
+function getQ(t0:number, ta:number, d0:number, d1:number, lambda:number, alphas:number) {
+    return (t0 - ta) / (d1 / (2 * lambda) * Math.log(d1 / d0) + 1 / alphas)
+}
+
+/**
+ * 每米管道热损失量计算，公式5.4.3-2
+ * @param Q 
+ * @param d1 
+ * @returns 单位长度散热量[W/m]
+ */
+function getq_Q(Q:number, d1:number) {
+    return Math.PI * d1 * Q
+}
+
+/**
+ * 辐射换热系数计算，公式5.8.4-1
+ * @param epsilon 
+ * @param ta 
+ * @param ts 
+ * @returns 
+ */
+function getAlphar(epsilon:number, ta:number, ts:number) {
+    return 5.669 * epsilon / (ts - ta) * (Math.pow(((273 + ts) / 100), 4) - Math.pow(((273 + ta) / 100), 4))
+}
+
+/**
+ * 对流换热系数计算，公式5.8.4-2、5.8.4-3、5.8.4-4
+ * @param w 
+ * @param d1 
+ * @param ta 
+ * @param ts 
+ * @returns 
+ */
+function getAlphac(w:number, d1:number, ta = 0, ts = 0){
+    if (w == 0) {
+        return 26.4 / Math.sqrt(297 + 0.5 * (ts + ta)) * Math.pow(((ts - ta) / d1), 0.25)
+    } else {
+        return w * d1 > 0.8 ? 4.53 * Math.pow(w, 0.805) / Math.pow(d1, 0.195) : (0.08 / d1 + 4.2 * Math.pow(w, 0.618) / Math.pow(d1, 0.382))
+    }
+}
+
+/**
+ * 表面换热系数计算
+ * @param alphar 
+ * @param alphac 
+ * @returns 
+ */
+function getAlphas(alphar:number, alphac:number){
+    return alphar + alphac
+}
+
+/**
+ *  表面换热系数计算，防烫保温
+ * @returns 
+ */
+function getAlphas2(){
+    return 8.141
+}
+
+/**
+ * 绝热材料在平均温度下的导热系数计算仅针对硅酸铝棉及其制品，附录A
+ * @param tm 
+ * @param lambda0 
+ * @returns 
+ */
+function getLambda(tm:number, lambda0 = 0.044) {
+    var lambdal = lambda0 + 0.0002 * (tm - 70)
+    var lambdah = lambdal + 0.00036 * (tm -400)
+
+    return tm > 400 ? lambdah : lambdal
+}
+
+/**
+ * 
+ * @param d0 
+ * @param Lc 
+ * @returns 
+ */
+// function getD1_Lc(d0:number, Lc:number) {
+//     let d1_min = 0, d1_max = 3000, d1_tmp:number, Lc_tmp = 0
+//     while(Math.abs(Lc - Lc_tmp) > 0.01){
+//         d1_tmp = (d1_tmp + d1_max) / 2
+//         Lc_tmp = d1_tmp * Math.log(d1_tmp / d0)
+//         if(lc_tmp < Lc){
+//             d1_min = d1_tmp
+//         }else{
+//             d1_max = d1_tmp
+//         }
+//     }
+
+//     return d1_tmp
+// }
+
+/**
+ * 计算管道末端介质焓值
+ * @param hA 始端焓值[kj/kg]
+ * @param f 流量[kg/s]
+ * @param q 单位长度散热量[W/m]
+ * @param l 管道长度[m]
+ * @returns 末端焓值 kj/kg 
+ */
+function getHB(hA:number, f:number, q:number, l:number){
+    return (hA * 1000 - q * l / f) / 1000
+}
+
+/**
+ * 计算蒸汽温度
+ * @param h 末端焓值[kj/kg]
+ * @param p 末端压力[MPaA]
+ * @returns 介质温度 [K]
+ */
+function getT(h:number, p:number){
+    var w = new IAPWS97();
+
+    return w.solve({p:p, h:h}).t;
+}
 
 
-console.log(pipeDp0(100,0.075/1000,0.2,200,1000,0.001));
+/**
+ * 计算蒸汽焓值
+ * @param t 温度[K]
+ * @param p 压力[MPaA]
+ * @returns 焓值[kj/kg]
+ */
+function getH(t:number,p:number){
+    var w = new IAPWS97();
+
+    return w.solve({t:t, p:p}).h;
+}
+
+/**
+ * 仅限于蒸汽
+ * @param t_A 始端温度[℃]
+ * @param h_A 始端压力[MPaA]
+ * @param p_B 末端压力[MPaA]
+ * @param ta 环境温度[℃]
+ * @param d0 管道外径[m]
+ * @param d1 保温外径[m]
+ * @param epsilon 黑度
+ * @param w 风速[m/s]
+ * @param f 流量[kg/s]
+ * @param l 管道长度[m]
+ * @returns 管道或设备外表面平均温度[℃]
+ */
+function getT0(t_A:number, h_A:number, p_B:number, ta:number, d0:number, d1:number, epsilon:number, w:number, f:number, l:number){
+    var t0 = t_A, ts, tm, lambda, alphar,alphac,alphas,Q,q;
+    var t0_tmp// = t_A;
+    do {
+        t0_tmp = t0;
+        ts = getTs_delta(t0,ta,d0,d1,epsilon,w);
+        tm = (t0 + ts) / 2;
+        lambda = getLambda(tm);
+        alphar = getAlphar(epsilon,ta,ts);
+        alphac = getAlphac(w,d1);
+        alphas = getAlphas(alphar,alphac)
+       
+        Q = getQ(t0,ta,d0,d1,lambda,alphas);
+        q = getq_Q(Q,d1);
+        
+        var h_B = getHB(h_A,f,q,l);
+        var t_B = getT(h_B,p_B) - 273.15;
+        
+        t0 = (t_A + t_B) / 2;
+        console.log("t0",t0);
+    } while (Math.abs(t0 - t0_tmp) > 0.01)
+
+    return t0;
+}

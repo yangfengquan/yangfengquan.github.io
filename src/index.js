@@ -1,12 +1,13 @@
 const Digits = 2;
 const catalog = [
     {text: "管道", child: [
-        {text: "管径计算[流速]", url: "dim_v"},
-        {text: "管径计算[压降]", url: "dim_dP"},
+        {text: "管径[流速]", url: "dim_v"},
+        {text: "管径[压降]", url: "dim_dP"},
         {text: "管道阻力", url: "pipePressureDrop"},
-        {text: "管子重量", url: "pipeWgt_thk"},
-        {text: "钢管尺寸系列[SH/T3405]", url: "pipeSeries_SHT3405"},
-        {text: "管道保温", url: "pipeInsultion"},
+        {text: "管子重量", url: "pipeWeight_thk"},
+        {text: "钢管尺寸", url: "pipeSeries_SHT3405"},
+        {text: "管道绝热[1]", url: "pipeInsultion"},
+        {text: "管道绝热[2]", url: "pipeInsultion2"},
     ]},
     {text: "水蒸气", child: [
         {text: "物性", url: "waterProp"}
@@ -22,6 +23,7 @@ const unit = {
     dP: "kPa",
     dp0: "kPa",
     dp1: "kPa",
+    dps: "kPa",
     dim: "mm",
     don: "mm",
     thk: "mm",
@@ -31,6 +33,11 @@ const unit = {
     ithk: "mm",
     Vi: "m3",
     Si:"m2",
+
+    t0: "C",
+    ta: "C",
+    d1: "mm",
+    wv: "m/s",
 
     m: "kg/mol",
     p: "MPa(a)",
@@ -60,6 +67,7 @@ const propName = {
     dP: "允许压降",
     dp0: "直管阻力降",
     dp1: "局部阻力降",
+    dps: "总阻力降",
     dim: "管子内径",
     don: "管子外径",
     thk: "管子壁厚",
@@ -68,7 +76,12 @@ const propName = {
 
     ithk: "保温厚度",
     Vi: "保温体积",
-    Si:"保温外表面积",
+    Si: "保温外表面积",
+
+    t0: "介质温度",
+    ta: "环境温度",
+    d1: "保温外径",
+    wv: "风速",
 
     m: "摩尔质量",
     phase: "相态",
@@ -119,19 +132,10 @@ function initCatalog(data) {
     return ul;
 }
 
-function home() {
+(function () {
     document.getElementById("catalog").innerHTML = '';
     document.getElementById("catalog").appendChild(initCatalog(catalog));
-};
-
-home();
-
-
-
-window.Router.route("/", function () {
-    home();
-});
-
+})();
 
 function createInput(data) {
     var input = document.createElement("input");
@@ -199,6 +203,10 @@ function createRes(res) {
     return resEl;
 }
 
+window.Router.route("/", function () {
+    window.location.href = "#changelog";
+});
+
 window.Router.route("dim_v",function () {
     document.querySelector("#tab-title").innerHTML = catalog[0].child[0].text;
     document.querySelector("#tab-panel").innerHTML = '';
@@ -230,13 +238,12 @@ window.Router.route("pipePressureDrop",function () {
     document.querySelector("#tab-title").innerHTML =  catalog[0].child[2].text
     document.querySelector("#tab-panel").innerHTML = '';
     var form = createForm(["dim","l","f","rho","mu"], function () {
-        var e = Number(document.getElementsByName("e")[0].value);
+        var e = Number(document.getElementsByName("e")[0].value) / 1000;
         var dim = Number(document.getElementsByName("dim")[0].value) / 1000;
         var f = Number(document.getElementsByName("f")[0].value);
         var l = Number(document.getElementsByName("l")[0].value);
         var rho = Number(document.getElementsByName("rho")[0].value);
         var mu = Number(document.getElementsByName("mu")[0].value);
-
         var ksum = 0;
 
         Object.keys(LocalResistace).forEach(el => {
@@ -248,7 +255,7 @@ window.Router.route("pipePressureDrop",function () {
         var ve = f / 3600 / (Pi * (dim / 2) ** 2);
         var dp0 = pipeDp0(f, e, dim, l, rho, mu);
         var dp1 = pipeDp1(ksum, ve, rho);
-        document.querySelector("#tab-panel").appendChild(createRes([{name: "ve", value: ve},{name: "dp0", value: dp0},{name: "dp1", value: dp1}]));
+        document.querySelector("#tab-panel").appendChild(createRes([{name: "ve", value: ve},{name: "dp0", value: dp0},{name: "dp1", value: dp1},{name: "dps", value: dp0 + dp1}]));
     });
 
     var p = document.createElement("p");
@@ -276,7 +283,7 @@ window.Router.route("pipePressureDrop",function () {
     document.querySelector("#tab-panel").appendChild(form);
 });
 
-window.Router.route("pipeWgt_thk",function () {
+window.Router.route("pipeWeight_thk",function () {
     document.querySelector("#tab-title").innerHTML =  catalog[0].child[3].text;
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","thk","l"], function () {
@@ -320,6 +327,20 @@ window.Router.route("pipeInsultion",function () {
     document.querySelector("#tab-title").innerHTML =  catalog[0].child[5].text
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","ithk","l"], function name(params) {
+        var don = Number(document.getElementsByName("don")[0].value);
+        var ithk = Number(document.getElementsByName("ithk")[0].value);
+        var l = Number(document.getElementsByName("l")[0].value);
+
+        var vi = VInsultion(don, ithk, l).toFixed(Digits+2);
+        var si = SInsultion(don, ithk, l).toFixed(Digits);
+        document.querySelector("#tab-panel").appendChild(createRes([{name: "Vi", value: vi},{name: "Si", value: si}]));
+    }));
+});
+
+window.Router.route("pipeInsultion2",function () {
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[6].text
+    document.querySelector("#tab-panel").innerHTML = '';
+    document.querySelector("#tab-panel").appendChild(createForm(["t0","don","d1","l","ta","wv"], function name(params) {
         var don = Number(document.getElementsByName("don")[0].value);
         var ithk = Number(document.getElementsByName("ithk")[0].value);
         var l = Number(document.getElementsByName("l")[0].value);
@@ -431,7 +452,7 @@ window.Router.route("changelog", function () {
     document.querySelector("#tab-panel").innerHTML = '';
 
     [
-        {date: "2021-7-16", content: "修改水蒸气物性计算数值的显示精度。\n修改样式。"},
+        {date: "2021-7-16", content: "修改水蒸气物性计算数值的显示精度。\n修改样式。\n增加管道阻力降功能。"},
         {date: "2021-7-16", content: "测试更新日志功能。"}
     ].forEach(el => {
         var h4 = document.createElement("h4");
