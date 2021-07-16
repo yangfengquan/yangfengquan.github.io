@@ -16,10 +16,10 @@ p {
 }
 
 button {
-    margin: 15px;
+    margin: 15px 127px;
 }
 label {
-    width: 120px;
+    width: 100px;
     margin-right: 15px;
     text-align: right;
 }
