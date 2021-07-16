@@ -1,10 +1,10 @@
 const Digits = 2;
 const catalog = [
     {text: "管子", child: [
-        {text: "管径计算（流速）", url: "dim_v"},
-        {text: "管径计算（压降）", url: "dim_dP"},
+        {text: "管径计算[流速]", url: "dim_v"},
+        {text: "管径计算[压降]", url: "dim_dP"},
         {text: "管子重量", url: "pipeWgt_thk"},
-        {text: "钢管尺寸系列SH/T3405", url: "pipeSeries_SHT3405"},
+        {text: "钢管尺寸系列[SH/T3405]", url: "pipeSeries_SHT3405"},
         {text: "管子保温", url: "pipeInsultion"},
     ]},
     {text: "水蒸气", child: [
@@ -195,7 +195,7 @@ function createRes(res) {
 }
 
 window.Router.route("dim_v",function () {
-    document.querySelector("#tab-title").innerHTML = "管径计算（流速）"
+    document.querySelector("#tab-title").innerHTML = catalog[0].child[0].text;
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["f","ve"], function () {
         var f = Number(document.getElementsByName("f")[0].value);
@@ -207,7 +207,7 @@ window.Router.route("dim_v",function () {
 });
 
 window.Router.route("dim_dP",function () {
-    document.querySelector("#tab-title").innerHTML = "管径计算（压降）"
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[1].text
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["f","dP","rho","nu"], function () {
         var f = Number(document.getElementsByName("f")[0].value);
@@ -221,7 +221,7 @@ window.Router.route("dim_dP",function () {
 });
 
 window.Router.route("pipeWgt_thk",function () {
-    document.querySelector("#tab-title").innerHTML = "管子重量"
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[2].text;
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","thk","l"], function () {
         var don = Number(document.getElementsByName("don")[0].value);
@@ -235,7 +235,7 @@ window.Router.route("pipeWgt_thk",function () {
 });
 
 window.Router.route("pipeSeries_SHT3405",function () {
-    document.querySelector("#tab-title").innerHTML = "钢管尺寸系列SH/T3405"
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[3].text;
     document.querySelector("#tab-panel").innerHTML = '';
     var form = document.createElement("div");
     var p = document.createElement("p");
@@ -261,7 +261,7 @@ window.Router.route("pipeSeries_SHT3405",function () {
 });
 
 window.Router.route("pipeInsultion",function () {
-    document.querySelector("#tab-title").innerHTML = "管子保温"
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[4].text
     document.querySelector("#tab-panel").innerHTML = '';
     document.querySelector("#tab-panel").appendChild(createForm(["don","ithk","l"], function name(params) {
         var don = Number(document.getElementsByName("don")[0].value);
@@ -275,7 +275,7 @@ window.Router.route("pipeInsultion",function () {
 });
 
 window.Router.route("waterProp",function () {
-    document.querySelector("#tab-title").innerHTML = "水蒸气物性"
+    document.querySelector("#tab-title").innerHTML =  "水蒸气" + catalog[1].child[0].text;
     document.querySelector("#tab-panel").innerHTML = '';
     var p = document.createElement("p");
     var label = document.createElement("label");
