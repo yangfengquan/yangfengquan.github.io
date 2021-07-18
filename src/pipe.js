@@ -246,6 +246,7 @@ function pipeDp1(ksum, ve, rho) {
  Lc 特征长度，d1log(d1/d0)
  w 风速[m/s]
  */
+//GB50264-2018 表5.8.9
 const BlackDegree = [
     ["铝合金薄板", (0.15 + 0.3) / 2],
     ["不锈钢薄板", (0.20 + 0.4) / 2],
@@ -267,7 +268,7 @@ const BlackDegree = [
  * @param w
  * @returns
  */
-function getTs_delta(t0, ta, d0, d1, epsilon, w) {
+function ts_delta(t0, ta, d0, d1, epsilon, w) {
     let tm_tmp, ts_tmp, tss = 20, lambda_tmp, alphas_tmp;
     do {
         ts_tmp = tss;
@@ -285,7 +286,7 @@ function getTs_delta(t0, ta, d0, d1, epsilon, w) {
  * @param alphas
  * @returns
  */
-function getTs_Q(Q, ta, alphas) {
+function ts_Q(Q, ta, alphas) {
     return Q / alphas + ta;
 }
 /**
@@ -297,7 +298,7 @@ function getTs_Q(Q, ta, alphas) {
  * @param alphas
  * @returns
  */
-function getLc_Q(t0, ta, Q, lambda, alphas) {
+function lc_Q(t0, ta, Q, lambda, alphas) {
     return 2 * lambda * ((t0 - ta) / Q - 1 / alphas);
 }
 /**
@@ -309,7 +310,7 @@ function getLc_Q(t0, ta, Q, lambda, alphas) {
  * @param alphas
  * @returns
  */
-function getLc_ts(t0, ta, ts, lambda, alphas) {
+function lc_ts(t0, ta, ts, lambda, alphas) {
     return 2 * lambda / alphas * (t0 - ts) / (ts - ta);
 }
 /**
@@ -322,7 +323,7 @@ function getLc_ts(t0, ta, ts, lambda, alphas) {
  * @param alphas
  * @returns 每平方米绝热层外表面积的热损失量[W/m2]
  */
-function getQ(t0, ta, d0, d1, lambda, alphas) {
+function Qs(t0, ta, d0, d1, lambda, alphas) {
     return (t0 - ta) / (d1 / (2 * lambda) * Math.log(d1 / d0) + 1 / alphas);
 }
 /**
@@ -331,7 +332,7 @@ function getQ(t0, ta, d0, d1, lambda, alphas) {
  * @param d1
  * @returns 单位长度散热量[W/m]
  */
-function getq_Q(Q, d1) {
+function q_Q(Q, d1) {
     return Math.PI * d1 * Q;
 }
 /**
@@ -456,14 +457,14 @@ function getT0(t_A, h_A, p_B, ta, d0, d1, epsilon, w, f, l) {
     var t0_tmp; // = t_A;
     do {
         t0_tmp = t0;
-        ts = getTs_delta(t0, ta, d0, d1, epsilon, w);
+        ts = ts_delta(t0, ta, d0, d1, epsilon, w);
         tm = (t0 + ts) / 2;
         lambda = getLambda(tm);
         alphar = getAlphar(epsilon, ta, ts);
         alphac = getAlphac(w, d1);
         alphas = getAlphas(alphar, alphac);
-        Q = getQ(t0, ta, d0, d1, lambda, alphas);
-        q = getq_Q(Q, d1);
+        Q = Qs(t0, ta, d0, d1, lambda, alphas);
+        q = q_Q(Q, d1);
         var h_B = getHB(h_A, f, q, l);
         var t_B = getT(h_B, p_B) - 273.15;
         t0 = (t_A + t_B) / 2;

@@ -288,7 +288,7 @@ function pipeDp1(ksum:number, ve:number, rho:number) {
   * @param w 
   * @returns 
   */
-function getTs_delta(t0:number,ta:number, d0:number, d1:number, epsilon:number, w:number) {
+function ts_delta(t0:number,ta:number, d0:number, d1:number, epsilon:number, w:number) {
     
     let tm_tmp, ts_tmp, tss = 20, lambda_tmp, alphas_tmp
     do {
@@ -309,7 +309,7 @@ function getTs_delta(t0:number,ta:number, d0:number, d1:number, epsilon:number, 
  * @param alphas 
  * @returns 
  */
- function getTs_Q(Q:number, ta:number, alphas:number){
+ function ts_Q(Q:number, ta:number, alphas:number){
     return Q / alphas + ta
 }
 
@@ -322,7 +322,7 @@ function getTs_delta(t0:number,ta:number, d0:number, d1:number, epsilon:number, 
  * @param alphas 
  * @returns 
  */
-function getLc_Q(t0:number, ta:number, Q:number, lambda:number, alphas:number) {
+function lc_Q(t0:number, ta:number, Q:number, lambda:number, alphas:number) {
     return 2 * lambda * ((t0 - ta) / Q - 1 / alphas)
 }
 
@@ -335,7 +335,7 @@ function getLc_Q(t0:number, ta:number, Q:number, lambda:number, alphas:number) {
  * @param alphas 
  * @returns 
  */
-function getLc_ts(t0:number, ta:number, ts:number, lambda:number, alphas:number) {
+function lc_ts(t0:number, ta:number, ts:number, lambda:number, alphas:number) {
     return 2 * lambda / alphas * (t0 - ts) / (ts - ta)
 }
 
@@ -349,7 +349,7 @@ function getLc_ts(t0:number, ta:number, ts:number, lambda:number, alphas:number)
  * @param alphas 
  * @returns 每平方米绝热层外表面积的热损失量[W/m2]
  */
-function getQ(t0:number, ta:number, d0:number, d1:number, lambda:number, alphas:number) {
+function Qs(t0:number, ta:number, d0:number, d1:number, lambda:number, alphas:number) {
     return (t0 - ta) / (d1 / (2 * lambda) * Math.log(d1 / d0) + 1 / alphas)
 }
 
@@ -359,7 +359,7 @@ function getQ(t0:number, ta:number, d0:number, d1:number, lambda:number, alphas:
  * @param d1 
  * @returns 单位长度散热量[W/m]
  */
-function getq_Q(Q:number, d1:number) {
+function q_Q(Q:number, d1:number) {
     return Math.PI * d1 * Q
 }
 
@@ -498,15 +498,15 @@ function getT0(t_A:number, h_A:number, p_B:number, ta:number, d0:number, d1:numb
     var t0_tmp// = t_A;
     do {
         t0_tmp = t0;
-        ts = getTs_delta(t0,ta,d0,d1,epsilon,w);
+        ts = ts_delta(t0,ta,d0,d1,epsilon,w);
         tm = (t0 + ts) / 2;
         lambda = getLambda(tm);
         alphar = getAlphar(epsilon,ta,ts);
         alphac = getAlphac(w,d1);
         alphas = getAlphas(alphar,alphac)
        
-        Q = getQ(t0,ta,d0,d1,lambda,alphas);
-        q = getq_Q(Q,d1);
+        Q = Qs(t0,ta,d0,d1,lambda,alphas);
+        q = q_Q(Q,d1);
         
         var h_B = getHB(h_A,f,q,l);
         var t_B = getT(h_B,p_B) - 273.15;
