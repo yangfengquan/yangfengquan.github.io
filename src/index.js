@@ -8,6 +8,7 @@ const catalog = [
         {text: "钢管尺寸", url: "pipeSeries_SHT3405"},
         {text: "管道绝热[1]", url: "pipeInsultion"},
         {text: "管道绝热[2]", url: "pipeInsultion2"},
+        {text: "水蒸汽管道", url: "waterPipe"},
     ]},
     {text: "水蒸气", child: [
         {text: "物性", url: "waterProp"}
@@ -18,6 +19,7 @@ const unit = {
     l: "m",
 
     f: "m3/h",
+    f_m: "kg/h",
     ve: "m/s",
 
     dP: "kPa",
@@ -37,6 +39,10 @@ const unit = {
     t0: "C",
     ta: "C",
     ts: "C",
+    t_A: "C",
+    p_A: "MPa(a)",
+    t_B: "C",
+    p_B: "MPa(a)",
     d1: "mm",
     wv: "m/s",
     qs: "W/m2",
@@ -66,6 +72,7 @@ const propName = {
     l: "长度",
 
     f: "流量",
+    f_m: "流量",
     ve: "流速",
 
     dP: "允许压降",
@@ -85,6 +92,10 @@ const propName = {
     t0: "管道外表面温度",
     ta: "环境温度",
     ts: "保温外表面温度",
+    t_A: "始端温度",
+    p_A: "始端压力",
+    t_B: "末端温度",
+    p_B: "末端压力",
     d1: "保温外径",
     wv: "风速",
     qs: "单位表面积热损失",
@@ -141,7 +152,6 @@ function initCatalog(data) {
 }
 
 (function () {
-    //document.getElementById("catalog").innerHTML = '';
     document.getElementById("catalog").appendChild(initCatalog(catalog));
 })();
 
@@ -238,7 +248,7 @@ window.Router.route("dim_dP",function () {
     document.querySelector("#tab-panel").innerHTML = '';
     
     var formWrapper = document.createElement("div");
-    formWrapper.id = "formWrapper";
+    formWrapper.className = "formWrapper";
 
     var form1 = document.createElement("div");
     ["f","l","dP"].forEach(el => {
@@ -275,7 +285,7 @@ window.Router.route("pipePressureDrop",function () {
     document.querySelector("#tab-panel").innerHTML = '';
 
     var formWrapper = document.createElement("div");
-    formWrapper.id = "formWrapper";
+    formWrapper.className = "formWrapper";
 
     var form1 = document.createElement("div");
     form1.appendChild(createSelect({name: "e", label: "管子类别", option: Roughness}));
@@ -420,7 +430,7 @@ window.Router.route("pipeInsultion2",function () {
     document.querySelector("#tab-panel").innerHTML = '';
 
     var formWrapper = document.createElement("div");
-    formWrapper.id = "formWrapper";
+    formWrapper.className = "formWrapper";
 
     var form1 = document.createElement("div");
     ["don","d1","l"].forEach(el => {
@@ -463,6 +473,113 @@ window.Router.route("pipeInsultion2",function () {
 			{name: "qs", value: qs.toFixed(Digits)},
             {name: "q", value: q.toFixed(Digits)},
             {name: "qt", value: qt.toFixed(Digits)}
+        ].forEach(el => {
+            resEl.appendChild(createRes(el));
+        })
+        document.querySelector("#tab-panel").appendChild(resEl);
+    }));
+});
+
+window.Router.route("waterPipe",function () {
+    document.querySelector("#tab-title").innerHTML =  catalog[0].child[7].text
+    document.querySelector("#tab-panel").innerHTML = '';
+
+    var formWrapper = document.createElement("div");
+    formWrapper.className = "formWrapper";
+
+    var form1 = document.createElement("div");
+    form1.appendChild(createSelect({name: "e", label: "管子类别", option: Roughness}));
+    ["don","dim","d1","l","f_m"].forEach(el => {
+        form1.appendChild(createInput({name: el}));
+    });
+    formWrapper.appendChild(form1);
+
+    var form2 = document.createElement("div");
+    ["t_A","p_A","ta","wv"].forEach(el => {
+        form2.appendChild(createInput({name: el}));
+    });
+    form2.appendChild(createSelect({name: "epsilon",label: "外表面材料", option: BlackDegree}));
+    formWrapper.appendChild(form2);
+
+    var form3 = document.createElement("div");
+    Object.keys(LocalResistace).slice(0,6).forEach(el => {
+        var label;
+        if (PipeFitting.hasOwnProperty(el)) {
+            label = PipeFitting[el];
+        } else {
+            label = Gate[el];
+        }
+        form3.appendChild(createInput({name: el, label: label, unit: "个"}));
+    });
+    formWrapper.appendChild(form3);
+
+    var form4 = document.createElement("div");
+    Object.keys(LocalResistace).slice(6).forEach(el => {
+        var label;
+        if (PipeFitting.hasOwnProperty(el)) {
+            label = PipeFitting[el];
+        } else {
+            label = Gate[el];
+        }
+        form4.appendChild(createInput({name: el, label: label, unit: "个"}));
+    });
+    formWrapper.appendChild(form4);
+
+    document.querySelector("#tab-panel").appendChild(formWrapper);
+    document.querySelector("#tab-panel").appendChild(createButton("计算", function () {
+        var e = Number(document.getElementsByName("e")[0].value) / 1000;
+        var don = Number(document.getElementsByName("don")[0].value) / 1000;
+        var dim = Number(document.getElementsByName("dim")[0].value) / 1000;
+        var d1 = Number(document.getElementsByName("d1")[0].value) / 1000;
+        var l = Number(document.getElementsByName("l")[0].value);
+        var f_m = Number(document.getElementsByName("f_m")[0].value);  
+        var t_A = Number(document.getElementsByName("t_A")[0].value);
+        var p_A = Number(document.getElementsByName("p_A")[0].value);
+        var ta = Number(document.getElementsByName("ta")[0].value);
+        var wv = Number(document.getElementsByName("wv")[0].value);
+        var epsilon = Number(document.getElementsByName("epsilon")[0].value);
+        var ksum = 0;
+
+        Object.keys(LocalResistace).forEach(el => {
+            if (LocalResistace.hasOwnProperty(el)) {
+                ksum += Number(document.getElementsByName(el)[0].value) * LocalResistace[el];
+            }
+        });
+        
+        
+        var w = new IAPWS97();
+        var ww = w.solve({t: t_A + 273.15, p: p_A});
+        var ve = f_m / ww.rho / 3600 / (Pi * (dim / 2) ** 2);
+        var dp0 = pipeDp0(f_m / ww.rho, e, dim, l, ww.rho, ww.mu);
+        var dp1 = pipeDp1(ksum, ve, ww.rho);
+        console.log((dp0 + dp1) / 1000);
+        var p_B = p_A - (dp0 + dp1) / 1000;
+
+        var ts = ts_delta(t_A, ta, don, d1, epsilon, wv);
+        var t0 = getT0(t_A, ww.h, p_B, ta, don, d1, epsilon, wv, f_m / 3600, l);
+        var tss = ts_delta(t0, ta, don, d1, epsilon, wv);
+        var k = getLambda((t0 + tss) / 2);
+        var ar = getAlphar(epsilon, ta, tss);
+        var ac = getAlphac(wv, d1, ta, tss);
+        var a = getAlphas(ar, ac);
+        var qs = Qs(t0, ta, don, d1, k, a);
+        var q = q_Q(qs, d1);
+        var qt = q * l;
+        var h_B = getHB(ww.h, f_m / 3600, q, l);
+        var t_B = w.solve({p: p_B, h: h_B}).t - 273.15;
+
+        var resEl = document.createElement("div");
+        [
+            {name: "ve", value: ve},
+            {name: "dp0", value: dp0},
+            {name: "dp1", value: dp1},
+            {name: "dps", value: (dp0 + dp1)},
+            {name: "ts", value: ts},
+            {name: "p_B", value: p_B},
+            {name: "t_B", value: t_B},
+            {name: "qs", value: qs},
+            {name: "q", value: q},
+            {name: "qt", value: qt}
         ].forEach(el => {
             resEl.appendChild(createRes(el));
         })
