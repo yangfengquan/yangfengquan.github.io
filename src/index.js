@@ -570,16 +570,16 @@ window.Router.route("waterPipe",function () {
 
         var resEl = document.createElement("div");
         [
-            {name: "ve", value: ve},
-            {name: "dp0", value: dp0},
-            {name: "dp1", value: dp1},
-            {name: "dps", value: (dp0 + dp1)},
-            {name: "ts", value: ts},
-            {name: "p_B", value: p_B},
-            {name: "t_B", value: t_B},
-            {name: "qs", value: qs},
-            {name: "q", value: q},
-            {name: "qt", value: qt}
+            {name: "ve", value: ve.toFixed(Digits)},
+            {name: "dp0", value: dp0.toFixed(Digits)},
+            {name: "dp1", value: dp1.toFixed(Digits)},
+            {name: "dps", value: (dp0 + dp1).toFixed(Digits)},
+            {name: "ts", value: ts.toFixed(Digits)},
+            {name: "p_B", value: p_B.toFixed(Digits)},
+            {name: "t_B", value: t_B.toFixed(Digits)},
+            {name: "qs", value: qs.toFixed(Digits)},
+            {name: "q", value: q.toFixed(Digits)},
+            {name: "qt", value: qt.toFixed(Digits)}
         ].forEach(el => {
             resEl.appendChild(createRes(el));
         })
