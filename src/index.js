@@ -84,11 +84,11 @@ const propName = {
 
     t0: "管道外表面温度",
     ta: "环境温度",
-    tc: "外表面温度",
+    ts: "保温外表面温度",
     d1: "保温外径",
     wv: "风速",
-    qs: "表面积热损失",
-    q: "长度散热损失",
+    qs: "单位表面积热损失",
+    q: "单位长度热损失",
     qt: "总热损失",
 
     m: "摩尔质量",
@@ -459,9 +459,10 @@ window.Router.route("pipeInsultion2",function () {
 
         var resEl = document.createElement("div");
         [
-            {name: "ts", value: ts},{name: "qs", value: qs},
-            {name: "q", value: q},
-            {name: "qt", value: qt}
+            {name: "ts", value: ts.toFixed(Digits)},
+			{name: "qs", value: qs.toFixed(Digits)},
+            {name: "q", value: q.toFixed(Digits)},
+            {name: "qt", value: qt.toFixed(Digits)}
         ].forEach(el => {
             resEl.appendChild(createRes(el));
         })
