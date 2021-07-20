@@ -47,6 +47,7 @@ const unit = {
     wv: "m/s",
     qs: "W/m2",
     q: "W/m",
+    qf: "W",
     qt: "W",
 
     m: "kg/mol",
@@ -100,6 +101,7 @@ const propName = {
     wv: "风速",
     qs: "单位表面积热损失",
     q: "单位长度热损失",
+    qf: "单个管托热损失",
     qt: "总热损失",
 
     m: "摩尔质量",
@@ -489,13 +491,25 @@ window.Router.route("waterPipe",function () {
 
     var form1 = document.createElement("div");
     form1.appendChild(createSelect({name: "e", label: "管子类别", option: Roughness}));
-    ["don","dim","d1","l","f_m"].forEach(el => {
-        form1.appendChild(createInput({name: el}));
+    ["don","dim","d1","l","hf","lf","n"].forEach(el => {
+        if (el === "hf") {
+            form1.appendChild(createInput({name: el, label: "管托高度", unit: "mm"}));
+        } 
+        else if (el === "lf") {
+            form1.appendChild(createInput({name: el, label: "管托长度", unit: "mm"}));
+        }
+        else if (el === "n") {
+            form1.appendChild(createInput({name: el, label: "管托数量", unit: "个"}));
+        }
+        else {
+            form1.appendChild(createInput({name: el}));
+        }
+        
     });
     formWrapper.appendChild(form1);
 
     var form2 = document.createElement("div");
-    ["t_A","p_A","ta","wv"].forEach(el => {
+    ["f_m","t_A","p_A","ta","wv"].forEach(el => {
         form2.appendChild(createInput({name: el}));
     });
     form2.appendChild(createSelect({name: "epsilon",label: "外表面材料", option: BlackDegree}));
@@ -538,6 +552,9 @@ window.Router.route("waterPipe",function () {
         var ta = Number(document.getElementsByName("ta")[0].value);
         var wv = Number(document.getElementsByName("wv")[0].value);
         var epsilon = Number(document.getElementsByName("epsilon")[0].value);
+        var hf = Number(document.getElementsByName("hf")[0].value) / 1000;
+        var lf = Number(document.getElementsByName("lf")[0].value) / 1000;
+        var n = Number(document.getElementsByName("epsilon")[0].value);
         var ksum = 0;
 
         Object.keys(LocalResistace).forEach(el => {
@@ -552,7 +569,7 @@ window.Router.route("waterPipe",function () {
         var ve = f_m / ww.rho / 3600 / (Pi * (dim / 2) ** 2);
         var dp0 = pipeDp0(f_m / ww.rho, e, dim, l, ww.rho, ww.mu);
         var dp1 = pipeDp1(ksum, ve, ww.rho);
-        console.log((dp0 + dp1) / 1000);
+        //console.log((dp0 + dp1) / 1000);
         var p_B = p_A - (dp0 + dp1) / 1000;
 
         var ts = ts_delta(t_A, ta, don, d1, epsilon, wv);
@@ -564,9 +581,14 @@ window.Router.route("waterPipe",function () {
         var a = getAlphas(ar, ac);
         var qs = Qs(t0, ta, don, d1, k, a);
         var q = q_Q(qs, d1);
-        var qt = q * l;
-        var h_B = getHB(ww.h, f_m / 3600, q, l);
+        var qf = qFin(hf, lf, t0, ta, (d1 - don) / 2);
+        console.log(qf);
+        var qt = q * l + qf * n;
+        console.log("qt",qt);
+        var h_B = getHB(ww.h, f_m / 3600, qt);
+        console.log("hb",h_B);
         var t_B = w.solve({p: p_B, h: h_B}).t - 273.15;
+
 
         var resEl = document.createElement("div");
         [
@@ -579,6 +601,7 @@ window.Router.route("waterPipe",function () {
             {name: "t_B", value: t_B.toFixed(Digits)},
             {name: "qs", value: qs.toFixed(Digits)},
             {name: "q", value: q.toFixed(Digits)},
+            {name: "qf", value: qf.toFixed(Digits)},
             {name: "qt", value: qt.toFixed(Digits)}
         ].forEach(el => {
             resEl.appendChild(createRes(el));
@@ -701,6 +724,8 @@ window.Router.route("changelog", function () {
     document.querySelector("#tab-panel").innerHTML = '';
 
     [
+        {date: "2021-7-20", content: "水蒸气计算功能增加管托热损失计算。"},
+        {date: "2021-7-19", content: "增加水蒸气计算功能。"},
         {date: "2021-7-18", content: "增加管道热损失计算功能。\n修改输入表单布局"},
         {date: "2021-7-16", content: "修改水蒸气物性计算数值的显示精度。\n修改样式。\n增加管道阻力降功能。"},
         {date: "2021-7-16", content: "测试更新日志功能。"}

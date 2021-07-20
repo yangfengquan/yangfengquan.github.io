@@ -388,6 +388,32 @@ function getLambda(tm, lambda0 = 0.044) {
     var lambdah = lambdal + 0.00036 * (tm - 400);
     return tm > 400 ? lambdah : lambdal;
 }
+function qFin(hf, l, t0, ta, ithk) {
+    var k = 50; //钢的导热系数 [W/m.K]，未考虑温度变化
+    var h = 25; //表面传热系数[W/m2.K]
+    var thk;
+    switch (hf) {
+        case 0.1:
+            thk = 0.007;
+            break;
+        case 0.15:
+            thk = 0.0095;
+            break;
+        case 0.2:
+            thk = 0.01;
+            break;
+        default:
+            thk = 0.007;
+            break;
+    }
+    var H = hf - ithk; //只计算未保温管托散热
+    var A0 = l * thk;
+    var P = 2 * (l + thk);
+    var m = Math.pow((h * P) / (k * A0), 0.5);
+    var theta0 = t0 - ta;
+    var q = h * P / m * theta0 * Math.tanh(m * H);
+    return q;
+}
 /**
  *
  * @param d0
@@ -411,12 +437,12 @@ function getLambda(tm, lambda0 = 0.044) {
  * 计算管道末端介质焓值
  * @param hA 始端焓值[kj/kg]
  * @param f 流量[kg/s]
- * @param q 单位长度散热量[W/m]
+ * @param qt 总散热量[W/m]
  * @param l 管道长度[m]
  * @returns 末端焓值 kj/kg
  */
-function getHB(hA, f, q, l) {
-    return (hA * 1000 - q * l / f) / 1000;
+function getHB(hA, f, qt) {
+    return (hA * 1000 - qt / f) / 1000;
 }
 /**
  * 计算蒸汽温度
@@ -465,7 +491,7 @@ function getT0(t_A, h_A, p_B, ta, d0, d1, epsilon, w, f, l) {
         alphas = getAlphas(alphar, alphac);
         Q = Qs(t0, ta, d0, d1, lambda, alphas);
         q = q_Q(Q, d1);
-        var h_B = getHB(h_A, f, q, l);
+        var h_B = getHB(h_A, f, q * l);
         var t_B = getT(h_B, p_B) - 273.15;
         t0 = (t_A + t_B) / 2;
         console.log("t0", t0);
