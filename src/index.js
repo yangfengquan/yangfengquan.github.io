@@ -218,7 +218,7 @@ function createRes(res) {
 }
 
 window.Router.route("/", function () {
-    window.location.href = "#changelog";
+    //window.location.href = "#changelog";
 });
 
 window.Router.route("dim_v",function () {
