@@ -389,7 +389,7 @@ function getLambda(tm, lambda0 = 0.044) {
     return tm > 400 ? lambdah : lambdal;
 }
 function qFin(hf, l, t0, ta, ithk) {
-    var k = 50; //钢的导热系数 [W/m.K]，未考虑温度变化
+    var k = -0.0465 * t0 + 61.697;
     var h = 25; //表面传热系数[W/m2.K]
     var thk;
     switch (hf) {
