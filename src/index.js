@@ -732,6 +732,7 @@ window.Router.route("changelog", function () {
     document.querySelector("#tab-panel").innerHTML = '';
 
     [
+        {date: "2021-7-21", content: "水蒸气管道终端压力及方法按照DL/T5054修改。"},
         {date: "2021-7-20", content: "水蒸气计算功能增加管托热损失计算。"},
         {date: "2021-7-19", content: "增加水蒸气计算功能。"},
         {date: "2021-7-18", content: "增加管道热损失计算功能。\n修改输入表单布局"},
