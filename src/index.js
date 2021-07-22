@@ -570,7 +570,13 @@ window.Router.route("waterPipe",function () {
         var dp0 = pipeDp0(f_m / ww.rho, e, dim, l, ww.rho, ww.mu);
         var dp1 = pipeDp1(ksum, ve, ww.rho);
         //console.log((dp0 + dp1) / 1000);
-        var p_B = p_A - (dp0 + dp1) / 1000;
+        //var p_B = p_A - (dp0 + dp1) / 1000;
+        var re = reynolds(dim, ve, ww.rho, ww.mu);
+        var res = resistace(re, dim, e);
+        var ksum = kt0(res, l, dim) + ksum;
+        var pd1 = pd(ve, ww.v);
+        var p_B = p2(pd1,p_A * 1e6,res) / 1e6;
+        console.log("pB",p_B);
 
         var ts = ts_delta(t_A, ta, don, d1, epsilon, wv);
         var t0 = getT0(t_A, ww.h, p_B, ta, don, d1, epsilon, wv, f_m / 3600, l);

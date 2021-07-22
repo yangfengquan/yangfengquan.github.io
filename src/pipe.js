@@ -217,7 +217,7 @@ function pipeDp0(f, e, dim, l, rho, mu) {
 }
 /**
  * 局部阻力 SHT3035-2018
- * @param ksum
+ * @param ksum 总局部阻力系数
  * @param ve
  * @param rho
  * @returns
@@ -225,6 +225,35 @@ function pipeDp0(f, e, dim, l, rho, mu) {
 function pipeDp1(ksum, ve, rho) {
     var dp1 = ksum * rho * Math.pow(ve, 2) / 2 * 0.001;
     return dp1;
+}
+/**
+ *
+ * @param lambda 阻力系数
+ * @param l 长度 [m]
+ * @param di 内径 [m]
+ * @returns
+ */
+function kt0(lambda, l, di) {
+    return lambda / 2 / 9.8 * l / di;
+}
+/**
+ * 动压 [Pa]
+ * @param ve 流速 [m/s]
+ * @param v 比体积 [m3/kg]
+ * @returns
+ */
+function pd(ve, v) {
+    return ve * ve / v / 2;
+}
+/**
+ * 终端压力 [Pa] DLT5054-2016 7.3.3-1
+ * @param pd1 始端动压力[Pa]
+ * @param p1 始端压力[Pa]
+ * @param kt 管道总阻力系数
+ * @returns
+ */
+function p2(pd1, p1, kt) {
+    return p1 * Math.pow((1 - 2 * pd1 / p1 * kt * (1 + 2.5 * pd1 / p1)), 0.5);
 }
 /**
  GB50264-2013
