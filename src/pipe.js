@@ -253,6 +253,7 @@ function pd(ve, v) {
  * @returns
  */
 function p2(pd1, p1, kt) {
+    console.log(pd1, p1, kt);
     return p1 * Math.pow((1 - 2 * pd1 / p1 * kt * (1 + 2.5 * pd1 / p1)), 0.5);
 }
 /**

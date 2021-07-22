@@ -272,7 +272,7 @@ function pd(ve:number, v:number) {
  * @param kt 管道总阻力系数
  * @returns 
  */
-function p2(pd1:number, p1:number, kt:number) {
+function p2(pd1:number, p1:number, kt:number) {    
     return p1 * Math.pow((1 - 2 * pd1 / p1 * kt * (1 + 2.5 * pd1 / p1)), 0.5);
 }
 

@@ -567,16 +567,18 @@ window.Router.route("waterPipe",function () {
         var w = new IAPWS97();
         var ww = w.solve({t: t_A + 273.15, p: p_A});
         var ve = f_m / ww.rho / 3600 / (Pi * (dim / 2) ** 2);
-        var dp0 = pipeDp0(f_m / ww.rho, e, dim, l, ww.rho, ww.mu);
-        var dp1 = pipeDp1(ksum, ve, ww.rho);
+        //var dp0 = pipeDp0(f_m / ww.rho, e, dim, l, ww.rho, ww.mu);
+        //var dp1 = pipeDp1(ksum, ve, ww.rho);
         //console.log((dp0 + dp1) / 1000);
         //var p_B = p_A - (dp0 + dp1) / 1000;
         var re = reynolds(dim, ve, ww.rho, ww.mu);
+        //console.log("re",re);
         var res = resistace(re, dim, e);
-        var ksum = kt0(res, l, dim) + ksum;
+        //console.log("res",res);
+        ksum = kt0(res, l, dim) + ksum;
         var pd1 = pd(ve, ww.v);
-        var p_B = p2(pd1,p_A * 1e6,res) / 1e6;
-        console.log("pB",p_B);
+        var p_B = p2(pd1,p_A * 1e6,ksum) / 1e6;
+        //console.log("pB",p_B);
 
         var ts = ts_delta(t_A, ta, don, d1, epsilon, wv);
         var t0 = getT0(t_A, ww.h, p_B, ta, don, d1, epsilon, wv, f_m / 3600, l);
@@ -588,20 +590,20 @@ window.Router.route("waterPipe",function () {
         var qs = Qs(t0, ta, don, d1, k, a);
         var q = q_Q(qs, d1);
         var qf = qFin(hf, lf, t0, ta, (d1 - don) / 2);
-        console.log(qf);
+        //console.log(qf);
         var qt = q * l + qf * n;
-        console.log("qt",qt);
+        //console.log("qt",qt);
         var h_B = getHB(ww.h, f_m / 3600, qt);
-        console.log("hb",h_B);
+        //console.log("hb",h_B);
         var t_B = w.solve({p: p_B, h: h_B}).t - 273.15;
 
 
         var resEl = document.createElement("div");
         [
             {name: "ve", value: ve.toFixed(Digits)},
-            {name: "dp0", value: dp0.toFixed(Digits)},
-            {name: "dp1", value: dp1.toFixed(Digits)},
-            {name: "dps", value: (dp0 + dp1).toFixed(Digits)},
+            //{name: "dp0", value: dp0.toFixed(Digits)},
+            //{name: "dp1", value: dp1.toFixed(Digits)},
+            //{name: "dps", value: (dp0 + dp1).toFixed(Digits)},
             {name: "ts", value: ts.toFixed(Digits)},
             {name: "p_B", value: p_B.toFixed(Digits)},
             {name: "t_B", value: t_B.toFixed(Digits)},
