@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="管道工程软件 管道阻力计算 管道尺寸查询 管道重量计算 管道绝热计算 管道保温计算 水蒸气管道压降温降计算 水和水蒸气物性查询">
+    <title>Yang.shu</title>
+    <link rel="stylesheet" href="style.css">  
+</head>
+<body>
+    <div id="sidebar">
+        <h1> <a href="./">Yang.shu</a></h1>
+        <h4>目录</h4>
+        <div id="catalog"></div>
+        <h4>其它</h4>
+        <ul>
+            <li><a href="#contact">联系</a></li>
+            <li><a href="#changelog">更新日志</a></li>
+            <li><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279093109'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1279093109%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script></li>
+        </ul>
+    </div>
+    <div id="tab">
+        <h2 id="tab-title">首页</h2>
+        <div id="tab-panel">
+            <h4>功能介绍</h4>
+            <ol>
+                <li>管径</li>
+                <p>提供两种管径计算方法：一、选定介质流速；二、选定允许压降。</p><br>
+                <li>管道阻力</li>
+                <p>分别计算直管阻力和局部阻力，局部阻力采用局部阻力系数法计算。</p>
+                <p>目前仅支持不可压缩流体计算，对于气体可压缩流体，当管道进出口端的压差小于进口端绝对压力的20%时，计算结果可以作为参考。</p>
+                <p>管壁绝对粗糙度、管道附件局部阻力系数取自SH/T3035-2018《石油化工工艺装置管径选择导则》。</p>
+                <p>管壁绝对粗糙度、管道附件局部阻力系数的取值接近苏联标准，与德国、美国标准差异较大。</p><br>
+                <li>管子</li>
+                <p>密度取值：7.85kg/cm3</p><br>
+                <li>管子尺寸</li>
+                <p>采用标准：SH/T3405-2017《石油化工钢管尺寸系列》。</p><br>
+                <li>管道绝热</li>
+                <p>管道绝热[1]作为材料统计计算。</p>
+                <p>管道绝热[2]对保温厚度进行核算，计算管道热损失、保温外壁温度。管道热损失没有包含管托散热损失。</p>
+                <p>目前，保温材料数据库只包含了硅酸铝。</p>
+                <p>硅酸铝材料特性，外表面材料黑度取自GB50264-2013《工业设备及管道绝热工程设计规范》。</p><br>
+                <li>水蒸汽管道</li>
+                <p>校核水蒸气管道管径、保温厚度，计算管道阻力降、温降。</p>
+                <p>目前，保温材料数据库也只包含了硅酸铝。</p>
+                <p>保温管托应不输入管托数据，管托散热按照肋片传热计算，只计算保温外露出管托的散热。</p>
+                <p>蒸汽阻力暂时按照不可压缩流体计算。</p>
+            </ol>
+        </div>
+    </div>
+    <script src="./src/router.js"></script>
+    <script src="./src/pipe.js"></script>
+    <script src="./src/iapws97.js"></script>
+    <script src="./src/index.js"></script>
+</body>
+</html>
