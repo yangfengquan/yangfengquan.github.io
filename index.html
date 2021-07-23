@@ -5,8 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="管道工程软件 管道阻力计算 管道尺寸查询 管道重量计算 管道绝热计算 管道保温计算 水蒸气管道压降温降计算 水和水蒸气物性查询">
-    <title>Yang.shu</title>
-    <link rel="stylesheet" href="style.css">  
+    <title>Yang.shu 工程计算软件</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function AddFavorite(title,url){
+            try{
+                window.external.addFavorite(url,title);
+            }
+            catch(e){
+                try{
+                    window.sidebar.addPanel(title,url,"");
+                }
+                catch(e){
+                    alert("抱歉，您所使用的浏览器无法完成此操作。\n\n请使用快捷键Ctrl+D进行添加！");
+                }
+            }
+        }
+    </script>  
 </head>
 <body>
     <div id="sidebar">
@@ -15,6 +30,7 @@
         <div id="catalog"></div>
         <h4>其它</h4>
         <ul>
+            <li><a href="#" onclick="javascript:AddFavorite('yangshu-工程计算软件','https://yangshu.gitee.io')" title="收藏本站到收藏夹">收藏本站</a></li>
             <li><a href="#contact">联系</a></li>
             <li><a href="#changelog">更新日志</a></li>
             <li><script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1279093109'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1279093109%26online%3D1' type='text/javascript'%3E%3C/script%3E"));</script></li>
