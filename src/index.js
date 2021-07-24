@@ -10,8 +10,8 @@ const catalog = [
         {text: "管道绝热[2]", url: "pipeInsultion2"},
         {text: "水蒸汽管道", url: "waterPipe"},
     ]},
-    {text: "水蒸气", child: [
-        {text: "物性", url: "waterProp"}
+    {text: "物性", child: [
+        {text: "水蒸气", url: "waterProp"}
     ]}
 ];
 
@@ -619,7 +619,7 @@ window.Router.route("waterPipe",function () {
 });
 
 window.Router.route("waterProp",function () {
-    document.querySelector("#tab-title").innerHTML =  "水蒸气" + catalog[1].child[0].text;
+    document.querySelector("#tab-title").innerHTML = catalog[1].child[0].text;
     document.querySelector("#tab-panel").innerHTML = '';
 
     var mode = [];
