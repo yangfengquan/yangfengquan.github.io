@@ -15,6 +15,10 @@ p {
     align-items: center;
 }
 
+a {
+    display:inline;
+}
+
 button {
     margin: 15px 120px;
 }
