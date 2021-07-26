@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="360-site-verification" content="42b60e56e6e8a47ca740390845de4425" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="三未化学 管道工程软件 管径计算 管道阻力计算 管道尺寸查询 管道重量计算 管道绝热计算 管道保温计算 水蒸气管道压降温降计算 水和水蒸气物性查询">
+    <title>Yang.shu 工业工程计算软件</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function AddFavorite(title,url){
+            try{
+                window.external.addFavorite(url,title);
+            }
+            catch(e){
+                try{
+                    window.sidebar.addPanel(title,url,"");
+                }
+                catch(e){
+                    alert("抱歉，您所使用的浏览器无法完成此操作。\n\n请使用快捷键Ctrl+D进行添加！");
+                }
+            }
+        }
+    </script>  
+</head>
+<body>
+    <div id="sidebar">
+        <h1> <a href="./">Yang.shu</a></h1>
+        <h4>目录</h4>
+        <div id="catalog"></div>
+        <h4>其它</h4>
+        <ul>
+            <li><a href="javascript:;" onclick="javascript:AddFavorite('yangshu-工程计算软件','https://yangshu.gitee.io')" title="收藏本站到收藏夹">收藏本站</a></li>
+            <li><a href="#contact">联系</a></li>
+            <li><a href="#changelog">更新日志</a></li>
+            <li>
+                <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1279093109&web_id=1279093109"></script>
+            </li>
+        </ul>
+    </div>
+    <div id="tab">
+        <h2 id="tab-title"></h2>
+        <div id="tab-panel">
+        </div>
+    </div>
+    <script src="./src/router.js"></script>
+    <script src="./src/pipe.js"></script>
+    <script src="./src/iapws97.js"></script>
+    <script src="./src/index.js"></script>
+</body>
+</html>

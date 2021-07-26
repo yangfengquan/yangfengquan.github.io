@@ -15,8 +15,8 @@ p {
     align-items: center;
 }
 
-.dt p {
-    display: block;
+a:visited {
+    color:rgb(0,0,238);
 }
 
 button {
