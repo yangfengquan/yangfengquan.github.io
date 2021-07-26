@@ -15,8 +15,8 @@ p {
     align-items: center;
 }
 
-a {
-    display:inline;
+.dt p {
+    display: block;
 }
 
 button {
