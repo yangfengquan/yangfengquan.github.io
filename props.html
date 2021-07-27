@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content-type="application/wasm" />
+<title>物性查询</title>
+
+<script src="./src/coolprop.js"></script>
+</head>
+
+<body>
+<button onclick="a122()">23</button>
+    <script>
+                //var T = Module.PropsSI('T', "P", 101325, "Q", 0, "Water")
+                //console.log(Module.PropsSI);
+        function a122() {
+            console.log(Module.PropsSI('T', "P", 101325, "Q", 0, "Water"));
+        }
+ 
+    </script>
+
+</body>
+
+</html>
