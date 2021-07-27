@@ -10,10 +10,12 @@
 
 <body>
 <button onclick="a122()">23</button>
+<p id="as"></p>
     <script>
                 //var T = Module.PropsSI('T', "P", 101325, "Q", 0, "Water")
                 //console.log(Module.PropsSI);
         function a122() {
+            document.querySelector("#as").innerHTML=Module.PropsSI('T', "P", 101325, "Q", 0, "Water");
             console.log(Module.PropsSI('T', "P", 101325, "Q", 0, "Water"));
         }
  
