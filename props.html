@@ -1,26 +1,183 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh">
 <head>
-<meta charset="utf-8" />
-<meta content-type="application/wasm" />
-<title>物性查询</title>
-
-<script src="./src/coolprop.js"></script>
-</head>
-
-<body>
-<button onclick="a122()">23</button>
-<p id="as"></p>
-    <script>
-                //var T = Module.PropsSI('T', "P", 101325, "Q", 0, "Water")
-                //console.log(Module.PropsSI);
-        function a122() {
-            document.querySelector("#as").innerHTML=Module.PropsSI('T', "P", 101325, "Q", 0, "Water");
-            console.log(Module.PropsSI('T', "P", 101325, "Q", 0, "Water"));
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="360-site-verification" content="42b60e56e6e8a47ca740390845de4425" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="水 蒸汽 氮气 氧气 甲烷 乙烷 乙炔 物性计算">
+    <title>物性计算</title>
+    <script src="./src/coolprop.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #value1,#value1 {
+            margin-left: 15px;
         }
- 
+        input[type=checkbox] {
+            padding: 0;
+            margin: 0;
+            margin-left: 85px;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h1> <a href="./">Yang shu</a></h1>
+        <ol>
+            <li>物性</li>
+        </ol>
+    </div>
+    <div id="tab">
+        <h2 id="tab-title">物性</h2>
+        <div id="tab-panel">
+            <p>
+                <label>介质</label>
+                <input type="text" id="fluidName" list="Fluids" onfocus="fillDataist()">
+                <datalist id="Fluids"></datalist>
+            </p>
+            <p>
+                <label>输入1</label>
+                <select id="name1" onchange="name1Change(this)">
+                    <option value="" hidden></option>
+                    <option value="P">压力MPa(a)</option>
+                    <option value="T">温度℃</option>
+                </select>
+                <input type="text" id="value1">
+            </p>
+            <p>
+                <label>输入2</label>
+                <select id="name2" disabled>
+                    <option value="" hidden></option>
+                    <option value="P">压力MPa(a)</option>
+                    <option value="T">温度℃</option>
+                    <option value="h">焓值</option>
+                    <option value="s">气态体积分数</option>
+                </select>
+                <input type="text" id="value2">
+            </p>
+            <p>
+                <label>输出参数</label>
+            </p>
+            <p><input type="checkbox" id="out1">热力性质</p>
+            <p><input type="checkbox" id="out2">动力性质</p>
+            <p><input type="checkbox" id="out3">其它性质</p>
+            <p><button onclick="props()">计算</button></p>
+        </div>
+    </div>
+    <script>
+
+        const args = [
+            {parameter: "DELTA",  units: "",  description: "Reduced density (rho/rhoc)"},
+            {parameter: "DMOLAR",  units: "mol/m^3",  description: "Molar density"},
+            {parameter: "D",  units: "kg/m^3",  description: "Mass density"},
+            {parameter: "HMOLAR",  units: "J/mol",  description: "Molar specific enthalpy"},
+            {parameter: "H",  units: "J/kg",  description: "Mass specific enthalpy"},
+            {parameter: "P",  units: "Pa",  description: "Pressure"},
+            {parameter: "Q",  units: "mol/mol",  description: "Mass vapor quality"},
+            {parameter: "SMOLAR",  units: "J/mol/K",  description: "Molar specific entropy"},
+            {parameter: "S",  units: "J/kg/K",  description: "Mass specific entropy"},
+            {parameter: "TAU",  units: "",  description: "Reciprocal reduced temperature (Tc/T)"},
+            {parameter: "T",  units: "K",  description: "Temperature"},
+            {parameter: "UMOLAR",  units: "J/mol",  description: "Molar specific internal energy"},
+            {parameter: "U",  units: "J/kg",  description: "Mass specific internal energy"},
+            {parameter: "ACENTRIC",  units: "",  description: "Acentric factor"},
+            {parameter: "ALPHA0",  units: "",  description: "Ideal Helmholtz energy"},
+            {parameter: "ALPHAR",  units: "",  description: "Residual Helmholtz energy"},
+            {parameter: "A",  units: "m/s",  description: "Speed of sound"},
+            {parameter: "BVIRIAL",  units: "",  description: "Second virial coefficient"},
+            {parameter: "CONDUCTIVITY",  units: "W/m/K",  description: "Thermal conductivity"},
+            {parameter: "CP0MASS",  units: "J/kg/K",  description: "Ideal gas mass specific constant pressure specific heat"},
+            {parameter: "CP0MOLAR",  units: "J/mol/K",  description: "Ideal gas molar specific constant pressure specific heat"},
+            {parameter: "CPMOLAR",  units: "J/mol/K",  description: "Molar specific constant pressure specific heat"},
+            {parameter: "CVIRIA",  units: "",  description: "Third virial coefficient"},
+            {parameter: "CVMASS",  units: "J/kg/K",  description: "Mass specific constant volume specific heat"},
+            {parameter: "CVMOLAR",  units: "J/mol/K",  description: "Molar specific constant volume specific heat"},
+            {parameter: "C",  units: "J/kg/K",  description: "Mass specific constant pressure specific heat"},
+            {parameter: "DALPHA0_DDELTA_CONSTTAU",  units: "",  description: "Derivative of ideal Helmholtz energy with delta"},
+            {parameter: "DALPHA0_DTAU_CONSTDELTA",  units: "",  description: "Derivative of ideal Helmholtz energy with tau"},
+            {parameter: "DALPHAR_DDELTA_CONSTTAU",  units: "",  description: "Derivative of residual Helmholtz energy with delta"},
+            {parameter: "DALPHAR_DTAU_CONSTDELTA",  units: "",  description: "Derivative of residual Helmholtz energy with tau"},
+            {parameter: "DBVIRIAL_DT",  units: "",  description: "Derivative of second virial coefficient with respect to T"},
+            {parameter: "DCVIRIAL_DT",  units: "",  description: "Derivative of third virial coefficient with respect to T"},
+            {parameter: "DIPOLE_MOMENT",  units: "C m",  description: "Dipole moment"},
+            {parameter: "FH",  units: "",  description: "Flammability hazard"},
+            {parameter: "FRACTION_MAX",  units: "",  description: "Fraction (mole,mass,volume) maximum value for incompressible solutions"},
+            {parameter: "FRACTION_MIN",  units: "",  description: "Fraction (mole,mass,volume) minimum value for incompressible solutions"},
+            {parameter: "FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS",  units: "",  description: "Fundamental derivative of gas dynamics"},
+            {parameter: "GAS_CONSTANT",  units: "J/mol/K",  description: "Molar gas constant"},
+            {parameter: "GMOLAR_RESIDUAL",  units: "J/mol/K",  description: "Residual molar Gibbs energy"},
+            {parameter: "GMOLAR",  units: "J/mol",  description: "Molar specific Gibbs energy"},
+            {parameter: "GWP100",  units: "",  description: "100-year global warming potential"},
+            {parameter: "GWP20",  units: "",  description: "20-year global warming potential"},
+            {parameter: "GWP500",  units: "",  description: "500-year global warming potential"},
+            {parameter: "G",  units: "J/kg",  description: "Mass specific Gibbs energy"},
+            {parameter: "HELMHOLTZMASS",  units: "J/kg",  description: "Mass specific Helmholtz energy"},
+            {parameter: "HELMHOLTZMOLAR",  units: "J/mol",  description: "Molar specific Helmholtz energy"},
+            {parameter: "HH",  units: "",  description: "Health hazard"},
+            {parameter: "HMOLAR_RESIDUAL",  units: "J/mol/K",  description: "Residual molar enthalpy"},
+            {parameter: "ISENTROPIC_EXPANSION_COEFFICIENT",  units: "",  description: "Isentropic expansion coefficient"},
+            {parameter: "ISOBARIC_EXPANSION_COEFFICIENT",  units: "1/K",  description: "Isobaric expansion coefficient"},
+            {parameter: "ISOTHERMAL_COMPRESSIBILITY",  units: "1/Pa",  description: "Isothermal compressibility"},
+            {parameter: "SURFACE_TENSION",  units: "N/m",  description: "Surface tension"},
+            {parameter: "M",  units: "kg/mol",  description: "Molar mass"},
+            {parameter: "ODP",  units: "",  description: "Ozone depletion potential"},
+            {parameter: "PCRIT",  units: "Pa",  description: "Pressure at the critical point"},
+            {parameter: "PHASE",  units: "",  description: "Phase index as a float"},
+            {parameter: "PH",  units: "",  description: "Physical hazard"},
+            {parameter: "PIP",  units: "",  description: "Phase identification parameter"},
+            {parameter: "PMAX",  units: "Pa",  description: "Maximum pressure limit"},
+            {parameter: "PMIN",  units: "Pa",  description: "Minimum pressure limit"},
+            {parameter: "PRANDTL",  units: "",  description: "Prandtl number"},
+            {parameter: "PTRIPLE",  units: "Pa",  description: "Pressure at the triple point (pure only)"},
+            {parameter: "P_REDUCING",  units: "Pa",  description: "Pressure at the reducing point"},
+            {parameter: "RHOCRIT",  units: "kg/m^3",  description: "Mass density at critical point"},
+            {parameter: "RHOMASS_REDUCING",  units: "kg/m^3",  description: "Mass density at reducing point"},
+            {parameter: "RHOMOLAR_CRITICAL",  units: "mol/m^3",  description: "Molar density at critical point"},
+            {parameter: "RHOMOLAR_REDUCING",  units: "mol/m^3",  description: "Molar density at reducing point"},
+            {parameter: "SMOLAR_RESIDUAL",  units: "J/mol/K",  description: "Residual molar entropy (sr/R = s(T,rho) - s^0(T,rho))"},
+            {parameter: "TCRIT",  units: "K",  description: "Temperature at the critical point"},
+            {parameter: "TMAX",  units: "K",  description: "Maximum temperature limit"},
+            {parameter: "TMIN",  units: "K",  description: "Minimum temperature limit"},
+            {parameter: "TTRIPLE",  units: "K",  description: "Temperature at the triple point"},
+            {parameter: "T_FREEZE",  units: "K",  description: "Freezing temperature for incompressible solutions"},
+            {parameter: "T_REDUCING",  units: "K",  description: "Temperature at the reducing point"},
+            {parameter: "V",  units: "Pa s",  description: "Viscosity"},
+            {parameter: "Z",  units: "",  description: "Compressibility factor"}
+
+        ]
+
+        function fillDataist() {
+            var lists = document.querySelector("#Fluids");
+            if (lists.options.length != 0) {
+                return ;
+            }
+            var fluidsListString = Module.get_global_param_string("FluidsList") ;
+            (fluidsListString.split(',')).forEach(fluidName => {
+                lists.appendChild(new Option(fluidName));
+            });
+        }
+
+        function name1Change(name1) {
+            var name2 = document.querySelector("#name2");
+            if (name1.selectedIndex == 1) {
+                name2.options[1].hidden = true;
+                name2.options[2].hidden = false;
+            }else{
+                name2.options[1].hidden = false;
+                name2.options[2].hidden = true;
+            }
+
+            name2.selectedIndex = 0;
+            name2.disabled = false; 
+        }
+
+        function props() {
+            var fluidName = document.querySelector("#fluidName").value;
+            console.log(fluidName);
+
+           var t = Module.PropsSI("T","P",1E6,"Q",0,"Water")-273.15;
+           console.log(t);
+        }
     </script>
-
 </body>
-
 </html>
