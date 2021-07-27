@@ -10,7 +10,7 @@
     <script src="./src/coolprop.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        #value1,#value1 {
+        #value1,#value2 {
             margin-left: 15px;
         }
         input[type=checkbox] {
@@ -39,8 +39,8 @@
                 <label>输入1</label>
                 <select id="name1" onchange="name1Change(this)">
                     <option value="" hidden></option>
-                    <option value="P">压力MPa(a)</option>
-                    <option value="T">温度℃</option>
+                    <option value="P">压力[MPa(a)]</option>
+                    <option value="T">温度[℃]</option>
                 </select>
                 <input type="text" id="value1">
             </p>
@@ -48,10 +48,13 @@
                 <label>输入2</label>
                 <select id="name2" disabled>
                     <option value="" hidden></option>
-                    <option value="P">压力MPa(a)</option>
-                    <option value="T">温度℃</option>
-                    <option value="h">焓值</option>
-                    <option value="s">气态体积分数</option>
+                    <option value="P">压力[MPa(a)]</option>
+                    <option value="T">温度[℃]</option>
+                    <option value="DMOLAR">摩尔密度[mol/m3]</option>
+                    <option value="DMOLAR">质量密度[kg/m3]</option>
+                    <option value="DMOLAR">摩尔比焓[J/mol]</option>
+                    <option value="DMOLAR">质量比焓[J/kg]</option>
+                    <option value="Q">气态体积分数</option>
                 </select>
                 <input type="text" id="value2">
             </p>
@@ -62,89 +65,90 @@
             <p><input type="checkbox" id="out2">动力性质</p>
             <p><input type="checkbox" id="out3">其它性质</p>
             <p><button onclick="props()">计算</button></p>
+            <div id="out"></div>
         </div>
     </div>
     <script>
 
-        const args = [
-            {parameter: "DELTA",  units: "",  description: "Reduced density (rho/rhoc)"},
-            {parameter: "DMOLAR",  units: "mol/m^3",  description: "Molar density"},
-            {parameter: "D",  units: "kg/m^3",  description: "Mass density"},
-            {parameter: "HMOLAR",  units: "J/mol",  description: "Molar specific enthalpy"},
-            {parameter: "H",  units: "J/kg",  description: "Mass specific enthalpy"},
-            {parameter: "P",  units: "Pa",  description: "Pressure"},
-            {parameter: "Q",  units: "mol/mol",  description: "Mass vapor quality"},
-            {parameter: "SMOLAR",  units: "J/mol/K",  description: "Molar specific entropy"},
-            {parameter: "S",  units: "J/kg/K",  description: "Mass specific entropy"},
-            {parameter: "TAU",  units: "",  description: "Reciprocal reduced temperature (Tc/T)"},
-            {parameter: "T",  units: "K",  description: "Temperature"},
-            {parameter: "UMOLAR",  units: "J/mol",  description: "Molar specific internal energy"},
-            {parameter: "U",  units: "J/kg",  description: "Mass specific internal energy"},
-            {parameter: "ACENTRIC",  units: "",  description: "Acentric factor"},
-            {parameter: "ALPHA0",  units: "",  description: "Ideal Helmholtz energy"},
-            {parameter: "ALPHAR",  units: "",  description: "Residual Helmholtz energy"},
-            {parameter: "A",  units: "m/s",  description: "Speed of sound"},
-            {parameter: "BVIRIAL",  units: "",  description: "Second virial coefficient"},
-            {parameter: "CONDUCTIVITY",  units: "W/m/K",  description: "Thermal conductivity"},
-            {parameter: "CP0MASS",  units: "J/kg/K",  description: "Ideal gas mass specific constant pressure specific heat"},
-            {parameter: "CP0MOLAR",  units: "J/mol/K",  description: "Ideal gas molar specific constant pressure specific heat"},
-            {parameter: "CPMOLAR",  units: "J/mol/K",  description: "Molar specific constant pressure specific heat"},
-            {parameter: "CVIRIA",  units: "",  description: "Third virial coefficient"},
-            {parameter: "CVMASS",  units: "J/kg/K",  description: "Mass specific constant volume specific heat"},
-            {parameter: "CVMOLAR",  units: "J/mol/K",  description: "Molar specific constant volume specific heat"},
-            {parameter: "C",  units: "J/kg/K",  description: "Mass specific constant pressure specific heat"},
-            {parameter: "DALPHA0_DDELTA_CONSTTAU",  units: "",  description: "Derivative of ideal Helmholtz energy with delta"},
-            {parameter: "DALPHA0_DTAU_CONSTDELTA",  units: "",  description: "Derivative of ideal Helmholtz energy with tau"},
-            {parameter: "DALPHAR_DDELTA_CONSTTAU",  units: "",  description: "Derivative of residual Helmholtz energy with delta"},
-            {parameter: "DALPHAR_DTAU_CONSTDELTA",  units: "",  description: "Derivative of residual Helmholtz energy with tau"},
-            {parameter: "DBVIRIAL_DT",  units: "",  description: "Derivative of second virial coefficient with respect to T"},
-            {parameter: "DCVIRIAL_DT",  units: "",  description: "Derivative of third virial coefficient with respect to T"},
-            {parameter: "DIPOLE_MOMENT",  units: "C m",  description: "Dipole moment"},
-            {parameter: "FH",  units: "",  description: "Flammability hazard"},
-            {parameter: "FRACTION_MAX",  units: "",  description: "Fraction (mole,mass,volume) maximum value for incompressible solutions"},
-            {parameter: "FRACTION_MIN",  units: "",  description: "Fraction (mole,mass,volume) minimum value for incompressible solutions"},
-            {parameter: "FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS",  units: "",  description: "Fundamental derivative of gas dynamics"},
-            {parameter: "GAS_CONSTANT",  units: "J/mol/K",  description: "Molar gas constant"},
-            {parameter: "GMOLAR_RESIDUAL",  units: "J/mol/K",  description: "Residual molar Gibbs energy"},
-            {parameter: "GMOLAR",  units: "J/mol",  description: "Molar specific Gibbs energy"},
-            {parameter: "GWP100",  units: "",  description: "100-year global warming potential"},
-            {parameter: "GWP20",  units: "",  description: "20-year global warming potential"},
-            {parameter: "GWP500",  units: "",  description: "500-year global warming potential"},
-            {parameter: "G",  units: "J/kg",  description: "Mass specific Gibbs energy"},
-            {parameter: "HELMHOLTZMASS",  units: "J/kg",  description: "Mass specific Helmholtz energy"},
-            {parameter: "HELMHOLTZMOLAR",  units: "J/mol",  description: "Molar specific Helmholtz energy"},
-            {parameter: "HH",  units: "",  description: "Health hazard"},
-            {parameter: "HMOLAR_RESIDUAL",  units: "J/mol/K",  description: "Residual molar enthalpy"},
-            {parameter: "ISENTROPIC_EXPANSION_COEFFICIENT",  units: "",  description: "Isentropic expansion coefficient"},
-            {parameter: "ISOBARIC_EXPANSION_COEFFICIENT",  units: "1/K",  description: "Isobaric expansion coefficient"},
-            {parameter: "ISOTHERMAL_COMPRESSIBILITY",  units: "1/Pa",  description: "Isothermal compressibility"},
-            {parameter: "SURFACE_TENSION",  units: "N/m",  description: "Surface tension"},
-            {parameter: "M",  units: "kg/mol",  description: "Molar mass"},
-            {parameter: "ODP",  units: "",  description: "Ozone depletion potential"},
-            {parameter: "PCRIT",  units: "Pa",  description: "Pressure at the critical point"},
-            {parameter: "PHASE",  units: "",  description: "Phase index as a float"},
-            {parameter: "PH",  units: "",  description: "Physical hazard"},
-            {parameter: "PIP",  units: "",  description: "Phase identification parameter"},
-            {parameter: "PMAX",  units: "Pa",  description: "Maximum pressure limit"},
-            {parameter: "PMIN",  units: "Pa",  description: "Minimum pressure limit"},
-            {parameter: "PRANDTL",  units: "",  description: "Prandtl number"},
-            {parameter: "PTRIPLE",  units: "Pa",  description: "Pressure at the triple point (pure only)"},
-            {parameter: "P_REDUCING",  units: "Pa",  description: "Pressure at the reducing point"},
-            {parameter: "RHOCRIT",  units: "kg/m^3",  description: "Mass density at critical point"},
-            {parameter: "RHOMASS_REDUCING",  units: "kg/m^3",  description: "Mass density at reducing point"},
-            {parameter: "RHOMOLAR_CRITICAL",  units: "mol/m^3",  description: "Molar density at critical point"},
-            {parameter: "RHOMOLAR_REDUCING",  units: "mol/m^3",  description: "Molar density at reducing point"},
-            {parameter: "SMOLAR_RESIDUAL",  units: "J/mol/K",  description: "Residual molar entropy (sr/R = s(T,rho) - s^0(T,rho))"},
-            {parameter: "TCRIT",  units: "K",  description: "Temperature at the critical point"},
-            {parameter: "TMAX",  units: "K",  description: "Maximum temperature limit"},
-            {parameter: "TMIN",  units: "K",  description: "Minimum temperature limit"},
-            {parameter: "TTRIPLE",  units: "K",  description: "Temperature at the triple point"},
-            {parameter: "T_FREEZE",  units: "K",  description: "Freezing temperature for incompressible solutions"},
-            {parameter: "T_REDUCING",  units: "K",  description: "Temperature at the reducing point"},
-            {parameter: "V",  units: "Pa s",  description: "Viscosity"},
-            {parameter: "Z",  units: "",  description: "Compressibility factor"}
+        const Args = {
+            DELTA:  {units: "",  description: "Reduced density (rho/rhoc)"},
+            DMOLAR: {units: "mol/m^3",  description: "Molar density"},
+            D: {units: "kg/m^3",  description: "Mass density"},
+            HMOLAR: {units: "J/mol",  description: "Molar specific enthalpy"},
+            H: {units: "J/kg",  description: "Mass specific enthalpy"},
+            P: {units: "Pa",  description: "Pressure"},
+            Q: {units: "mol/mol",  description: "Mass vapor quality"},
+            SMOLAR: {units: "J/mol/K",  description: "Molar specific entropy"},
+            S: {units: "J/kg/K",  description: "Mass specific entropy"},
+            TAU: {units: "",  description: "Reciprocal reduced temperature (Tc/T)"},
+            T: {units: "K",  description: "Temperature"},
+            UMOLAR: {units: "J/mol",  description: "Molar specific internal energy"},
+            U: {units: "J/kg",  description: "Mass specific internal energy"},
+            ACENTRIC: {units: "",  description: "Acentric factor"},
+            ALPHA0: {units: "",  description: "Ideal Helmholtz energy"},
+            ALPHAR: {units: "",  description: "Residual Helmholtz energy"},
+            A: {units: "m/s",  description: "Speed of sound"},
+            BVIRIAL: {units: "",  description: "Second virial coefficient"},
+            CONDUCTIVITY: {units: "W/m/K",  description: "Thermal conductivity"},
+            CP0MASS: {units: "J/kg/K",  description: "Ideal gas mass specific constant pressure specific heat"},
+            CP0MOLAR: {units: "J/mol/K",  description: "Ideal gas molar specific constant pressure specific heat"},
+            CPMOLAR: {units: "J/mol/K",  description: "Molar specific constant pressure specific heat"},
+            CVIRIA: {units: "",  description: "Third virial coefficient"},
+            CVMASS: {units: "J/kg/K",  description: "Mass specific constant volume specific heat"},
+            CVMOLAR: {units: "J/mol/K",  description: "Molar specific constant volume specific heat"},
+            C: {units: "J/kg/K",  description: "Mass specific constant pressure specific heat"},
+            DALPHA0_DDELTA_CONSTTAU: {units: "",  description: "Derivative of ideal Helmholtz energy with delta"},
+            DALPHA0_DTAU_CONSTDELTA: {units: "",  description: "Derivative of ideal Helmholtz energy with tau"},
+            DALPHAR_DDELTA_CONSTTAU: {units: "",  description: "Derivative of residual Helmholtz energy with delta"},
+            DALPHAR_DTAU_CONSTDELTA: {units: "",  description: "Derivative of residual Helmholtz energy with tau"},
+            DBVIRIAL_DT: {units: "",  description: "Derivative of second virial coefficient with respect to T"},
+            DCVIRIAL_DT: {units: "",  description: "Derivative of third virial coefficient with respect to T"},
+            DIPOLE_MOMENT: {units: "C m",  description: "Dipole moment"},
+            FH: {units: "",  description: "Flammability hazard"},
+            FRACTION_MAX: {units: "",  description: "Fraction (mole,mass,volume) maximum value for incompressible solutions"},
+            FRACTION_MIN: {units: "",  description: "Fraction (mole,mass,volume) minimum value for incompressible solutions"},
+            FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS: {units: "",  description: "Fundamental derivative of gas dynamics"},
+            GAS_CONSTANT: {units: "J/mol/K",  description: "Molar gas constant"},
+            GMOLAR_RESIDUAL: {units: "J/mol/K",  description: "Residual molar Gibbs energy"},
+            GMOLAR: {units: "J/mol",  description: "Molar specific Gibbs energy"},
+            GWP100: {units: "",  description: "100-year global warming potential"},
+            GWP20: {units: "",  description: "20-year global warming potential"},
+            GWP500: {units: "",  description: "500-year global warming potential"},
+            G: {units: "J/kg",  description: "Mass specific Gibbs energy"},
+            HELMHOLTZMASS: {units: "J/kg",  description: "Mass specific Helmholtz energy"},
+            HELMHOLTZMOLAR: {units: "J/mol",  description: "Molar specific Helmholtz energy"},
+            HH: {units: "",  description: "Health hazard"},
+            HMOLAR_RESIDUAL: {units: "J/mol/K",  description: "Residual molar enthalpy"},
+            ISENTROPIC_EXPANSION_COEFFICIENT: {units: "",  description: "Isentropic expansion coefficient"},
+            ISOBARIC_EXPANSION_COEFFICIENT: {units: "1/K",  description: "Isobaric expansion coefficient"},
+            ISOTHERMAL_COMPRESSIBILITY: {units: "1/Pa",  description: "Isothermal compressibility"},
+            SURFACE_TENSION: {units: "N/m",  description: "Surface tension"},
+            M: {units: "kg/mol",  description: "Molar mass"},
+            ODP: {units: "",  description: "Ozone depletion potential"},
+            PCRIT: {units: "Pa",  description: "Pressure at the critical point"},
+            PHASE: {units: "",  description: "Phase index as a float"},
+            PH: {units: "",  description: "Physical hazard"},
+            PIP: {units: "",  description: "Phase identification parameter"},
+            PMAX: {units: "Pa",  description: "Maximum pressure limit"},
+            PMIN: {units: "Pa",  description: "Minimum pressure limit"},
+            PRANDTL: {units: "",  description: "Prandtl number"},
+            PTRIPLE: {units: "Pa",  description: "Pressure at the triple point (pure only)"},
+            P_REDUCING: {units: "Pa",  description: "Pressure at the reducing point"},
+            RHOCRIT: {units: "kg/m^3",  description: "Mass density at critical point"},
+            RHOMASS_REDUCING: {units: "kg/m^3",  description: "Mass density at reducing point"},
+            RHOMOLAR_CRITICAL: {units: "mol/m^3",  description: "Molar density at critical point"},
+            RHOMOLAR_REDUCING: {units: "mol/m^3",  description: "Molar density at reducing point"},
+            SMOLAR_RESIDUAL: {units: "J/mol/K",  description: "Residual molar entropy (sr/R = s(T,rho) - s^0(T,rho))"},
+            TCRIT: {units: "K",  description: "Temperature at the critical point"},
+            TMAX: {units: "K",  description: "Maximum temperature limit"},
+            TMIN: {units: "K",  description: "Minimum temperature limit"},
+            TTRIPLE: {units: "K",  description: "Temperature at the triple point"},
+            T_FREEZE: {units: "K",  description: "Freezing temperature for incompressible solutions"},
+            T_REDUCING: {units: "K",  description: "Temperature at the reducing point"},
+            V: {units: "Pa s",  description: "Viscosity"},
+            Z: {units: "",  description: "Compressibility factor"}
 
-        ]
+        }
 
         function fillDataist() {
             var lists = document.querySelector("#Fluids");
@@ -172,11 +176,51 @@
         }
 
         function props() {
+            var out = document.querySelector("#out");
+            out.innerHTML = '';
             var fluidName = document.querySelector("#fluidName").value;
-            console.log(fluidName);
+            //console.log(fluidName);
+            var name1 = document.querySelector("#name1").options[document.querySelector("#name1").selectedIndex].value;
+            var name2 = document.querySelector("#name2").options[document.querySelector("#name2").selectedIndex].value;
+            var value1 = Number(document.querySelector("#value1").value);
+            var value2 = Number(document.querySelector("#value2").value);
+            if (name1 == "P") {
+                value1 = value1 * 1e6;
+            }
+            if (name2 == "P") {
+                value2 = value2 * 1e6;
+            }
+            if (name1 == "T") {
+                value1 = value1 + 273.15;
+            }
+            if (name2 == "T") {
+                value2 = value2 + 273.15;
+            }
 
-           var t = Module.PropsSI("T","P",1E6,"Q",0,"Water")-273.15;
-           console.log(t);
+            var normalArgs = ["DMOLAR","M","D","HMOLAR","H","P","Q","SMOLAR","S","TAU","T","UMOLAR","U"];
+            normalArgs.forEach(arg => {
+                var v = Module.PropsSI(arg,name1,value1,name2,value2,fluidName);
+                if (arg == "P") {
+                    v = v / 1e6;
+                }
+                if (arg == "T") {
+                    v = v - 273.15;
+                }
+                console.log(arg,v);
+                
+                out.appendChild(outEl(arg,v.toFixed(4)));
+            })
+        }
+
+        function outEl(name,value) {
+            var p = document.createElement("p");
+            var label = document.createElement("label");
+            label.innerText = (Args[name].description) + "\n" + (Args[name].units || '');
+            p.appendChild(label);
+            var span = document.createElement("span");
+            span.innerText = value; 
+            p.appendChild(span);
+            return p;
         }
     </script>
 </body>
