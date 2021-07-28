@@ -1,18 +1,13 @@
 const Digits = 2;
 const catalog = [
-    {text: "管道", child: [
-        {text: "管径[流速]", url: "dim_v"},
-        {text: "管径[压降]", url: "dim_dP"},
-        {text: "管道阻力", url: "pipePressureDrop"},
-        {text: "管子重量", url: "pipeWeight_thk"},
-        {text: "钢管尺寸", url: "pipeSeries_SHT3405"},
-        {text: "管道绝热[1]", url: "pipeInsultion"},
-        {text: "管道绝热[2]", url: "pipeInsultion2"},
-        {text: "水蒸汽管道", url: "waterPipe"},
-    ]},
-    {text: "物性", child: [
-        {text: "水蒸气", url: "waterProp"}
-    ]}
+    {text: "管径[流速]", url: "dim_v"},
+    {text: "管径[压降]", url: "dim_dP"},
+    {text: "管道阻力", url: "pipePressureDrop"},
+    {text: "管子重量", url: "pipeWeight_thk"},
+    {text: "钢管尺寸", url: "pipeSeries_SHT3405"},
+    {text: "管道绝热[1]", url: "pipeInsultion"},
+    {text: "管道绝热[2]", url: "pipeInsultion2"},
+    {text: "水蒸汽管道", url: "waterPipe"},
 ];
 
 const unit = {
@@ -130,27 +125,18 @@ const propName = {
 }
 
 function initCatalog(data) {
-    var ul = document.createElement("ul");
     
-    data.forEach(plist => {
-       
         var ol = document.createElement("ol");
-        plist.child.forEach(clist => {
+        data.forEach(link => {
             var a = document.createElement("a");
-            a.textContent = clist.text;
-            a.href = '#' + clist.url;
+            a.textContent = link.text;
+            a.href = '#' + link.url;
             var li = document.createElement("li");
             li.appendChild(a);
             ol.appendChild(li);
         });
-        
-        var li = document.createElement("li");
-        li.innerText = plist.text;
-        li.appendChild(ol);
-        ul.appendChild(li);
-    });
-    
-    return ul;
+
+    return ol;
 }
 
 (function () {
@@ -222,7 +208,7 @@ window.Router.route("/", function () {
 });
 
 window.Router.route("dim_v",function () {
-    document.querySelector("#tab-title").innerHTML = catalog[0].child[0].text;
+    document.querySelector("#tab-title").innerHTML = catalog[0].text;
     document.querySelector("#tab-panel").innerHTML = '';
 
     var form = document.createElement("div");
@@ -246,7 +232,7 @@ window.Router.route("dim_v",function () {
 });
 
 window.Router.route("dim_dP",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[1].text
+    document.querySelector("#tab-title").innerHTML =  catalog[1].text
     document.querySelector("#tab-panel").innerHTML = '';
     
     var formWrapper = document.createElement("div");
@@ -283,7 +269,7 @@ window.Router.route("dim_dP",function () {
 });
 
 window.Router.route("pipePressureDrop",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[2].text
+    document.querySelector("#tab-title").innerHTML =  catalog[2].text
     document.querySelector("#tab-panel").innerHTML = '';
 
     var formWrapper = document.createElement("div");
@@ -354,7 +340,7 @@ window.Router.route("pipePressureDrop",function () {
 });
 
 window.Router.route("pipeWeight_thk",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[3].text;
+    document.querySelector("#tab-title").innerHTML =  catalog[3].text;
     document.querySelector("#tab-panel").innerHTML = '';
 
     var form = document.createElement("div");
@@ -380,7 +366,7 @@ window.Router.route("pipeWeight_thk",function () {
 });
 
 window.Router.route("pipeSeries_SHT3405",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[4].text;
+    document.querySelector("#tab-title").innerHTML =  catalog[4].text;
     document.querySelector("#tab-panel").innerHTML = '';
 
     var form = document.createElement("div");
@@ -402,7 +388,7 @@ window.Router.route("pipeSeries_SHT3405",function () {
 });
 
 window.Router.route("pipeInsultion",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[5].text
+    document.querySelector("#tab-title").innerHTML =  catalog[5].text
     document.querySelector("#tab-panel").innerHTML = '';
 
     var form = document.createElement("div");
@@ -428,7 +414,7 @@ window.Router.route("pipeInsultion",function () {
 });
 
 window.Router.route("pipeInsultion2",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[6].text
+    document.querySelector("#tab-title").innerHTML =  catalog[6].text
     document.querySelector("#tab-panel").innerHTML = '';
 
     var formWrapper = document.createElement("div");
@@ -483,7 +469,7 @@ window.Router.route("pipeInsultion2",function () {
 });
 
 window.Router.route("waterPipe",function () {
-    document.querySelector("#tab-title").innerHTML =  catalog[0].child[7].text
+    document.querySelector("#tab-title").innerHTML =  catalog[7].text
     document.querySelector("#tab-panel").innerHTML = '';
 
     var formWrapper = document.createElement("div");
@@ -612,94 +598,6 @@ window.Router.route("waterPipe",function () {
             {name: "qf", value: qf.toFixed(Digits)},
             {name: "qt", value: qt.toFixed(Digits)}
         ].forEach(el => {
-            resEl.appendChild(createRes(el));
-        })
-        document.querySelector("#tab-panel").appendChild(resEl);
-    }));
-});
-
-window.Router.route("waterProp",function () {
-    document.querySelector("#tab-title").innerHTML = catalog[1].child[0].text;
-    document.querySelector("#tab-panel").innerHTML = '';
-
-    var mode = [];
-
-    var form = document.createElement("div");
-    form.appendChild(createSelect({name: "mode", label: "已知",option: ["请选择","压力-温度","压力-饱和","温度-饱和","压力-比焓","压力-比熵","比焓-比熵","压力-干度","温度-干度"]},function (e) {
-        
-        var l = document.getElementById("tab-panel").children[0].children.length;
-        if (l > 1) {
-            for (let index = l - 1; index > 0; index--) {
-                document.getElementById("tab-panel").children[0].removeChild(document.getElementById("tab-panel").children[0].children[index])
-            }
-        }
-
-        var modes = [
-            ['p','t'],
-            ['p'],
-            ['t'],
-            ['p','h'],
-            ['p','s'],
-            ['h','s'],
-            ['p','x'],
-            ['t','x']
-        ];
-        mode = modes[e.target.selectedIndex - 1];
-        mode.forEach(el => {
-            form.appendChild(createInput({name:el}));
-        })
-    }));
-    document.querySelector("#tab-panel").appendChild(form);
-
-    document.querySelector("#tab-panel").appendChild(createButton("计算", function () {
-        if (mode.length === 0) {
-            return;
-        }
-        var l = document.getElementById("tab-panel").children.length;
-        if (l > 2) {
-            for (let index = l - 1; index > 1; index--) {
-                document.getElementById("tab-panel").removeChild(document.getElementById("tab-panel").children[index])
-            }
-        }
-    
-        var length = mode.length, arg0, arg1;
-        
-        if (length === 1) {
-            arg0 = Number(document.getElementsByName(mode[0])[0].value);
-            if (mode[0] === "t") arg0 += 273.15;
-            var args = {};
-            args[mode[0]] = arg0;
-        }else{
-            arg0 = Number(document.getElementsByName(mode[0])[0].value);
-            arg1 = Number(document.getElementsByName(mode[1])[0].value);
-            var w = new IAPWS97();
-            if (mode[0] === "t") arg0 += 273.15;
-            if (mode[1] === "t") arg1 += 273.15;
-            var args = {};
-            args[mode[0]] = arg0;
-            args[mode[1]] = arg1;
-        }
-        var w = new IAPWS97();
-        var s = w.solve(args);
-        var r = [];
-        for (const key in propName) {
-            if (Object.hasOwnProperty.call(s, key)) {
-                if (s[key] != null) {
-                    var v = key === "t" ? s[key] - 273.15 : s[key];
-                    if (!isNaN(v)) {
-                        //v = v.toFixed(Digits + 6);
-                        if (v < 1 ) {
-                            v = v.toFixed(10)
-                        } else {
-                            v = v.toFixed(Digits);
-                        }
-                    }
-                    r.push({name: key, value: v});
-                }
-            }
-        }
-        var resEl = document.createElement("div");
-        r.forEach(el => {
             resEl.appendChild(createRes(el));
         })
         document.querySelector("#tab-panel").appendChild(resEl);
