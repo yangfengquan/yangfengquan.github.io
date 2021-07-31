@@ -25,7 +25,12 @@
     </script>  
 </head>
 <body>
-    <!--[if lte IE11]><p>您正在使用IE浏览器，IE浏览器不支持本站的大多数功能，请更换其它浏览器。</p><![endif]-->
+    <script>
+        if(!!window.ActiveXObject ||"ActiveXObject" in window) 
+        {
+            document.write('<p style="background-color: aquamarine;">您在正使用IE浏览器，本站不兼容IE浏览器，请更换其它浏览器。</p>')
+        }
+    </script>
     <div id="sidebar">
         <h1> <a href="./">Yang shu</a></h1>
         <h4>目录</h4>
