@@ -48,7 +48,15 @@
             <li><a href="contact.html">联系</a></li>
             <li><a href="changelog.html">更新日志</a></li>
             <li>
-                <script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1279093109&web_id=1279093109"></script>
+                <script type="text/javascript">
+                    var cnzz;
+                    if (window.location.host == "yangshu.gitee.io") {
+                        cnzz = "https://v1.cnzz.com/z_stat.php?id=1279093109&web_id=1279093109";
+                    } else {
+                        cnzz = "https://v1.cnzz.com/z_stat.php?id=1280145546&web_id=1280145546";
+                    }
+                    document.write('<script type="text/javascript" src="'+ cnzz +'"><\/script>')
+                </script>
             </li>
         </ul>
     </div>
