@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="管道工程软件 管径计算 管道阻力计算 管道尺寸查询 管道重量计算 管道绝热计算 管道保温计算 水蒸气管道压降温降计算 水和水蒸气物性查询">
+    <title>联系-Yangshu</title>
+    <script src="./src/iapws97.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+        function iePrompt() {
+             if(!!window.ActiveXObject ||"ActiveXObject" in window){
+                document.write('<p style="background-color: beige; padding: 10px;">非常抱歉，本站不兼容IE浏览器，您需要更换其它浏览器。</p>')
+             }
+         }
+         iePrompt();
+    </script>
+    <div id="sidebar">
+        <h1> <a href="./">Yang shu</a></h1>
+        <h2>目录</h2>
+        <ul>
+            <li><a href="./">说明</a></li>
+            <li><a href="pipe.html">管道设计</a></li>
+            <li><a href="props.html">物性</a></li>
+            <li><a href="waterprops.html">水和水蒸气物性</a></li>
+        </ul>
+        <h2>其它</h2>
+        <ul>
+            <li><a href="javascript:;" onclick="javascript:addFavorite('yangshu-工程计算软件','https://yangshu.gitee.io')" title="收藏本站到收藏夹">收藏本站</a></li>
+            <li><a href="contact.html">联系</a></li>
+            <li><a href="changelog.html">更新日志</a></li>
+            <li>
+                <script type="text/javascript">
+                    var cnzz;
+                    if (window.location.host == "yangshu.gitee.io") {
+                        cnzz = "https://v1.cnzz.com/z_stat.php?id=1279093109&web_id=1279093109";
+                    } else {
+                        cnzz = "https://v1.cnzz.com/z_stat.php?id=1280145546&web_id=1280145546";
+                    }
+                    document.write('<script type="text/javascript" src="'+ cnzz +'"><\/script>')
+                </script>
+            </li>
+        </ul>
+    </div>
+    <div id="tab">
+        <h2 id="tab-title">安全阀</h2>
+        <div id="tab-panel">
+        </div>
+    </div>
+<script>
+
+    const ReliefValveArgs = {
+        w: {unit: "kg/h", description: "泄放量"},
+        po: {unit: "MPa(a)", description: "泄放装置出口侧压力"},
+        pf: {unit: "MPa(a)", description: "泄放压力"},
+        tf: {unit: "MPa(a)", description: "泄放压力"}
+    }
+
+    document.querySelector("#tab-panel").innerHTML = '';
+    var form = document.createElement("div");
+    form.appendChild(createSelect({name: "stdcode", label: "标准编号",option: ["TSG11"]},function (e) {}));
+    ["po","pf","tf"].forEach(el => {
+        form.appendChild(createInput(ReliefValveArgs[el].description, el));
+    })
+
+    document.querySelector("#tab-panel").appendChild(form);
+
+    document.querySelector("#tab-panel").appendChild(createButton("计算", function () {
+        var po = Number(document.getElementsByName("po")[0].value);
+        var pf = Number(document.getElementsByName("pf")[0].value);
+        var tf = Number(document.getElementsByName("tf")[0].value);
+        
+        var w = new IAPWS97();
+        var s = w.solve(args);
+        var r = [];
+        for (const key in propName) {
+            if (Object.hasOwnProperty.call(s, key)) {
+                if (s[key] != null) {
+                    var v = key === "t" ? s[key] - 273.15 : s[key];
+                    if (!isNaN(v)) {
+                        //v = v.toFixed(Digits + 6);
+                        if (v < 1 ) {
+                            v = v.toFixed(10)
+                        } else {
+                            v = v.toFixed(Digits);
+                        }
+                    }
+                    r.push({name: key, value: v});
+                }
+            }
+        }
+        var resEl = document.createElement("div");
+        r.forEach(el => {
+            resEl.appendChild(createRes(el));
+        })
+        document.querySelector("#tab-panel").appendChild(resEl);
+    }));
+
+function createInput(label, name, other = {}) {
+    var p = document.createElement("p");
+    
+    var label = document.createElement("label");
+    label.innerText = label + "\n" + (other.unit || '');
+    p.appendChild(label);
+
+    var input = document.createElement("input");
+    input.name = name || '';
+    input.type = other.type || "text";
+    input.readOnly = other.readOnly || false;
+    input.required = other.required || false;
+    input.placeholder = other.placeholder || '';
+    input.value = other.value || '';
+    p.appendChild(input);
+
+    return p;
+}    
+
+function createSelect(label, name, options, callback, other = {}) {
+    var p = document.createElement("p");
+    
+    var label = document.createElement("label");
+    label.innerText = label + "\n" + (other.unit || '');
+    p.appendChild(label);
+
+    var select = document.createElement("select");
+    select.name = name;
+    select.required = other.required || false;
+    options.forEach((opt, index) => {
+        var option = document.createElement("option");
+        option.innerText = Array.isArray(opt) ? el[0] : el;
+        option.value = Array.isArray(opt) ? el[1] : index;
+        select.appendChild(option);
+    });
+    select.addEventListener("change", callback);
+    p.appendChild(select);
+
+    return p;
+}
+</script>
+</body>
+</html>
