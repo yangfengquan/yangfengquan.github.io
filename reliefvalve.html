@@ -49,6 +49,11 @@
         <h2 id="tab-title">蒸汽安全阀</h2>
         <div id="tab-panel">
             <p>
+                <label>泄放物料</label>
+                <input type="text" name="fluidName" list="fluids" placeholder="英文名称" value="Water" disabled>
+                <datalist id="fluids"></datalist>
+            </p>
+            <p>
                 <label>泄放量<br>kg/h</label>
                 <input type="text" name="w">
             </p>
@@ -65,6 +70,10 @@
                 <input type="text" name="tf">
             </p>
             <p>
+                <label>泄放系数</label>
+                <input type="text" name="tf" value="0.7">
+            </p>
+            <p>
                 <label>采用标准</label>
                 <select name="stdCode">
                     <option>TSG 11</option>
@@ -74,6 +83,17 @@
         </div>
     </div>
 <script>
+    (function () {
+        var lists = document.querySelector("#fluids")
+        if (lists.options.length != 0) {
+            return ;
+        }
+        var fluidsListString = "Acetone,Air,Ammonia,Argon,Benzene,CarbonDioxide,CarbonMonoxide,CarbonylSulfide,CycloHexane,CycloPropane,Cyclopentane,D4,D6,Deuterium,DiethylEther,DimethylCarbonate,DimethylEther,Ethane,D5,Dichloroethane,Ethanol,EthylBenzene,Ethylene,EthyleneOxide,Fluorine,HFE143m,HeavyWater,Helium,Hydrogen,HydrogenChloride,HydrogenSulfide,IsoButane,IsoButene,Isohexane,Isopentane,Krypton,MD2M,MD3M,MD4M,MDM,MM,Methane,Methanol,MethylLinoleate,MethylLinolenate,MethylOleate,MethylPalmitate,MethylStearate,Neon,Neopentane,Nitrogen,NitrousOxide,Novec649,OrthoDeuterium,OrthoHydrogen,Oxygen,ParaDeuterium,ParaHydrogen,Propylene,Propyne,R11,R113,R114,R115,R116,R12,R123,R1233zd(E),R1234yf,R1234ze(E),R1234ze(Z),R124,R1243zf,R125,R13,R134a,R13I1,R14,R141b,R142b,R143a,R152A,R161,R21,R218,R22,R227EA,R23,R236EA,R236FA,R245ca,R245fa,R32,R365MFC,R40,R404A,R407C,R41,R410A,R507A,RC318,SES36,SulfurDioxide,SulfurHexafluoride,Toluene,Water,Xenon,cis-2-Butene,m-Xylene,n-Butane,n-Decane,n-Dodecane,n-Heptane,n-Hexane,n-Nonane,n-Octane,n-Pentane,n-Propane,n-Undecane,o-Xylene,p-Xylene,trans-2-Butene,1-Butene";
+        (fluidsListString.split(',')).forEach(fluidName => {
+            lists.appendChild(new Option(fluidName));
+        });
+    })();
+
     function reliefvalve() {
         var w = Number(document.getElementsByName("w")[0].value);
         var po = Number(document.getElementsByName("po")[0].value);
