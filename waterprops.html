@@ -8,17 +8,47 @@
     <meta name="keywords" content="水 蒸汽 氮气 氧气 甲烷 乙烷 乙炔 物性计算">
     <title>水和水蒸气物性计算</title>
     <script src="./src/iapws97.js"></script>
+    <script src="./src/common.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
         
     </style>
 </head>
 <body>
+    <script>
+       function iePrompt() {
+            if(!!window.ActiveXObject ||"ActiveXObject" in window){
+                document.write('<p style="background-color: beige; padding: 10px;">非常抱歉，本站不兼容IE浏览器，您需要更换其它浏览器。</p>')
+            }
+        }
+        iePrompt();
+    </script>
     <div id="sidebar">
         <h1> <a href="./">Yang shu</a></h1>
-        <ol>
-            <li> <a href="./waterprops.html">水和水蒸气物性</a></li>
-        </ol>
+        <h2>目录</h2>
+        <ul>
+            <li><a href="./">说明</a></li>
+            <li><a href="pipe.html">管道设计</a></li>
+            <li><a href="props.html">物性</a></li>
+            <li><a href="waterprops.html">水和水蒸气物性</a></li>
+        </ul>
+        <h2>其它</h2>
+        <ul>
+            <li><a href="javascript:;" onclick="javascript:addFavorite('yangshu-工程计算软件','https://yangshu.gitee.io')" title="收藏本站到收藏夹">收藏本站</a></li>
+            <li><a href="contact.html">联系</a></li>
+            <li><a href="changelog.html">更新日志</a></li>
+            <li>
+                <script type="text/javascript">
+                    var cnzz;
+                    if (window.location.host == "yangshu.gitee.io") {
+                        cnzz = "https://v1.cnzz.com/z_stat.php?id=1279093109&web_id=1279093109";
+                    } else {
+                        cnzz = "https://v1.cnzz.com/z_stat.php?id=1280145546&web_id=1280145546";
+                    }
+                    document.write('<script type="text/javascript" src="'+ cnzz +'"><\/script>')
+                </script>
+            </li>
+        </ul>
     </div>
     <div id="tab">
         <h2 id="tab-title">水和水蒸气物性</h2>
@@ -158,66 +188,6 @@ document.querySelector("#tab-title").innerHTML = "水和水蒸气物性";
         })
         document.querySelector("#tab-panel").appendChild(resEl);
     }));
-
-    function createInput(data) {
-    var p = document.createElement("p");
-    
-    var label = document.createElement("label");
-    label.innerText = (data.label || propName[data.name] || '') + "\n" + (data.unit || unit[data.name] || '');
-    p.appendChild(label);
-
-    var input = document.createElement("input");
-    input.name = data.name || '';
-    input.type = data.type || "text";
-    input.readOnly = data.readOnly || false;
-    input.required = data.required || false;
-    input.placeholder = data.placeholder || '';
-    input.value = data.value || '';
-    input.autocomplete = data.autocomplete || "on";
-    p.appendChild(input);
-
-    return p;
-}
-
-function createSelect(data, callback) {
-    var p = document.createElement("p");
-    
-    var label = document.createElement("label");
-    label.innerText = (data.label || propName[data.name] || '') + "\n" + (data.unit || unit[data.name] || '');
-    p.appendChild(label);
-
-    var select = document.createElement("select");
-    select.name = data.name || '';
-    select.required = data.required || false;
-    data.option.forEach((el, index) => {
-        var option = document.createElement("option");
-        option.innerText = Array.isArray(el) ? el[0] : el;
-        option.value = Array.isArray(el) ? el[1] : index;
-        select.appendChild(option);
-    });
-    select.addEventListener("change", callback);
-    p.appendChild(select);
-
-    return p;
-}
-
-function createButton(text, callback) {
-    var btn = document.createElement("button");
-    btn.innerText = text;
-    btn.addEventListener("click", callback);
-    return btn;
-}
-
-function createRes(res) {
-    var p = document.createElement("p");
-    var label = document.createElement("label");
-    label.innerText = (propName[res.name] || '') + "\n" + (unit[res.name] || '');
-    p.appendChild(label);
-    var value = document.createElement("span");
-    value.innerText = res.value; 
-    p.appendChild(value);
-    return p;
-}
 </script>
 </body>
 </html>
