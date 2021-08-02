@@ -1,4 +1,4 @@
-const Digits = 2;
+const Digits = 4;
 const catalog = [
     {text: "管径[流速]", url: "dim_v"},
     {text: "管径[压降]", url: "dim_dP"},
@@ -44,24 +44,9 @@ const unit = {
     q: "W/m",
     qf: "W",
     qt: "W",
-
-    m: "kg/mol",
-    p: "MPa(a)",
-    t: "C",
-    h: "kJ/kg",
-    s: "kJ/kg",
-    v: "m3/kg",
-    rho: "kg/m3",
-    u: "kJ/kg",
-    cp: "kJ/(kg·K)",
-    cv: "kJ/(kg·K)",
-    mu: "Pa·s",
-    nu: "m2/s",
-    k: "W/(m·K)",
-    st: "N/m",
-    alfav: "1/K",
-    kt: "1/MPa",
-    w: "m/s"
+	rho: "kg/m3",
+	mu: "Pa·s",
+	nu: "m2/s"
 }
 
 const propName = {
@@ -98,30 +83,9 @@ const propName = {
     q: "单位长度热损失",
     qf: "单个管托热损失",
     qt: "总热损失",
-
-    m: "摩尔质量",
-    phase: "相态",
-    region: "区间",
-    p: "压力",
-    t: "温度",
-    h: "比焓",
-    s: "比熵",
-    x: "干度",
-    v: "比体积",
-    rho: "密度",
-    u: "内能",
-    cp: "定压比热容",
-    cv: "定容比热容",
-    mu: "动力粘度",
-    nu: "运动粘度",
-    k: "导热系数",
-    st: "表面张力",
-    ie: "等熵指数",
-    alfav: "膨胀系数",
-    kt: "等温压缩性",
-    w: "声速",
-    epsilon: "介电常数",
-    kw: "电离常数"
+	rho: "密度",
+	mu: "动力粘度",
+	nu: "运动粘度"
 }
 
 function initCatalog(data) {

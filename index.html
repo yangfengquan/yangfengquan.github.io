@@ -27,6 +27,11 @@
         }
     </style>
     <script>
+        (function (){
+            if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                alert("本站不支持IE浏览器!");
+            }
+        })();
         function AddFavorite(title,url){
             try{
                 window.external.addFavorite(url,title);
