@@ -186,7 +186,7 @@ function resistace(re, dim = 0, e = 0) {
     else {
         var x0 = 0, x1 = 0.1;
         do {
-            var mid = (x0 + x1) / 2;
+            var mid = (x0 + x1) / 2;console.log(mid);
             if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(e / (3.7 * dim)) > 0) {
                 x0 = mid;
             }
@@ -195,7 +195,7 @@ function resistace(re, dim = 0, e = 0) {
             }
         } while (Math.abs(x0 - x1) > 1e-6);
         lambda = (x0 + x1) / 2;
-    }
+    }console.log(lambda);
     return lambda;
 }
 /**
