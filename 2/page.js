@@ -18,7 +18,8 @@ Router.prototype.refresh = function () {
     if (curPage != null) {
         curPage.classList.add("show");
         if (this.currentUrl != "/") {
-            document.getElementById("run").addEventListener("click", this.routes[this.currentUrl], false);
+            //document.getElementById("run").addEventListener("click", this.routes[this.currentUrl], false);
+			document.getElementById("run").onclick = this.routes[this.currentUrl];
         }
     }
 };
