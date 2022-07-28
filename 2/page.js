@@ -9,7 +9,8 @@ Router.prototype.route = function (path, callback) {
 };
 Router.prototype.refresh = function () {
     document.getElementById(this.currentUrl)?.classList.remove("show");
-    document.getElementsByClassName("nav")[0].innerHTML = '';
+    document.getElementById("page-result").classList.remove("show");
+    document.getElementById("report").removeAttribute("href");
     console.log(this.currentUrl)
     this.currentUrl = location.hash.slice(1) || '/';
 
@@ -17,10 +18,6 @@ Router.prototype.refresh = function () {
     if (curPage != null) {
         curPage.classList.add("show");
         if (this.currentUrl != "/") {
-            document.getElementsByClassName("nav")[0].innerHTML = `
-                <li id="run">run</li>
-                <li id="open">open</li>
-                `;
             document.getElementById("run").addEventListener("click", this.routes[this.currentUrl], false);
         }
     }
@@ -39,3 +36,15 @@ window.Router.route("page1", function () {
 window.Router.route("page2", function () {
     alert("page2");
 });
+
+function run(){
+    var res = document.createElement("p");
+    res.innerHTML = "page1 result";
+    document.getElementById("page-result").appendChild(res);
+    document.getElementById("page-result").classList.add("show");
+
+    var txt = "1234\n中文12\t456\nAbvdf\t456";
+    var blob = new Blob([txt], { type: "text/plain;charset=utf-8" ,endings:'native'});
+    var link = document.getElementById("report");
+    link.href = URL.createObjectURL(blob);
+}

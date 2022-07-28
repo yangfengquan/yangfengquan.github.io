@@ -6,11 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <script src="jquery-3.6.0.js"></script>
 </head>
 <body>
     <!--[if IE]><div style="color:red;text-align:center">很抱歉，我们不支持 Internet Explorer 等浏览器，请使用一个更新版本的浏览器。</div><![endif]-->
     <h1><a href="https://Yangshu.gitee.io">Yangshu</a></h1>
+    <ul class="nav">
+        <li id="open">open</li>
+        <li id="save">save</li>
+        <li id="run">run</li>
+        <li><a id="report" download="报告.txt">report</a></li>
+    </ul>
+    
     <div class="sidebar-wrapper">
         <ol>
             <li><a href="#page1">物质物性查询</a></li>
@@ -30,7 +36,6 @@
         </ol>
     </div>
     <div class="page-wrapper">
-        <ul class="nav"></ul>
         <div id="/" class="page">
             <h3>介绍</h3>
             <p>免费工程设计计算网站，网站作者还在业余时间持续更新……</p>
@@ -41,13 +46,6 @@
             <h3>压力</h3>
             <p>Length: <input type="text" name="" id=""> m</p>
             <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
-            <p>Length: <input type="text" name="" id=""> m</p>
         </div>
         <div id="page2" class="page">
             <h2>压力</h2>
@@ -55,50 +53,14 @@
         </div>
     </div>
     <div class="result-wrapper">
-        <ul class="nav">
-            <li id="save">save</li>
-        </ul>
-        <div id="" class="page show">
-            <h3>介绍</h3>
-            <table border="1">
-                <caption>游戏级别统计表</caption>
-                <tr>
-                    <td>12</td>
-                    <td>15534.55e6</td>
-                    <td>43</td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td>15534.55e6</td>
-                    <td>43</td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td>15534.55e6</td>
-                    <td>43</td>
-                </tr>
-                <tr>
-                    <td>12</td>
-                    <td>15534.55e6</td>
-                    <td>43</td>
-                </tr>
-            </table>
-            <a id="a11" download="游戏级别统计表.xls">导出表格</a>
+        <div id="page-result" class="page">
+            <h3>结果</h3>
         </div>
     </div>
     <script>
-    	$(document).ready(function(){
-        	var now_html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
-      	    /*outerHTML:获取整个table元素的HTML代码（包括<table>标签）,包装成一个完整的HTML文档
-      	     charset为urf-8以防止中文乱码*/
-       	    var blob = new Blob([now_html], { type: "application/vnd.ms-excel" });
-       	    /*实例化一个Blob对象
-       	     * Blob构造函数:[now_html]包含文件的数组
-       	     * { type: "application/vnd.ms-excel" }：是包含文件类型属性的对象*/
-            var a = document.getElementById("a11");
-            //利用URL.createObjectURL()方法为a元素生成blob URL
-            a.href = URL.createObjectURL(blob);
-    	})
+        (function(){
+            
+        }());
     </script>
     <script src="page.js"></script>
 </body>

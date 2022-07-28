@@ -2,22 +2,19 @@ ul, ol {
     margin: 0;
 }
 
-a:visited {
-    color:rgb(0,0,238);
-}
-
 .sidebar-wrapper {
+	width: 180px;
 	float: left;
 }
 
 .page-wrapper {
 	float: left;
-	padding-left: 30px; 
+	padding-left: 50px; 
 }
 
 .result-wrapper {
 	float: left;
-	padding-left: 30px; 
+	padding-left: 50px; 
 }
 
 .page {
@@ -30,13 +27,15 @@ a:visited {
 
 .nav {
 	list-style-type: none;
-	padding-left: 0;
+	padding-left: 230px;
 }
 
 .nav li{
-	color: rgb(0,0,238);
 	display: inline-block;
-	text-decoration: underline;
+	border: 1px black solid;
+	border-radius: 2px;
+	box-shadow: 1px 1px black;
 	cursor: pointer;
 	width: 60px;
+	text-align: center;
 }
