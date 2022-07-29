@@ -2,6 +2,14 @@ ul, ol {
     margin: 0;
 }
 
+input[type="file"]{
+	display: none;
+}
+
+h1 a{
+	text-decoration-line: none;
+}
+
 .sidebar-wrapper {
 	width: 180px;
 	float: left;
@@ -27,7 +35,7 @@ ul, ol {
 
 .nav {
 	list-style-type: none;
-	padding-left: 230px;
+	padding-left: 0px;
 }
 
 .nav li{
