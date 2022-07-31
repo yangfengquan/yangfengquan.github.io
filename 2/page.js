@@ -8,9 +8,11 @@ Router.prototype.route = function (path, callback) {
     this.routes[path] = callback || function () { };
 };
 Router.prototype.refresh = function () {
+    
     document.getElementById(this.currentUrl)?.classList.remove("show");
     document.getElementById("page-result").classList.remove("show");
     document.getElementById("report").removeAttribute("href");
+    
     //console.log(this.currentUrl)
     this.currentUrl = location.hash.slice(1) || '/';
 

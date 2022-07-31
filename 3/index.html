@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">    
+</head>
+<body>
+    <!--[if IE]><div style="color:red;text-align:center">很抱歉，我们不支持 Internet Explorer 等浏览器，请使用一个更新版本的浏览器。</div><![endif]-->
+    <h1><a href="https://yfq000.github.io">工程计算</a></h1>
+    <div class="sidebar-wrapper">
+        <ul>
+            <li><a href="#page1">物质物性查询</a></li>
+            <li><a href="#">管道</a>
+                <ul>
+                    <li><a href="#page1">管径>流速</a></li>
+                    <li><a href="#page2">管径>压降</a></li>
+                    <li><a href="#page1">阻力</a></li>
+                    <li><a href="#page1">绝热</a></li>
+                    <li><a href="#page1">阻力绝热精确</a></li>
+                    <li><a href="#page1">壁厚</a></li>
+                    <li><a href="#page1">重量</a></li>
+                    <li><a href="#page1">系列查询</a></li>
+                </ul>
+            </li>
+            <li><a href="#page1">安全阀</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper"><input type="file" id="file">
+        <ul class="nav">
+            <li id="open">打开</li>
+            <li id="save">保存</li>
+            <li id="run">运行</li>
+            <li><a id="report" download="报告.txt">报告</a></li>
+        </ul>
+        <div class="pages">
+            <div id="/" class="page">
+                <h3>介绍</h3>
+                <p>免费工程设计计算网站，网站作者在业余时间持续更新……</p>
+                <p>欢迎工程设计师参与网站功能的扩展，有意者请加微信：Nyingchix</p>
+                <p>意见反馈邮箱：yfq000@126.com</p>
+            </div>
+            <div id="page1" class="page">
+                <h3>管道材料</h3>
+                <div >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>钢管外径<br>mm</th>
+                                <th>钢管壁厚<br>mm</th>
+                                <th>保温厚<br>mm</th>
+                                <th>管长<br>m</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody id="page1-form">
+                            <tr id="page1-row-1" class="page1-row row">
+                                <td><input type="number"></td>
+                                <td><input type="number"></td>
+                                <td><input type="number"></td>
+                                <td><input type="number"></td>
+                                <td><button onclick="onPage1DelRow(1)">删除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> 
+                <p><button onclick="onPage1AddRow()">添加</button></p>
+            </div>
+            <div id="page2" class="page">
+                <h2>压力</h2>
+                <p>Length: <input type="text" name="" id=""> m</p>
+    
+            </div>
+            <div id="page-result" class="page">
+                <h3>结果</h3>
+                <div id="result"></div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script src="./dist/page.js"></script>
+    <script src="./dist/pipe.js"></script>
+</body>
+</html>

@@ -5,14 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="stylesheet" href="style.css">    
 </head>
 <body>
     <!--[if IE]><div style="color:red;text-align:center">很抱歉，我们不支持 Internet Explorer 等浏览器，请使用一个更新版本的浏览器。</div><![endif]-->
     <h1><a href="https://yfq000.github.io">工程计算</a></h1>
-    
-    
     <div class="sidebar-wrapper">
         <ul>
             <li><a href="#page1">物质物性查询</a></li>
@@ -45,19 +42,22 @@
             <p>意见反馈邮箱：yfq000@126.com</p>
         </div>
         <div id="page1" class="page">
-            <h3>钢管重量</h3>
-            <p>外径<br>mm <input type="text" name="do"></p>
-            <p>壁厚<br>mm <input type="text" name="thk"></p>
-            <p>长度<br>m <input type="text" name="l"></p>
+            <h3>管道重量</h3>
+            <p><label>外径<br>mm</label><input type="number" v-model.number="dno"></p>
+            <p><label>壁厚<br>mm</label><input type="text" v-model.number="thk"></p>
+            <p><label>长度<br> m</label><input type="text" v-model.number="len"></p>
+            <p><label>介质密度<br>kg/m3</label><input type="text" v-model.number="len"></p>
         </div>
         <div id="page2" class="page">
             <h2>压力</h2>
             <p>Length: <input type="text" name="" id=""> m</p>
+
         </div>
     </div>
     <div class="result-wrapper">
         <div id="page-result" class="page">
             <h3>结果</h3>
+            
         </div>
     </div>
     <script src="page.js"></script>
