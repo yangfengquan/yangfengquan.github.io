@@ -28,10 +28,12 @@
             <li><a href="#page1">安全阀</a></li>
         </ul>
     </div>
-    <div class="page-wrapper"><input type="file" id="file">
+    <div class="page-wrapper">
         <ul class="nav">
+            <input type="file" id="file">
+            <a hidden id="save-link" download="yfq000.gihun.io.txt"></a>
             <li id="open">打开</li>
-            <li id="save">保存</li>
+            <li onclick="save()">保存</li>
             <li id="run">运行</li>
             <li><a id="report" download="报告.txt">报告</a></li>
         </ul>
@@ -55,8 +57,8 @@
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
-                        <tbody id="page1-form">
-                            <tr id="page1-row-1" class="page1-row row">
+                        <tbody id="page1-form form">
+                            <tr id="page1-row-1 row-1" class="page1-row row">
                                 <td><input type="number"></td>
                                 <td><input type="number"></td>
                                 <td><input type="number"></td>

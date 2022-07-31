@@ -137,8 +137,24 @@ document.getElementById("file").onchange = function(){
         let fileString = evt.target.result;
         console.log(fileString);
         const jsonObj = JSON.parse(fileString);
-        console.log(jsonObj.c);
+        console.log(jsonObj);
+        document.getElementById(window.Router.currentUrl).classList.remove("show");
+        
+        location.hash = "#" + jsonObj.page;
+
+        let pageEle = document.getElementById(jsonObj.page);
+        if (pageEle) {
+            let formEle = pageEle.getElementById("form")
+            let rows = formEle.getElementsByClassName("row");
+            let inputs = rows[0].getElementsByTagName("input");
+            for (let i = 0; i < jsonObj.data.length; i++) {
+                inputs[i].value = jsonObj.data[i]; 
+            }
+        }
+        
     }
+
+    
 }
 
 function onPage1AddRow() {
@@ -171,8 +187,40 @@ function  onPage1DelRow(id) {
     document.getElementById("page1-row-" + id.toString()).remove();
 }
 
+function save() {
+    let currentPage = document.getElementsByClassName("show")[0];
+    //let page = currentPage.id;
+    let rowsEle = currentPage.getElementsByClassName("row");
+
+    let rows = new Array();
+    for (let i = 0; i < rowsEle.length; i++) {
+        const rowEle = rowsEle[i];
+        let inputs = rowEle.getElementsByTagName("input");
+        let row = new Array();
+        for (let j = 0; j < inputs.length; j++) {
+            const input = inputs[j];
+            row.push(input.value);
+        }
+        rows.push(row);
+    }
+
+    let dataObj = new Object();
+    dataObj.page = currentPage.id;
+    dataObj.data = rows;
+    let jsonStr = JSON.stringify(dataObj);
+
+    let link = document.getElementById("save-link");
+    link.href = downLoadLink(jsonStr);
+    link.click();
+}
+
 function toReport(text) {
     var blob = new Blob([text], { type: "text/plain;charset=utf-8" ,endings:'native'});
     var link = document.getElementById("report");
     link.href = URL.createObjectURL(blob);
+}
+
+function downLoadLink(text) {
+    var blob = new Blob([text], { type: "text/plain;charset=utf-8" ,endings:'native'});
+    return URL.createObjectURL(blob);
 }
