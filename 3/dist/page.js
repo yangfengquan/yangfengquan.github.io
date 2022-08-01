@@ -146,10 +146,14 @@ window.Runner.method ("page1", function () {
         currentSum = currentSum.nextElementSibling;
     }
 
+    let table = rowEle.parentNode.parentNode;
+    for (let i = 0; i < table.rows.length; i++) {
+        table.rows[i].deleteCell(9);
+    }
     let content = rowEle.parentNode.parentNode.outerHTML;
-    let blob = new Blob([content], {type: "application/ms-word;charset=gb2312"});
-    document.getElementById("report").href = URL.createObjectURL(blob);
-    //document.getElementById("report").href = downLoadLink(content);
+    //let blob = new Blob([content], {type: "application/ms-word;charset=gb2312"});
+    //document.getElementById("report").href = URL.createObjectURL(blob);
+    document.getElementById("report").href = downLoadLink(content);
 });
 
 window.Runner.method ("page2", function () {
