@@ -1,37 +1,29 @@
 "use strict"
 
 function Router() {
-    this.routes = {};
     this.currentUrl = '';
 }
-Router.prototype.route = function (path, callback) {
-    this.routes[path] = callback || function () { };
-};
-Router.prototype.refresh = function () {
-    
+
+Router.prototype.refresh = function () {   
     document.getElementById(this.currentUrl)?.classList.remove("show");
     document.getElementById("page-result").classList.remove("show");
     document.getElementById("report").removeAttribute("href");
-    
-    //console.log(this.currentUrl)
+
     this.currentUrl = location.hash.slice(1) || '/';
 
     let curPage = document.getElementById(this.currentUrl);
     if (curPage != null) {
         curPage.classList.add("show");
-        if (this.currentUrl != "/") {
-            //document.getElementById("run").addEventListener("click", this.routes[this.currentUrl], false);
-			document.getElementById("run").onclick = this.routes[this.currentUrl];
-        }
     }
 };
+
 Router.prototype.init = function () {
     window.addEventListener('load', this.refresh.bind(this), false);
     window.addEventListener('hashchange', this.refresh.bind(this), false);
 };
 window.Router = new Router();
 window.Router.init();
-
+/*
 window.Router.route("page1", function () {
     //let form = document.getElementById("page1_form");
     let rows = new Array();
@@ -124,103 +116,211 @@ window.Router.route("page1", function () {
 window.Router.route("page2", function () {
     alert("page2");
 });
-
+*/
 document.getElementById("open").onclick = function(){
     document.getElementById("file").click();  
 }
 
 document.getElementById("file").onchange = function(){
-    var file_ele = document.getElementById("file")
     let reader = new FileReader();
-    reader.readAsText(file_ele.files[0], "UTF-8");
+    reader.readAsText(this.files[0], "UTF-8");
     reader.onload = function(evt){
         let fileString = evt.target.result;
-        console.log(fileString);
         const jsonObj = JSON.parse(fileString);
-        console.log(jsonObj);
-        document.getElementById(window.Router.currentUrl).classList.remove("show");
-        
-        location.hash = "#" + jsonObj.page;
 
-        let pageEle = document.getElementById(jsonObj.page);
-        if (pageEle) {
-            let formEle = pageEle.getElementById("form")
-            let rows = formEle.getElementsByClassName("row");
-            let inputs = rows[0].getElementsByTagName("input");
-            for (let i = 0; i < jsonObj.data.length; i++) {
-                inputs[i].value = jsonObj.data[i]; 
+        document.getElementById(window.Router.currentUrl).classList.remove("show");
+        location.hash = "#" + jsonObj.page;
+        window.Router.currentUrl = jsonObj.page;
+        let currentPage = document.getElementById(jsonObj.page);
+        let currentRow = currentPage.getElementsByClassName("form")[0].firstElementChild;
+        for (let i = 0; i < jsonObj.data.length; i++) {
+            const row = jsonObj.data[i];
+            let inputs = currentRow.getElementsByTagName("input");
+            for (let j = 0; j < row.length; j++) {
+                const val = row[j];
+                inputs[j].value = val;
+            }
+            if (!(currentRow = currentRow.nextElementSibling) && i !=  jsonObj.data.length - 1) {
+                currentRow = addRow();
             }
         }
-        
     }
-
-    
-}
-
-function onPage1AddRow() {
-    let page1_form = document.getElementById("page1-form");
-    //let n = page1_form.children.length;
-    let last = page1_form.lastElementChild;
-    let nextRowId = 1;
-    if (last) {
-        let rowStr = last.id;
-        let index = rowStr.lastIndexOf('-');
-        nextRowId = parseInt(rowStr.slice(index + 1)) + 1;
-    } 
-
-    let row = document.createElement("tr");
-    row.id = "page1-row-" + nextRowId.toString();
-    row.classList.add("page1-row");
-    row.classList.add("row");
-    let html = `    
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><input type="number"></td>
-            <td><button onclick="onPage1DelRow(` + nextRowId.toString() + `)">删除</button></td>
-        `;
-    row.innerHTML = html;
-    page1_form.appendChild(row);
-}
-
-function  onPage1DelRow(id) {
-    document.getElementById("page1-row-" + id.toString()).remove();
 }
 
 function save() {
-    let currentPage = document.getElementsByClassName("show")[0];
-    //let page = currentPage.id;
-    let rowsEle = currentPage.getElementsByClassName("row");
-
-    let rows = new Array();
-    for (let i = 0; i < rowsEle.length; i++) {
-        const rowEle = rowsEle[i];
-        let inputs = rowEle.getElementsByTagName("input");
-        let row = new Array();
-        for (let j = 0; j < inputs.length; j++) {
-            const input = inputs[j];
-            row.push(input.value);
-        }
-        rows.push(row);
-    }
-
     let dataObj = new Object();
-    dataObj.page = currentPage.id;
-    dataObj.data = rows;
-    let jsonStr = JSON.stringify(dataObj);
+    dataObj.page = window.Router.currentUrl;
+    dataObj.data = new Array();
+
+    let currentPage = document.getElementById(window.Router.currentUrl);
+    let currentRow = currentPage.getElementsByClassName("form")[0].firstElementChild;
+    
+    do {
+        let row = new Array();
+        let inputs = currentRow.getElementsByTagName("input");
+        for (let i = 0; i < inputs.length; i++) {
+            const val = inputs[i].value;
+            row.push(val);
+        }
+        dataObj.data.push(row);
+    } while (currentRow = currentRow.nextElementSibling);
 
     let link = document.getElementById("save-link");
-    link.href = downLoadLink(jsonStr);
+    link.href = downLoadLink(JSON.stringify(dataObj));
     link.click();
-}
-
-function toReport(text) {
-    var blob = new Blob([text], { type: "text/plain;charset=utf-8" ,endings:'native'});
-    var link = document.getElementById("report");
-    link.href = URL.createObjectURL(blob);
 }
 
 function downLoadLink(text) {
     var blob = new Blob([text], { type: "text/plain;charset=utf-8" ,endings:'native'});
     return URL.createObjectURL(blob);
 }
+
+function addRow() {
+    let currentPage = document.getElementById(window.Router.currentUrl);
+    let formEle = currentPage.getElementsByClassName("form")[0];
+    let lastRowEle = formEle.lastElementChild;
+    let nextRowEle = lastRowEle.cloneNode(true);
+    formEle.appendChild(nextRowEle);
+    return nextRowEle;
+}
+
+function delRow(e) {
+    let rowEle = e.target.parentNode.parentNode;//row
+    if (rowEle.parentNode.childElementCount > 1) {
+        rowEle.parentNode.removeChild(rowEle);
+    }
+    else {
+        alert("最后一项只允许修改");
+    }
+}
+
+function run() {
+    window.Runner.methods[window.Router.currentUrl]();
+}
+
+function Runer() {
+    this.methods = {};
+}
+
+Runer.prototype.method = function (page, callback) {
+    this.methods[page] = callback || function () { };
+};
+
+window.Runner = new Runer();
+
+window.Runner.method ("page1", function () {
+    let pipe = new Pipe();
+
+    let rowEle = event.target.parentNode.parentNode;
+    let inputs = rowEle.getElementsByTagName("input");
+    pipe.do_ = Number(inputs[0].value) / 1000;
+    pipe.thk = Number(inputs[1].value) / 1000;
+    pipe.insulThk = Number(inputs[2].value) / 1000;
+    let length = Number(inputs[3].value);
+
+    rowEle.children[4].innerHTML = pipe.weight().toFixed(2);
+    rowEle.children[5].innerHTML = (pipe.weight()* length).toFixed(2);
+    rowEle.children[6].innerHTML = (pipe.area() * length).toFixed(2);
+    rowEle.children[7].innerHTML = (pipe.insulVolume() * length).toFixed(2);
+    rowEle.children[8].innerHTML = (pipe.cladArea() * length).toFixed(2);
+
+    let sum = [0, 0, 0, 0];
+    let currentRow = rowEle.parentNode.firstElementChild;
+    do {
+        sum[0] += Number(currentRow.children[5].innerHTML);
+        sum[1] += Number(currentRow.children[6].innerHTML);
+        sum[2] += Number(currentRow.children[7].innerHTML);
+        sum[3] += Number(currentRow.children[8].innerHTML);
+    } while (currentRow = currentRow.nextElementSibling);
+    
+    let currentSum = rowEle.parentNode.nextElementSibling.firstElementChild.children[5];
+    for (let i = 0; i < sum.length; i++) {
+        currentSum.innerHTML = sum[i].toFixed(2);
+        currentSum = currentSum.nextElementSibling;
+    }
+
+    let content = rowEle.parentNode.parentNode.outerHTML;
+    console.log(content);
+    //responseType: "blob";
+    let blob = new Blob([content], {type: "application/msword;charset=utf-8"});
+    document.getElementById("report").href = URL.createObjectURL(blob);
+});
+
+window.Runner.method ("page2", function () {
+    alert("page2 run");
+});
+
+//   function downloadFile(file) {
+    
+//     dwonloadFiles({ fileName: file.name }).then(response => {
+//       let blob = new Blob([response]);
+//       let downloadElement = document.createElement("a");
+//       let href = window.URL.createObjectURL(blob); //创建下载的链接
+//       downloadElement.href = href;
+//       console.log(file.name, "文件名");
+//       downloadElement.download = file.name; //下载后文件名
+//       document.body.appendChild(downloadElement);
+//       downloadElement.click(); //点击下载
+//       document.body.removeChild(downloadElement); //下载完成移除元素
+//       window.URL.revokeObjectURL(href); //释放掉blob对象
+//     });
+ // }
+// // 知识链库下载文件
+// export function dwonloadFiles(query) {
+//     return request({
+//       url: '/system/knowledgechain/download',
+//       method: 'get',
+//       params: query,
+//       responseType: 'blob'
+//     })
+//   }
+//   function downloadFile(file) {
+//     dwonloadFiles({ fileName: file.name }).then(response => {
+//       let blob = new Blob([response]);
+//       let downloadElement = document.createElement("a");
+//       let href = window.URL.createObjectURL(blob); //创建下载的链接
+//       downloadElement.href = href;
+//       console.log(file.name, "文件名");
+//       downloadElement.download = file.name; //下载后文件名
+//       document.body.appendChild(downloadElement);
+//       downloadElement.click(); //点击下载
+//       document.body.removeChild(downloadElement); //下载完成移除元素
+//       window.URL.revokeObjectURL(href); //释放掉blob对象
+//     });
+//   }
+// export function exportExcel(url, params = {}) {
+//     return new Promise((resolve, reject) => {
+//       axios({
+//         method: "get",
+//         url: url, // 请求地址
+//         params,
+//         responseType: "blob" // 表明返回服务器返回的数据类型
+//       }).then(
+//         (response) => {
+//           resolve(response);
+//           console.log(response)
+//           // 前面responseType设置的 “blob” 后台返回的response直接就是 blob对象，前端不用再去new Blob了
+//           // let blob = new Blob([response], {
+//           //   type: "application/vnd.ms-excel"
+//           // });
+//           // console.log(blob);
+//           let fileName = "导出单据" + Date.parse(new Date()) + ".xls";
+//           if (window.navigator.msSaveOrOpenBlob) {
+//             navigator.msSaveBlob(response, fileName);
+//           } else {
+//             let link = document.createElement("a");
+   
+//             link.href = window.URL.createObjectURL(response);
+//             link.download = fileName;
+//             link.click();
+//             // 释放内存
+//             window.URL.revokeObjectURL(link.href);
+   
+//           }
+//         },
+//         (err) => {
+//           reject(err);
+//         }
+//       );
+//     });
+//   }

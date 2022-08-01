@@ -68,10 +68,10 @@ class Pipe {
     insulWeight() {
         return cylinderArea(this.do_, this.do_ + 2 * this.insulThk) * this.insulDensity;
     }
-    kapArea() {
+    cladArea() {
         return circleCircumference(this.do_ + 2 * this.insulThk);
     }
-    kapWeight(insulThk /* 保温厚 m */, insulRho /* 保温材料密度 kg/m3 */) {
+    cladWeight(insulThk /* 保温厚 m */, insulRho /* 保温材料密度 kg/m3 */) {
         return cylinderArea(this.do_, this.do_ + 2 * insulThk) * insulRho;
     }
 }

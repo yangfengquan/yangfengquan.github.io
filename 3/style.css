@@ -47,10 +47,11 @@ table {
 td,th {
 	border-right: 1px #000 solid;
 	border-bottom: 1px #000 solid;
+	font-weight: lighter;
 }
 
 td input {
-	width: 80px;
+	width: 60px;
 }
 
 .page-wrapper {
