@@ -33,6 +33,11 @@ document.getElementById("tog-menu").onclick = function () {
     }
 }
 
+function newFile() {
+    document.getElementById("menu").style.display = "block";
+    alert('选择菜单项。')
+}
+
 document.getElementById("open").onclick = function(){
     document.getElementById("file").click();  
 }

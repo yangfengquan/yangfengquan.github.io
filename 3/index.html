@@ -24,6 +24,7 @@
     </div>
     <div class="page-wrapper">
         <ul class="nav">
+            <li onclick="newFile()">新建</li>
             <input type="file" id="file">
             <a hidden id="save-link" download="yfq000.github.io"></a>
             <li id="open">打开</li>
@@ -146,14 +147,8 @@
                 </div> 
                 <p><button onclick="addRow()">添加</button></p>
             </div>
-            <div id="page-result" class="page">
-                <h3>结果</h3>
-                <div id="result"></div>
-            </div>
         </div>
-        
     </div>
-    
     <script src="./dist/page.js"></script>
     <script src="./dist/pipe.js"></script>
 </body>
