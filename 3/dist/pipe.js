@@ -43,8 +43,8 @@ class Pipe {
         this.fluidDensity = 0;
         this.insulThk = 0;
         this.insulDensity = 0;
-        this.kapThk = 0;
-        this.kapDensity = 0;
+        this.cladThk = 0;
+        this.cladDensity = 0;
     }
     /**
      * 单位长度质量 kg/m
@@ -71,7 +71,9 @@ class Pipe {
     cladArea() {
         return circleCircumference(this.do_ + 2 * this.insulThk);
     }
-    cladWeight(insulThk /* 保温厚 m */, insulRho /* 保温材料密度 kg/m3 */) {
-        return cylinderArea(this.do_, this.do_ + 2 * insulThk) * insulRho;
+    cladWeight() {
+        let dw = this.do_ + 2 * this.insulThk + 2 * this.cladThk;
+        let di = this.do_ + 2 * this.insulThk;
+        return cylinderArea(di, dw) * this.cladDensity;
     }
 }

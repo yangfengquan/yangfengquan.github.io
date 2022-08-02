@@ -105,9 +105,6 @@ function delRow(e) {
     if (rowEle.parentNode.childElementCount > 1) {
         rowEle.parentNode.removeChild(rowEle);
     }
-    else {
-        alert("最后一项只允修改");
-    }
 }
 
 function run() {
@@ -124,7 +121,11 @@ Runer.prototype.method = function (page, callback) {
 
 window.Runner = new Runer();
 
-window.Runner.method ("page1", function () {
+window.Runner.method ("/", function () {
+    alert("未选择功能。");
+});
+
+window.Runner.method ("pipe-material-sum", function () {
     let pipe = new Pipe();
 
     let rowEle = event.target.parentNode.parentNode;
@@ -155,16 +156,67 @@ window.Runner.method ("page1", function () {
         currentSum = currentSum.nextElementSibling;
     }
 
-    let table = rowEle.parentNode.parentNode;
+    let table = rowEle.parentNode.parentNode.cloneNode(true);
+    table.border = "1";
     for (let i = 0; i < table.rows.length; i++) {
+        for (let j = 0; j < 4 && i > 0 && i < table.rows.length - 1; j++) { 
+            const cell = table.rows[i].cells[j];
+            cell.innerHTML = cell.children[0].value;  
+        }
         table.rows[i].deleteCell(9);
     }
-    let content = rowEle.parentNode.parentNode.outerHTML;
+    let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
+        + "</body></html>";
     //let blob = new Blob([content], {type: "application/ms-word;charset=gb2312"});
     //document.getElementById("report").href = URL.createObjectURL(blob);
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("page2", function () {
-    alert("page2 run");
+window.Runner.method ("pipe-weigth", function () {
+    let pipe = new Pipe();
+
+    let rowEle = event.target.parentNode.parentNode;
+    let inputs = rowEle.getElementsByTagName("input");
+    pipe.do_ = Number(inputs[0].value) / 1000;
+    pipe.thk = Number(inputs[1].value) / 1000;
+    pipe.insulThk = Number(inputs[2].value) / 1000;
+    pipe.insulDensity = Number(inputs[3].value);
+    pipe.cladThk = Number(inputs[4].value) / 1000;
+    pipe.cladDensity = Number(inputs[5].value);
+    let length = Number(inputs[6].value);
+
+    rowEle.children[7].innerHTML = pipe.weight().toFixed(2);
+    rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);
+    rowEle.children[9].innerHTML = (pipe.insulWeight() * length).toFixed(2);
+    rowEle.children[10].innerHTML = (pipe.cladWeight() * length).toFixed(2);
+    //rowEle.children[11].innerHTML = (pipe.weight() + pipe.insulWeight() + pipe.cladWeight()).toFixed(2);
+    rowEle.children[11].innerHTML = ((pipe.weight() + pipe.insulWeight() + pipe.cladWeight()) * length).toFixed(2);
+
+    let sum = [0, 0, 0, 0];
+    let currentRow = rowEle.parentNode.firstElementChild;
+    do {
+        sum[0] += Number(currentRow.children[8].innerHTML);
+        sum[1] += Number(currentRow.children[9].innerHTML);
+        sum[2] += Number(currentRow.children[10].innerHTML);
+        sum[3] += Number(currentRow.children[11].innerHTML);
+    } while (currentRow = currentRow.nextElementSibling);
+    
+    let currentSum = rowEle.parentNode.nextElementSibling.firstElementChild.children[8];
+    for (let i = 0; i < sum.length; i++) {
+        currentSum.innerHTML = sum[i].toFixed(2);
+        currentSum = currentSum.nextElementSibling;
+    }
+
+    let table = rowEle.parentNode.parentNode.cloneNode(true);
+    table.border = "1";
+    for (let i = 0; i < table.rows.length; i++) {
+        for (let j = 0; j < 7 && i > 0 && i < table.rows.length - 1; j++) { 
+            const cell = table.rows[i].cells[j];
+            cell.innerHTML = cell.children[0].value;  
+        }
+        table.rows[i].deleteCell(12);
+    }
+    let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
+        + "</body></html>";
+    document.getElementById("report").href = downLoadLink(content);
 });

@@ -13,42 +13,34 @@
     <div class="sidebar-wrapper">
         <img src="./image/menu.png" id="tog-menu">
         <ul id="menu">
-            <li><a href="#page1">物质物性查询</a></li>
             <li><a href="#">管道</a>
                 <ul>
-                    <li><a href="#page1">管径>流速</a></li>
-                    <li><a href="#page2">管径>压降</a></li>
-                    <li><a href="#page1">阻力</a></li>
-                    <li><a href="#page1">绝热</a></li>
-                    <li><a href="#page1">阻力绝热精确</a></li>
-                    <li><a href="#page1">壁厚</a></li>
-                    <li><a href="#page1">重量</a></li>
-                    <li><a href="#page1">系列查询</a></li>
+                    <li><a href="#pipe-material-sum">管道材料</a></li>
+                    <li><a href="#pipe-weight">管道重量</a></li>
                 </ul>
             </li>
-            <li><a href="#page1">安全阀</a></li>
+            <li><a href="#safety-valve">安全阀</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
         <ul class="nav">
             <input type="file" id="file">
-            <a hidden id="save-link" download="yfq000.gihun.io.txt"></a>
+            <a hidden id="save-link" download="yfq000.github.io"></a>
             <li id="open">打开</li>
             <li onclick="save()">保存</li>
             <li onclick="run()">运行</li>
-            <li><a id="report" download="报告.doc">报告</a></li>
+            <li><a id="report" download="报告.html">报告</a></li>
         </ul>
         <div class="pages">
             <div id="/" class="page">
-                <h3>介绍</h3>
-                <p>免费工程设计计算网站，网站作者在业余时间持续更新……</p>
-                <p>欢迎工程设计师参与网站功能的扩展，有意者请加微信：Nyingchix</p>
+                <p>欢迎！</p>
+                <p>你可以使用快捷键Ctrl+D收藏本站，或保存本站网址：yfq000@github.com。</p>
                 <p>意见反馈邮箱：yfq000@126.com</p>
             </div>
-            <div id="page1" class="page">
+            <div id="pipe-material-sum" class="page">
                 <h3>管道材料</h3>
                 <div >
-                    <table border="1">
+                    <table>
                         <thead>
                             <tr>
                                 <th>钢管外径<br>mm</th>
@@ -95,10 +87,64 @@
                 </div> 
                 <p><button onclick="addRow()">添加</button></p>
             </div>
-            <div id="page2" class="page">
-                <h2>压力</h2>
-                <p>Length: <input type="text" name="" id=""> m</p>
-    
+            <div id="pipe-weight" class="page">
+                <h3>管道重量</h3>
+                <div >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>钢管外径<br>mm</th>
+                                <th>钢管壁厚<br>mm</th>
+                                <th>保温厚<br>mm</th>
+                                <th>保温密度<br>kg/m3</th>
+                                <th>保护层厚<br>mm</th>
+                                <th>保护层密度<br>kg/m3</th>
+                                <th>管长<br>m</th>
+                                <th>钢管单重<br>kg/m</th>
+                                <th>钢管总重<br>kg</th>
+                                <th>保温重<br>kg</th>
+                                <th>保护层重<br>kg</th>
+                                <th>总重<br>kg</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody class="form">
+                            <tr class="row-1 row">
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" value="200" onchange="run()"></td>
+                                <td><input type="number" value="0.6" onchange="run()"></td>
+                                <td><input type="number" value="2720" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><button onclick="delRow(event)">删除</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>合计</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div> 
+                <p><button onclick="addRow()">添加</button></p>
             </div>
             <div id="page-result" class="page">
                 <h3>结果</h3>

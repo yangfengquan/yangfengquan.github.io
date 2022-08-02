@@ -1,6 +1,4 @@
 body {
-    margin: 0;
-    padding: 0;
     font-size: 16px;
 }
 
@@ -28,7 +26,7 @@ p label {
 }
 
 p input {
-	width: 80px;
+	width: 60px;
 	height: 20px;
 }
 
@@ -42,7 +40,7 @@ table {
 td,th {
 	border-right: 1px #000 solid;
 	border-bottom: 1px #000 solid;
-	font-weight: lighter;
+	font-weight: normal;
 }
 
 td input {

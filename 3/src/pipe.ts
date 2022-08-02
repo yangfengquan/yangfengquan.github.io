@@ -34,8 +34,8 @@ class Pipe {
     fluidDensity:number;
     insulThk:number;
     insulDensity:number;
-    kapThk:number;
-    kapDensity:number;
+    cladThk:number;
+    cladDensity:number;
 
 
     // constructor(do_:number /* 外径 m */, thk:number /* 壁厚 m */, density:number = 7850 /* 密度 kg/m3 */, fluidDensity:number = 0,
@@ -57,8 +57,8 @@ class Pipe {
         this.fluidDensity = 0;
         this.insulThk = 0;
         this.insulDensity = 0;
-        this.kapThk = 0;
-        this.kapDensity = 0;
+        this.cladThk = 0;
+        this.cladDensity = 0;
     }
 
 
@@ -94,7 +94,9 @@ class Pipe {
         return circleCircumference(this.do_ + 2 * this.insulThk);
     }
 
-    cladWeight(insulThk:number /* 保温厚 m */, insulRho:number /* 保温材料密度 kg/m3 */):number {
-        return cylinderArea(this.do_, this.do_ + 2 * insulThk) * insulRho;
+    cladWeight():number {
+        let dw = this.do_ + 2 * this.insulThk + 2 * this.cladThk;
+        let di = this.do_ + 2 * this.insulThk;
+        return cylinderArea(di, dw) * this.cladDensity;
     }
 }
