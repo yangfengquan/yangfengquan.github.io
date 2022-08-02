@@ -32,11 +32,6 @@ p input {
 	height: 20px;
 }
 
-.sidebar-wrapper {
-	width: 180px;
-	float: left;
-}
-
 table {
 	border-top: 1px #000 solid;
 	border-left: 1px #000 solid;
@@ -53,6 +48,27 @@ td,th {
 td input {
 	width: 60px;
 }
+
+
+.sidebar-wrapper {
+	width: 180px;
+	float: left;
+}
+
+.sidebar-wrapper ul{
+	display: none;
+}
+
+@media (min-width:40rem) {
+	.sidebar-wrapper img{
+		display: none;
+	}
+
+	.sidebar-wrapper ul{
+		display: block;
+	}
+}
+
 
 .page-wrapper {
 	float: left;

@@ -23,100 +23,17 @@ Router.prototype.init = function () {
 };
 window.Router = new Router();
 window.Router.init();
-/*
-window.Router.route("page1", function () {
-    //let form = document.getElementById("page1_form");
-    let rows = new Array();
-    let rowsEle = document.getElementsByClassName("page1-row");
-    //document.getElementsByName
-    let len = rowsEle.length;
-    for (let index = 0; index < len; index++) {
-        const rowEle = rowsEle[index];
-        let row = new Object();
-        let do_ = rowEle.getElementsByTagName("input")[0].value;
-        if (do_ == null || do_ == undefined || do_ == '') {
-            alert("外径未输入，将自动忽略");
-            continue;
-        }
-        row.do_ = new Number(do_) / 1000;
-        row.thk = new Number(rowEle.getElementsByTagName("input")[1].value) / 1000;
-        row.insulThk = new Number(rowEle.getElementsByTagName("input")[2].value) / 1000;
-        row.length = new Number(rowEle.getElementsByTagName("input")[3].value);
 
-        let pipe = new Pipe();
-        pipe.do_ = row.do_;
-        pipe.thk = row.thk;
-        pipe.insulThk = row.insulThk;
-
-        row.weight = pipe.weight();
-        row.area = pipe.area();
-
-        row.insulVolume = pipe.insulVolume();
-
-        row.kapArea = pipe.kapArea();
-
-        rows.push(row);
+document.getElementById("tog-menu").onclick()
+{
+    let menu = document.getElementById("menu");
+    if (menu.style.display == "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
     }
-    
-    let table = document.createElement("table");
-    table.innerHTML = "<tr><td>外径<br>mm</td><td>单重<br>kg/m</td><td>总重<br>kg</td><td>刷漆面积<br>m2</td><td>保温材料体积<br>m3</td><td>保护层面积<br>m3</td></tr>";
-    let weightSum = 0, areaSum = 0, insulSum = 0, kapSum = 0;
+}
 
-    for (let index = 0; index < rows.length; index++) {
-        const row = rows[index];
-        let tr = document.createElement("tr");
-        tr.innerHTML = 
-            "  <td>" + (row.do_ * 1000).toString() + "</td>"
-            + "<td>" + row.weight.toFixed(2) + "</td>"
-            + "<td>" + (row.weight * row.length).toFixed(2) + "</td>"
-            + "<td>" + (row.area * row.length).toFixed(2) + "</td>"
-            + "<td>" + (row.insulVolume * row.length).toFixed(2) + "</td>"
-            + "<td>" + (row.kapArea * row.length).toFixed(2) + "</td>";
-        table.appendChild(tr);
-
-        weightSum += new Number(row.weight * row.length);
-        areaSum += new Number(row.area * row.length);
-        insulSum += new Number(row.insulVolume * row.length);
-        kapSum += new Number(row.kapArea * row.length);
-    }
-
-    let tr = document.createElement("tr");
-    tr.innerHTML =
-        "  <td>合计</td>"
-        + "<td>&nbsp</td>"
-        + "<td>" + weightSum.toFixed(2) + "</td>"
-        + "<td>" + areaSum.toFixed(2) + "</td>"
-        + "<td>" + insulSum.toFixed(2) + "</td>"
-        + "<td>" + kapSum.toFixed(2) + "</td>";
-    table.appendChild(tr);
-
-    let result = document.getElementById("result");
-    result.innerHTML = "";
-    result.appendChild(table);
-
-    document.getElementById("page-result").classList.add("show");
-
-    let text = "外径\t\t壁厚\t\t保温厚\t管长\t\t单重\t\t总重\t\t刷漆面积\t保温材料体积\t保护层面积\nmm\t\tmm\t\tmm\t\tm\t\tkg/m\t\tkg\t\tm2\t\tm3\t\t\tm2\n";
-    for (let index = 0; index < rows.length; index++) {
-        const row = rows[index];
-        text += (row.do_ * 1000).toString() + "\t\t";
-        text += (row.thk * 1000).toString() + "\t\t";
-        text += (row.insulThk * 1000).toString() + "\t\t";
-        text += row.length.toString() + "\t\t";
-        text += row.weight .toFixed(2) + "\t\t";
-        text += (row.weight * row.length).toFixed(2) + "\t\t";
-        text += (row.area * row.length).toFixed(2) + "\t\t";
-        text += (row.insulVolume * row.length).toFixed(2) + "\t\t\t";
-        text += (row.kapArea * row.length).toFixed(2) + "\n";
-    }
-
-    toReport(text);
-});
-
-window.Router.route("page2", function () {
-    alert("page2");
-});
-*/
 document.getElementById("open").onclick = function(){
     document.getElementById("file").click();  
 }
@@ -249,78 +166,3 @@ window.Runner.method ("page1", function () {
 window.Runner.method ("page2", function () {
     alert("page2 run");
 });
-
-//   function downloadFile(file) {
-    
-//     dwonloadFiles({ fileName: file.name }).then(response => {
-//       let blob = new Blob([response]);
-//       let downloadElement = document.createElement("a");
-//       let href = window.URL.createObjectURL(blob); //创建下载的链接
-//       downloadElement.href = href;
-//       console.log(file.name, "文件名");
-//       downloadElement.download = file.name; //下载后文件名
-//       document.body.appendChild(downloadElement);
-//       downloadElement.click(); //点击下载
-//       document.body.removeChild(downloadElement); //下载完成移除元素
-//       window.URL.revokeObjectURL(href); //释放掉blob对象
-//     });
- // }
-// // 知识链库下载文件
-// export function dwonloadFiles(query) {
-//     return request({
-//       url: '/system/knowledgechain/download',
-//       method: 'get',
-//       params: query,
-//       responseType: 'blob'
-//     })
-//   }
-//   function downloadFile(file) {
-//     dwonloadFiles({ fileName: file.name }).then(response => {
-//       let blob = new Blob([response]);
-//       let downloadElement = document.createElement("a");
-//       let href = window.URL.createObjectURL(blob); //创建下载的链接
-//       downloadElement.href = href;
-//       console.log(file.name, "文件名");
-//       downloadElement.download = file.name; //下载后文件名
-//       document.body.appendChild(downloadElement);
-//       downloadElement.click(); //点击下载
-//       document.body.removeChild(downloadElement); //下载完成移除元素
-//       window.URL.revokeObjectURL(href); //释放掉blob对象
-//     });
-//   }
-// export function exportExcel(url, params = {}) {
-//     return new Promise((resolve, reject) => {
-//       axios({
-//         method: "get",
-//         url: url, // 请求地址
-//         params,
-//         responseType: "blob" // 表明返回服务器返回的数据类型
-//       }).then(
-//         (response) => {
-//           resolve(response);
-//           console.log(response)
-//           // 前面responseType设置的 “blob” 后台返回的response直接就是 blob对象，前端不用再去new Blob了
-//           // let blob = new Blob([response], {
-//           //   type: "application/vnd.ms-excel"
-//           // });
-//           // console.log(blob);
-//           let fileName = "导出单据" + Date.parse(new Date()) + ".xls";
-//           if (window.navigator.msSaveOrOpenBlob) {
-//             navigator.msSaveBlob(response, fileName);
-//           } else {
-//             let link = document.createElement("a");
-   
-//             link.href = window.URL.createObjectURL(response);
-//             link.download = fileName;
-//             link.click();
-//             // 释放内存
-//             window.URL.revokeObjectURL(link.href);
-   
-//           }
-//         },
-//         (err) => {
-//           reject(err);
-//         }
-//       );
-//     });
-//   }
