@@ -6,15 +6,9 @@ function Router() {
 
 Router.prototype.refresh = function () {   
     document.getElementById(this.currentUrl)?.classList.remove("show");
-    document.getElementById("page-result").classList.remove("show");
     document.getElementById("report").removeAttribute("href");
-
     this.currentUrl = location.hash.slice(1) || '/';
-
-    let curPage = document.getElementById(this.currentUrl);
-    if (curPage != null) {
-        curPage.classList.add("show");
-    }
+    document.getElementById(this.currentUrl)?.classList.add("show");
 };
 
 Router.prototype.init = function () {
@@ -35,7 +29,7 @@ document.getElementById("tog-menu").onclick = function () {
 
 function newFile() {
     document.getElementById("menu").style.display = "block";
-    alert('选择菜单项。')
+    alert('选择菜单项。');
 }
 
 document.getElementById("open").onclick = function(){
