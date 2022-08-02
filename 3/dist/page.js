@@ -107,7 +107,7 @@ function delRow(e) {
         rowEle.parentNode.removeChild(rowEle);
     }
     else {
-        alert("最后一项只允许修改");
+        alert("最后一项只允修改");
     }
 }
 
@@ -156,11 +156,14 @@ window.Runner.method ("page1", function () {
         currentSum = currentSum.nextElementSibling;
     }
 
+    let table = rowEle.parentNode.parentNode;
+    for (let i = 0; i < table.rows.length; i++) {
+        table.rows[i].deleteCell(9);
+    }
     let content = rowEle.parentNode.parentNode.outerHTML;
-    console.log(content);
-    //responseType: "blob";
-    let blob = new Blob([content], {type: "application/msword;charset=utf-8"});
-    document.getElementById("report").href = URL.createObjectURL(blob);
+    //let blob = new Blob([content], {type: "application/ms-word;charset=gb2312"});
+    //document.getElementById("report").href = URL.createObjectURL(blob);
+    document.getElementById("report").href = downLoadLink(content);
 });
 
 window.Runner.method ("page2", function () {
