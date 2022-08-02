@@ -24,8 +24,7 @@ Router.prototype.init = function () {
 window.Router = new Router();
 window.Router.init();
 
-document.getElementById("tog-menu").onclick()
-{
+document.getElementById("tog-menu").onclick = function () {
     let menu = document.getElementById("menu");
     if (menu.style.display == "none") {
         menu.style.display = "block";
