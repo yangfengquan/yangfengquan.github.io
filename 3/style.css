@@ -53,6 +53,10 @@ td input {
 	float: left;
 }
 
+.sidebar-wrapper img{
+	margin-left: 20px;
+}
+
 #menu{
 	display: none;
 }
@@ -62,7 +66,6 @@ td input {
 		display: none;
 		margin-left: 15px;
 	}
-
 	#menu{
 		display: block;
 	}
