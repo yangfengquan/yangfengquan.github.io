@@ -171,7 +171,7 @@ window.Runner.method ("pipe-material-sum", function () {
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("pipe-weigth", function () {
+window.Runner.method ("pipe-weight", function () {
     let pipe = new Pipe();
 
     let rowEle = event.target.parentNode.parentNode;
