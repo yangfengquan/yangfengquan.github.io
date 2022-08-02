@@ -188,16 +188,17 @@ window.Runner.method ("pipe-weight", function () {
     rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);
     rowEle.children[9].innerHTML = (pipe.insulWeight() * length).toFixed(2);
     rowEle.children[10].innerHTML = (pipe.cladWeight() * length).toFixed(2);
-    //rowEle.children[11].innerHTML = (pipe.weight() + pipe.insulWeight() + pipe.cladWeight()).toFixed(2);
-    rowEle.children[11].innerHTML = ((pipe.weight() + pipe.insulWeight() + pipe.cladWeight()) * length).toFixed(2);
+    rowEle.children[11].innerHTML = (pipe.waterWeight() * length).toFixed(2);
+    rowEle.children[12].innerHTML = ((pipe.weight() + pipe.insulWeight() + pipe.cladWeight() + pipe.waterWeight() ) * length).toFixed(2);
 
-    let sum = [0, 0, 0, 0];
+    let sum = [0, 0, 0, 0, 0];
     let currentRow = rowEle.parentNode.firstElementChild;
     do {
         sum[0] += Number(currentRow.children[8].innerHTML);
         sum[1] += Number(currentRow.children[9].innerHTML);
         sum[2] += Number(currentRow.children[10].innerHTML);
         sum[3] += Number(currentRow.children[11].innerHTML);
+        sum[4] += Number(currentRow.children[12].innerHTML);
     } while (currentRow = currentRow.nextElementSibling);
     
     let currentSum = rowEle.parentNode.nextElementSibling.firstElementChild.children[8];
@@ -213,7 +214,7 @@ window.Runner.method ("pipe-weight", function () {
             const cell = table.rows[i].cells[j];
             cell.innerHTML = cell.children[0].value;  
         }
-        table.rows[i].deleteCell(12);
+        table.rows[i].deleteCell(13);
     }
     let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
         + "</body></html>";
