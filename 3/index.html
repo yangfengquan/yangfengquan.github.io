@@ -15,11 +15,12 @@
         <ul id="menu">
             <li><a href="#">管道</a>
                 <ul>
-                    <li><a href="#pipe-material-sum">管道材料</a></li>
-                    <li><a href="#pipe-weight">管道重量</a></li>
+                    <li><a href="#pipe-material-sum">材料</a></li>
+                    <li><a href="#pipe-weight">重量</a></li>
+                    <li><a href="#pipe-pressure-drop">阻力</a></li>
                 </ul>
             </li>
-            <li><a href="#safety-valve">安全阀</a></li>
+            <li><a href=""></a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -52,7 +53,7 @@
                                 <th>总重<br>kg</th>
                                 <th>刷漆面积<br>m2</th>
                                 <th>保温体积<br>m3</th>
-                                <th>保护层面积<br>m3</th>
+                                <th>保护层面积<br>m2</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
@@ -147,7 +148,37 @@
                 </div> 
                 <p><button onclick="addRow()">添加</button></p>
             </div>
-        </div>
+            <div id="pipe-pressure-drop" class="page">
+                <h3>管道材料</h3>
+                <div>
+                    <div class="form">
+                        <div class="row">
+                            <p>
+                                <label>管道内径</label><input type="text">
+                                <label>管道内径</label><input type="text">
+                                <label>管道内径</label><input type="text">
+                                <label>管道内径</label><input type="text">
+                                <button onclick="delRow(event)">删除</button>
+                            </p>
+                            <p>
+                                <label>玄奇管道内径<br>个</label><input type="text">
+                                <label>管道内径</label><input type="text">
+                                <label>管道内径</label><input type="text">
+                                <label>管道内径</label><input type="text">
+                            </p>
+                            <p>
+                                <label>玄奇管道内径<br>个</label><span>12</span>
+                                <label>管道内径</label><span>12</span>
+                                <label>管道内径</label><span>12</span>
+                                <label>管道内径</label><span>12</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                 
+                <p><button onclick="addRow()">添加</button></p>
+            </div>
+        </div><!-- pages -->
     </div>
     <script src="./dist/page.js"></script>
     <script src="./dist/pipe.js"></script>
