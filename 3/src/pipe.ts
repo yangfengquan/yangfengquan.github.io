@@ -1,9 +1,11 @@
+/* 严格采用国际单位（SI），无例外 */
+
 /**
  * 圆 周长
  * @param d 直径 m
  * @returns m
  */
-function circleCircumference(d:number):number {
+function circleCircumference(d:number/* 直径 */):number {
     return Math.PI * d;
 }
 
@@ -12,7 +14,7 @@ function circleCircumference(d:number):number {
  * @param d 直径 m
  * @returns m2
  */
-function circleArea(d:number):number {
+function circleArea(d:number/* 直径 */):number {
     return Math.PI * Math.pow(d, 2) * 0.25;
 }
 
@@ -22,12 +24,18 @@ function circleArea(d:number):number {
  * @param do_ 
  * @returns m2
  */
-function cylinderArea(di: number /* 内径 m */, do_: number /* 外径 m */):number {
+function cylinderArea(di:number /* 内径 m */, do_:number /* 外径 m */):number {
     return circleArea(do_) - circleArea(di);
 }
 
+/**
+ * 雷诺数
+ */
+function reynolds(di:number /* 内径 m */, velocity:number, density:number, viscosity:number/* 动力粘度 Pa.s */) {
+    return di * velocity * density / viscosity;
+}
+
 class Pipe {
-    /* 单位 SI kg m */
     do_:number;
     thk:number;
     density:number;
@@ -37,18 +45,7 @@ class Pipe {
     cladThk:number;
     cladDensity:number;
 
-
-    // constructor(do_:number /* 外径 m */, thk:number /* 壁厚 m */, density:number = 7850 /* 密度 kg/m3 */, fluidDensity:number = 0,
-    //     insulThk:number = 0, insulDensity:number = 0, kapThk:number = 0, kapDensity:number = 0) {
-    //     this.do_ = do_;
-    //     this.thk = thk;
-    //     this.density = density;
-    //     this.fluidDensity = fluidDensity;
-    //     this.insulThk = insulThk;
-    //     this.insulDensity = insulDensity;
-    //     this.kapThk = kapThk;
-    //     this.kapDensity = kapDensity;
-    // }
+    flowRate:number = 0; //质量流量
 
     constructor() {
         this.do_ = 0;
