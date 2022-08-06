@@ -11,17 +11,12 @@ ul, ol {
 }
 
 input[type="file"] {
-	display: none;
+	-display: none;
 }
 
 p {
 	display: flex;
 	align-items: center;
-}
-
-p input {
-	width: 60px;
-	height: 20px;
 }
 
 table {
@@ -37,11 +32,6 @@ td,th {
 	font-weight: normal;
 	font-size: 14px;
 }
-
-td input {
-	width: 60px;
-}
-
 
 .sidebar-wrapper {
 	width: 180px;
@@ -72,11 +62,6 @@ td input {
 	padding-left: 50px; 
 }
 
-#page-result {
-	float: right;
-	padding-left: 50px; 
-}
-
 .page {
 	display: none;
 	float: left;
@@ -101,10 +86,6 @@ td input {
 	text-align: center;
 }
 
-.right {
-	margin-left: auto;
-}
-
 .row {
 	border-bottom: 1px black solid;
 	font-size: 14px;
@@ -112,19 +93,4 @@ td input {
 
 .row input {
 	width: 60px;
-}
-
-.row button {
-	margin-left: 15px;
-}
-
-.row label {
-	width: 90px;
-	text-align: right;
-	margin-right: 5px;
-	color: #888222;
-}
-
-.row span {
-	width: 68px;
 }

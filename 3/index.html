@@ -24,9 +24,9 @@
         </ul>
     </div>
     <div class="page-wrapper">
+        <input type="file" id="file" hidden>
+        <a id="save-link" download="yfq000.github.io" hidden></a>
         <ul class="nav">  
-            <input type="file" id="file">
-            <a hidden id="save-link" download="yfq000.github.io"></a>
             <li onclick="newFile()">新建</li>
             <li id="open">打开</li>
             <li onclick="save()">保存</li>
@@ -150,34 +150,108 @@
                 <p><button onclick="addRow()">添加</button></p>
             </div>
             <div id="pipe-pressure-drop" class="page">
-                <h3>管道材料</h3>
+                <h3>阻力</h3>
                 <div>
-                    <div class="form">
-                        <div class="row">
-                            <p>
-                                <label>管道内径</label><input type="text">
-                                <label>管道内径</label><input type="text">
-                                <label>管道内径</label><input type="text">
-                                <label>管道内径</label><input type="text">
-                                <button onclick="delRow(event)">删除</button>
-                            </p>
-                            <p>
-                                <label>玄奇管道内径<br>个</label><input type="text">
-                                <label>管道内径</label><input type="text">
-                                <label>管道内径</label><input type="text">
-                                <label>管道内径</label><input type="text">
-                            </p>
-                            <p>
-                                <label>玄奇管道内径<br>个</label><span>12</span>
-                                <label>管道内径</label><span>12</span>
-                                <label>管道内径</label><span>12</span>
-                                <label>管道内径</label><span>12</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                 
-                <p><button onclick="addRow()">添加</button></p>
+                    <datalist id="list0"><option value="正常" /><option value="正常2" /></datalist>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="3">管道</th>
+                                <th colspan="3">流体</th>
+                                <th colspan="12">管件阀门</th>
+                                <th rowspan="2">流速<br>m/s</th>
+                                <th rowspan="2">直管阻力<br>kPa</th>
+                                <th rowspan="2">局部阻力<br>kPa</th>
+                                <th rowspan="2">总阻力<br>kPa</th>
+                                <th rowspan="2">&nbsp;</th>
+                            </tr>
+                            <tr>
+                                <th>管道类别</th>
+                                <th>管道内径<br>mm</th>
+                                <th>长度<br>m</th>                       
+                                <th>流量<br>kg/h</th>
+                                <th>密度<br>kg/m3</th>
+                                <th>动力粘度<br>Pa.s</th>
+                                <th>45°弯头<br>个</th>
+                                <th>90°弯头<br>个</th>
+                                <th>90°斜接弯头<br>个</th>
+                                <th>180°弯头<br>个</th>
+                                <th>截止阀<br>个</th>
+                                <th>角阀<br>个</th>
+                                <th>闸阀<br>个</th>
+                                <th>旋塞阀<br>个</th>
+                                <th>旋启式止回阀<br>个</th>
+                                <th>升降式止回阀<br>个</th>
+                                <th>底阀<br>个</th>
+                                <th>180°弯头<br>个</th>                                
+                            </tr>
+                        </thead>
+                        <tbody class="form">
+                            <tr class="row-1 row">
+                                <td>
+                                    <select>
+                                        <option value="0.0075">无缝黄铜、铜及铅管</option>
+                                        <option value="0.07500000000000001">操作中基本无腐蚀的无缝钢管</option>
+                                        <option value="0.15000000000000002">操作中有轻度腐蚀的无缝钢管</option>
+                                        <option value="0.35">操作中有显著腐蚀的无缝钢管</option>
+                                        <option value="0.33">钢板卷管</option>
+                                        <option value="0.675">铸铁管</option>
+                                        <option value="0.00575">干净的玻璃管</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><button onclick="delRow(event)">删除</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>合计</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <p><button onclick="addRow()">添加</button></p>
             </div>
         </div><!-- pages -->
     </div>
