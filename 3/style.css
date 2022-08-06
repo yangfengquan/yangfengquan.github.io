@@ -33,6 +33,10 @@ td,th {
 	font-size: 14px;
 }
 
+td input {
+	width: 60px;
+}
+
 .sidebar-wrapper {
 	width: 180px;
 	float: left;
@@ -84,13 +88,4 @@ td,th {
 	cursor: pointer;
 	width: 60px;
 	text-align: center;
-}
-
-.row {
-	border-bottom: 1px black solid;
-	font-size: 14px;
-}
-
-.row input {
-	width: 60px;
 }
