@@ -18,15 +18,6 @@ Router.prototype.init = function () {
 window.Router = new Router();
 window.Router.init();
 
-document.getElementById("tog-menu").onclick = function () {
-    let menu = document.getElementById("menu");
-    if (menu.style.display == "block") {
-        menu.style.display = "none";
-    } else {
-        menu.style.display = "block";
-    }
-}
-
 function newFile() {
     document.getElementById("menu").style.display = "block";
     alert('选择菜单项。');
