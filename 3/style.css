@@ -50,33 +50,6 @@ input[type="file"] {
 	-display: none;
 }
 
-table {
-	border-top: 1px #000 solid;
-	border-left: 1px #000 solid;
-	border-spacing: 0;
-	text-align: center;
-	white-space: nowrap;
-}
-
-td,th {
-	border-right: 1px #000 solid;
-	border-bottom: 1px #000 solid;
-	font-weight: normal;
-	font-size: 14px;
-}
-
-td input {
-	width: 60px;
-}
-
-.page {
-	display: none;
-}
-
-.show {
-	display: block;
-}
-
 .nav {
 	list-style-type: none;
 	padding-left: 0px;
@@ -91,3 +64,31 @@ td input {
 	width: 60px;
 	text-align: center;
 }
+
+table {
+	border-top: 1px #000 solid;
+	border-left: 1px #000 solid;
+	border-spacing: 0;
+	text-align: center;
+	white-space: nowrap;
+}
+
+td,th {
+	border-right: 1px #000 solid;
+	border-bottom: 1px #000 solid;
+	font-weight: normal;
+	-font-size: 14px;
+}
+
+td input {
+	width: 60px;
+}
+
+.page {
+	display: none;
+}
+
+.show {
+	display: block;
+}
+
