@@ -96,13 +96,13 @@ class Pipe {
     
 
     static Roughness = {
-        copper_pipe: (0.005 + 0.01) / 2,
-        non_corrosive_pipe: (0.05 + 0.1) / 2,
-        mildly_corrosive_pipe: (0.1 + 0.2) / 2,
-        deep_corrosive_pipe: (0.2 + 0.5) / 2,
-        reel_pipe: 0.33,
-        cast_iron_pipe: (0.5 + 0.85) / 2,
-        glass_pipe: (0.0015 + 0.01) / 2
+        copper_pipe: (0.000005 + 0.00001) / 2,
+        non_corrosive_pipe: (0.00005 + 0.0001) / 2,
+        mildly_corrosive_pipe: (0.0001 + 0.0002) / 2,
+        deep_corrosive_pipe: (0.0002 + 0.0005) / 2,
+        reel_pipe: 0.00033,
+        cast_iron_pipe: (0.0005 + 0.00085) / 2,
+        glass_pipe: (0.0000015 + 0.00001) / 2
     };
 
     static LocalResistace = {
@@ -120,9 +120,9 @@ class Pipe {
         footValve: 15.00,
     };
 
-    constructor(do_:number, di:number) {
-        this.do_ = do_;
-        this.di = di;
+    constructor() {
+        this.do_ = 0;
+        this.di = 0;
         this.material = new PipeMaterial();
         this.roughness = 0;
         this.k = 0;

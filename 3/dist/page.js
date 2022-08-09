@@ -118,15 +118,13 @@ window.Runner.method ("/", function () {
 window.Runner.method ("pipe-material-sum", function () { 
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
-    let do_ = Number(inputs[0].value) / 1000;
-    let di = do_ - 2 * (Number(inputs[1].value) / 1000);
 
-    let pipe = new Pipe(do_, di);
+    let pipe = new Pipe();
 
+    pipe.do_ = Number(inputs[0].value) / 1000;
+    pipe.di = pipe.do_ - 2 * (Number(inputs[1].value) / 1000);
     pipe.insulThk = Number(inputs[2].value) / 1000;
     let length = Number(inputs[3].value);
-
-    
 
     rowEle.children[4].innerHTML = pipe.weight().toFixed(2);
     rowEle.children[5].innerHTML = (pipe.weight()* length).toFixed(2);
@@ -168,18 +166,17 @@ window.Runner.method ("pipe-material-sum", function () {
 window.Runner.method ("pipe-weight", function () {
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
-    let do_ = Number(inputs[0].value) / 1000;
-    let di = do_ - 2 * (Number(inputs[1].value) / 1000);
 
-    let pipe = new Pipe(do_, di);
+    let pipe = new Pipe();
+
+    pipe.do_ = Number(inputs[0].value) / 1000;
+    pipe.di = pipe.do_ - 2 * (Number(inputs[1].value) / 1000);
 
     pipe.insulThk = Number(inputs[2].value) / 1000;
     pipe.insul.density = Number(inputs[3].value);
     pipe.cladThk = Number(inputs[4].value) / 1000;
     pipe.clad.density = Number(inputs[5].value);
     let length = Number(inputs[6].value);
-
-    
 
     rowEle.children[7].innerHTML = pipe.weight().toFixed(2);
     rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);
@@ -220,19 +217,28 @@ window.Runner.method ("pipe-weight", function () {
 
 window.Runner.method ("pipe-drop-pressure", function () {
     let rowEle = event.target.parentNode.parentNode;
+    let selects = rowEle.getElementsByTagName("select");
+
     let inputs = rowEle.getElementsByTagName("input");
-    let do_ = Number(inputs[0].value) / 1000;
-    let di = do_ - 2 * (Number(inputs[1].value) / 1000);
-
-    let pipe = new Pipe(do_, di);
-
-    pipe.insulThk = Number(inputs[2].value) / 1000;
-    pipe.insul.density = Number(inputs[3].value);
-    pipe.cladThk = Number(inputs[4].value) / 1000;
-    pipe.clad.density = Number(inputs[5].value);
-    let length = Number(inputs[6].value);
-
-    
+    let pipe = new Pipe();
+    pipe.roughness = Number(selects[0].value);
+    pipe.di = Number(inputs[0].value) / 1000;
+    let length = Number(inputs[1].value);
+    pipe.fluid.flowRate_mass = Number(inputs[2].value) / 3600;
+    pipe.fluid.density = Number(inputs[3].value);
+    pipe.fluid.viscosity = Number(inputs[4].value);
+    pipe.k = Number(inputs[5].value) * pipe.LocalResistace.elbow45;
+    pipe.k += Number(inputs[6].value) * pipe.LocalResistace.elbow90;
+    pipe.k += Number(inputs[7].value) * pipe.LocalResistace.elbow90_x;
+    pipe.k += Number(inputs[8].value) * pipe.LocalResistace.elbow180;
+    pipe.k += Number(inputs[9].value) * pipe.LocalResistace.globeValve;
+    pipe.k += Number(inputs[10].value) * pipe.LocalResistace.angleValve;
+    pipe.k += Number(inputs[11].value) * pipe.LocalResistace.gateValve;
+    pipe.k += Number(inputs[12].value) * pipe.LocalResistace.plugValve;
+    pipe.k += Number(inputs[13].value) * pipe.LocalResistace.butterflyValve;
+    pipe.k += Number(inputs[14].value) * pipe.LocalResistace.checkValve0;
+    pipe.k += Number(inputs[15].value) * pipe.LocalResistace.checkValve1;
+    pipe.k += Number(inputs[16].value) * pipe.LocalResistace.footValve;
 
     rowEle.children[7].innerHTML = pipe.weight().toFixed(2);
     rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);

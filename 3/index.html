@@ -157,7 +157,7 @@
                             <tr>
                                 <th colspan="3">管道</th>
                                 <th colspan="3">流体</th>
-                                <th colspan="12">管件阀门</th>
+                                <th colspan="13">管件阀门</th>
                                 <th rowspan="2">流速<br>m/s</th>
                                 <th rowspan="2">直管阻力<br>kPa</th>
                                 <th rowspan="2">局部阻力<br>kPa</th>
@@ -175,10 +175,11 @@
                                 <th>90°弯头<br>个</th>
                                 <th>90°斜接弯头<br>个</th>
                                 <th>180°弯头<br>个</th>
-                                <th>截止阀<br>个</th>
-                                <th>角阀<br>个</th>
-                                <th>闸阀<br>个</th>
-                                <th>旋塞阀<br>个</th>
+                                <th>截止阀（全开）<br>个</th>
+                                <th>角阀（全开）<br>个</th>
+                                <th>闸阀（全开）<br>个</th>
+                                <th>旋塞阀（全开）<br>个</th>
+                                <th>蝶阀（全开）<br>个</th>
                                 <th>旋启式止回阀<br>个</th>
                                 <th>升降式止回阀<br>个</th>
                                 <th>底阀<br>个</th>
@@ -188,16 +189,17 @@
                         <tbody class="form">
                             <tr class="row-1 row">
                                 <td>
-                                    <select>
-                                        <option value="0.0075">无缝黄铜、铜及铅管</option>
-                                        <option value="0.075">操作中基本无腐蚀的无缝钢管</option>
-                                        <option value="0.15">操作中有轻度腐蚀的无缝钢管</option>
-                                        <option value="0.35">操作中有显著腐蚀的无缝钢管</option>
-                                        <option value="0.33">钢板卷管</option>
-                                        <option value="0.675">铸铁管</option>
-                                        <option value="0.00575">干净的玻璃管</option>
+                                    <select onchange="run()">
+                                        <option value="0.0000075">无缝黄铜、铜及铅管</option>
+                                        <option value="0.000075">操作中基本无腐蚀的无缝钢管</option>
+                                        <option value="0.00015">操作中有轻度腐蚀的无缝钢管</option>
+                                        <option value="0.00035">操作中有显著腐蚀的无缝钢管</option>
+                                        <option value="0.00033">钢板卷管</option>
+                                        <option value="0.000675">铸铁管</option>
+                                        <option value="0.00000575">干净的玻璃管</option>
                                     </select>
                                 </td>
+                                <td><input type="number" onchange="run()"></td>
                                 <td><input type="number" onchange="run()"></td>
                                 <td><input type="number" onchange="run()"></td>
                                 <td><input type="number" onchange="run()"></td>
@@ -225,6 +227,7 @@
                         <tfoot>
                             <tr>
                                 <td>合计</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
