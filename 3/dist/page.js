@@ -115,15 +115,18 @@ window.Runner.method ("/", function () {
     alert("未选择功能。");
 });
 
-window.Runner.method ("pipe-material-sum", function () {
-    let pipe = new Pipe();
-
+window.Runner.method ("pipe-material-sum", function () { 
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
-    pipe.do_ = Number(inputs[0].value) / 1000;
-    pipe.thk = Number(inputs[1].value) / 1000;
+    let do_ = Number(inputs[0].value) / 1000;
+    let di = do_ - 2 * (Number(inputs[1].value) / 1000);
+
+    let pipe = new Pipe(do_, di);
+
     pipe.insulThk = Number(inputs[2].value) / 1000;
     let length = Number(inputs[3].value);
+
+    
 
     rowEle.children[4].innerHTML = pipe.weight().toFixed(2);
     rowEle.children[5].innerHTML = (pipe.weight()* length).toFixed(2);
@@ -163,17 +166,73 @@ window.Runner.method ("pipe-material-sum", function () {
 });
 
 window.Runner.method ("pipe-weight", function () {
-    let pipe = new Pipe();
-
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
-    pipe.do_ = Number(inputs[0].value) / 1000;
-    pipe.thk = Number(inputs[1].value) / 1000;
+    let do_ = Number(inputs[0].value) / 1000;
+    let di = do_ - 2 * (Number(inputs[1].value) / 1000);
+
+    let pipe = new Pipe(do_, di);
+
     pipe.insulThk = Number(inputs[2].value) / 1000;
-    pipe.insulDensity = Number(inputs[3].value);
+    pipe.insul.density = Number(inputs[3].value);
     pipe.cladThk = Number(inputs[4].value) / 1000;
-    pipe.cladDensity = Number(inputs[5].value);
+    pipe.clad.density = Number(inputs[5].value);
     let length = Number(inputs[6].value);
+
+    
+
+    rowEle.children[7].innerHTML = pipe.weight().toFixed(2);
+    rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);
+    rowEle.children[9].innerHTML = (pipe.insulWeight() * length).toFixed(2);
+    rowEle.children[10].innerHTML = (pipe.cladWeight() * length).toFixed(2);
+    rowEle.children[11].innerHTML = (pipe.waterWeight() * length).toFixed(2);
+    rowEle.children[12].innerHTML = ((pipe.weight() + pipe.insulWeight() + pipe.cladWeight() + pipe.waterWeight() ) * length).toFixed(2);
+
+    let sum = [0, 0, 0, 0, 0];
+    let currentRow = rowEle.parentNode.firstElementChild;
+    do {
+        sum[0] += Number(currentRow.children[8].innerHTML);
+        sum[1] += Number(currentRow.children[9].innerHTML);
+        sum[2] += Number(currentRow.children[10].innerHTML);
+        sum[3] += Number(currentRow.children[11].innerHTML);
+        sum[4] += Number(currentRow.children[12].innerHTML);
+    } while (currentRow = currentRow.nextElementSibling);
+    
+    let currentSum = rowEle.parentNode.nextElementSibling.firstElementChild.children[8];
+    for (let i = 0; i < sum.length; i++) {
+        currentSum.innerHTML = sum[i].toFixed(2);
+        currentSum = currentSum.nextElementSibling;
+    }
+
+    let table = rowEle.parentNode.parentNode.cloneNode(true);
+    table.border = "1";
+    for (let i = 0; i < table.rows.length; i++) {
+        for (let j = 0; j < 7 && i > 0 && i < table.rows.length - 1; j++) { 
+            const cell = table.rows[i].cells[j];
+            cell.innerHTML = cell.children[0].value;  
+        }
+        table.rows[i].deleteCell(13);
+    }
+    let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
+        + "</body></html>";
+    document.getElementById("report").href = downLoadLink(content);
+});
+
+window.Runner.method ("pipe-drop-pressure", function () {
+    let rowEle = event.target.parentNode.parentNode;
+    let inputs = rowEle.getElementsByTagName("input");
+    let do_ = Number(inputs[0].value) / 1000;
+    let di = do_ - 2 * (Number(inputs[1].value) / 1000);
+
+    let pipe = new Pipe(do_, di);
+
+    pipe.insulThk = Number(inputs[2].value) / 1000;
+    pipe.insul.density = Number(inputs[3].value);
+    pipe.cladThk = Number(inputs[4].value) / 1000;
+    pipe.clad.density = Number(inputs[5].value);
+    let length = Number(inputs[6].value);
+
+    
 
     rowEle.children[7].innerHTML = pipe.weight().toFixed(2);
     rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);
