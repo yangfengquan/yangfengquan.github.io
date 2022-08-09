@@ -121,6 +121,7 @@ class Pipe {
         return cylinderArea(di_clad, do_clad) * cladDensity;
     }
 
+<<<<<<< Updated upstream
     velocity(flowRate:number /* m3/s */):number {
         return flowRate / circleArea(this.di);
     }
@@ -129,6 +130,9 @@ class Pipe {
      * 阻力系数
      */
     resistace(re:number, roughness:number/* 绝对粗糙度 m */) {
+=======
+    resistace(re:number/* 雷诺数 */, di:number = 0, roughness:number = 0) {
+>>>>>>> Stashed changes
         var lambda:number;
         if (re <= 2000) {
             lambda = 64 / re;
@@ -136,35 +140,56 @@ class Pipe {
         else if (re > 2000 && re <= 4000) {
             lambda = 0.3164 * re ** -0.25;
         }
+<<<<<<< Updated upstream
         else if (re > 4000 && re < 396 * this.di / roughness * Math.log10(3.7 * this.di / roughness)) {
             var x0:number = 0, x1:number = 0.1;
             do {
                 var mid = (x0 + x1) / 2;
                 if (1 / mid ** 0.5 + 2 * Math.log10(roughness / (3.7 * this.di) + 2.51 / (re * mid ** 0.5)) > 0) {
+=======
+        else if (re > 4000 && re < 396 * di / roughness * Math.log10(3.7 * di / roughness)) {
+            var x0:number = 0, x1:number = 0.1;
+            do {
+                var mid = (x0 + x1) / 2;
+                if (1 / mid ** 0.5 + 2 * Math.log10(roughness / (3.7 * di) + 2.51 / (re * mid ** 0.5)) > 0) {
+>>>>>>> Stashed changes
                     x0 = mid;
                 }else{
                     x1 = mid;
                 }
             } while (Math.abs(x0 - x1) > 1e-6);
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
             lambda = (x0+x1)/2;
         }
         else {
             var x0:number = 0, x1:number = 0.1;
             do {
                 var mid = (x0 + x1) / 2;
+<<<<<<< Updated upstream
                 if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(roughness / (3.7 * this.di)) > 0) {
+=======
+                if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(roughness / (3.7 * di)) > 0) {
+>>>>>>> Stashed changes
                     x0 = mid;
                 }
                 else {
                     x1 = mid;
                 }
             } while (Math.abs(x0 - x1) > 1e-6);
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
             lambda = (x0 + x1) / 2;
         }
         return lambda;
     }
+<<<<<<< Updated upstream
 
     /**
      * 单位长度直管阻力 Pa/m
@@ -181,4 +206,6 @@ class Pipe {
     }
 
 
+=======
+>>>>>>> Stashed changes
 }
