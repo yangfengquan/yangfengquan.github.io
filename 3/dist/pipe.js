@@ -28,13 +28,13 @@ function cylinderArea(di /* 内径 m */, do_ /* 外径 m */) {
 /**
  * 雷诺数
  */
-function reynolds(di /* 内径 m */, velocity, density, viscosity /* 动力粘度 Pa.s */) {
-    return di * velocity * density / viscosity;
+function reynolds(di /* 内径 m */, velocity, density, viscosity /* 运动粘度 m2/s */) {
+    return di * velocity / viscosity;
 }
 class Fluid {
     constructor() {
         this.density = 0;
-        this.viscosity = 0;
+        this.viscosity = 0; //运动粘度 m2/s
         this.flowRate_mass = 0; //质量流量
         this.flowRate_volume = 0; //体积流量
     }
@@ -45,10 +45,10 @@ class Fluid {
         return this.density;
     }
     getFlowRate_mass() {
-        return this.flowRate_mass;
+        return this.flowRate_mass == 0 ? this.flowRate_volume * this.density : this.flowRate_mass;
     }
     getFlowRate_volume() {
-        return this.flowRate_volume;
+        return this.flowRate_volume == 0 ? this.flowRate_mass / this.density : this.flowRate_volume;
     }
 }
 class PipeMaterial {
@@ -76,6 +76,15 @@ class Clad {
     }
 }
 class Pipe {
+    // static Roughness = {
+    //     copper_pipe: (0.000005 + 0.00001) / 2,
+    //     non_corrosive_pipe: (0.00005 + 0.0001) / 2,
+    //     mildly_corrosive_pipe: (0.0001 + 0.0002) / 2,
+    //     deep_corrosive_pipe: (0.0002 + 0.0005) / 2,
+    //     reel_pipe: 0.00033,
+    //     cast_iron_pipe: (0.0005 + 0.00085) / 2,
+    //     glass_pipe: (0.0000015 + 0.00001) / 2
+    // };
     constructor() {
         this.do_ = 0;
         this.di = 0;
@@ -120,6 +129,16 @@ class Pipe {
     velocity() {
         return this.fluid.getFlowRate_volume() / circleArea(this.di);
     }
+    diameter_velocity(velocity) {
+        return 2 * Math.sqrt(this.fluid.getFlowRate_volume() / velocity / Math.PI);
+    }
+    diameter_pressureDrop(length, pressureDrop /* Pa/m */) {
+        return 0.6568905 * Math.pow(this.fluid.getDensity(), 0.207)
+            * Math.pow(this.fluid.getViscosity(), 0.033)
+            * Math.pow(length, 0.207)
+            * Math.pow(this.fluid.getFlowRate_volume(), 0.38)
+            * Math.pow(pressureDrop, -0.207);
+    }
     /**
      * 阻力系数
      */
@@ -163,36 +182,19 @@ class Pipe {
     /**
      * 单位长度直管阻力 Pa/m
      */
-    dropPressure_line(resistace, velocity, density) {
+    _dropPressure_line(resistace, velocity, density) {
         return resistace * density * Math.pow(velocity, 2) / (2 * this.di);
+    }
+    dropPressure_line(length) {
+        return length * this._dropPressure_line(this.resistace(), this.velocity(), this.fluid.getDensity());
     }
     /**
      * 局部阻力 Pa
      */
-    dropPressure_local(k /* 总局部阻力系数 */, velocity, density) {
-        return k * density * Math.pow(velocity, 2) / 2;
+    _dropPressure_local(velocity, density) {
+        return density * Math.pow(velocity, 2) / 2;
+    }
+    dropPressure_local(k /* 总局部阻力系数 */) {
+        return k * this._dropPressure_local(this.velocity(), this.fluid.getDensity());
     }
 }
-Pipe.Roughness = {
-    copper_pipe: (0.000005 + 0.00001) / 2,
-    non_corrosive_pipe: (0.00005 + 0.0001) / 2,
-    mildly_corrosive_pipe: (0.0001 + 0.0002) / 2,
-    deep_corrosive_pipe: (0.0002 + 0.0005) / 2,
-    reel_pipe: 0.00033,
-    cast_iron_pipe: (0.0005 + 0.00085) / 2,
-    glass_pipe: (0.0000015 + 0.00001) / 2
-};
-Pipe.LocalResistace = {
-    elbow45: 0.35,
-    elbow90: 0.75,
-    elbow90_x: 1.30,
-    elbow180: 1.5,
-    globeValve: 6.00,
-    angleValve: 3.00,
-    gateValve: 0.17,
-    plugValve: 0.05,
-    butterflyValve: 0.24,
-    checkValve0: 2.00,
-    checkValve1: 10.00,
-    footValve: 15.00,
-};

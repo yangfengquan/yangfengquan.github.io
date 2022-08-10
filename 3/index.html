@@ -17,6 +17,8 @@
                 <ul>
                     <li ><a href="#pipe-material-sum">材料</a></li>
                     <li><a href="#pipe-weight">重量</a></li>
+                    <li ><a href="#pipe-diameter-velocity">流速>管径</a></li>
+                    <li ><a href="#pipe-diameter-pressure-drop">压降>管径</a></li>
                     <li><a href="#pipe-drop-pressure">阻力</a></li>
                 </ul>
             </li>
@@ -37,6 +39,7 @@
             <div id="/" class="page">
                 <p>你可以使用快捷键<code style="color: #fd5d5d;">&nbspCtrl+D&nbsp</code>收藏本站，或保存本站网址：yfq000@github.com。</p>
             </div>
+
             <div id="pipe-material-sum" class="page">
                 <h3>管道材料</h3>
                 <div >
@@ -47,8 +50,8 @@
                                 <th>钢管壁厚<br>mm</th>
                                 <th>保温厚<br>mm</th>
                                 <th>管长<br>m</th>
-                                <th>单重<br>kg/m</th>
-                                <th>总重<br>kg</th>
+                                <th>钢管单重<br>kg/m</th>
+                                <th>钢管总重<br>kg</th>
                                 <th>刷漆面积<br>m2</th>
                                 <th>保温体积<br>m3</th>
                                 <th>保护层面积<br>m2</th>
@@ -87,6 +90,7 @@
                 </div> 
                 <p><button onclick="addRow()">添加</button></p>
             </div>
+
             <div id="pipe-weight" class="page">
                 <h3>管道重量</h3>
                 <div >
@@ -100,10 +104,10 @@
                                 <th>保护层厚<br>mm</th>
                                 <th>保护层密度<br>kg/m3</th>
                                 <th>管长<br>m</th>
-                                <th>钢管单重<br>kg/m</th>
-                                <th>钢管总重<br>kg</th>
-                                <th>保温重<br>kg</th>
-                                <th>保护层重<br>kg</th>
+                                <th>钢管自重[单重]<br>kg/m</th>
+                                <th>钢管自重[总重]<br>kg</th>
+                                <th>保温总重<br>kg</th>
+                                <th>保护层总重<br>kg</th>
                                 <th>充水水重<br>kg</th>
                                 <th>总重<br>kg</th>
                                 <th>&nbsp;</th>
@@ -149,6 +153,66 @@
                 </div> 
                 <p><button onclick="addRow()">添加</button></p>
             </div>
+
+            <div id="pipe-diameter-velocity" class="page">
+                <h3>流速>管径</h3>
+                <div >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>流量<br>m3/h</th>
+                                <th>流速<br>m/s</th>
+                                <th>内径<br>mm</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody class="form">
+                            <tr class="row">
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td></td>
+                                <td><button onclick="delRow(event)">删除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> 
+                <p><button onclick="addRow()">添加</button></p>
+            </div>
+
+            <div id="pipe-diameter-pressure-drop" class="page">
+                <h3>压降>管径</h3>
+                <script>
+                    (function(){console.log(0.007 * Math.pow(3600,0.38)*Math.pow(1000,0.207))}());
+                </script>
+                <div >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>流量<br>m3/h</th>
+                                <th>密度<br>m/s</th>
+                                <th>运动粘度<br>m2/s</th>
+                                <th>长度<br>mm</th>
+                                <th>压降<br>kPa</th>
+                                <th>内径<br>mm</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody class="form">
+                            <tr class="row">
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td><input type="number" onchange="run()"></td>
+                                <td></td>
+                                <td><button onclick="delRow(event)">删除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> 
+                <p><button onclick="addRow()">添加</button></p>
+            </div>
+
             <div id="pipe-drop-pressure" class="page">
                 <h3>阻力</h3>
                 <div>
@@ -157,7 +221,7 @@
                             <tr>
                                 <th colspan="3">管道</th>
                                 <th colspan="3">流体</th>
-                                <th colspan="13">管件阀门</th>
+                                <th colspan="12">管件阀门</th>
                                 <th rowspan="2">流速<br>m/s</th>
                                 <th rowspan="2">直管阻力<br>kPa</th>
                                 <th rowspan="2">局部阻力<br>kPa</th>
@@ -170,7 +234,7 @@
                                 <th>长度<br>m</th>                       
                                 <th>流量<br>kg/h</th>
                                 <th>密度<br>kg/m3</th>
-                                <th>动力粘度<br>Pa.s</th>
+                                <th>运动粘度<br>m2/s</th>
                                 <th>45°弯头<br>个</th>
                                 <th>90°弯头<br>个</th>
                                 <th>90°斜接弯头<br>个</th>
@@ -183,13 +247,12 @@
                                 <th>旋启式止回阀<br>个</th>
                                 <th>升降式止回阀<br>个</th>
                                 <th>底阀<br>个</th>
-                                <th>180°弯头<br>个</th>                                
                             </tr>
                         </thead>
                         <tbody class="form">
                             <tr class="row-1 row">
                                 <td>
-                                    <select onchange="run()">
+                                    <select onchange="run()" id="s1">
                                         <option value="0.0000075">无缝黄铜、铜及铅管</option>
                                         <option value="0.000075">操作中基本无腐蚀的无缝钢管</option>
                                         <option value="0.00015">操作中有轻度腐蚀的无缝钢管</option>
@@ -199,7 +262,6 @@
                                         <option value="0.00000575">干净的玻璃管</option>
                                     </select>
                                 </td>
-                                <td><input type="number" onchange="run()"></td>
                                 <td><input type="number" onchange="run()"></td>
                                 <td><input type="number" onchange="run()"></td>
                                 <td><input type="number" onchange="run()"></td>
@@ -249,7 +311,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                               
                             </tr>
                         </tfoot>
                     </table>

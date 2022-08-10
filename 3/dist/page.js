@@ -42,9 +42,14 @@ document.getElementById("file").onchange = function(){
         for (let i = 0; i < jsonObj.data.length; i++) {
             const row = jsonObj.data[i];
             let inputs = currentRow.getElementsByTagName("input");
-            for (let j = 0; j < row.length; j++) {
+            for (let j = 0; j < inputs.length; j++) {
                 const val = row[j];
                 inputs[j].value = val;
+            }
+            let selects = currentRow.getElementsByTagName("select");
+            for (let m = 0; m < selects.length; m++) {
+                const selectedIndex = row[inputs.length + m];
+                selects[m].selectedIndex = selectedIndex;
             }
             if (!(currentRow = currentRow.nextElementSibling) && i !=  jsonObj.data.length - 1) {
                 currentRow = addRow();
@@ -67,6 +72,11 @@ function save() {
         for (let i = 0; i < inputs.length; i++) {
             const val = inputs[i].value;
             row.push(val);
+        }
+        let selects = currentRow.getElementsByTagName("select");
+        for (let j = 0; j < selects.length; j++) {
+            const selectedIndex = selects[j].selectedIndex;
+            row.push(selectedIndex);
         }
         dataObj.data.push(row);
     } while (currentRow = currentRow.nextElementSibling);
@@ -218,7 +228,6 @@ window.Runner.method ("pipe-weight", function () {
 window.Runner.method ("pipe-drop-pressure", function () {
     let rowEle = event.target.parentNode.parentNode;
     let selects = rowEle.getElementsByTagName("select");
-
     let inputs = rowEle.getElementsByTagName("input");
     let pipe = new Pipe();
     pipe.roughness = Number(selects[0].value);
@@ -227,37 +236,44 @@ window.Runner.method ("pipe-drop-pressure", function () {
     pipe.fluid.flowRate_mass = Number(inputs[2].value) / 3600;
     pipe.fluid.density = Number(inputs[3].value);
     pipe.fluid.viscosity = Number(inputs[4].value);
-    pipe.k = Number(inputs[5].value) * pipe.LocalResistace.elbow45;
-    pipe.k += Number(inputs[6].value) * pipe.LocalResistace.elbow90;
-    pipe.k += Number(inputs[7].value) * pipe.LocalResistace.elbow90_x;
-    pipe.k += Number(inputs[8].value) * pipe.LocalResistace.elbow180;
-    pipe.k += Number(inputs[9].value) * pipe.LocalResistace.globeValve;
-    pipe.k += Number(inputs[10].value) * pipe.LocalResistace.angleValve;
-    pipe.k += Number(inputs[11].value) * pipe.LocalResistace.gateValve;
-    pipe.k += Number(inputs[12].value) * pipe.LocalResistace.plugValve;
-    pipe.k += Number(inputs[13].value) * pipe.LocalResistace.butterflyValve;
-    pipe.k += Number(inputs[14].value) * pipe.LocalResistace.checkValve0;
-    pipe.k += Number(inputs[15].value) * pipe.LocalResistace.checkValve1;
-    pipe.k += Number(inputs[16].value) * pipe.LocalResistace.footValve;
 
-    rowEle.children[7].innerHTML = pipe.weight().toFixed(2);
-    rowEle.children[8].innerHTML = (pipe.weight()* length).toFixed(2);
-    rowEle.children[9].innerHTML = (pipe.insulWeight() * length).toFixed(2);
-    rowEle.children[10].innerHTML = (pipe.cladWeight() * length).toFixed(2);
-    rowEle.children[11].innerHTML = (pipe.waterWeight() * length).toFixed(2);
-    rowEle.children[12].innerHTML = ((pipe.weight() + pipe.insulWeight() + pipe.cladWeight() + pipe.waterWeight() ) * length).toFixed(2);
+    const localResistace = {
+        elbow45: 0.35,
+        elbow90: 0.75,
+        elbow90_x: 1.30, //90°斜接弯头
+        elbow180: 1.5,
+        globeValve: 6.00,
+        angleValve: 3.00,
+        gateValve: 0.17,
+        plugValve: 0.05,
+        butterflyValve: 0.24,
+        checkValve0: 2.00,
+        checkValve1: 10.00,
+        footValve: 15.00,
+    };
 
-    let sum = [0, 0, 0, 0, 0];
-    let currentRow = rowEle.parentNode.firstElementChild;
+    let i = 5, k = 0;
+    for (const key in localResistace) {
+        //console.log(localResistace[key]);
+        k += Number(inputs[i].value) * localResistace[key];
+        ++i;
+        //console.log(k);
+    }
+
+    rowEle.children[18].innerHTML = pipe.velocity().toFixed(2);
+    rowEle.children[19].innerHTML = (pipe.dropPressure_line(length) / 1000).toFixed(2);
+    rowEle.children[20].innerHTML = (pipe.dropPressure_local(k) / 1000).toFixed(2);
+    rowEle.children[21].innerHTML = ((pipe.dropPressure_line(length) + pipe.dropPressure_local(k)) / 1000).toFixed(2);
+    
+    let sum = [0, 0, 0];
+    let currentRow = rowEle.parentNode.firstElementChild;//获取第一行数据
     do {
-        sum[0] += Number(currentRow.children[8].innerHTML);
-        sum[1] += Number(currentRow.children[9].innerHTML);
-        sum[2] += Number(currentRow.children[10].innerHTML);
-        sum[3] += Number(currentRow.children[11].innerHTML);
-        sum[4] += Number(currentRow.children[12].innerHTML);
+        sum[0] += Number(currentRow.children[19].innerHTML);
+        sum[1] += Number(currentRow.children[20].innerHTML);
+        sum[2] += Number(currentRow.children[21].innerHTML);
     } while (currentRow = currentRow.nextElementSibling);
     
-    let currentSum = rowEle.parentNode.nextElementSibling.firstElementChild.children[8];
+    let currentSum = rowEle.parentNode.nextElementSibling/* <tfoot> */.firstElementChild.children[19];
     for (let i = 0; i < sum.length; i++) {
         currentSum.innerHTML = sum[i].toFixed(2);
         currentSum = currentSum.nextElementSibling;
@@ -265,12 +281,81 @@ window.Runner.method ("pipe-drop-pressure", function () {
 
     let table = rowEle.parentNode.parentNode.cloneNode(true);
     table.border = "1";
+    //输入框替换为文本，删除最后一列
     for (let i = 0; i < table.rows.length; i++) {
-        for (let j = 0; j < 7 && i > 0 && i < table.rows.length - 1; j++) { 
+        for (let j = 0; j < 18 && i > 1 && i < table.rows.length - 1; j++) { 
             const cell = table.rows[i].cells[j];
-            cell.innerHTML = cell.children[0].value;  
+            if (j == 0) {
+                cell.innerHTML = cell.children[0].options[cell.children[0].selectedIndex].text;
+            }
+            else {
+                cell.innerHTML = cell.children[0].value;
+            }
         }
-        table.rows[i].deleteCell(13);
+
+        switch (i) {
+            case 0:
+                table.rows[i].deleteCell(7);
+                break;
+            case 1:
+                break;
+            default:
+                table.rows[i].deleteCell(22);
+                break;
+        }      
+    }
+    let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
+        + "</body></html>";
+    document.getElementById("report").href = downLoadLink(content);
+});
+
+window.Runner.method ("pipe-diameter-velocity", function () {
+    let rowEle = event.target.parentNode.parentNode;
+    let inputs = rowEle.getElementsByTagName("input");
+    let pipe = new Pipe();
+    pipe.fluid.flowRate_volume = Number(inputs[0].value) / 3600;
+    let velocity = Number(inputs[1].value);
+
+    rowEle.children[2].innerHTML = (pipe.diameter_velocity(velocity) * 1000).toFixed(2);
+    
+    let table = rowEle.parentNode.parentNode.cloneNode(true);
+    table.border = "1";
+    //输入框替换为文本，删除最后一列
+    for (let i = 0; i < table.rows.length; i++) {
+        for (let j = 0; j < 2 && i > 0; j++) { 
+            const cell = table.rows[i].cells[j];
+            cell.innerHTML = cell.children[0].value;
+        }
+
+        table.rows[i].deleteCell(3);    
+    }
+    let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
+        + "</body></html>";
+    document.getElementById("report").href = downLoadLink(content);
+});
+
+window.Runner.method ("pipe-diameter-pressure-drop", function () {
+    let rowEle = event.target.parentNode.parentNode;
+    let inputs = rowEle.getElementsByTagName("input");
+    let pipe = new Pipe();
+    pipe.fluid.flowRate_volume = Number(inputs[0].value) / 3600;
+    pipe.fluid.density = Number(inputs[1].value);
+    pipe.fluid.viscosity = Number(inputs[2].value);
+    let length = Number(inputs[3].value);
+    let pressureDrop = Number(inputs[4].value) * 1000;
+
+    rowEle.children[5].innerHTML = (pipe.diameter_pressureDrop(length, pressureDrop) * 1000).toFixed(2);
+    
+    let table = rowEle.parentNode.parentNode.cloneNode(true);
+    table.border = "1";
+    //输入框替换为文本，删除最后一列
+    for (let i = 0; i < table.rows.length; i++) {
+        for (let j = 0; j < 5 && i > 0; j++) { 
+            const cell = table.rows[i].cells[j];
+            cell.innerHTML = cell.children[0].value;
+        }
+
+        table.rows[i].deleteCell(6);    
     }
     let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
         + "</body></html>";

@@ -1,5 +1,5 @@
 body {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 #menu {
@@ -77,7 +77,6 @@ td,th {
 	border-right: 1px #000 solid;
 	border-bottom: 1px #000 solid;
 	font-weight: normal;
-	-font-size: 14px;
 }
 
 td input {
