@@ -65,7 +65,7 @@ class Fluid {
     }
     
     getT():number {
-        return this.T
+        return this.T;
     }
     
     getDensity():number {
