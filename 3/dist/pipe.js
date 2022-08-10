@@ -50,7 +50,7 @@ class Fluid {
             this[key2] = val2;
             ["T", "P", "M", "D", "H", "viscosity", "Z"].forEach(key => {
                 if ([key1, key2].indexOf(key) == -1) {
-                    //this[key] = Module.PropsSI(key, key1, val1, key2, val2, name);
+                    this[key] = Module.PropsSI(key, key1, val1, key2, val2, name);
                 }
             });
         }
