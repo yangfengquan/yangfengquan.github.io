@@ -3,16 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>CoolProp Javascript example</title>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<script>
-//<link rel="stylesheet" href="/resources/demos/style.css" />
-</script>
-
-<!-- (Problems with CORS) script src="http://www.coolprop.sourceforge.net/jscript/coolprop.js"></script -->
 <script src="coolprop.js"></script>
 </head>
 
@@ -64,12 +55,12 @@
             return 'D';
     }
     //using jQuery
-    $('#calc').click( function() {
-        var name = $('#FluidName :selected').text()
-        var key1 = text2key($('#Name1 :selected').text())
-        var key2 = text2key($('#Name2 :selected').text())
-        var val1 = parseFloat($('#Value1').val())
-        var val2 = parseFloat($('#Value2').val())
+    document.getElementById("#calc").click( function() {
+        var name = "water";$('#FluidName :selected').text()
+        var key1 = "T";//text2key($('#Name1 :selected').text())
+        var key2 = "P";//text2key($('#Name2 :selected').text())
+        var val1 = 300;//parseFloat($('#Value1').val())
+        var val2 = 100000;//parseFloat($('#Value2').val())
         
         var T = Module.PropsSI('T', key1, val1, key2, val2, name)
         var rho = Module.PropsSI('D', key1, val1, key2, val2, name)
