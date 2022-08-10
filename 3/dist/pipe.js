@@ -1,5 +1,6 @@
 "use strict";
 /* 严格采用国际单位（SI），无例外 */
+//import {Module} from "../dist/CoolProp6.4.1/coolprop.js"
 /**
  * 圆 周长
  * @param d 直径 m
@@ -32,23 +33,42 @@ function reynolds(di /* 内径 m */, velocity, density, viscosity /* 运动粘�
     return di * velocity / viscosity;
 }
 class Fluid {
-    constructor() {
-        this.density = 0;
-        this.viscosity = 0; //运动粘度 m2/s
+    constructor(key1, val1, key2, val2, name) {
+        this.name = "";
+        this.T = NaN; // K
+        this.P = NaN; // Pa
+        this.M = NaN; // kg/mol
+        this.D = NaN; //density
+        this.H = NaN;
+        this.viscosity = NaN; //运动粘度 m2/s
+        this.Z = NaN; // Compressibility factor
         this.flowRate_mass = 0; //质量流量
         this.flowRate_volume = 0; //体积流量
+        if (key1 != undefined && key2 != undefined && name != undefined) {
+            this.name = name;
+            this[key1] = val1;
+            this[key2] = val2;
+            ["T", "P", "M", "D", "H", "viscosity", "Z"].forEach(key => {
+                if ([key1, key2].indexOf(key) == -1) {
+                    this[key] = Module.PropsSI(key, key1, val1, key2, val2, name);
+                }
+            });
+        }
+    }
+    getT() {
+        return this.T;
+    }
+    getDensity() {
+        return this.D;
     }
     getViscosity() {
         return this.viscosity;
     }
-    getDensity() {
-        return this.density;
-    }
     getFlowRate_mass() {
-        return this.flowRate_mass == 0 ? this.flowRate_volume * this.density : this.flowRate_mass;
+        return this.flowRate_mass == 0 ? this.flowRate_volume * this.D : this.flowRate_mass;
     }
     getFlowRate_volume() {
-        return this.flowRate_volume == 0 ? this.flowRate_mass / this.density : this.flowRate_volume;
+        return this.flowRate_volume == 0 ? this.flowRate_mass / this.D : this.flowRate_volume;
     }
 }
 class PipeMaterial {
@@ -138,6 +158,7 @@ class Pipe {
             * Math.pow(length, 0.207)
             * Math.pow(this.fluid.getFlowRate_volume(), 0.38)
             * Math.pow(pressureDrop, -0.207);
+        //0.007 * Math.pow(3600,0.38)*Math.pow(1000,0.207)
     }
     /**
      * 阻力系数

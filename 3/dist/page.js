@@ -361,3 +361,31 @@ window.Runner.method ("pipe-diameter-pressure-drop", function () {
         + "</body></html>";
     document.getElementById("report").href = downLoadLink(content);
 });
+
+window.Runner.method ("property", function () {
+    let rowEle = event.target.parentNode.parentNode;
+    let inputs = rowEle.getElementsByTagName("input");
+    let pipe = new Pipe();
+    pipe.fluid.flowRate_volume = Number(inputs[0].value) / 3600;
+    pipe.fluid.density = Number(inputs[1].value);
+    pipe.fluid.viscosity = Number(inputs[2].value);
+    let length = Number(inputs[3].value);
+    let pressureDrop = Number(inputs[4].value) * 1000;
+
+    rowEle.children[5].innerHTML = (pipe.diameter_pressureDrop(length, pressureDrop) * 1000).toFixed(2);
+    
+    let table = rowEle.parentNode.parentNode.cloneNode(true);
+    table.border = "1";
+    //输入框替换为文本，删除最后一列
+    for (let i = 0; i < table.rows.length; i++) {
+        for (let j = 0; j < 5 && i > 0; j++) { 
+            const cell = table.rows[i].cells[j];
+            cell.innerHTML = cell.children[0].value;
+        }
+
+        table.rows[i].deleteCell(6);    
+    }
+    let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
+        + "</body></html>";
+    document.getElementById("report").href = downLoadLink(content);
+});
