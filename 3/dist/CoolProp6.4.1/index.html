@@ -55,8 +55,8 @@
             return 'D';
     }
     //using jQuery
-    document.getElementById("#calc").click( function() {
-        var name = "water";$('#FluidName :selected').text()
+    document.getElementById("calc").onclick= function() {
+        var name = "water";//$('#FluidName :selected').text()
         var key1 = "T";//text2key($('#Name1 :selected').text())
         var key2 = "P";//text2key($('#Name2 :selected').text())
         var val1 = 300;//parseFloat($('#Value1').val())
@@ -69,7 +69,7 @@
         var h = Module.PropsSI('H', key1, val1, key2, val2, name)
         var cp = Module.PropsSI('C', key1, val1, key2, val2, name)
         
-        text = ''
+        var text = ''
         text += 'T = ' + T + ' K\n' + '<br>'
         text += 'rho = ' + rho + ' kg/m&#179; <br>'
         text += 'p = ' + p + ' Pa<br>'
@@ -77,9 +77,9 @@
         text += 'h = ' + h + ' J/kg<br>'
         text += 'cp = ' + cp + ' J/kg/K<br>'
         
-        $( "#output" ).html( text);
+        document.getElementById("#output" ).innerHTML = text;
         
-    });
+    };
     </script>
 
 </body>
