@@ -3,16 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <title>CoolProp Javascript example</title>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 
-<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<script>
-//<link rel="stylesheet" href="/resources/demos/style.css" />
-</script>
-
-<!-- (Problems with CORS) script src="http://www.coolprop.sourceforge.net/jscript/coolprop.js"></script -->
 <script src="coolprop.js"></script>
 </head>
 
@@ -64,12 +55,12 @@
             return 'D';
     }
     //using jQuery
-    $('#calc').click( function() {
-        var name = $('#FluidName :selected').text()
-        var key1 = text2key($('#Name1 :selected').text())
-        var key2 = text2key($('#Name2 :selected').text())
-        var val1 = parseFloat($('#Value1').val())
-        var val2 = parseFloat($('#Value2').val())
+    document.getElementById("calc").onclick= function() {
+        var name = "water";//$('#FluidName :selected').text()
+        var key1 = "T";//text2key($('#Name1 :selected').text())
+        var key2 = "P";//text2key($('#Name2 :selected').text())
+        var val1 = 300;//parseFloat($('#Value1').val())
+        var val2 = 100000;//parseFloat($('#Value2').val())
         
         var T = Module.PropsSI('T', key1, val1, key2, val2, name)
         var rho = Module.PropsSI('D', key1, val1, key2, val2, name)
@@ -78,7 +69,7 @@
         var h = Module.PropsSI('H', key1, val1, key2, val2, name)
         var cp = Module.PropsSI('C', key1, val1, key2, val2, name)
         
-        text = ''
+        var text = ''
         text += 'T = ' + T + ' K\n' + '<br>'
         text += 'rho = ' + rho + ' kg/m&#179; <br>'
         text += 'p = ' + p + ' Pa<br>'
@@ -86,9 +77,9 @@
         text += 'h = ' + h + ' J/kg<br>'
         text += 'cp = ' + cp + ' J/kg/K<br>'
         
-        $( "#output" ).html( text);
+        document.getElementById("#output" ).innerHTML = text;
         
-    });
+    };
     </script>
 
 </body>
