@@ -366,8 +366,18 @@ window.YRunner.method ("property", function () {
     let rowEle = event.target.parentNode.parentNode;
     let selects = rowEle.getElementsByTagName("select");
     let fluidName = selects[0].value;
-    const keys = ["T", "P", "D", "H", "S", "U", "Q"]
+    
     let inputs = rowEle.getElementsByTagName("input");
+    if (rowEle.children[11].innerHTML == "lock") {
+        var currentValue = event.target.value;
+        for (let k = 0; k < inputs.length; k++) {
+            inputs[k].value = '';
+            event.target.value = currentValue;
+        }
+        rowEle.children[11].innerHTML = '';
+    }
+
+    const keys = ["T", "P", "D", "H", "S", "U", "Q"]
     let keyId = [], vals = [];
     for (let i = 0; i < inputs.length; i++) {
         let val = parseFloat(inputs[i].value);
@@ -383,7 +393,6 @@ window.YRunner.method ("property", function () {
                 val = val * 1e3;
             }
             vals.push(parseFloat(val));
-            if (keys.length > 2) break;
         }
     }
     if (keyId.length < 2) {
@@ -391,7 +400,6 @@ window.YRunner.method ("property", function () {
     }
     let fluid = new Fluid(keys[keyId[0]], vals[0], keys[keyId[1]], vals[1], fluidName);
 
-    //if (keyId.indexOf(0) == -1) inputs[0].value = fluid.getT()
     for (let m = 0; m < inputs.length; m++) {
         if (keyId.indexOf(m) == -1) {
             switch (m) {
@@ -424,13 +432,14 @@ window.YRunner.method ("property", function () {
 
     rowEle.children[8].innerHTML = fluid.getViscosity().toFixed(8);
     rowEle.children[9].innerHTML = fluid.getZ().toFixed(2);
+    rowEle.children[11].innerHTML = "lock";
     
     
     let table = rowEle.parentNode.parentNode.cloneNode(true);
     table.border = "1";
     //输入框替换为文本，删除最后一列
     for (let i = 0; i < table.rows.length; i++) {
-        for (let j = 0; j < 5 && i > 0; j++) { 
+        for (let j = 0; j < 8 && i > 0; j++) { 
             const cell = table.rows[i].cells[j];
             if (j == 0) {
                 cell.innerHTML = cell.children[0].options[cell.children[0].selectedIndex].text;
@@ -440,7 +449,7 @@ window.YRunner.method ("property", function () {
             }
             
         }
-        table.rows[i].deleteCell(9);    
+        table.rows[i].deleteCell(10);    
     }
     let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
         + "</body></html>";
