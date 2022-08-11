@@ -1,5 +1,4 @@
 /* 严格采用国际单位（SI），无例外 */
-//import {Module} from "../dist/CoolProp6.4.1/coolprop.js"
 /**
  * 圆 周长
  * @param d 直径 m
@@ -40,9 +39,12 @@ class Fluid {
     T:number = NaN; // K
     P:number = NaN; // Pa
     M:number = NaN; // kg/mol
-    D:number = NaN; //density
-    H:number = NaN;
-    viscosity:number = NaN; //运动粘度 m2/s
+    D:number = NaN; // density kg/m^3
+    H:number = NaN; // Mass specific enthalpy J/kg
+    Q:number = NaN; // Mass vapor quality mol/mol
+    S:number = NaN; // Mass specific entropy J/kg/K
+    U:number = NaN; // Mass specific internal energy J/kg
+    viscosity:number = NaN; // Pa.s
     Z:number = NaN; // Compressibility factor
     flowRate_mass:number = 0; //质量流量
     flowRate_volume:number = 0; //体积流量
@@ -52,32 +54,83 @@ class Fluid {
             this.name = name;
             this[key1] = val1;
             this[key2] = val2;
-            ["T","P","M","D","H", "viscosity", "Z"].forEach(key=>{
+            ["T","P","M","D","H", "Q", "S", "U", "viscosity", "Z"].forEach(key=>{
                 if ([key1, key2].indexOf(key) == -1) {
-                    //this[key] = Module.PropsSI(key, key1, val1, key2, val2, name);
+                    this[key] = Module.PropsSI(key, key1, val1, key2, val2, name);
+                    //console.log(Module.PropsSI("T","P",100000, "Q", 1, "WATER"));
                 }
             })
         }
     }
     
+    setName(name:string):void {
+        this.name = name;
+    }
+
+    setT(T:number):void {
+        this.T = T;
+    }
+
+    setP(P:number):void {
+        this.P = P;
+    }
+
+    setDensity(D:number):void {
+        this.D = D;
+    }
+
+    setEnthalpy(H:number):void {
+        this.H = H;
+    }
+
+    setViscosity(viscosity:number):void {
+        this.viscosity = viscosity;
+    }
+
     getT():number {
         return this.T;
     }
-    
+
+    getP():number {
+        return this.P;
+    }
+
+    getM():number {
+        return this.M;
+    }
+
     getDensity():number {
         return this.D;
     }
 
-    getViscosity():number {
-        return this.viscosity;
+    getEnthalpy():number {
+        return this.H;
+    }
+
+    getEntropy():number {
+        return this.S;
+    }
+
+    getInternalEnergy():number {
+        return this.U;
+    }
+
+    getViscosity():number {//m2/s
+        return this.viscosity / this.D; //运动粘度= 动力粘度 / 密度
+    }
+    getQ():number {
+        return this.Q;
+    }
+    getZ():number {
+        return this.Z;
     }
 
     getFlowRate_mass() {
-        return this.flowRate_mass == 0 ? this.flowRate_volume * this.D : this.flowRate_mass;
+        return isNaN(this.flowRate_mass) ? this.flowRate_volume * this.D : this.flowRate_mass;
     }
 
     getFlowRate_volume() {
-        return this.flowRate_volume == 0 ? this.flowRate_mass / this.D : this.flowRate_volume;
+        return isNaN(this.flowRate_volume) ? this.flowRate_mass / this.D : this.flowRate_volume;
     }
 }
 

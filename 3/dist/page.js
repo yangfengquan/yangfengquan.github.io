@@ -107,25 +107,25 @@ function delRow(e) {
     }
 }
 
-function run() {
-    window.Runner.methods[window.Router.currentUrl]();
+function yrun() {
+    window.YRunner.methods[window.Router.currentUrl]();
 }
 
-function Runer() {
+function YRuner() {
     this.methods = {};
 }
 
-Runer.prototype.method = function (page, callback) {
+YRuner.prototype.method = function (page, callback) {
     this.methods[page] = callback || function () { };
 };
 
-window.Runner = new Runer();
+window.YRunner = new YRuner();
 
-window.Runner.method ("/", function () {
+window.YRunner.method ("/", function () {
     alert("未选择功能。");
 });
 
-window.Runner.method ("pipe-material-sum", function () { 
+window.YRunner.method ("pipe-material-sum", function () { 
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
 
@@ -173,7 +173,7 @@ window.Runner.method ("pipe-material-sum", function () {
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("pipe-weight", function () {
+window.YRunner.method ("pipe-weight", function () {
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
 
@@ -225,7 +225,7 @@ window.Runner.method ("pipe-weight", function () {
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("pipe-drop-pressure", function () {
+window.YRunner.method ("pipe-drop-pressure", function () {
     let rowEle = event.target.parentNode.parentNode;
     let selects = rowEle.getElementsByTagName("select");
     let inputs = rowEle.getElementsByTagName("input");
@@ -234,8 +234,8 @@ window.Runner.method ("pipe-drop-pressure", function () {
     pipe.di = Number(inputs[0].value) / 1000;
     let length = Number(inputs[1].value);
     pipe.fluid.flowRate_mass = Number(inputs[2].value) / 3600;
-    pipe.fluid.density = Number(inputs[3].value);
-    pipe.fluid.viscosity = Number(inputs[4].value);
+    pipe.fluid.setD(Number(inputs[3].value));
+    pipe.fluid.setViscosity(Number(inputs[4].value));
 
     const localResistace = {
         elbow45: 0.35,
@@ -309,7 +309,7 @@ window.Runner.method ("pipe-drop-pressure", function () {
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("pipe-diameter-velocity", function () {
+window.YRunner.method ("pipe-diameter-velocity", function () {
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
     let pipe = new Pipe();
@@ -334,13 +334,13 @@ window.Runner.method ("pipe-diameter-velocity", function () {
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("pipe-diameter-pressure-drop", function () {
+window.YRunner.method ("pipe-diameter-pressure-drop", function () {
     let rowEle = event.target.parentNode.parentNode;
     let inputs = rowEle.getElementsByTagName("input");
     let pipe = new Pipe();
     pipe.fluid.flowRate_volume = Number(inputs[0].value) / 3600;
-    pipe.fluid.density = Number(inputs[1].value);
-    pipe.fluid.viscosity = Number(inputs[2].value);
+    pipe.fluid.setD(Number(inputs[1].value));
+    pipe.fluid.setViscosity(Number(inputs[2].value));
     let length = Number(inputs[3].value);
     let pressureDrop = Number(inputs[4].value) * 1000;
 
@@ -362,17 +362,69 @@ window.Runner.method ("pipe-diameter-pressure-drop", function () {
     document.getElementById("report").href = downLoadLink(content);
 });
 
-window.Runner.method ("property", function () {
+window.YRunner.method ("property", function () {
     let rowEle = event.target.parentNode.parentNode;
+    let selects = rowEle.getElementsByTagName("select");
+    let fluidName = selects[0].value;
+    const keys = ["T", "P", "D", "H", "S", "U", "Q"]
     let inputs = rowEle.getElementsByTagName("input");
-    let pipe = new Pipe();
-    pipe.fluid.flowRate_volume = Number(inputs[0].value) / 3600;
-    pipe.fluid.density = Number(inputs[1].value);
-    pipe.fluid.viscosity = Number(inputs[2].value);
-    let length = Number(inputs[3].value);
-    let pressureDrop = Number(inputs[4].value) * 1000;
+    let keyId = [], vals = [];
+    for (let i = 0; i < inputs.length; i++) {
+        let val = parseFloat(inputs[i].value);
+        if (!isNaN(val)) {
+            keyId.push(i);
+            if (keys[i] == "T") {
+                val = val + 273.15;
+            }
+            else if (keys[i] == "P") {
+                val = val * 1e6;
+            }
+            else if (["H", "S", "U"].indexOf(keys[i]) != -1) {
+                val = val * 1e3;
+            }
+            vals.push(parseFloat(val));
+            if (keys.length > 2) break;
+        }
+    }
+    if (keyId.length < 2) {
+        return;
+    }
+    let fluid = new Fluid(keys[keyId[0]], vals[0], keys[keyId[1]], vals[1], fluidName);
 
-    rowEle.children[5].innerHTML = (pipe.diameter_pressureDrop(length, pressureDrop) * 1000).toFixed(2);
+    //if (keyId.indexOf(0) == -1) inputs[0].value = fluid.getT()
+    for (let m = 0; m < inputs.length; m++) {
+        if (keyId.indexOf(m) == -1) {
+            switch (m) {
+                case 0:
+                    inputs[0].value = (fluid.getT() - 273.15).toFixed(2);
+                    break;
+                case 1:
+                    inputs[1].value = (fluid.getP() / 1e6).toFixed(2);
+                    break;
+                case 2:
+                    inputs[2].value = fluid.getDensity().toFixed(2);
+                    break;
+                case 3:
+                    inputs[3].value =  (fluid.getEnthalpy() / 1e3).toFixed(2);
+                    break;
+                case 4:
+                    inputs[4].value =  (fluid.getEntropy() / 1e3).toFixed(2);
+                    break;
+                case 5:
+                    inputs[5].value =  (fluid.getInternalEnergy() / 1e3).toFixed(2);
+                    break;
+                case 6:
+                    inputs[6].value = fluid.getQ().toFixed(2);
+                    break;
+                default:
+                    break;
+            }
+        } 
+    }
+
+    rowEle.children[8].innerHTML = fluid.getViscosity().toFixed(8);
+    rowEle.children[9].innerHTML = fluid.getZ().toFixed(2);
+    
     
     let table = rowEle.parentNode.parentNode.cloneNode(true);
     table.border = "1";
@@ -380,10 +432,15 @@ window.Runner.method ("property", function () {
     for (let i = 0; i < table.rows.length; i++) {
         for (let j = 0; j < 5 && i > 0; j++) { 
             const cell = table.rows[i].cells[j];
-            cell.innerHTML = cell.children[0].value;
+            if (j == 0) {
+                cell.innerHTML = cell.children[0].options[cell.children[0].selectedIndex].text;
+            }
+            else {
+                cell.innerHTML = cell.children[0].value;
+            }
+            
         }
-
-        table.rows[i].deleteCell(6);    
+        table.rows[i].deleteCell(9);    
     }
     let content = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>` + table.outerHTML
         + "</body></html>";
