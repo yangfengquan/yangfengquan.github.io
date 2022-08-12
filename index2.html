@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="管道材料计算 管道重量计算 管径计算 管道阻力计算 管道水力计算 物性查询 物质物理性质">
+    <title>工程计算</title>
+    <link rel="stylesheet" href="./style.css"> 
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?d319312b017fe4df29c750d1c27439e0";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
+    </script>   
+</head>
+<body>
+   <div id="page"></div>
+   <script>
+    const html_pages_data = {
+        pipe_diameter_velocity : {
+            inputs: {
+                flowrate_volume : {title: "流量", unit: "m3/h", tagname: "input", method: "yrun", event: "change"},
+                velocity : {title: "流速", unit: "m/s", tagname: "input", method: "yrun", event: "change"}
+            },
+            results: {
+                velocity : {title: "内径", unit: "mm"}
+            },
+            multiple_rows: true,
+            total_row: true
+        }
+    }
+
+    function createPage(html_page_data) {
+        let table_ele = document.createElement("table");
+        let thead_ele = document.createElement("thead");
+        let tbody_ele = document.createElement("tbody");
+        let thead_tr_ele = document.createElement("tr");
+        let tbody_tr_ele = document.createElement("tr");
+        for (const input of html_page_data.inputs) {
+            let th_ele = document.createElement("th");
+            th_ele.innerHTML = input.title + "<br>" + input.unit;
+            let input_ele = document.createElement(input.tagname);
+            input
+        }
+    }
+
+   </script>
+</body>
+</html>

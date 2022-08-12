@@ -13,8 +13,9 @@ body {
 }
 
 #menu ul li{
-	display: inline-block;
+	float: left;
 	line-height: 40px;
+	position: relative;
 	text-align: center;
 }
 

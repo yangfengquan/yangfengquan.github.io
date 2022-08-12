@@ -21,36 +21,19 @@
 <body>
     <!--[if IE]><div style="color:red;text-align:center">很抱歉，我们不支持 Internet Explorer 等浏览器，请使用一个更新版本的浏览器。</div><![endif]-->
     <div id="menu">
-        <!--<img src="./image/menu.png" id="tog-menu">-->
         <ul>
             <li><a href="./"><b>工程计算</b> </a>
             <li><a href="#">管道</a>
                 <ul>
-                    <li ><a href="#pipe-material-sum">材料</a></li>
+                    <li><a href="#pipe-material-sum">材料</a></li>
                     <li><a href="#pipe-weight">重量</a></li>
-                    <li ><a href="#pipe-diameter-velocity">流速>管径</a></li>
-                    <li ><a href="#pipe-diameter-pressure-drop">压降>管径</a></li>
+                    <li><a href="#pipe-diameter-velocity">流速>管径</a></li>
+                    <li><a href="#pipe-diameter-pressure-drop">压降>管径</a></li>
                     <li><a href="#pipe-drop-pressure">阻力</a></li>
                 </ul>
             </li>
             <li><a href="#property" target="_blank">物性</a></li>
-            <li><a href="" onclick="AddFavorite('工程计算','https://yfq000.github.io')">收藏网站</a></li>
         </ul>
-        <script>
-            function AddFavorite(title,url){
-                try{
-                    window.external.addFavorite(url,title);
-                }
-                catch(e){
-                    try{
-                        window.sidebar.addPanel(title,url,"");
-                    }
-                    catch(e){
-                        alert("抱歉，您所使用的浏览器无法完成此操作。\n\n请使用快捷键Ctrl+D收藏！");
-                    }
-                }
-            }
-        </script>
     </div>
     <div class="page-wrapper">
         <input type="file" id="file" hidden>
@@ -507,6 +490,7 @@
                     </table>
                 </div> 
                 <p><button onclick="addRow()">添加</button></p>
+                <p>页面加载存在延迟，可能导致初次加载时无法及时显示结果，可稍后重新输入。</p>
             </div>
         </div><!-- pages -->
     </div>
