@@ -113,7 +113,7 @@ function dim_v(f, v) {
 function dim_dP(f, l, dP, rho, nu) {
     //nu = nu * 10000;
     //return 11.4 * rho ** 0.207 * nu ** 0.033 * f ** 0.38 * dP **-0.207;
-    var di = 0.007 * Math.pow(rho, 0.207) * Math.pow(nu, 0.033) * Math.pow(l, 0.207) * Math.pow(f, 0.38) * Math.pow(dP, -0.207);
+    var di = 0.007 * rho ** 0.207 * nu ** 0.033 * l ** 0.207 * f ** 0.38 * dP ** -0.207;
     return di * 1000;
 }
 /**
@@ -168,13 +168,13 @@ function resistace(re, dim = 0, e = 0) {
         lambda = 64 / re;
     }
     else if (re > 2000 && re <= 4000) {
-        lambda = 0.3164 * Math.pow(re, -0.25);
+        lambda = 0.3164 * re ** -0.25;
     }
     else if (re > 4000 && re < 396 * dim / e * Math.log10(3.7 * dim / e)) {
         var x0 = 0, x1 = 0.1;
         do {
             var mid = (x0 + x1) / 2;
-            if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(e / (3.7 * dim) + 2.51 / (re * Math.pow(mid, 0.5))) > 0) {
+            if (1 / mid ** 0.5 + 2 * Math.log10(e / (3.7 * dim) + 2.51 / (re * mid ** 0.5)) > 0) {
                 x0 = mid;
             }
             else {
@@ -209,10 +209,10 @@ function resistace(re, dim = 0, e = 0) {
  * @returns dp [kPa]
  */
 function pipeDp0(f, e, dim, l, rho, mu) {
-    var ve = f / 3600 / (Pi * Math.pow((dim / 2), 2));
+    var ve = f / 3600 / (Pi * (dim / 2) ** 2);
     var re = reynolds(dim, ve, rho, mu);
     var lambda = resistace(re, dim, e);
-    var dp0 = lambda * (l / dim) * (rho * Math.pow(ve, 2) / 2) * 0.001;
+    var dp0 = lambda * (l / dim) * (rho * ve ** 2 / 2) * 0.001;
     return dp0;
 }
 /**
@@ -223,7 +223,7 @@ function pipeDp0(f, e, dim, l, rho, mu) {
  * @returns
  */
 function pipeDp1(ksum, ve, rho) {
-    var dp1 = ksum * rho * Math.pow(ve, 2) / 2 * 0.001;
+    var dp1 = ksum * rho * ve ** 2 / 2 * 0.001;
     return dp1;
 }
 /**

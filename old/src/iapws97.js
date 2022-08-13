@@ -155,7 +155,7 @@ function _h13_s(s) {
     let suma = 0;
     for (let m = 0; m < 6; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((sigma - 0.884), i) * Math.pow((sigma - 0.864), j);
+        suma += ni * (sigma - 0.884) ** i * (sigma - 0.864) ** j;
     }
     return 1700 * suma;
 }
@@ -185,7 +185,7 @@ function _P23_T(T) {
     16.52916425
     */
     let n = [0.34805185628969e3, -0.11671859879975e1, 0.10192970039326e-2];
-    return n[0] + n[1] * T + n[2] * Math.pow(T, 2);
+    return n[0] + n[1] * T + n[2] * T ** 2;
 }
 function _t_P(P) {
     /*
@@ -213,7 +213,7 @@ function _t_P(P) {
     623.15
     */
     let n = [0.10192970039326e-2, 0.57254459862746e3, 0.1391883977870e2];
-    return n[1] + Math.pow(((P - n[2]) / n[0]), 0.5);
+    return n[1] + ((P - n[2]) / n[0]) ** 0.5;
 }
 function _t_hs(h, s) {
     /*Define the boundary between Region 2 and 3, T=f(h,s)
@@ -275,7 +275,7 @@ function _t_hs(h, s) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 0.727), i) * Math.pow((sigma - 0.864), j);
+        suma += ni * (nu - 0.727) ** i * (sigma - 0.864) ** j;
     }
     return 900 * suma;
 }
@@ -319,10 +319,10 @@ function _PSat_T(T) {
         -0.48232657361591E+04, 0.40511340542057E+06, -0.23855557567849E+00,
         0.65017534844798E+03];
     let tita = T + n[9] / (T - n[10]);
-    let A = Math.pow(tita, 2) + n[1] * tita + n[2];
-    let B = n[3] * Math.pow(tita, 2) + n[4] * tita + n[5];
-    let C = n[6] * Math.pow(tita, 2) + n[7] * tita + n[8];
-    return Math.pow((2 * C / (-B + Math.pow((Math.pow(B, 2) - 4 * A * C), 0.5))), 4);
+    let A = tita ** 2 + n[1] * tita + n[2];
+    let B = n[3] * tita ** 2 + n[4] * tita + n[5];
+    let C = n[6] * tita ** 2 + n[7] * tita + n[8];
+    return (2 * C / (-B + (B ** 2 - 4 * A * C) ** 0.5)) ** 4;
 }
 function _TSat_P(P) {
     /*Define the saturated line, T=f(P)
@@ -362,12 +362,12 @@ function _TSat_P(P) {
         0.12020824702470E+05, -0.32325550322333E+07, 0.14915108613530E+02,
         -0.48232657361591E+04, 0.40511340542057E+06, -0.23855557567849E+00,
         0.65017534844798E+03];
-    let beta = Math.pow(P, 0.25);
-    let E = Math.pow(beta, 2) + n[3] * beta + n[6];
-    let F = n[1] * Math.pow(beta, 2) + n[4] * beta + n[7];
-    let G = n[2] * Math.pow(beta, 2) + n[5] * beta + n[8];
-    let D = 2 * G / (-F - Math.pow((Math.pow(F, 2) - 4 * E * G), 0.5));
-    return (n[10] + D - Math.pow((Math.pow((n[10] + D), 2) - 4 * (n[9] + n[10] * D)), 0.5)) / 2;
+    let beta = P ** 0.25;
+    let E = beta ** 2 + n[3] * beta + n[6];
+    let F = n[1] * beta ** 2 + n[4] * beta + n[7];
+    let G = n[2] * beta ** 2 + n[5] * beta + n[8];
+    let D = 2 * G / (-F - (F ** 2 - 4 * E * G) ** 0.5);
+    return (n[10] + D - ((n[10] + D) ** 2 - 4 * (n[9] + n[10] * D)) ** 0.5) / 2;
 }
 function _PSat_h(h) {
     /*Define the saturated line, P=f(h) for region 3
@@ -419,7 +419,7 @@ function _PSat_h(h) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 1.02), i) * Math.pow((nu - 0.608), j);
+        suma += ni * (nu - 1.02) ** i * (nu - 0.608) ** j;
     }
     return 22 * suma;
 }
@@ -472,7 +472,7 @@ function _PSat_s(s) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((sigma - 1.03), i) * Math.pow((sigma - 0.699), j);
+        suma += ni * (sigma - 1.03) ** i * (sigma - 0.699) ** j;
     }
     return 22 * suma;
 }
@@ -531,7 +531,7 @@ function _h1_s(s) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((sigma - 1.09), i) * Math.pow((sigma + 0.366e-4), j);
+        suma += ni * (sigma - 1.09) ** i * (sigma + 0.366e-4) ** j;
     }
     return 1700 * suma;
 }
@@ -586,7 +586,7 @@ function _h3a_s(s) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((sigma - 1.09), i) * Math.pow((sigma + 0.366e-4), j);
+        suma += ni * (sigma - 1.09) ** i * (sigma + 0.366e-4) ** j;
     }
     return 1700 * suma;
 }
@@ -647,7 +647,7 @@ function _h2ab_s(s) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((1 / sigma1 - 0.513), i) * Math.pow((sigma2 - 0.524), j);
+        suma += ni * (1 / sigma1 - 0.513) ** i * (sigma2 - 0.524) ** j;
     }
     return 2800 * Math.exp(suma);
 }
@@ -701,9 +701,9 @@ function _h2c3b_s(s) {
     let suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((sigma - 1.02), i) * Math.pow((sigma - 0.726), j);
+        suma += ni * (sigma - 1.02) ** i * (sigma - 0.726) ** j;
     }
-    return 2800 * Math.pow(suma, 4);
+    return 2800 * suma ** 4;
 }
 // Region 1
 function _Region1(T, P) {
@@ -781,12 +781,12 @@ function _Region1(T, P) {
     let g = 0, gp = 0, gpp = 0, gt = 0, gtt = 0, gpt = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        g += ni * Math.pow((7.1 - Pr), i) * Math.pow((Tr - 1.222), j);
-        gp -= ni * i * Math.pow((7.1 - Pr), (i - 1)) * Math.pow((Tr - 1.222), j);
-        gpp += ni * i * (i - 1) * Math.pow((7.1 - Pr), (i - 2)) * Math.pow((Tr - 1.222), j);
-        gt += ni * j * Math.pow((7.1 - Pr), i) * Math.pow((Tr - 1.222), (j - 1));
-        gtt += ni * j * (j - 1) * Math.pow((7.1 - Pr), i) * Math.pow((Tr - 1.222), (j - 2));
-        gpt -= ni * i * j * Math.pow((7.1 - Pr), (i - 1)) * Math.pow((Tr - 1.222), (j - 1));
+        g += ni * (7.1 - Pr) ** i * (Tr - 1.222) ** j;
+        gp -= ni * i * (7.1 - Pr) ** (i - 1) * (Tr - 1.222) ** j;
+        gpp += ni * i * (i - 1) * (7.1 - Pr) ** (i - 2) * (Tr - 1.222) ** j;
+        gt += ni * j * (7.1 - Pr) ** i * (Tr - 1.222) ** (j - 1);
+        gtt += ni * j * (j - 1) * (7.1 - Pr) ** i * (Tr - 1.222) ** (j - 2);
+        gpt -= ni * i * j * (7.1 - Pr) ** (i - 1) * (Tr - 1.222) ** (j - 1);
     }
     return {
         t: T,
@@ -794,9 +794,9 @@ function _Region1(T, P) {
         v: Pr * gp * R * T / P / 1000,
         h: Tr * gt * R * T,
         s: R * (Tr * gt - g),
-        cp: -R * Math.pow(Tr, 2) * gtt,
-        cv: R * (-(Math.pow(Tr, 2) * gtt) + Math.pow((gp - Tr * gpt), 2) / gpp),
-        w: Math.sqrt(R * T * 1000 * Math.pow(gp, 2) / (Math.pow((gp - Tr * gpt), 2) / (Math.pow(Tr, 2) * gtt) - gpp)),
+        cp: -R * Tr ** 2 * gtt,
+        cv: R * (-(Tr ** 2 * gtt) + (gp - Tr * gpt) ** 2 / gpp),
+        w: Math.sqrt(R * T * 1000 * gp ** 2 / ((gp - Tr * gpt) ** 2 / (Tr ** 2 * gtt) - gpp)),
         alfav: (1 - Tr * gpt / gp) / T,
         kt: -Pr * gpp / gp / P,
         region: 1,
@@ -846,7 +846,7 @@ function _Backward1_T_Ph(P, h) {
     let T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow(Pr, i) * Math.pow((nu + 1), j);
+        T += ni * Pr ** i * (nu + 1) ** j;
     }
     return T;
 }
@@ -892,7 +892,7 @@ function _Backward1_T_Ps(P, s) {
     let T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow(Pr, i) * Math.pow((sigma + 2), j);
+        T += ni * Pr ** i * (sigma + 2) ** j;
     }
     return T;
 }
@@ -941,7 +941,7 @@ function _Backward1_P_hs(h, s) {
     let P = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        P += ni * Math.pow((nu + 0.05), i) * Math.pow((sigma + 0.05), j);
+        P += ni * (nu + 0.05) ** i * (sigma + 0.05) ** j;
     }
     return 100 * P;
 }
@@ -1030,12 +1030,12 @@ function _Region2(T, P) {
     //for i, j, ni in zip(Ir, Jr, nr):
     for (let m = 0; m < Ir.length; m++) {
         let i = Ir[m], j = Jr[m], ni = nr[m];
-        gr += ni * Math.pow(Pr, i) * Math.pow((Tr - 0.5), j);
-        grp += ni * i * Math.pow(Pr, (i - 1)) * Math.pow((Tr - 0.5), j);
-        grpp += ni * i * (i - 1) * Math.pow(Pr, (i - 2)) * Math.pow((Tr - 0.5), j);
-        grt += ni * j * Math.pow(Pr, i) * Math.pow((Tr - 0.5), (j - 1));
-        grtt += ni * j * (j - 1) * Math.pow(Pr, i) * Math.pow((Tr - 0.5), (j - 2));
-        grpt += ni * i * j * Math.pow(Pr, (i - 1)) * Math.pow((Tr - 0.5), (j - 1));
+        gr += ni * Pr ** i * (Tr - 0.5) ** j;
+        grp += ni * i * Pr ** (i - 1) * (Tr - 0.5) ** j;
+        grpp += ni * i * (i - 1) * Pr ** (i - 2) * (Tr - 0.5) ** j;
+        grt += ni * j * Pr ** i * (Tr - 0.5) ** (j - 1);
+        grtt += ni * j * (j - 1) * Pr ** i * (Tr - 0.5) ** (j - 2);
+        grpt += ni * i * j * Pr ** (i - 1) * (Tr - 0.5) ** (j - 1);
     }
     return {
         t: T,
@@ -1043,12 +1043,12 @@ function _Region2(T, P) {
         v: Pr * (gop + grp) * R * T / P / 1000,
         h: Tr * (got + grt) * R * T,
         s: R * (Tr * (got + grt) - (go + gr)),
-        cp: -R * Math.pow(Tr, 2) * (gott + grtt),
-        cv: R * (-(Math.pow(Tr, 2) * (gott + grtt)) - Math.pow((1 + Pr * grp - Tr * Pr * grpt), 2) /
-            (1 - Math.pow(Pr, 2) * grpp)),
-        w: Math.pow((R * T * 1000 * (1 + 2 * Pr * grp + Math.pow(Pr, 2) * Math.pow(grp, 2)) / (1 - Math.pow(Pr, 2) * grpp + Math.pow((1 + Pr * grp - Tr * Pr * grpt), 2) / Math.pow(Tr, 2) / (gott + grtt))), 0.5),
+        cp: -R * Tr ** 2 * (gott + grtt),
+        cv: R * (-(Tr ** 2 * (gott + grtt)) - (1 + Pr * grp - Tr * Pr * grpt) ** 2 /
+            (1 - Pr ** 2 * grpp)),
+        w: (R * T * 1000 * (1 + 2 * Pr * grp + Pr ** 2 * grp ** 2) / (1 - Pr ** 2 * grpp + (1 + Pr * grp - Tr * Pr * grpt) ** 2 / Tr ** 2 / (gott + grtt))) ** 0.5,
         alfav: (1 + Pr * grp - Tr * Pr * grpt) / (1 + Pr * grp) / T,
-        kt: (1 - Math.pow(Pr, 2) * grpp) / (1 + Pr * grp) / P,
+        kt: (1 - Pr ** 2 * grpp) / (1 + Pr * grp) / P,
         region: 2,
         x: 1
     };
@@ -1087,15 +1087,15 @@ function Region2_cp0(Tr, Pr) {
         0.71452738081455E-01, -0.40710498223928E+00, 0.14240819171444E+01,
         -0.43839511319450E+01, -0.28408632460772E+00, 0.21268463753307E-01];
     let go = Math.log(Pr);
-    let gop = Math.pow(Pr, -1);
-    let gopp = -(Math.pow(Pr, -2));
+    let gop = Pr ** -1;
+    let gopp = -(Pr ** -2);
     let got = 0, gott = 0, gopt = 0;
     //for j, ni in zip(Jo, no):
     for (let m = 0; m < Jo.length; m++) {
         let j = Jo[m], ni = no[m];
-        go += ni * Math.pow(Tr, j);
-        got += ni * j * Math.pow(Tr, (j - 1));
-        gott += ni * j * (j - 1) * Math.pow(Tr, (j - 2));
+        go += ni * Tr ** j;
+        got += ni * j * Tr ** (j - 1);
+        gott += ni * j * (j - 1) * Tr ** (j - 2);
     }
     return [go, gop, gopp, got, gott, gopt];
 }
@@ -1123,7 +1123,7 @@ function _P_2bc(h) {
     >>> _P_2bc(3516.004323)
     100.0
     */
-    return 905.84278514723 - 0.67955786399241 * h + 1.2809002730136e-4 * Math.pow(h, 2);
+    return 905.84278514723 - 0.67955786399241 * h + 1.2809002730136e-4 * h ** 2;
 }
 function _hbc_P(P) {
     /*Define the boundary between Region 2b and 2c, h=f(P)
@@ -1149,7 +1149,7 @@ function _hbc_P(P) {
     >>> _hbc_P(100)
     3516.004323
     */
-    return 0.26526571908428e4 + Math.pow(((P - 0.45257578905948e1) / 1.2809002730136e-4), 0.5);
+    return 0.26526571908428e4 + ((P - 0.45257578905948e1) / 1.2809002730136e-4) ** 0.5;
 }
 function _hab_s(s) {
     /*Define the boundary between Region 2a and 2b, h=f(s)
@@ -1187,7 +1187,7 @@ function _hab_s(s) {
     }
     else {
         h = -0.349898083432139e4 + 0.257560716905876e4 * s -
-            0.421073558227969e3 * Math.pow(s, 2) + 0.276349063799944e2 * Math.pow(s, 3);
+            0.421073558227969e3 * s ** 2 + 0.276349063799944e2 * s ** 3;
     }
     return h;
 }
@@ -1241,7 +1241,7 @@ function _Backward2a_T_Ph(P, h) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow(Pr, i) * Math.pow((nu - 2.1), j);
+        T += ni * Pr ** i * (nu - 2.1) ** j;
     }
     return T;
 }
@@ -1295,7 +1295,7 @@ function _Backward2b_T_Ph(P, h) {
     let T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow((Pr - 2), i) * Math.pow((nu - 2.6), j);
+        T += ni * (Pr - 2) ** i * (nu - 2.6) ** j;
     }
     return T;
 }
@@ -1344,7 +1344,7 @@ function _Backward2c_T_Ph(P, h) {
     let T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow((Pr + 25), i) * Math.pow((nu - 1.8), j);
+        T += ni * (Pr + 25) ** i * (nu - 1.8) ** j;
     }
     return T;
 }
@@ -1441,7 +1441,7 @@ function _Backward2a_T_Ps(P, s) {
     let T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow(Pr, i) * Math.pow((sigma - 2), j);
+        T += ni * Pr ** i * (sigma - 2) ** j;
     }
     return T;
 }
@@ -1497,7 +1497,7 @@ function _Backward2b_T_Ps(P, s) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow(Pr, i) * Math.pow((10 - sigma), j);
+        T += ni * Pr ** i * (10 - sigma) ** j;
     }
     return T;
 }
@@ -1545,7 +1545,7 @@ function _Backward2c_T_Ps(P, s) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        T += ni * Math.pow(Pr, i) * Math.pow((2 - sigma), j);
+        T += ni * Pr ** i * (2 - sigma) ** j;
     }
     return T;
 }
@@ -1627,9 +1627,9 @@ function _Backward2a_P_hs(h, s) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 0.5), i) * Math.pow((sigma - 1.2), j);
+        suma += ni * (nu - 0.5) ** i * (sigma - 1.2) ** j;
     }
-    return 4 * Math.pow(suma, 4);
+    return 4 * suma ** 4;
 }
 function _Backward2b_P_hs(h, s) {
     /*Backward equation for region 2b, P=f(h,s)
@@ -1679,9 +1679,9 @@ function _Backward2b_P_hs(h, s) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 0.6), i) * Math.pow((sigma - 1.01), j);
+        suma += ni * (nu - 0.6) ** i * (sigma - 1.01) ** j;
     }
-    return 100 * Math.pow(suma, 4);
+    return 100 * suma ** 4;
 }
 function _Backward2c_P_hs(h, s) {
     /*Backward equation for region 2c, P=f(h,s)
@@ -1730,9 +1730,9 @@ function _Backward2c_P_hs(h, s) {
     let nu = h / 3500, sigma = s / 5.9, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 0.7), i) * Math.pow((sigma - 1.1), j);
+        suma += ni * (nu - 0.7) ** i * (sigma - 1.1) ** j;
     }
-    return 100 * Math.pow(suma, 4);
+    return 100 * suma ** 4;
 }
 function _Backward2_P_hs(h, s) {
     /*Backward equation for region 2, P=f(h,s)
@@ -1829,15 +1829,15 @@ function _Region3(rho, T) {
         0.16436278447961, -0.13503372241348e-1, -0.14834345352472e-1,
         0.57922953628084e-3, 0.32308904703711e-2, 0.80964802996215e-4,
         -0.16557679795037e-3, -0.44923899061815e-4];
-    let d = rho / rhoc, Tr = Tc / T, g = 1.0658070028513 * Math.log(d), gd = 1.0658070028513 / d, gdd = -1.0658070028513 / Math.pow(d, 2), gt = 0, gtt = 0, gdt = 0;
+    let d = rho / rhoc, Tr = Tc / T, g = 1.0658070028513 * Math.log(d), gd = 1.0658070028513 / d, gdd = -1.0658070028513 / d ** 2, gt = 0, gtt = 0, gdt = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        g += ni * Math.pow(d, i) * Math.pow(Tr, j);
-        gd += ni * i * Math.pow(d, (i - 1)) * Math.pow(Tr, j);
-        gdd += ni * i * (i - 1) * Math.pow(d, (i - 2)) * Math.pow(Tr, j);
-        gt += ni * j * Math.pow(d, i) * Math.pow(Tr, (j - 1));
-        gtt += ni * j * (j - 1) * Math.pow(d, i) * Math.pow(Tr, (j - 2));
-        gdt += ni * i * j * Math.pow(d, (i - 1)) * Math.pow(Tr, (j - 1));
+        g += ni * d ** i * Tr ** j;
+        gd += ni * i * d ** (i - 1) * Tr ** j;
+        gdd += ni * i * (i - 1) * d ** (i - 2) * Tr ** j;
+        gt += ni * j * d ** i * Tr ** (j - 1);
+        gtt += ni * j * (j - 1) * d ** i * Tr ** (j - 2);
+        gdt += ni * i * j * d ** (i - 1) * Tr ** (j - 1);
     }
     return {
         t: T,
@@ -1845,12 +1845,12 @@ function _Region3(rho, T) {
         v: 1 / rho,
         h: R * T * (Tr * gt + d * gd),
         s: R * (Tr * gt - g),
-        cp: R * (-(Math.pow(Tr, 2) * gtt) + Math.pow((d * gd - d * Tr * gdt), 2) / (2 * d * gd + Math.pow(d, 2) * gdd)),
-        cv: -R * Math.pow(Tr, 2) * gtt,
-        w: Math.sqrt(R * T * 1000 * (2 * d * gd + Math.pow(d, 2) * gdd - Math.pow((d * gd - d * Tr * gdt), 2) /
-            Math.pow(Tr, 2) / gtt)),
+        cp: R * (-(Tr ** 2 * gtt) + (d * gd - d * Tr * gdt) ** 2 / (2 * d * gd + d ** 2 * gdd)),
+        cv: -R * Tr ** 2 * gtt,
+        w: Math.sqrt(R * T * 1000 * (2 * d * gd + d ** 2 * gdd - (d * gd - d * Tr * gdt) ** 2 /
+            Tr ** 2 / gtt)),
         alfav: (gd - Tr * gdt) / (2 * gd + d * gdd) / T,
-        kt: 1 / (2 * d * gd + Math.pow(d, 2) * gdd) / rho / R / T * 1000,
+        kt: 1 / (2 * d * gd + d ** 2 * gdd) / rho / R / T * 1000,
         region: 3,
         x: 1
     };
@@ -1874,7 +1874,7 @@ function _h_3ab(P) {
     2095.936454
     */
     return 0.201464004206875e4 + 3.74696550136983 * P -
-        0.0219921901054187 * Math.pow(P, 2) + 0.875131686009950e-4 * Math.pow(P, 3);
+        0.0219921901054187 * P ** 2 + 0.875131686009950e-4 * P ** 3;
 }
 function _tab_P(P) {
     /*Define the boundary between Region 3a-3b, T=f(P)
@@ -1906,7 +1906,7 @@ function _tab_P(P) {
     let Pr = P / 1, T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], ni = n[m];
-        T += ni * Math.pow(Math.log(Pr), i);
+        T += ni * Math.log(Pr) ** i;
     }
     return T;
 }
@@ -1940,7 +1940,7 @@ function _top_P(P) {
     let Pr = P / 1, T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], ni = n[m];
-        T += ni * Math.pow(Math.log(Pr), i);
+        T += ni * Math.log(Pr) ** i;
     }
     return T;
 }
@@ -1974,7 +1974,7 @@ function _twx_P(P) {
     let Pr = P / 1, T = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], ni = n[m];
-        T += ni * Math.pow(Math.log(Pr), i);
+        T += ni * Math.log(Pr) ** i;
     }
     return T;
 }
@@ -2069,7 +2069,7 @@ function _txx_P(P, xy) {
     //for i, ni in enumerate(n):
     for (let i = 0; i < n.length; i++) {
         let ni = n[i];
-        T += ni * Math.pow(Pr, i);
+        T += ni * Pr ** i;
     }
     return T;
 }
@@ -2119,7 +2119,7 @@ function _Backward3a_v_Ph(P, h) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.128), i) * Math.pow((nu - 0.727), j);
+        suma += ni * (Pr + 0.128) ** i * (nu - 0.727) ** j;
     }
     return 0.0028 * suma;
 }
@@ -2167,7 +2167,7 @@ function _Backward3b_v_Ph(P, h) {
     let Pr = P / 100, nu = h / 2800, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.0661), i) * Math.pow((nu - 0.72), j);
+        suma += ni * (Pr + 0.0661) ** i * (nu - 0.72) ** j;
     }
     return 0.0088 * suma;
 }
@@ -2239,7 +2239,7 @@ function _Backward3a_T_Ph(P, h) {
     let Pr = P / 100, nu = h / 2300, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.240), i) * Math.pow((nu - 0.615), j);
+        suma += ni * (Pr + 0.240) ** i * (nu - 0.615) ** j;
     }
     return 760 * suma;
 }
@@ -2288,7 +2288,7 @@ function _Backward3b_T_Ph(P, h) {
     let Pr = P / 100, nu = h / 2800, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.298), i) * Math.pow((nu - 0.72), j);
+        suma += ni * (Pr + 0.298) ** i * (nu - 0.72) ** j;
     }
     return 860 * suma;
 }
@@ -2360,7 +2360,7 @@ function _Backward3a_v_Ps(P, s) {
     let Pr = P / 100, sigma = s / 4.4, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.187), i) * Math.pow((sigma - 0.755), j);
+        suma += ni * (Pr + 0.187) ** i * (sigma - 0.755) ** j;
     }
     return 0.0028 * suma;
 }
@@ -2409,7 +2409,7 @@ function _Backward3b_v_Ps(P, s) {
     let Pr = P / 100, sigma = s / 5.3, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.298), i) * Math.pow((sigma - 0.816), j);
+        suma += ni * (Pr + 0.298) ** i * (sigma - 0.816) ** j;
     }
     return 0.0088 * suma;
 }
@@ -2480,7 +2480,7 @@ function _Backward3a_T_Ps(P, s) {
     let Pr = P / 100, sigma = s / 4.4, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.240), i) * Math.pow((sigma - 0.703), j);
+        suma += ni * (Pr + 0.240) ** i * (sigma - 0.703) ** j;
     }
     return 760 * suma;
 }
@@ -2528,7 +2528,7 @@ function _Backward3b_T_Ps(P, s) {
     let Pr = P / 100, sigma = s / 5.3, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((Pr + 0.760), i) * Math.pow((sigma - 0.818), j);
+        suma += ni * (Pr + 0.760) ** i * (sigma - 0.818) ** j;
     }
     return 860 * suma;
 }
@@ -2604,7 +2604,7 @@ function _Backward3a_P_hs(h, s) {
     let nu = h / 2300, sigma = s / 4.4, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 1.01), i) * Math.pow((sigma - 0.75), j);
+        suma += ni * (nu - 1.01) ** i * (sigma - 0.75) ** j;
     }
     return 99 * suma;
 }
@@ -2658,7 +2658,7 @@ function _Backward3b_P_hs(h, s) {
     let nu = h / 2800, sigma = s / 5.3, suma = 0;
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 0.681), i) * Math.pow((sigma - 0.792), j);
+        suma += ni * (nu - 0.681) ** i * (sigma - 0.792) ** j;
     }
     return 16.6 / suma;
 }
@@ -3559,16 +3559,16 @@ function _Backward3x_v_PT(T, P, x) {
         //for i, j, ni in zip(I, J, n):
         for (let m = 0; m < II.length; m++) {
             let i = II[m], j = JJ[m], ni = nn[m];
-            suma += ni * Math.pow((Pr - a), i) * Math.pow((Tr - b), j);
+            suma += ni * (Pr - a) ** i * (Tr - b) ** j;
         }
         return v_ * Math.exp(suma);
     }
     else {
         for (let m = 0; m < II.length; m++) {
             let i = II[m], j = JJ[m], ni = nn[m];
-            suma += ni * Math.pow((Pr - a), (c * i)) * Math.pow((Tr - b), (j * d));
+            suma += ni * (Pr - a) ** (c * i) * (Tr - b) ** (j * d);
         }
-        return v_ * Math.pow(suma, e);
+        return v_ * suma ** e;
     }
 }
 function _x4_Ph(P, h) {
@@ -3729,7 +3729,7 @@ function _Backward4_T_hs(h, s) {
     //for i, j, ni in zip(I, J, n):
     for (let m = 0; m < I.length; m++) {
         let i = I[m], j = J[m], ni = n[m];
-        suma += ni * Math.pow((nu - 0.119), i) * Math.pow((sigma - 1.07), j);
+        suma += ni * (nu - 0.119) ** i * (sigma - 1.07) ** j;
     }
     return 550 * suma;
 }
@@ -3796,12 +3796,12 @@ function _Region5(T, P) {
     //for i, j, ni in zip(Ir, Jr, nr):
     for (let m = 0; m < Ir.length; m++) {
         let i = Ir[m], j = Jr[m], ni = nr[m];
-        gr += ni * Math.pow(Pr, i) * Math.pow(Tr, j);
-        grp += ni * i * Math.pow(Pr, (i - 1)) * Math.pow(Tr, j);
-        grpp += ni * i * (i - 1) * Math.pow(Pr, (i - 2)) * Math.pow(Tr, j);
-        grt += ni * j * Math.pow(Pr, i) * Math.pow(Tr, (j - 1));
-        grtt += ni * j * (j - 1) * Math.pow(Pr, i) * Math.pow(Tr, (j - 2));
-        grpt += ni * i * j * Math.pow(Pr, (i - 1)) * Math.pow(Tr, (j - 1));
+        gr += ni * Pr ** i * Tr ** j;
+        grp += ni * i * Pr ** (i - 1) * Tr ** j;
+        grpp += ni * i * (i - 1) * Pr ** (i - 2) * Tr ** j;
+        grt += ni * j * Pr ** i * Tr ** (j - 1);
+        grtt += ni * j * (j - 1) * Pr ** i * Tr ** (j - 2);
+        grpt += ni * i * j * Pr ** (i - 1) * Tr ** (j - 1);
     }
     return {
         t: T,
@@ -3809,12 +3809,12 @@ function _Region5(T, P) {
         v: Pr * (gop + grp) * R * T / P / 1000,
         h: Tr * (got + grt) * R * T,
         s: R * (Tr * (got + grt) - (go + gr)),
-        cp: -R * Math.pow(Tr, 2) * (gott + grtt),
-        cv: R * (-(Math.pow(Tr, 2) * (gott + grtt)) + Math.pow(((gop + grp) - Tr * (gopt + grpt)), 2) /
+        cp: -R * Tr ** 2 * (gott + grtt),
+        cv: R * (-(Tr ** 2 * (gott + grtt)) + ((gop + grp) - Tr * (gopt + grpt)) ** 2 /
             (gopp + grpp)),
-        w: Math.pow((R * T * 1000 * (1 + 2 * Pr * grp + Math.pow(Pr, 2) * Math.pow(grp, 2)) / (1 - Math.pow(Pr, 2) * grpp + Math.pow((1 + Pr * grp - Tr * Pr * grpt), 2) / Math.pow(Tr, 2) / (gott + grtt))), 0.5),
+        w: (R * T * 1000 * (1 + 2 * Pr * grp + Pr ** 2 * grp ** 2) / (1 - Pr ** 2 * grpp + (1 + Pr * grp - Tr * Pr * grpt) ** 2 / Tr ** 2 / (gott + grtt))) ** 0.5,
         alfav: (1 + Pr * grp - Tr * Pr * grpt) / (1 + Pr * grp) / T,
-        kt: (1 - Math.pow(Pr, 2) * grpp) / (1 + Pr * grp) / P,
+        kt: (1 - Pr ** 2 * grpp) / (1 + Pr * grp) / P,
         region: 5,
         x: 1
     };
@@ -3848,13 +3848,13 @@ function Region5_cp0(Tr, Pr) {
     http://www.iapws.org/relguide/IF97-Rev.html, Eq 33
     */
     let Jo = [0, 1, -3, -2, -1, 2], no = [-0.13179983674201e2, 0.68540841634434e1, -0.24805148933466e-1,
-        0.36901534980333, -0.31161318213925e1, -0.32961626538917], go = Math.log(Pr), gop = Math.pow(Pr, -1), gopp = -(Math.pow(Pr, -2)), got = 0, gott = 0, gopt = 0;
+        0.36901534980333, -0.31161318213925e1, -0.32961626538917], go = Math.log(Pr), gop = Pr ** -1, gopp = -(Pr ** -2), got = 0, gott = 0, gopt = 0;
     //for j, ni in zip(Jo, no):
     for (let m = 0; m < Jo.length; m++) {
         let j = Jo[m], ni = no[m];
-        go += ni * Math.pow(Tr, j);
-        got += ni * j * Math.pow(Tr, (j - 1));
-        gott += ni * j * (j - 1) * Math.pow(Tr, (j - 2));
+        go += ni * Tr ** j;
+        got += ni * j * Tr ** (j - 1);
+        gott += ni * j * (j - 1) * Tr ** (j - 2);
     }
     return [go, gop, gopp, got, gott, gopt];
 }
@@ -4305,9 +4305,9 @@ function prop0(T, P) {
     prop0["v"] = Pr * gop * R * T / P / 1000;
     prop0["h"] = Tr * got * R * T;
     prop0["s"] = R * (Tr * got - go);
-    prop0["cp"] = -R * Math.pow(Tr, 2) * gott;
-    prop0["cv"] = R * (-(Math.pow(Tr, 2) * gott) - 1);
-    prop0["w"] = Math.pow((R * T * 1000 / (1 + 1 / Math.pow(Tr, 2) / gott)), 0.5);
+    prop0["cp"] = -R * Tr ** 2 * gott;
+    prop0["cv"] = R * (-(Tr ** 2 * gott) - 1);
+    prop0["w"] = (R * T * 1000 / (1 + 1 / Tr ** 2 / gott)) ** 0.5;
     prop0["alfav"] = 1 / T;
     prop0["xkappa"] = 1 / P;
     return prop0;
