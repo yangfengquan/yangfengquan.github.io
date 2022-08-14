@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#menu {
+    list-style: none;
+    background-color: #eee;
+    padding: 5px;
+    height: 30PX;
+}
+
+#menu li {
+    display: inline-block;
+    width: 100px;
+    line-height: 30px;
+    text-align: center;
+}
+
+#menu li ul {
+    display: none;
+    position: absolute;
+    background-color: #eee;
+    margin-left: 0;
+}
+#menu li ul li {
+    display: block;
+}
+#menu li:hover ul {
+    display: block;
+}
+#menu li:hover {
+    background-color: #000;
+    color: #FFF;
+}

@@ -5,7 +5,9 @@ import { currentUrl } from "./Url.js";
 function page(url) {
     let page_ele = document.getElementById("page");
     page_ele.innerHTML = '';
-    if (Object.hasOwnProperty.call(html_pages_data, url)) {  
+    if (url == "/") {
+        page_ele.innerHTML = '<div style="width: 100%; text-align:center; margin-top:30px"><h2>Welcome！</h2></div>'
+    } else if (Object.hasOwnProperty.call(html_pages_data, url)) {  
         if (screen.width > 800) {
             page_ele.appendChild(createPageForBigScreen(html_pages_data[url]));
         } else {
@@ -13,12 +15,12 @@ function page(url) {
         }
     }
     else {
-        page_ele.innerHTML = '<div style="width: 100%; text-align:center;"><h2>404</h><p>未找到页面</p></div>';
+        page_ele.innerHTML = '<div style="width: 100%; text-align:center; margin-top:30px"><h2>404</h2><p>未找到页面!</p></div>';
     }
 }
 
 function menu() {
-    let menu_ele = document.getElementById("menu-ul");
+    let menu_ele = document.getElementById("menu");
     const menu0 = [
         {text: "管道", pagesBegin: 0},
         {text: "物性", pagesBegin: 7}
@@ -33,7 +35,7 @@ function menu() {
                 if (item.pagesBegin == curId) {
                     pLi_ele = document.createElement("li");
                     ul_ele = document.createElement("ul");
-                    ul_ele.innerText = item.text;
+                    pLi_ele.innerText = item.text;
                     pLi_ele.appendChild(ul_ele);
                     menu_ele.appendChild(pLi_ele);
                 }
