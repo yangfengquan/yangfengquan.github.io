@@ -6,7 +6,7 @@ function page(url) {
     let page_ele = document.getElementById("page");
     page_ele.innerHTML = '';
     if (url == "/") {
-        page_ele.innerHTML = '<div style="width: 100%; text-align:center; margin-top:30px"><h2>Welcome！</h2></div>'
+        page_ele.innerHTML = '<div style="width: 100%; text-align:center; margin-top:30px"><h2>Welcome！</h2><p>：)</p></div>'
     } else if (Object.hasOwnProperty.call(html_pages_data, url)) {  
         if (screen.width > 800) {
             page_ele.appendChild(createPageForBigScreen(html_pages_data[url]));
@@ -85,7 +85,9 @@ function createPageForSmallScreen(html_page_data) {
     let p_ele = document.createElement("p");
     let button_ele = document.createElement("button");
     button_ele.innerText = "计算";
-    button_ele.addEventListener("click", yrun);
+    button_ele.addEventListener("change", function(){
+        solver.methods[currentUrl]();
+    });
     p_ele.appendChild(button_ele);
     page_ele.appendChild(p_ele);
 
@@ -162,7 +164,7 @@ function createFormTable(html_page_data) {
         let tr_ele = document.createElement("tr");
         tfoot_ele.appendChild(tr_ele);
         table_ele.appendChild(tfoot_ele);
-        for (let i = 0; i < html_page_data.inputs.length + html_page_data.results.length; i++) {
+        for (let i = 0; i < Object.keys(html_page_data.inputs).length + Object.keys(html_page_data.results).length; i++) {
             tr_ele.appendChild(document.createElement("td"));
         }
         if (html_page_data.multiple_rows) {

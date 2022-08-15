@@ -1,35 +1,63 @@
-* {
-    margin: 0;
-    padding: 0;
+@media (min-width:40rem) {
+    #menu {
+        list-style: none;
+        background-color: #eee;
+        padding: 5px;
+        height: 30PX;
+    }
+    
+    #menu li {
+        display: inline-block;
+        width: 100px;
+        line-height: 30px;
+        text-align: center;
+    }
+    
+    #menu li ul {
+        display: none;
+        position: absolute;
+        background-color: #eee;
+        padding: 0;
+    }
+    #menu li ul li {
+        display: block;
+    }
+    #menu li:hover ul {
+        display: block;
+    }
+    #menu li:hover {
+        background-color: #aaa;
+        color: #fff;
+    }
+    
+    #menu a:hover {
+        color: #fff;
+    }
+    
+    #menu a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    table {
+        border-top: 1px #000 solid;
+        border-left: 1px #000 solid;
+        border-spacing: 0;
+        text-align: center;
+        white-space: nowrap;
+    }
+    
+    td,th {
+        border-right: 1px #000 solid;
+        border-bottom: 1px #000 solid;
+        font-weight: normal;
+    }
+    
+    td input {
+        width: 60px;
+    }
 }
 
-#menu {
-    list-style: none;
-    background-color: #eee;
-    padding: 5px;
-    height: 30PX;
-}
-
-#menu li {
-    display: inline-block;
-    width: 100px;
-    line-height: 30px;
-    text-align: center;
-}
-
-#menu li ul {
-    display: none;
-    position: absolute;
-    background-color: #eee;
-    margin-left: 0;
-}
-#menu li ul li {
-    display: block;
-}
-#menu li:hover ul {
-    display: block;
-}
-#menu li:hover {
-    background-color: #000;
-    color: #FFF;
+@media (max-width: 40rem) {
+    
 }
