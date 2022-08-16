@@ -2,8 +2,8 @@ const html_pages_data = {
     pipe_diameter_velocity: {
         title: "流速>管径",
         inputs: {
-            flowrate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: ''},
-            velocity: {title: "流速", unit: "m/s", tagname: "input", type: "number", default_value: ''}
+            flowrate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: '', value:''},
+            velocity: {title: "流速", unit: "m/s", tagname: "input", type: "number", default_value: '', value:''}
         },
         results: {
             di: {title: "内径", unit: "mm"}
@@ -11,17 +11,23 @@ const html_pages_data = {
         options: {
             
         },
+        method: function () {
+            html_pages_data.pipe_diameter_velocity.inputs[this.name].value= parseFloat(this.value);
+            if (html_pages_data.pipe_diameter_velocity.inputs.flowrate_volume.value != '' && html_pages_data.pipe_diameter_velocity.inputs.velocity.value != '') {
+                
+            }
+        },
         multiple_rows: true,
         has_total_row: false
     },
     pipe_diameter_drop_pressure: {
         title: "压降>管径",
         inputs: {
-            flowrate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: ''},
-            density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: ''},
-            viscosity: {title: "运动粘度", unit: "m2/s", tagname: "input", type: "number", default_value: ''},
-            length: {title: "管长", unit: "m", tagname: "input", type: "number", default_value: ''},
-            drop_pressure: {title: "压降", unit: "MPa", tagname: "input", type: "number", default_value: ''}
+            flowrate_volume: {title: "流量", unit: "m3/h", tagname: "input", type: "number", default_value: '', value: ''},
+            density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: '', value: ''},
+            viscosity: {title: "运动粘度", unit: "m2/s", tagname: "input", type: "number", default_value: '', value: ''},
+            length: {title: "管长", unit: "m", tagname: "input", type: "number", default_value: '', value: ''},
+            drop_pressure: {title: "压降", unit: "MPa", tagname: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             di: {title: "内径", unit: "mm"}
@@ -36,23 +42,23 @@ const html_pages_data = {
         title: "阻力",
         inputs: {
             pipe: {title: "管道类别", tagname: "select"},
-            di: {title: "管道内径", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: ''},                       
-            flowrate_mass: {title: "流量", unit: "kg/h", tagname: "input", type: "number", default_value: ''},
-            density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: ''},
-            viscosity: {title: "运动粘度", unit: "m2/s", tagname: "input", type: "number", default_value: ''},
-            elbow45: {title: "45°弯头", unit: "个", tagname: "input", type: "number", default_value: ''},
-            elbow90: {title: "90°弯头", unit: "个", tagname: "input", type: "number", default_value: ''},
-            elbow90_x: {title: "90°斜接弯头", unit: "个", tagname: "input", type: "number", default_value: ''},
-            elbow180: {title: "180°弯头", unit: "个", tagname: "input", type: "number", default_value: ''},
-            globeValve: {title: "截止阀（全开）", unit: "个", tagname: "input", type: "number", default_value: ''},
-            angleValve: {title: "角阀（全开）", unit: "个", tagname: "input", type: "number", default_value: ''},
-            gateValve: {title: "闸阀（全开）", unit: "个", tagname: "input", type: "number", default_value: ''},
-            plugValve: {title: "旋塞阀（全开）", unit: "个", tagname: "input", type: "number", default_value: ''},
-            butterflyValve: {title: "蝶阀（全开）", unit: "个", tagname: "input", type: "number", default_value: ''},
-            checkValve0: {title: "旋启式止回阀", unit: "个", tagname: "input", type: "number", default_value: ''},
-            checkValve1: {title: "升降式止回阀", unit: "个", tagname: "input", type: "number", default_value: ''},
-            footValve: {title: "底阀", unit: "个", tagname: "input", type: "number", default_value: ''},
+            di: {title: "管道内径", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: '', value: ''},                       
+            flowrate_mass: {title: "流量", unit: "kg/h", tagname: "input", type: "number", default_value: '', value: ''},
+            density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: '', value: ''},
+            viscosity: {title: "运动粘度", unit: "m2/s", tagname: "input", type: "number", default_value: '', value: ''},
+            elbow45: {title: "45°弯头", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            elbow90: {title: "90°弯头", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            elbow90_x: {title: "90°斜接弯头", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            elbow180: {title: "180°弯头", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            globeValve: {title: "截止阀（全开）", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            angleValve: {title: "角阀（全开）", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            gateValve: {title: "闸阀（全开）", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            plugValve: {title: "旋塞阀（全开）", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            butterflyValve: {title: "蝶阀（全开）", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            checkValve0: {title: "旋启式止回阀", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            checkValve1: {title: "升降式止回阀", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
+            footValve: {title: "底阀", unit: "个", tagname: "input", type: "number", default_value: '', value: ''},
         },
         results: {
             velocity: {title: "流速", unit: "m/s"},
@@ -77,9 +83,9 @@ const html_pages_data = {
     pipe_weight: {
         title: "钢管重量",
         inputs: {
-            do_: {title: "外径", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            thk: {title: "壁厚", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: ''}
+            do_: {title: "外径", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            thk: {title: "壁厚", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             per_tube_weight: {title: "单位长度钢管自重", unit: "kg/m"},
@@ -97,13 +103,13 @@ const html_pages_data = {
     insul_pipe_weight: {
         title: "保温管道重量",
         inputs: {
-            do_: {title: "外径", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            thk: {title: "壁厚", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            insul_thk: {title: "保温厚", unit: "mm", tagname: "input", type: "number", default_value: ''},
+            do_: {title: "外径", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            thk: {title: "壁厚", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            insul_thk: {title: "保温厚", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
             insul_density: {title: "保温密度", unit: "mm", tagname: "input", type: "number", default_value: 200},
             clad_thk: {title: "保护层厚", unit: "mm", tagname: "input", type: "number", default_value: 0.6},
             clad_density: {title: "保护层密度", unit: "mm", tagname: "input", type: "number", default_value: 2720},
-            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: ''}
+            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             per_weight: {title: "单重", unit: "kg"},
@@ -118,8 +124,8 @@ const html_pages_data = {
     anticorrosion_material: {
         title: "防腐材料量",
         inputs: {
-            do_: {title: "管道外径", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: ''}
+            do_: {title: "管道外径", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             anticorrosion_area: {title: "刷漆量", unit: "m2"},
@@ -133,9 +139,9 @@ const html_pages_data = {
     insulation_material: {
         title: "保温材料量",
         inputs: {
-            do_: {title: "外径", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            insul_thk: {title: "保温厚", unit: "mm", tagname: "input", type: "number", default_value: ''},
-            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: ''}
+            do_: {title: "外径", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            insul_thk: {title: "保温厚", unit: "mm", tagname: "input", type: "number", default_value: '', value: ''},
+            length: {title: "长度", unit: "m", tagname: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             insul_volume: {title: "保温材料量", unit: "m3"},
@@ -151,13 +157,13 @@ const html_pages_data = {
         title: "物性",
         inputs: {
             fluid_name: {title: "名称", tagname: "select"},
-            temperture: {title: "温度", unit: "℃", tagname: "input", type: "number", default_value: ''},
-            pressure: {title: "压力", unit: "MPa(a)", tagname: "input", type: "number", default_value: ''},
-            density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: ''},
-            enthalpy: {title: "焓值", unit: "kj/kg", tagname: "input", type: "number", default_value: ''},
-            entropy: {title: "比熵", unit: "kj/kg/K", tagname: "input", type: "number", default_value: ''},
-            internal_energy: {title: "kj/kg", unit: "m", tagname: "input", type: "number", default_value: ''},
-            vapor_quality: {title: "干度", unit: "m", tagname: "input", type: "number", default_value: ''}
+            temperture: {title: "温度", unit: "℃", tagname: "input", type: "number", default_value: '', value: ''},
+            pressure: {title: "压力", unit: "MPa(a)", tagname: "input", type: "number", default_value: '', value: ''},
+            density: {title: "密度", unit: "kg/m3", tagname: "input", type: "number", default_value: '', value: ''},
+            enthalpy: {title: "焓值", unit: "kj/kg", tagname: "input", type: "number", default_value: '', value: ''},
+            entropy: {title: "比熵", unit: "kj/kg/K", tagname: "input", type: "number", default_value: '', value: ''},
+            internal_energy: {title: "kj/kg", unit: "m", tagname: "input", type: "number", default_value: '', value: ''},
+            vapor_quality: {title: "干度", unit: "m", tagname: "input", type: "number", default_value: '', value: ''}
         },
         results: {
             viscosity: {title: "粘度", unit: "m2/s"},

@@ -85,9 +85,7 @@ function createPageForSmallScreen(html_page_data) {
     let p_ele = document.createElement("p");
     let button_ele = document.createElement("button");
     button_ele.innerText = "计算";
-    button_ele.addEventListener("change", function(){
-        solver.methods[currentUrl]();
-    });
+    button_ele.addEventListener("click", html_page_data.method);
     p_ele.appendChild(button_ele);
     page_ele.appendChild(p_ele);
 
@@ -112,9 +110,7 @@ function createFormTable(html_page_data) {
             th_ele.innerText = element.title + "\n" + (element.unit || '');
             let input_ele = document.createElement(element.tagname);
             input_ele.name = key;
-            input_ele.addEventListener("change", function(){
-                solver.methods[currentUrl]();
-            });
+            input_ele.addEventListener("change", html_page_data.method);
             if (element.tagname == "select") {
                 html_page_data.options[key].forEach(option => {
                     let option_ele =document.createElement("option");
