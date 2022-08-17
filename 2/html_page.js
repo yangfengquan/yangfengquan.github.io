@@ -56,17 +56,23 @@ function createPageForBigScreen(html_page_data) {
     let page_ele = document.createElement("div");
 
     let page_title = document.createElement("h3");
-    page_title.innerText = html_page_data.title;
+    page_title.innerText = ">> " + html_page_data.title;
     page_ele.appendChild(page_title);
 
     page_ele.appendChild(createFormTable(html_page_data));
 
 
     let p_ele = document.createElement("p");
-    let button_ele = document.createElement("button");
-    button_ele.innerText = "添加";
-    button_ele.addEventListener("click", addRow);
-    p_ele.appendChild(button_ele);
+    let add_button_ele = document.createElement("button");
+    add_button_ele.innerText = "添加";
+    add_button_ele.addEventListener("click", addRow);
+
+    let clac_button_ele = document.createElement("button");
+    clac_button_ele.innerText = "计算";
+    clac_button_ele.addEventListener("click", html_page_data.method);
+
+    p_ele.appendChild(add_button_ele);
+    p_ele.appendChild(clac_button_ele);
     page_ele.appendChild(p_ele);
 
     return page_ele;
@@ -76,18 +82,10 @@ function createPageForSmallScreen(html_page_data) {
     let page_ele = document.createElement("div");
 
     let page_title = document.createElement("h3");
-    page_title.innerText = html_page_data.title;
+    page_title.innerText = ">> " + html_page_data.title;
     page_ele.appendChild(page_title);
 
     page_ele.appendChild(createFormDiv(html_page_data));
-
-
-    let p_ele = document.createElement("p");
-    let button_ele = document.createElement("button");
-    button_ele.innerText = "计算";
-    button_ele.addEventListener("click", html_page_data.method);
-    p_ele.appendChild(button_ele);
-    page_ele.appendChild(p_ele);
 
     return page_ele;
 }
@@ -109,8 +107,11 @@ function createFormTable(html_page_data) {
             let td_ele = document.createElement("td");
             th_ele.innerText = element.title + "\n" + (element.unit || '');
             let input_ele = document.createElement(element.tagname);
-            input_ele.name = key;
-            input_ele.addEventListener("change", html_page_data.method);
+            input_ele.id = key;
+            //input_ele.addEventListener("change", html_page_data.method);
+            input_ele.addEventListener("change", function () {
+                html_page_data.inputs[this.id].value = this.value;
+            })
             if (element.tagname == "select") {
                 html_page_data.options[key].forEach(option => {
                     let option_ele =document.createElement("option");
@@ -137,7 +138,7 @@ function createFormTable(html_page_data) {
             let th_ele = document.createElement("th");
             let td_ele = document.createElement("td");
             th_ele.innerHTML = element.title + "<br>" + element.unit;
-            
+            td_ele.id = key;
             thead_tr_ele.appendChild(th_ele);
             tbody_tr_ele.appendChild(td_ele);
         }
@@ -150,7 +151,6 @@ function createFormTable(html_page_data) {
         let button_ele = document.createElement("button");
         button_ele.innerText = "删除";
         button_ele.addEventListener("click", delRow);
-
         td_ele.appendChild(button_ele);
         tbody_tr_ele.appendChild(td_ele);
     }
@@ -182,7 +182,8 @@ function createFormDiv(html_page_data) {
             let label_ele = document.createElement("label");
             label_ele.innerText = element.title + "\n" + (element.unit || '');
             let input_ele = document.createElement(element.tagname);
-            input_ele.name = key;
+            input_ele.id = key;
+            input_ele.addEventListener("change", html_page_data.method);
             if (element.tagname == "select") {
                 html_page_data.options[key].forEach(option => {
                     let option_ele =document.createElement("option");
@@ -202,6 +203,21 @@ function createFormDiv(html_page_data) {
         }
     }
 
+    for (const key in html_page_data.results) {
+        if (Object.hasOwnProperty.call(html_page_data.results, key)) {
+            const element = html_page_data.results[key];
+            let p_ele = document.createElement("p");
+            let label_ele = document.createElement("label");
+            let span_ele = document.createElement("span");
+            //p_ele.hidden = true;
+            label_ele.innerText = element.title + "\n" + element.unit;
+            span_ele.id = key;
+            p_ele.appendChild(label_ele);
+            p_ele.appendChild(span_ele);
+            form_div_ele.appendChild(p_ele);
+        }
+    }
+
     return form_div_ele;
 }
 
@@ -212,5 +228,20 @@ function addRow(event) {
 function delRow(event) {
     
 }
+
+function showResult(result) {
+    for (const key in result) {
+        if (Object.hasOwnProperty.call(result, key)) {
+            const item = result[key];
+            let ele = document.getElementById(key);
+            ele.hidden = false;
+            if (ele.tagname == "input") {
+                ele.value = item.value;
+            } else {
+                ele.innerText = item.value;
+            }   
+        }
+    }
+}
 menu();
-export {page, addRow, delRow};
+export {page, addRow, delRow, showResult};

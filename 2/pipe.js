@@ -69,7 +69,7 @@ class Pipe {
         this.do_ = 0;
         this.di = 0;
         this.material = new PipeMaterial();
-        this.roughness = 0;
+        this.roughness = 0; //绝对粗糙度
         this.k = 0;
         this.fluid = new Fluid();
         this.insul = new Insul();
@@ -112,7 +112,7 @@ class Pipe {
     diameter_velocity(velocity) {
         return 2 * Math.sqrt(this.fluid.getFlowRate_volume() / velocity / Math.PI);
     }
-    diameter_pressureDrop(length, pressureDrop /* Pa/m */) {
+    diameter_pressureDrop(length, pressureDrop /* Pa */) {//viscosity[m2/s]
         return 0.6568905 * Math.pow(this.fluid.getDensity(), 0.207)
             * Math.pow(this.fluid.getViscosity(), 0.033)
             * Math.pow(length, 0.207)

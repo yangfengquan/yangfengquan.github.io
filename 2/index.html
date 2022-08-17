@@ -7,23 +7,34 @@
     <meta name="keywords" content="管道材料计算 管道重量计算 管径计算 管道阻力计算 管道水力计算 物性查询 物质物理性质">
     <title>工程计算</title>
     <script>
-        var _hmt = _hmt || [];
-        (function() {
-          var hm = document.createElement("script");
-          hm.src = "https://hm.baidu.com/hm.js?d319312b017fe4df29c750d1c27439e0";
-          var s = document.getElementsByTagName("script")[0]; 
-          s.parentNode.insertBefore(hm, s);
-        })();
+        // var _hmt = _hmt || [];
+        // (function() {
+        //   var hm = document.createElement("script");
+        //   hm.src = "https://hm.baidu.com/hm.js?d319312b017fe4df29c750d1c27439e0";
+        //   var s = document.getElementsByTagName("script")[0]; 
+        //   s.parentNode.insertBefore(hm, s);
+        // })();
     </script>
     <script type="module" src="./Url.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div>
+        <img src="./menu_bar.png" id="menubar">
         <ul id="menu">
             <li><a href="./"><b>工程计算</b></a>
         </ul>
     </div>
     <div id="page"></div>
+    <script>
+        document.getElementById("menubar").addEventListener("click", function () {
+            let menu_ele = document.getElementById("menu");
+            if (menu_ele.style.display == "none" || menu_ele.style.display == '') {
+                menu_ele.style.display = "block";
+            } else {
+                menu_ele.style.display = "none";
+            }
+        })
+    </script>
 </body>
 </html>

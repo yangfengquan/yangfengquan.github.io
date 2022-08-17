@@ -40,8 +40,8 @@ class Fluid {
     setEnthalpy(H) {
         this.H = H;
     }
-    setViscosity(viscosity) {
-        this.viscosity = viscosity;
+    setViscosity(viscosity/* m2 */) {
+        this.viscosity = viscosity * this.D;
     }
     getT() {
         return this.T;
@@ -64,8 +64,8 @@ class Fluid {
     getInternalEnergy() {
         return this.U;
     }
-    getViscosity() {
-        return this.viscosity / this.D; //运动粘度= 动力粘度 / 密度
+    getViscosity() {//m2/s
+        return this.viscosity / this.D; //运动粘度[m2/s] = 动力粘度[Pa.s] / 密度
     }
     getQ() {
         return this.Q;
