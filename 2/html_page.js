@@ -1,6 +1,4 @@
 import html_pages_data from "./html_pages_data.js"
-import { solver } from "./solver.js";
-import { currentUrl } from "./Url.js";
 
 function page(url) {
     let page_ele = document.getElementById("page");
@@ -108,10 +106,11 @@ function createFormTable(html_page_data) {
             th_ele.innerText = element.title + "\n" + (element.unit || '');
             let input_ele = document.createElement(element.tagname);
             input_ele.id = key;
+            input_ele.name = key;
             //input_ele.addEventListener("change", html_page_data.method);
-            input_ele.addEventListener("change", function () {
-                html_page_data.inputs[this.id].value = this.value;
-            })
+            // input_ele.addEventListener("change", function () {
+            //     html_page_data.inputs[this.id].value = this.value;
+            // });
             if (element.tagname == "select") {
                 html_page_data.options[key].forEach(option => {
                     let option_ele =document.createElement("option");
@@ -183,7 +182,9 @@ function createFormDiv(html_page_data) {
             label_ele.innerText = element.title + "\n" + (element.unit || '');
             let input_ele = document.createElement(element.tagname);
             input_ele.id = key;
-            input_ele.addEventListener("change", html_page_data.method);
+            input_ele.addEventListener("change", function () {
+                html_page_data.inputs[this.id].value = this.value;
+            });
             if (element.tagname == "select") {
                 html_page_data.options[key].forEach(option => {
                     let option_ele =document.createElement("option");
