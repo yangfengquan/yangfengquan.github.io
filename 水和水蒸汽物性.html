@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title> 水和水蒸汽物性 </title>
+<style>
+label {
+	display:block;
+}
+.short {
+	width: 5em;
+}
+</style>
+</head>
+<body>
+	<a href="./">索引</a>
+	<h1>水和水蒸汽物性</h1>
+	<form>
+		<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
+		<div id="args"></div>
+	</form>
+	<p><button onclick="run()">计算</button></p>
+	<h3>结果</h3>
+	<textarea id="res" rows="4", cols="100"></textarea>
+</body>
+<script>
+	(function(){
+		var select_ele = document.getElementById("select")
+		let options = ["请选择","压力-温度","压力-饱和","温度-饱和","压力-比焓","压力-比熵","比焓-比熵","压力-干度","温度-干度"]
+		options.forEach((item, index) => {
+			select_ele.options.add(new Option(item, index))
+		})
+	})()
+	
+	
+	const unitObj = {
+		m: "kg/mol",
+		p: "MPa(a)",
+		t: "C",
+		h: "kJ/kg",
+		s: "kJ/kg",
+		v: "m3/kg",
+		rho: "kg/m3",
+		u: "kJ/kg",
+		cp: "kJ/(kg·K)",
+		cv: "kJ/(kg·K)",
+		mu: "Pa·s",
+		nu: "m2/s",
+		k: "W/(m·K)",
+		st: "N/m",
+		alfav: "1/K",
+		kt: "1/MPa",
+		w: "m/s"
+	}
+
+	const propNameObj = {
+		m: "摩尔质量",
+		phase: "相态",
+		region: "区间",
+		p: "压力",
+		t: "温度",
+		h: "比焓",
+		s: "比熵",
+		x: "干度",
+		v: "比体积",
+		rho: "密度",
+		u: "内能",
+		cp: "定压比热容",
+		cv: "定容比热容",
+		mu: "动力粘度",
+		nu: "运动粘度",
+		k: "导热系数",
+		st: "表面张力",
+		ie: "等熵指数",
+		alfav: "膨胀系数",
+		kt: "等温压缩性",
+		w: "声速",
+		epsilon: "介电常数",
+		kw: "电离常数"
+	}
+	
+
+	function onSelected(selectedIndex){
+		let args_ele = document.getElementById("args")
+		args_ele.innerHTML = ''
+		let index = parseInt(selectedIndex) - 1
+		var modes = [
+            ['p','t'],
+            ['p'],
+            ['t'],
+            ['p','h'],
+            ['p','s'],
+            ['h','s'],
+            ['p','x'],
+            ['t','x']
+        ]
+		
+		modes[index].forEach(prop => {			
+				let unit = unitObj.hasOwnProperty(prop)? unitObj[prop] : ''
+				let propName = propNameObj.hasOwnProperty(prop)? propNameObj[prop] : ''
+				
+				let input_ele = document.createElement("p")
+				input_ele.innerHTML = '<label>' + propName + '</label><input id="' + prop +'"/> ' + unit
+				args_ele.appendChild(input_ele)
+		})
+	}
+</script>
+</html>
