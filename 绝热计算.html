@@ -12,30 +12,30 @@ label {
 </style>
 </head>
 <body>
-	<h2>¹ÜµÀ¾øÈÈ</h2>
+	<h2>ç®¡é“ç»çƒ­</h2>
 	<form>
-		<p><label>¹Ü×ÓÍâ±íÃæÎÂ¶È</label><input id="t0" type="number" value="100"> C</p>
-		<p><label>»·¾³ÎÂ¶È</label><input id="ta" type="number" value="14.7"> C</p>
-		<p><label>·çËÙ</label><input id="w" type="number" value="2.9"> m/s</p>
-		<p><label>¹Ü×ÓÍâ¾¶</label><input id="d0" type="number" value="114"> mm</p>
-		<p><label>¾øÈÈºñ¶È</label><input id="delta" type="number" value="30"> mm</p>
-		<p><label>¾øÈÈ²ÄÁÏµ¼ÈÈÏµÊı</label>
-		¦Ë=<input id="a0" class="short" type="number" value="0.043">
-		 +<input id="a1" class="short" type="number" value="0.00015">¡Á(Tm-<input id="a2" class="short" type="number" value="70">)
-		 +<input id="a3" class="short" type="number" value="0">¡Á(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
-		 +<input id="a5" class="short" type="number" value="0">¡Á(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
+		<p><label>ç®¡å­å¤–è¡¨é¢æ¸©åº¦</label><input id="t0" type="number" value="100"> C</p>
+		<p><label>ç¯å¢ƒæ¸©åº¦</label><input id="ta" type="number" value="14.7"> C</p>
+		<p><label>é£é€Ÿ</label><input id="w" type="number" value="2.9"> m/s</p>
+		<p><label>ç®¡å­å¤–å¾„</label><input id="d0" type="number" value="114"> mm</p>
+		<p><label>ç»çƒ­åšåº¦</label><input id="delta" type="number" value="30"> mm</p>
+		<p><label>ç»çƒ­ææ–™å¯¼çƒ­ç³»æ•°</label>
+		Î»=<input id="a0" class="short" type="number" value="0.043">
+		 +<input id="a1" class="short" type="number" value="0.00015">Ã—(Tm-<input id="a2" class="short" type="number" value="70">)
+		 +<input id="a3" class="short" type="number" value="0">Ã—(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
+		 +<input id="a5" class="short" type="number" value="0">Ã—(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
 		</p>
-		<p><label>ºÚ¶È</label><input id="epsilon" type="number" value="0.3"></p>
+		<p><label>é»‘åº¦</label><input id="epsilon" type="number" value="0.3"></p>
 	</form>
-	<p><button onclick="run()">¼ÆËã</button></p>
-	<h3>½á¹û</h3>
+	<p><button onclick="run()">è®¡ç®—</button></p>
+	<h3>ç»“æœ</h3>
 	<textarea id="res" rows="4", cols="100"></textarea>
 </body>
 <script>
 	function run() {
 		let t0, ta, w, d0, d1, epsilon
 		if (document.getElementById("t0").value == ""){
-			alert("¹Ü×ÓÍâ±íÃæÎÂ¶È²»¿ÉÎª¿Õ£¡")
+			alert("ç®¡å­å¤–è¡¨é¢æ¸©åº¦ä¸å¯ä¸ºç©ºï¼")
 			return
 		}
 		else {
@@ -43,7 +43,7 @@ label {
 		}
 		
 		if (document.getElementById("ta").value == ""){
-			alert("»·¾³ÎÂ¶È²»¿ÉÎª¿Õ£¡")
+			alert("ç¯å¢ƒæ¸©åº¦ä¸å¯ä¸ºç©ºï¼")
 			return
 		}
 		else {
@@ -51,7 +51,7 @@ label {
 		}
 		
 		if (document.getElementById("w").value == ""){
-			alert("Î´ÊäÈë·çËÙ£¬½«È¡Ä¬ÈÏ·çËÙ 0£¡")
+			alert("æœªè¾“å…¥é£é€Ÿï¼Œå°†å–é»˜è®¤é£é€Ÿ 0ï¼")
 			document.getElementById("w").value = 0
 			w = 0
 		}
@@ -60,7 +60,7 @@ label {
 		}
 		
 		if (document.getElementById("d0").value == ""){
-			alert("¹Ü×ÓÍâ¾¶²»¿ÉÎª¿Õ£¡")
+			alert("ç®¡å­å¤–å¾„ä¸å¯ä¸ºç©ºï¼")
 			return
 		}
 		else {
@@ -68,7 +68,7 @@ label {
 		}
 		
 		if (document.getElementById("delta").value == ""){
-			alert("¾øÈÈºñ¶È²»¿ÉÎª¿Õ£¡")
+			alert("ç»çƒ­åšåº¦ä¸å¯ä¸ºç©ºï¼")
 			return
 		}
 		else {
@@ -76,7 +76,7 @@ label {
 		}
 		
 		if (document.getElementById("epsilon").value == ""){
-			alert("ºÚ¶È²»¿ÉÎª¿Õ£¡")
+			alert("é»‘åº¦ä¸å¯ä¸ºç©ºï¼")
 			return
 		}
 		else {
@@ -91,10 +91,10 @@ label {
 		console.log(alpha)
 		let Q = getQ(t0, ta, d0, d1, lambda, alpha)
 		
-		let strResult = "¾øÈÈ²ÄÁÏ´«ÈÈÏµÊı£º" + lambda.toFixed(3)          + "  W/(m.K)"
-					 +"\nÍâ±íÃæÎÂ¶È£º      " + ts.toFixed(2)              + "  C"
-					 +"\nÉ¢ÈÈÁ¿£º          " + Q.toFixed(2)               + "  W/m2"
-					 +"\nÉ¢ÈÈÁ¿£º          " + (3.14 * d1 * Q).toFixed(2) + "  W/m"
+		let strResult = "ç»çƒ­ææ–™ä¼ çƒ­ç³»æ•°ï¼š" + lambda.toFixed(3)          + "  W/(m.K)"
+					 +"\nå¤–è¡¨é¢æ¸©åº¦ï¼š      " + ts.toFixed(2)              + "  C"
+					 +"\næ•£çƒ­é‡ï¼š          " + Q.toFixed(2)               + "  W/m2"
+					 +"\næ•£çƒ­é‡ï¼š          " + (3.14 * d1 * Q).toFixed(2) + "  W/m"
 		document.getElementById("res").value = strResult
 	}
 	function getLambda(t0, ta) {
