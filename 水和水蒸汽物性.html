@@ -10,7 +10,6 @@ label {
 	width: 5em;
 }
 </style>
-<script src="iapws97.js"></script>
 </head>
 <body>
 	<a href="./">索引</a>
@@ -21,121 +20,119 @@ label {
 	</form>
 	<p><button onclick="run()">计算</button></p>
 	<h3>结果</h3>
-	<textarea id="res" rows="23", cols="50"></textarea>
+	<textarea id="res" rows="15", cols="50"></textarea>	
 </body>
+<script src="xsteam.js"></script>
 <script>
-	const unitObj = {
-		m: "kg/mol",
-		p: "MPa(a)",
-		t: "C",
-		h: "kJ/kg",
-		s: "kJ/kg",
-		v: "m3/kg",
-		rho: "kg/m3",
-		u: "kJ/kg",
-		cp: "kJ/(kg·K)",
-		cv: "kJ/(kg·K)",
-		mu: "Pa·s",
-		nu: "m2/s",
-		k: "W/(m·K)",
-		st: "N/m",
-		alfav: "1/K",
-		kt: "1/MPa",
-		w: "m/s"
+	var propObj = {
+		// T    Temperature (K)
+		// p	Pressure    (MPa)
+		// h	Enthalpy    (kJ/kg)
+		// v	Specific volume (m3/kg)
+		// rho	Density
+		// s	Specific entropy
+		// u	Specific internal energy
+		// Cp	Specific isobaric heat capacity
+		// Cv	Specific isochoric heat capacity
+		// w	Speed of sound
+		// my	Viscosity
+		// tc	Thermal Conductivity
+		// st	Surface Tension
+		// x	Vapour fraction
+		// vx	Vapour Volume Fraction
+		T:   {name: "温度",         unit: "C",        },
+		p:   {name: "压力",         unit: "MPaA",     },
+		h:   {name: "比焓",         unit: "kJ/kg",    },
+		v:   {name: "比体积",       unit: "m3/kg",    },
+		rho: {name: "密度",         unit: "kg/m3",    },
+		s:   {name: "比熵",         unit: "kJ/kg",    },
+		u:   {name: "内能",         unit: "kJ/kg",    },
+		Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)",},
+		Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)",},
+		w:   {name: "声速",         unit: "m/s",      },
+		my:  {name: "动力粘度",     unit: "Pa·s",     },
+		tc:  {name: "导热系数",     unit: "W/(m·K)",  },
+		st:  {name: "表面张力",     unit: "N/m",      },
+		x:   {name: "干度",         unit: "",         },
+		vx:  {name: "气态体积分数", unit: "",         }
 	}
-
-	let propNameObj = {
-		m: "摩尔质量",
-		phase: "相态",
-		region: "区间",
-		p: "压力",
-		t: "温度",
-		h: "比焓",
-		s: "比熵",
-		x: "干度",
-		v: "比体积",
-		rho: "密度",
-		u: "内能",
-		cp: "定压比热容",
-		cv: "定容比热容",
-		mu: "动力粘度",
-		nu: "运动粘度",
-		k: "导热系数",
-		st: "表面张力",
-		ie: "等熵指数",
-		alfav: "膨胀系数",
-		kt: "等温压缩性",
-		w: "声速",
-		epsilon: "介电常数",
-		kw: "电离常数"
-	};
+	
+	var modes = [
+            ['p','T'],
+			['p','h'],
+            ['p','s'],
+			['p','x'],
+			['T','x'],
+            ['h','s']
+        ]
+		
+	var selectedIndex
 	
 	(function(){
 		var select_ele = document.getElementById("select")
-		let options = ["压力-温度","压力-比焓","压力-比熵","压力-干度","压力-饱和","温度-干度","温度-饱和","比焓-比熵"]
-		options.forEach((item, index) => {
-			select_ele.options.add(new Option(item, index))
+		//let options = ["压力-温度","压力-比焓","压力-比熵","压力-干度","压力-饱和","温度-干度","温度-饱和","比焓-比熵"]
+		modes.forEach((item, index) => {
+			select_ele.options.add(new Option(propObj[item[0]].name + "-" + propObj[item[1]].name, index))
 		})
 		
 		onSelected(0)
 	}())
 	
-	var mode
-	
-	function onSelected(selectedIndex){
+	function onSelected(index){
 		let args_ele = document.getElementById("args")
 		args_ele.innerHTML = ''
-		let index = parseInt(selectedIndex)
-		var modes = [
-            ['p','t'],
-			['p','h'],
-            ['p','s'],
-			['p','x'],
-            ['p'],
-			['t','x'],
-            ['t'],
-            ['h','s']
-        ]
+		selectedIndex = parseInt(index)
 		
-		mode = modes[index]
-		
-		mode.forEach(prop => {			
-				let unit = unitObj.hasOwnProperty(prop)? unitObj[prop] : ''
-				let propName = propNameObj.hasOwnProperty(prop)? propNameObj[prop] : ''
-				
+		modes[index].forEach(prop => {
 				let input_ele = document.createElement("p")
-				input_ele.innerHTML = '<label>' + propName + '</label><input name="' + prop +'"/> ' + unit
+				input_ele.innerHTML = '<label>' + propObj[prop].name + '</label><input name="' + prop +'"/> ' + propObj[prop].unit
 				args_ele.appendChild(input_ele)
 		})
 	}
 	
 	function run(){
-		let args = {}
+		let len = modes[selectedIndex].length, arg1, arg2, result = {}
 		
-		let len = mode.length
-		args[mode[0]] = parseFloat(document.getElementsByName(mode[0])[0].value)
-		args[mode[len - 1]] = parseFloat(document.getElementsByName(mode[len - 1])[0].value)
+		arg1 = parseFloat(document.getElementsByName(modes[selectedIndex][0])[0].value)
+		arg2 = parseFloat(document.getElementsByName(modes[selectedIndex][len - 1])[0].value)
 		
-		if(mode[0] == "t") args[mode[0]] += 273.15
-		if(mode[len - 1] == "t") args[mode[len - 1]] += 273.15
-
-		let w = new IAPWS97()
-		let r = w.solve(args)
+		if(modes[selectedIndex][0] == "T") arg1 += 273.15
+		if(modes[selectedIndex][len - 1] == "T") arg2 += 273.15
+		
+		switch(selectedIndex) {
+			case 0:
+				result = pT(arg1, arg2)
+				break;
+			case 1:
+				result = ph(arg1, arg2)
+				break;
+			case 2:
+				result = ps(arg1, arg2)
+				break;
+			case 3:
+				result = px(arg1, arg2)
+				break;
+			case 4:
+				result = Tx(arg1, arg2)
+				break;
+			case 5:
+				result = hs(arg1, arg2)
+				break;
+		}
+		
+		result.T -= 273.15
+		
 		let strResult = ''
-		for (let prop in propNameObj){
-			if(r.hasOwnProperty(prop)){
-				if(r[prop] != null){
-					let v = prop == "t"? r[prop] - 273.15 : r[prop]
-					let u = unitObj[prop] == undefined? '' : unitObj[prop]
-					let space
-					if(propNameObj[prop].length < 4) space = ":		"
-					if(propNameObj[prop].length >= 4) space = ":	"
-					strResult += propNameObj[prop] + space + v + " " + u + "\n"
-				}
+		for (let prop in propObj){
+			if(result.hasOwnProperty(prop)){
+				let space = propObj[prop].name.length < 3 ? "：\t\t" : "：\t"
+
+				strResult += propObj[prop].name + space + result[prop] + " " + propObj[prop].unit + "\n"
 			}
 		}
 		
-		document.getElementById("res").value = strResult
+		document.getElementById("res").value = strResult.substr(0, strResult.length - 2)
 	}
+	
 </script>
 </html>
