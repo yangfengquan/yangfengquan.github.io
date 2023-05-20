@@ -10,6 +10,7 @@ label {
 	width: 5em;
 }
 </style>
+<script src="iapws97.js"></script>
 </head>
 <body>
 	<a href="./">索引</a>
@@ -20,18 +21,9 @@ label {
 	</form>
 	<p><button onclick="run()">计算</button></p>
 	<h3>结果</h3>
-	<textarea id="res" rows="4", cols="100"></textarea>
+	<textarea id="res" rows="23", cols="50"></textarea>
 </body>
 <script>
-	(function(){
-		var select_ele = document.getElementById("select")
-		let options = ["请选择","压力-温度","压力-饱和","温度-饱和","压力-比焓","压力-比熵","比焓-比熵","压力-干度","温度-干度"]
-		options.forEach((item, index) => {
-			select_ele.options.add(new Option(item, index))
-		})
-	})()
-	
-	
 	const unitObj = {
 		m: "kg/mol",
 		p: "MPa(a)",
@@ -52,7 +44,7 @@ label {
 		w: "m/s"
 	}
 
-	const propNameObj = {
+	let propNameObj = {
 		m: "摩尔质量",
 		phase: "相态",
 		region: "区间",
@@ -76,32 +68,74 @@ label {
 		w: "声速",
 		epsilon: "介电常数",
 		kw: "电离常数"
-	}
+	};
 	
-
+	(function(){
+		var select_ele = document.getElementById("select")
+		let options = ["压力-温度","压力-比焓","压力-比熵","压力-干度","压力-饱和","温度-干度","温度-饱和","比焓-比熵"]
+		options.forEach((item, index) => {
+			select_ele.options.add(new Option(item, index))
+		})
+		
+		onSelected(0)
+	}())
+	
+	var mode
+	
 	function onSelected(selectedIndex){
 		let args_ele = document.getElementById("args")
 		args_ele.innerHTML = ''
-		let index = parseInt(selectedIndex) - 1
+		let index = parseInt(selectedIndex)
 		var modes = [
             ['p','t'],
-            ['p'],
-            ['t'],
-            ['p','h'],
+			['p','h'],
             ['p','s'],
-            ['h','s'],
-            ['p','x'],
-            ['t','x']
+			['p','x'],
+            ['p'],
+			['t','x'],
+            ['t'],
+            ['h','s']
         ]
 		
-		modes[index].forEach(prop => {			
+		mode = modes[index]
+		
+		mode.forEach(prop => {			
 				let unit = unitObj.hasOwnProperty(prop)? unitObj[prop] : ''
 				let propName = propNameObj.hasOwnProperty(prop)? propNameObj[prop] : ''
 				
 				let input_ele = document.createElement("p")
-				input_ele.innerHTML = '<label>' + propName + '</label><input id="' + prop +'"/> ' + unit
+				input_ele.innerHTML = '<label>' + propName + '</label><input name="' + prop +'"/> ' + unit
 				args_ele.appendChild(input_ele)
 		})
+	}
+	
+	function run(){
+		let args = {}
+		
+		let len = mode.length
+		args[mode[0]] = parseFloat(document.getElementsByName(mode[0])[0].value)
+		args[mode[len - 1]] = parseFloat(document.getElementsByName(mode[len - 1])[0].value)
+		
+		if(mode[0] == "t") args[mode[0]] += 273.15
+		if(mode[len - 1] == "t") args[mode[len - 1]] += 273.15
+
+		let w = new IAPWS97()
+		let r = w.solve(args)
+		let strResult = ''
+		for (let prop in propNameObj){
+			if(r.hasOwnProperty(prop)){
+				if(r[prop] != null){
+					let v = prop == "t"? r[prop] - 273.15 : r[prop]
+					let u = unitObj[prop] == undefined? '' : unitObj[prop]
+					let space
+					if(propNameObj[prop].length < 4) space = ":		"
+					if(propNameObj[prop].length >= 4) space = ":	"
+					strResult += propNameObj[prop] + space + v + " " + u + "\n"
+				}
+			}
+		}
+		
+		document.getElementById("res").value = strResult
 	}
 </script>
 </html>
