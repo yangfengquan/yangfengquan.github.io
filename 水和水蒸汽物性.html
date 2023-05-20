@@ -55,7 +55,6 @@ label {
 	
 	(function(){
 		var select_ele = document.getElementById("select")
-		//let options = ["压力-温度","压力-比焓","压力-比熵","压力-干度","压力-饱和","温度-干度","温度-饱和","比焓-比熵"]
 		modes.forEach((item, index) => {
 			select_ele.options.add(new Option(propObj[item[0]].name + "-" + propObj[item[1]].name, index))
 		})
@@ -66,8 +65,7 @@ label {
 	function onSelected(index){
 		let args_ele = document.getElementById("args")
 		args_ele.innerHTML = ''
-		selectedIndex = parseInt(index)
-		
+		selectedIndex = index
 		modes[index].forEach(prop => {
 				let input_ele = document.createElement("p")
 				input_ele.innerHTML = '<label>' + propObj[prop].name + '</label><input name="' + prop +'"/> ' + propObj[prop].unit
