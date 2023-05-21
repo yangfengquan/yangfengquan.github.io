@@ -97,7 +97,7 @@
 		
 		let strResult = ''
 		strResult += thk == undefined ? "SH/T3405-2017中无该壁厚系列\n" : "壁厚：\t" + thk + " mm\n"
-		strResult += "单重：\t" + weight + " kg/m"
+		strResult += "单重：\t" + weight.toFixed(2) + " kg/m"
 		
 		document.getElementById("res").value = strResult
 	}	

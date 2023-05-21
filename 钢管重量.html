@@ -30,8 +30,8 @@
 		let weight = 3.14 * 7.85 * (d0 - thk) * thk / 1000;
 		
 		let strResult = ''
-		strResult += "单重：\t" + weight + " kg/m\n"
-		strResult += "总重：\t" + weight * len + " kg"
+		strResult += "单重：\t" + weight.toFixed(2) + " kg/m\n"
+		strResult += "总重：\t" + (weight * len).toFixed(2) + " kg"
 		
 		document.getElementById("res").value = strResult
 	}	
