@@ -1,0 +1,51 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="管壁厚计算">
+<title> 管壁厚 </title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<a href="./">索引</a>
+	<h1>管壁厚</h1>
+	<form>
+		<p>GB/T 20801.3</p>
+		<p><label>管外径 D</label><input name="D"/> mm</p>
+		<p><label>设计压力 P</label><input name="P"/> MPa</p>
+		<p><label>许用应力 S</label><input name="S"/> MPa</p>
+		<p><label>计算系数 Y</label><input name="Y"/></p>
+		<p><label>焊接接头高温降低系数 W</label><input name="W"/></p>
+		<p><label>纵向焊接接头系数 Φ</label><input name="Phi"/></p>
+		<p><label>材料厚度负偏差 C1</label><input name="C1"/> mm</p>
+		<p><label>腐蚀、冲蚀裕量 C2</label><input name="C2"/> mm</p>
+		<p><label>机械加工深度 C3</label><input name="C3"/> mm</p>
+	</form>
+	<p><button onclick="run()">计算</button></p>
+	<h3>结果</h3>
+	<textarea id="res" rows="2", cols="30"></textarea>	
+</body>
+<script src="xsteam.js"></script>
+<script>
+	function run(){
+		let D, P, S, Y, W, Phi, C1, C2, C3
+		
+		D = parseFloat(document.getElementsByName("D")[0].value)
+		P = parseFloat(document.getElementsByName("P")[0].value)
+		S = parseFloat(document.getElementsByName("S")[0].value)
+		Y = parseFloat(document.getElementsByName("Y")[0].value)
+		W = parseFloat(document.getElementsByName("W")[0].value)
+		Phi = parseFloat(document.getElementsByName("Phi")[0].value)
+		C1 = parseFloat(document.getElementsByName("C1")[0].value)
+		C2 = parseFloat(document.getElementsByName("C2")[0].value)
+		C3 = parseFloat(document.getElementsByName("C3")[0].value)
+		
+		let t = P * D / (2 * (S * Phi * W + P * Y)) + C1 + C2 + C2
+		
+		let strResult = ''
+		strResult += "壁厚：\t" + t.toFixed(2) + " mm"
+		
+		document.getElementById("res").value = strResult
+	}	
+</script>
+</html>
