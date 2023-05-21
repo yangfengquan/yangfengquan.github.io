@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="钢管重量计算">
+<title> 钢管重量 </title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<a href="./">索引</a>
+	<h1>钢管重量</h1>
+	<form>
+		<p><label>钢管外径</label><input name="d0"/> mm</p>
+		<p><label>钢管壁厚</label><input name="thk"/> mm</p>
+		<p><label>钢管长度</label><input name="len"/> mm</p>
+		<div id="args"></div>
+	</form>
+	<p><button onclick="run()">计算</button></p>
+	<h3>结果</h3>
+	<textarea id="res" rows="2", cols="30"></textarea>	
+</body>
+<script src="xsteam.js"></script>
+<script>
+	function run(){
+		let d0, thk, len
+		
+		d0 = parseFloat(document.getElementsByName("d0")[0].value)
+		thk = parseFloat(document.getElementsByName("thk")[0].value)
+		len = parseFloat(document.getElementsByName("len")[0].value)
+		let weight = 3.14 * 7.85 * (d0 - thk) * thk / 1000;
+		
+		let strResult = ''
+		strResult += "单重：\t" + weight + " kg/m\n"
+		strResult += "总重：\t" + weight * len + " kg"
+		
+		document.getElementById("res").value = strResult
+	}	
+</script>
+</html>
