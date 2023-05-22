@@ -10,7 +10,6 @@
 	<a href="./">索引</a>
 	<h1>管壁厚</h1>
 	<form>
-		<p>GB/T 20801.3</p>
 		<p><label>管外径 D</label><input name="D"/> mm</p>
 		<p><label>设计压力 P</label><input name="P"/> MPa</p>
 		<p><label>许用应力 S</label><input name="S"/> MPa</p>
@@ -23,7 +22,8 @@
 	</form>
 	<p><button onclick="run()">计算</button></p>
 	<h3>结果</h3>
-	<textarea id="res" rows="2", cols="30"></textarea>	
+	<textarea id="res" rows="20", cols="45"></textarea>
+	<p>计算依据：GB/T 20801.3</p>
 </body>
 <script>
 	function run(){

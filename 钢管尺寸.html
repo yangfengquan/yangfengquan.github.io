@@ -10,13 +10,13 @@
 	<a href="./">索引</a>
 	<h1>钢管尺寸</h1>
 	<form>
-		<p>SH/T3405-2017</p>
 		<p>公称直径 <select name="DN"></select></p>
 		<p>壁厚系列 <select name="SCH"></select></p>
 	</form>
 	<p><button onclick="run()">计算</button></p>
 	<h3>结果</h3>
-	<textarea id="res" rows="2", cols="30"></textarea>	
+	<textarea id="res" rows="20", cols="45"></textarea>
+	<p>计算依据：SH/T3405-2017</p>
 </body>
 <script>
 	const Sch = ["SCH5", "SCH10", "SCH20", "SCH30", "SCH40", "SCH60", "SCH80", "SCH100", "SCH120", "SCH140", "SCH160", "STD", "XS", "XXS", "SCH5S", "SCH10S", "SCH40S", "SCH80S"]
