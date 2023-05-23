@@ -7,6 +7,8 @@
 <meta name="description" content="工程在线计算小程序，致力于实现ProII等模拟软件功能之外的工程设计计算功能，小而实用的在线计算。">
 <title>水和水蒸汽物性在线计算，依据：IAPWS-IF97</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 </head>
 <body>
 	<a href="./">索引</a>
@@ -19,6 +21,20 @@
 	<h3>结果</h3>
 	<textarea id="res" rows="20", cols="45"></textarea>
 	<p>计算依据：<a href="http://www.iapws.org/relguide/IF97-Rev.pdf">http://www.iapws.org/relguide/IF97-Rev.pdf</a></p>
+	<div id="gitalk-container"></div>
+	<script>
+	const gitalk = new Gitalk({
+	  clientID: '00dc4759e691a87d03ac',
+	  clientSecret: '68f058fff8d1af3c39f4df04c1079c29334f345c',
+	  repo: 'yangfengquan.github.io',
+	  owner: 'yangfengquan',
+	  admin: ['yangfengquan'],
+	  id: "https://yangfengquan.github.io/",
+	  distractionFreeMode: false
+	})
+
+	gitalk.render('gitalk-container')
+	</script>
 </body>
 <script src="xsteam.js"></script>
 <script>
