@@ -6,6 +6,9 @@
 <meta name="keywords" content="钢管重量在线计算 钢管尺寸在线查询 管壁厚在线计算 管道绝热在线计算 水和水蒸汽物性在线计算">
 <meta name="description" content="工程在线计算小程序，致力于实现ProII等模拟软件功能之外的工程设计计算功能，小而实用的在线计算。">
 <title>索引 工程在线计算小程序首页，功能目录</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
 </head>
 <body>
 	<h1>索引</h1>
@@ -16,7 +19,7 @@
 		<li><a href="管道绝热.html">管道绝热</a></li>
 		<li><a href="水和水蒸汽物性.html">水和水蒸汽物性</a></li>
 	</ul>
-	<p>留言</p>
+
 	<div id="gitalk-container"></div>
 	<script>
 	const gitalk = new Gitalk({
@@ -25,7 +28,7 @@
 	  repo: 'yangfengquan.github.io',      // The repository of store comments,
 	  owner: 'yangfengquan',
 	  admin: ['yangfengquan'],
-	  id: location.pathname,      // Ensure uniqueness and length less than 50
+	  id: 'https://yangfengquan.github.io',      // Ensure uniqueness and length less than 50
 	  distractionFreeMode: false  // Facebook-like distraction free mode
 	})
 
