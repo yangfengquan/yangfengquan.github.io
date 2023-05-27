@@ -4,7 +4,7 @@
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="keywords" content="钢管重量在线计算">
-<meta name="description" content="工程在线计算小程序，致力于实现ProII等模拟软件功能之外的工程设计计算功能，小而实用的在线计算。">
+<meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
 <title>管重量在线计算，可计算单重、总重</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
@@ -12,12 +12,12 @@
 </head>
 <body>
 	<a href="./">索引</a>
-	<div class="wrap">
+	<div class="wrap">	
 		<h1>管子重量</h1>
 		<form>
 			<p><label>管子外径</label><input name="d0"/> mm</p>
 			<p><label>管子壁厚</label><input name="thk"/> mm</p>
-			<p><label>管材密度（默认值为碳钢密度）</label><input name="rho"/ value="7850"> kg/m3</p>
+			<p><label>管材密度（默认值为碳钢密度）</label><input name="rho" value="7850"/> kg/m3</p>
 			<p><label>管子长度</label><input name="len"/> m</p>
 		</form>
 		<p><button onclick="run()">计算</button></p>
