@@ -12,23 +12,25 @@
 </head>
 <body>
 	<a href="./">索引</a>
-	<h1>管壁厚</h1>
-	<form>
-		<p><label>管外径 D</label><input name="D"/> mm</p>
-		<p><label>设计压力 P</label><input name="P"/> MPa</p>
-		<p><label>许用应力 S</label><input name="S"/> MPa</p>
-		<p><label>计算系数 Y</label><input name="Y"/></p>
-		<p><label>焊接接头高温降低系数 W</label><input name="W"/></p>
-		<p><label>纵向焊接接头系数 Φ</label><input name="Phi"/></p>
-		<p><label>材料厚度负偏差 C1</label><input name="C1"/> mm</p>
-		<p><label>腐蚀、冲蚀裕量 C2</label><input name="C2"/> mm</p>
-		<p><label>机械加工深度 C3</label><input name="C3"/> mm</p>
-	</form>
-	<p><button onclick="run()">计算</button></p>
-	<h3>结果</h3>
-	<textarea id="res" rows="20", cols="45"></textarea>
-	<p>计算依据：GB/T 20801.3</p>
-	<div id="gitalk-container"></div>
+	<div class="wrap">
+		<h1>管壁厚</h1>
+		<form>
+			<p><label>管外径 D</label><input name="D"/> mm</p>
+			<p><label>设计压力 P</label><input name="P"/> MPa</p>
+			<p><label>许用应力 S</label><input name="S"/> MPa</p>
+			<p><label>计算系数 Y</label><input name="Y"/></p>
+			<p><label>焊接接头高温降低系数 W</label><input name="W"/></p>
+			<p><label>纵向焊接接头系数 Φ</label><input name="Phi"/></p>
+			<p><label>材料厚度负偏差 C1</label><input name="C1"/> mm</p>
+			<p><label>腐蚀、冲蚀裕量 C2</label><input name="C2"/> mm</p>
+			<p><label>机械加工深度 C3</label><input name="C3"/> mm</p>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res" rows="20", cols="45"></textarea>
+		<p>计算依据：GB/T 20801.3</p>
+		<div id="gitalk-container"></div>
+	</div>
 	<script>
 	const gitalk = new Gitalk({
 	  clientID: '00dc4759e691a87d03ac',

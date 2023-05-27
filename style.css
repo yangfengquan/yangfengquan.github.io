@@ -1,6 +1,14 @@
 label {
 	display: block;
 }
+textarea {
+	width: 800px;
+	height: 300px;
+}
 .short {
 	width: 5em;
+}
+.wrap {
+	width: 800px;
+	margin: 0 auto;
 }

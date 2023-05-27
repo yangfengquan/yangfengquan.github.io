@@ -12,16 +12,18 @@
 </head>
 <body>
 	<a href="./">索引</a>
-	<h1>水和水蒸汽物性</h1>
-	<form>
-		<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
-		<div id="args"></div>
-	</form>
-	<p><button onclick="run()">计算</button></p>
-	<h3>结果</h3>
-	<textarea id="res" rows="20", cols="45"></textarea>
-	<p>计算依据：<a href="http://www.iapws.org/relguide/IF97-Rev.pdf">http://www.iapws.org/relguide/IF97-Rev.pdf</a></p>
-	<div id="gitalk-container"></div>
+	<div class="wrap">
+		<h1>水和水蒸汽物性</h1>
+		<form>
+			<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
+			<div id="args"></div>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res" rows="20", cols="45"></textarea>
+		<p>计算依据：<a href="http://www.iapws.org/relguide/IF97-Rev.pdf">http://www.iapws.org/relguide/IF97-Rev.pdf</a></p>
+		<div id="gitalk-container"></div>
+	</div>
 	<script>
 	const gitalk = new Gitalk({
 	  clientID: '00dc4759e691a87d03ac',

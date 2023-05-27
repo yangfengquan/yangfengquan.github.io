@@ -12,16 +12,18 @@
 </head>
 <body>
 	<a href="./">索引</a>
-	<h1>钢管尺寸</h1>
-	<form>
-		<p>公称直径 <select name="DN"></select></p>
-		<p>壁厚系列 <select name="SCH"></select></p>
-	</form>
-	<p><button onclick="run()">计算</button></p>
-	<h3>结果</h3>
-	<textarea id="res" rows="20", cols="45"></textarea>
-	<p>计算依据：SH/T3405-2017</p>
-	<div id="gitalk-container"></div>
+	<div class="wrap">
+		<h1>钢管尺寸</h1>
+		<form>
+			<p>公称直径 <select name="DN"></select></p>
+			<p>壁厚系列 <select name="SCH"></select></p>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res"></textarea>
+		<p>计算依据：SH/T3405-2017</p>
+		<div id="gitalk-container"></div>
+	</div>
 	<script>
 	const gitalk = new Gitalk({
 	  clientID: '00dc4759e691a87d03ac',
