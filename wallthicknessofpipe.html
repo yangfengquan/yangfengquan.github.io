@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="content-language" content="zh-CN">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="管壁厚在线计算">
+<meta name="description" content="工程在线计算小程序，致力于实现ProII等模拟软件功能之外的工程设计计算功能，小而实用的在线计算。">
+<title>管壁厚在线计算，计算依据：GB/T 20801.3</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+</head>
+<body>
+	<div class="wrap">
+		<a href="./">列表</a>
+		<h1>管壁厚</h1>
+		<form>
+			<p><label>管外径 D</label><input name="D"/> mm</p>
+			<p><label>设计压力 P</label><input name="P"/> MPa</p>
+			<p><label>许用应力 S</label><input name="S"/> MPa</p>
+			<p><label>计算系数 Y</label><input name="Y"/></p>
+			<p><label>焊接接头高温降低系数 W</label><input name="W"/></p>
+			<p><label>纵向焊接接头系数 Φ</label><input name="Phi"/></p>
+			<p><label>材料厚度负偏差 C1</label><input name="C1"/> mm</p>
+			<p><label>腐蚀、冲蚀裕量 C2</label><input name="C2"/> mm</p>
+			<p><label>机械加工深度 C3</label><input name="C3"/> mm</p>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res"></textarea>
+		<p>计算依据：GB/T 20801.3</p>
+		<div id="gitalk-container"></div>
+	</div>
+	<script>
+		const gitalk = new Gitalk({
+		  clientID: '00dc4759e691a87d03ac',
+		  clientSecret: '68f058fff8d1af3c39f4df04c1079c29334f345c',
+		  repo: 'yangfengquan.github.io',
+		  owner: 'yangfengquan',
+		  admin: ['yangfengquan'],
+		  id: "https://yangfengquan.github.io/管壁厚.html",
+		  distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+</body>
+<script>
+	function run(){
+		let D, P, S, Y, W, Phi, C1, C2, C3
+		
+		D = parseFloat(document.getElementsByName("D")[0].value)
+		P = parseFloat(document.getElementsByName("P")[0].value)
+		S = parseFloat(document.getElementsByName("S")[0].value)
+		Y = parseFloat(document.getElementsByName("Y")[0].value)
+		W = parseFloat(document.getElementsByName("W")[0].value)
+		Phi = parseFloat(document.getElementsByName("Phi")[0].value)
+		C1 = parseFloat(document.getElementsByName("C1")[0].value)
+		C2 = parseFloat(document.getElementsByName("C2")[0].value)
+		C3 = parseFloat(document.getElementsByName("C3")[0].value)
+		
+		let t = P * D / (2 * (S * Phi * W + P * Y)) + C1 + C2 + C3
+		
+		let strResult = ''
+		strResult += "壁厚：\t" + t.toFixed(2) + " mm"
+		
+		document.getElementById("res").value = strResult
+	}	
+</script>
+</html>

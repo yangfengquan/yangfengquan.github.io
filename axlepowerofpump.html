@@ -3,27 +3,26 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="管子重量在线计算,钢管尺寸在线查询,管壁厚在线计算，管道绝热在线计算,水和水蒸汽物性在线计算,泵轴功率在线计算, 安全阀在线计算">
+<meta name="keywords" content="泵轴功率在线计算">
 <meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
-<title>列表 工程在线计算小程序</title>
+<title>泵轴功率在线计算</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<h1>列表</h1>
-		<ul>
-			<li><a href="weightofpipe.html">管子重量</a></li>
-			<li><a href="sizeofpipe.html">钢管尺寸</a></li>
-			<li><a href="wallthicknessofpipe.html">管壁厚</a></li>
-			<li><a href="insulationofpipe.html">管道保温</a></li>
-			<li><a href="coldinsulationofpipe.html">管道保冷</a></li>
-			<li><a href="propertiesofwaterandsteam.html">水和水蒸汽物性</a></li>
-			<li><a href="axlepowerofpump.html">泵轴功率</a></li>
-			<li><a href="safetyvalve.html">安全阀</a></li>
-		</ul>
-
+		<a href="./">列表</a>
+		<h1>泵轴功率</h1>
+		<form>
+			<p><label>流量</label><input name="rate"/> m3/h</p>
+			<p><label>扬程</label><input name="h"/> m</p>
+			<p><label>密度</label><input name="rho"> kg/m3</p>
+			<p><label>效率</label><input name="eta"/> %</p>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res"></textarea>	
 		<div id="gitalk-container"></div>
 	</div>
 	<script>
@@ -33,7 +32,7 @@
 		  repo: 'yangfengquan.github.io',
 		  owner: 'yangfengquan',
 		  admin: ['yangfengquan'],
-		  id: "https://yangfengquan.github.io/",
+		  id: "https://yangfengquan.github.io/泵轴功率.html",
 		  distractionFreeMode: false
 		})
 
@@ -49,4 +48,20 @@
 		})();
 	</script>
 </body>
+<script>
+	function run(){
+		let rate, h, rho, eta;
+		
+		rate = parseFloat(document.getElementsByName("rate")[0].value)
+		h = parseFloat(document.getElementsByName("h")[0].value)
+		rho = parseFloat(document.getElementsByName("rho")[0].value)
+		eta = parseFloat(document.getElementsByName("eta")[0].value) / 100
+		let q = rate * h * 9.81 * rho / 3600 / eta / 1000;
+		
+		let strResult = ''
+		strResult += "轴功率：\t" + q.toFixed(2) + " kw\n"
+		
+		document.getElementById("res").value = strResult
+	}	
+</script>
 </html>

@@ -1,0 +1,150 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="content-language" content="zh-CN">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="安全阀在线计算">
+<meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
+<title>安全阀在线计算</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+</head>
+<body>
+	<div class="wrap">
+		<a href="./">列表</a>
+		<h1>安全阀</h1>
+		<form>
+			<p>
+				<label>物料</label>
+				<select name="stream" onchange="onSelected(this.options.selectedIndex)">
+					<option value="0">气体</option>
+					<option value="1">饱和蒸汽</option>
+					<option value="2">液体</option>
+				</select>
+			</p>
+			<p><label>泄放量</label><input name="W"/> kg/h</p>
+			<p><label>泄放装置出口侧压力</label><input name="p0"/> MPaA</p>
+			<p><label>泄放压力</label><input name="pf"/> MPaA</p>
+			<p><label>泄放温度</label><input name="Tf"/> K</p>
+			<p><label>泄放装置的泄放系数</label><input name="K"/></p>
+			<p><label>气体绝热指数</label><input name="k"></p>
+			<p><label>气体摩尔质量</label><input name="M"/> kg/kmol</p>
+			<p><label>气体压缩系数</label><input name="Z"/></p>
+			<p><label>液体动力粘度修正系数</label><input name="zeta" disabled="disabled"/></p>
+			<p><label>泄放条件下的介质密度</label><input name="rho" disabled="disabled"/> kg/m3</p>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res"></textarea>	
+		<p>计算依据：GB 150</p>
+		<div id="gitalk-container"></div>
+	</div>
+	<script>
+		const gitalk = new Gitalk({
+		  clientID: '00dc4759e691a87d03ac',
+		  clientSecret: '68f058fff8d1af3c39f4df04c1079c29334f345c',
+		  repo: 'yangfengquan.github.io',
+		  owner: 'yangfengquan',
+		  admin: ['yangfengquan'],
+		  id: "https://yangfengquan.github.io/泵轴功率.html",
+		  distractionFreeMode: false
+		})
+
+		gitalk.render('gitalk-container')
+	</script>
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+</body>
+<script>
+	function onSelected(selectedIndex) {
+		switch(selectedIndex) {
+			case 0:
+				document.getElementsByName("p0")[0].disabled = false
+				document.getElementsByName("Tf")[0].disabled = false
+				document.getElementsByName("k")[0].disabled = false
+				document.getElementsByName("M")[0].disabled = false
+				document.getElementsByName("Z")[0].disabled = false
+				document.getElementsByName("zeta")[0].disabled = true
+				document.getElementsByName("rho")[0].disabled = true
+				break;
+			case 1:
+				document.getElementsByName("p0")[0].disabled = true
+				document.getElementsByName("Tf")[0].disabled = true
+				document.getElementsByName("k")[0].disabled = true
+				document.getElementsByName("M")[0].disabled = true
+				document.getElementsByName("Z")[0].disabled = true
+				document.getElementsByName("zeta")[0].disabled = true
+				document.getElementsByName("rho")[0].disabled = true
+				break;
+			case 2:
+				document.getElementsByName("p0")[0].disabled = false
+				document.getElementsByName("Tf")[0].disabled = true
+				document.getElementsByName("k")[0].disabled = true
+				document.getElementsByName("M")[0].disabled = true
+				document.getElementsByName("Z")[0].disabled = true
+				document.getElementsByName("zeta")[0].disabled = false
+				document.getElementsByName("rho")[0].disabled = false
+				break;
+		}
+	}
+	function A_gas(W, p0, pf, Tf, K, k, M, Z) {
+		if (p0 / pf <= Math.pow(2 / (k + 1))) {
+			let C = 520 * Math.sqrt(k * Math.pow(2 / (k + 1), (k + 1) / (k - 1)))
+			return 13.16 * W / (C * K * pf) * Math.sqrt(Z* Tf / M)
+		}
+		else {
+			return 1.79e-2 * W / (K * pf * Math.sqrt(k / (k - 1) * (Math.pow(p0 / pf, 1 / k) - Math.pow(p0 / pf, (k + 1) / k)))) * Math.sqrt(Z * Tf / M)
+		}
+	}
+	function A_satSteam(W, K, pf) {
+		if(pf <= 10) {
+			return 0.19 * W / (K * pf)
+		}
+		else {
+			return 0.19 * W / (K * pf) * ((33.2 * pf - 1061) / (27.6 * pf - 1000))
+		}
+	}
+	function A_liquid(W, p0, pf, Tf, K, zeta, rho) {
+		return 0.196 * W / (zeta * K * Math.sqrt(rho * (pf - p0)))
+	}
+	function run(){
+		let selectedIndex, W, p0, pf, Tf, K, k, M, Z, zeta, rho, A
+		selectedIndex = document.getElementsByName("stream")[0].selectedIndex
+		W = parseFloat(document.getElementsByName("W")[0].value)
+		p0 = parseFloat(document.getElementsByName("p0")[0].value)
+		pf = parseFloat(document.getElementsByName("pf")[0].value)
+		Tf = parseFloat(document.getElementsByName("Tf")[0].value)
+		K = parseFloat(document.getElementsByName("K")[0].value)
+		k = parseFloat(document.getElementsByName("k")[0].value)
+		M = parseFloat(document.getElementsByName("M")[0].value)
+		Z = parseFloat(document.getElementsByName("Z")[0].value)
+		zeta = parseFloat(document.getElementsByName("zeta")[0].value)
+		rho = parseFloat(document.getElementsByName("rho")[0].value)
+		
+		switch(selectedIndex) {
+			case 0:
+				A = A_gas(W, p0, pf, Tf, K, k, M, Z)
+				break
+			case 1:
+				A = A_satSteam(W, K, pf)
+				break
+			case 2:
+				A = A_liquid(W, p0, pf, Tf, K, zeta, rho)
+				break
+		}
+		
+		let strResult = ''
+		strResult += "泄放面积：\t" + A.toFixed(2) + " mm2"
+		
+		document.getElementById("res").value = strResult
+	}	
+</script>
+</html>
