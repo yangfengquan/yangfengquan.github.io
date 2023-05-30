@@ -11,41 +11,29 @@
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 </head>
 <body>
-	<a href="./">索引</a>
-	<h1>管道保冷</h1>
-	<form>
-		<p><label>管子外表面温度</label><input id="t0" type="number" value="100"> C</p>
-		<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
-		<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
-		<p><label>管子外径</label><input id="d0" type="number" value="114"> mm</p>
-		<p><label>保冷厚度</label><input id="delta" type="number" value="30"> mm</p>
-		<p><label>保冷材料导热系数</label>
-		λ=<input id="a0" class="short" type="number" value="0.043">
-		 +<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
-		 +<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
-		 +<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
-		</p>
-		<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
-		<p><label>保冷厚度修正系数</label><input id="zeta" type="number"></p>
-	</form>
-	<p><button onclick="run()">计算</button></p>
-	<h3>结果</h3>
-	<textarea id="res" rows="20", cols="45"></textarea>
-	<p>计算依据：GB 50264</p>
-	<div id="gitalk-container"></div>
-	<script>
-	const gitalk = new Gitalk({
-	  clientID: '00dc4759e691a87d03ac',
-	  clientSecret: '68f058fff8d1af3c39f4df04c1079c29334f345c',
-	  repo: 'yangfengquan.github.io',
-	  owner: 'yangfengquan',
-	  admin: ['yangfengquan'],
-	  id: "https://yangfengquan.github.io/管道绝热.html",
-	  distractionFreeMode: false
-	})
-
-	gitalk.render('gitalk-container')
-	</script>
+	<div class="wrap">
+		<a href="./">索引</a>
+		<h1>管道保冷</h1>
+		<form>
+			<p><label>管子外表面温度</label><input id="t0" type="number" value="100"> C</p>
+			<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
+			<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
+			<p><label>管子外径</label><input id="d0" type="number" value="114"> mm</p>
+			<p><label>保冷厚度</label><input id="delta" type="number" value="30"> mm</p>
+			<p><label>保冷材料导热系数</label>
+			λ=<input id="a0" class="short" type="number" value="0.043">
+			 +<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
+			 +<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
+			 +<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
+			</p>
+			<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
+			<p><label>保冷厚度修正系数</label><input id="zeta" type="number"></p>
+		</form>
+		<p><button onclick="run()">计算</button></p>
+		<h3>结果</h3>
+		<textarea id="res" rows="20", cols="45"></textarea>
+		<p>计算依据：GB 50264</p>
+	</div>
 </body>
 <script>
 
