@@ -25,7 +25,7 @@
 		var _hmt = _hmt || [];
 		(function() {
 		  var hm = document.createElement("script");
-		  hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";
+		  hm.src = "https://hm.baidu.com/hm.js?51fca3a38264de03a9a5ee61c891b038";
 		  var s = document.getElementsByTagName("script")[0]; 
 		  s.parentNode.insertBefore(hm, s);
 		})();
@@ -107,6 +107,7 @@
 		let weight = 3.14 * 7.85 * (d0 - thk) * thk / 1000;
 		
 		let strResult = ''
+		strResult += "外径：\t" + D0[dn] + " mm\n"
 		strResult += thk == undefined ? "SH/T3405-2017中无该壁厚系列\n" : "壁厚：\t" + thk + " mm\n"
 		strResult += "单重：\t" + weight.toFixed(2) + " kg/m"
 		
