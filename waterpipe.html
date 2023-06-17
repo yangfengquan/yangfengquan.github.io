@@ -114,15 +114,15 @@
 						+"\n温度\t\tC\t\t"					+ tA.toFixed(2)					+ "\t\t" + tB.toFixed(2)
 						+"\n焓值\t\tkj/kg\t\t"				+ hA.toFixed(2)					+ "\t\t" + hB.toFixed(2)
 						+"\n干度\t\t\t\t"					+ xA.toFixed(2)					+ "\t\t" + xB.toFixed(2)
-						+"\n\n----------------------------------------------------------"
+						+"\n\n----------------------------------------------------"
 						+"\n压降\t\tMPa\t\t"				+ (pA - pB).toFixed(2)
 						+"\n温降\t\tC\t\t"					+ (tA - tB).toFixed(2)
 						+"\n焓降\t\tkj/kg\t\t"				+ (hA - hB).toFixed(2)
 						+"\n热损失\t\tW/m2\t\t"				+ Q.toFixed(2)
 						+"\n热损失\t\tW/m\t\t"				+ q.toFixed(2)
 						+"\n总热损失\tW\t\t"				+ (q * l + qbr).toFixed(2)
-						+"\n绝热材料传热系数W/(m.K)\t\t"	+ lambda.toFixed(3)
-						+"\n外表面温度\tC\t\t"			+ ts.toFixed(2)
+						+"\n传热系数\tW/(m.K)\t\t"			+ lambda.toFixed(3)
+						+"\n表面温度\tC\t\t"				+ ts.toFixed(2)
 
 		document.getElementById("res").value = strResult
 	}
