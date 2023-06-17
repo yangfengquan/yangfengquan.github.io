@@ -71,7 +71,7 @@ function getVelocity(f, d) {
  * @param v flow rate [m/s]
  * @returns Pipe Internal diameter [m]
  */
-function dim_v(f, v) {
+function di_v(f, v) {
     return Math.sqrt(f / v / 3.14) * 2;
 }
 /**
@@ -158,7 +158,7 @@ function resistace(re, dim, e) {
     else {
         var x0 = 0, x1 = 0.1;
         do {
-            var mid = (x0 + x1) / 2;console.log(mid);
+            var mid = (x0 + x1) / 2;
             if (1 / Math.pow(mid, 0.5) + 2 * Math.log10(e / (3.7 * dim)) > 0) {
                 x0 = mid;
             }
@@ -206,7 +206,7 @@ function pipeDp1(ksum, ve, rho) {
  * @returns
  */
 function kt(lambda, l, di) {
-    return lambda / l / di;
+    return lambda / di * l;
 }
 /**
  * 动压 [Pa]
@@ -225,7 +225,6 @@ function pd(ve, v) {
  * @returns
  */
 function p2(pd1, p1, kt) {
-	console.log("p1:"+p1)
     return p1 * Math.pow((1 - 2 * pd1 / p1 * kt * (1 + 2.5 * pd1 / p1)), 0.5);
 }
 /**
@@ -267,7 +266,6 @@ function getTs(t0, ta, w, d0, d1, lambda, epsilon) {
 		let alpha = getAlpha(ts, ta, w, d1, epsilon)
 		let Q = getQ(t0, ta, d0, d1, lambda, alpha)
 		ts_pre = ts_Q(Q, ta, alpha)
-		console.log("ts:"+ts+"-ts_pre"+ts_pre)
 	}
 	while(Math.abs(ts - ts_pre) > 1e-3)
 	
@@ -338,7 +336,6 @@ function getq(Q, d1) {
  */
 function getAlpha(ts, ta, w, d1, epsilon) {
 	let alpha_r = 5.669 * epsilon / (ts - ta) * (Math.pow((273 + ts) / 100, 4) - Math.pow((273 + ta) / 100, 4));
-	console.log("alpha_r:"+alpha_r)
 	let alpha_c;
 	if (w == 0) {
 		alpha_c = 26.4 / Math.pow(297 + 0.5 * (ts + ta), 0.5) * Math.pow((ts - ta) / d1, 0.25);
@@ -347,11 +344,11 @@ function getAlpha(ts, ta, w, d1, epsilon) {
 		if (w * d1 < 0.8) {	
 			alpha_c = 0.08 / d1 + 4.2 * Math.pow(w, 0.618) / Math.pow(d1, 0.382);
 		}
-		else {console.log("w:"+w+"d1"+d1)
+		else {
 			alpha_c = 4.53 * Math.pow(w, 0.805) / Math.pow(d1, 0.195);
 		}
 	}
-	console.log("alpha_c:"+alpha_c)
+
 	return alpha_r + alpha_c
 }
 /**
@@ -363,13 +360,12 @@ function getAlpha2() {
 }
 /**
  * 管托热损失
- * @param H 管托高度
- * @param l 管托截面长度
- * @param P 管托截面周长
- * @param A0 管托截面面积
+ * @param H 管托高度      [m]
+ * @param P 管托截面周长  [m]
+ * @param A0 管托截面面积 [m2]
  * @returns
  */
-function qBracket(H, l, P, ts, ta, A0) {
+function qBracket(H, P, t0, ta, A0) {
     var k = -0.0465 * t0 + 61.697;
     var h = 25; //表面传热系数[W/m2.K]
     var m = Math.pow((h * P) / (k * A0), 0.5);
@@ -387,7 +383,6 @@ function qBracket(H, l, P, ts, ta, A0) {
  * @returns 末端焓值 kj/kg
  */
 function getHB(hA, f, qTotal) {
-	console.log("hA:"+hA,"qTotal:"+qTotal)
     return hA - qTotal / 1000 / f;
 }
 /**
@@ -404,20 +399,17 @@ function getHB(hA, f, qTotal) {
  * @param l 管道长度[m]
  * @returns 管道或设备外表面平均温度[℃]
  */
-function getT0(f, d0, d1, l, tA, pA, pB, ta, lambda, alpha) {
-    console.log("f:"+f,"d0:"+d0,"d1:"+d1,"l:"+l,"tA:"+tA,"pA:"+pA,"pB:"+pB,"ta:"+ta,"lambda:"+lambda,"alpha:"+alpha)
-	var t0 = tA, Q, q, hB, tB;
+function getT0(f, d0, d1, l, tA, pA, pB, ta, lambda, alpha, Hbr, Pbr, A0br, numbr) {
+	var t0 = tA, Q, q, hB, tB, qbr;
     var t0_tmp; // = t_A;
     do {
         t0_tmp = t0;
         Q = getQ(t0, ta, d0, d1, lambda, alpha);
-		console.log("Q:"+Q)
         q = getq(Q, d1);
-		console.log("q:"+q)
-        hB = getHB(h_pT(pA, tA + 273.15), f, q * l);
-		console.log("hB:"+hB)
+		qbr = numbr * qBracket(Hbr, Pbr, t0, ta, A0br)
+		
+        hB = getHB(h_pT(pA, tA + 273.15), f, q * l + qbr);
 		tB = T_ph(pB, hB) - 273.15;
-		console.log("tB:"+tB)
         t0 = (tA + tB) / 2;
     } while (Math.abs(t0 - t0_tmp) > 0.01);
     return t0;

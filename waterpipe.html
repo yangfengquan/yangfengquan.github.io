@@ -18,12 +18,13 @@
 			<p><label>压力</label><input id="pA" type="number" value="1.6"> MPa(A)</p>
 			<p><label>外径</label><input id="d0" type="number" value="762"> mm</p>
 			<p><label>壁厚</label><input id="thk" type="number" value="12.7"> mm</p>
-			<p><label>长度</label><input id="l" type="number" value="100"> m</p>
+			<p><label>展开长度</label><input id="l" type="number" value="10000"> m</p>
+			<p><label>展开长度+当量长度</label><input id="lp" type="number" value="16500"> m</p>
 			<p><label>绝对粗糙度</label><input id="rough" type="number" value="0.2"> mm</p>
-			<p><label>管托数量</label><input id="bnum" type="number" value="1"> 个</p>
-			<p><label>管托截面周长</label><input id="bp" type="number" value="1"> mm</p>
-			<p><label>管托截面面积</label><input id="ba" type="number" value="1"> mm2</p>
-			<p><label>管托高度</label><input id="bh" type="number" value="1"> mm</p>
+			<p><label>管托数量</label><input id="numbr" type="number" value="750"> 个</p>
+			<p><label>管托截面周长</label><input id="Pbr" type="number" value="1600"> mm</p>
+			<p><label>管托截面面积</label><input id="A0br" type="number" value="9600"> mm2</p>
+			<p><label>管托高度</label><input id="Hbr" type="number" value="50"> mm</p>
 			<p><label>绝热厚度</label><input id="ithk" type="number" value="200"> mm</p>
 			<p><label>绝热材料导热系数</label>
 			λ=<input id="a0" class="short" type="number" value="0.043">
@@ -60,11 +61,12 @@
 		let d0 = parseFloat(document.getElementById("d0").value) / 1000;
 		let thk = parseFloat(document.getElementById("thk").value) / 1000;
 		let l = parseFloat(document.getElementById("l").value);
+		let lp = parseFloat(document.getElementById("lp").value);
 		let rough = parseFloat(document.getElementById("rough").value) / 1000;
-		let bnum = parseFloat(document.getElementById("bnum").value);
-		let bp = parseFloat(document.getElementById("bp").value) / 1000;
-		let ba = parseFloat(document.getElementById("ba").value) / 1e6;
-		let bh = parseFloat(document.getElementById("bh").value) / 1000;
+		let numbr = parseFloat(document.getElementById("numbr").value);
+		let Pbr = parseFloat(document.getElementById("Pbr").value) / 1000;
+		let A0br = parseFloat(document.getElementById("A0br").value) / 1e6;
+		let Hbr = parseFloat(document.getElementById("Hbr").value) / 1000;
 		let ithk = parseFloat(document.getElementById("ithk").value) / 1000;
 		
 		let lambdaArgs = []
@@ -75,37 +77,53 @@
 		let epsilon = parseFloat(document.getElementById("epsilon").value);
 		let ta = parseFloat(document.getElementById("ta").value);
 		let w = parseFloat(document.getElementById("w").value);
-		console.log("d0:"+d0)
+		
 		let hA = h_pT(pA, tA + 273.15);
-		console.log("hA:"+hA)
 		let rhoA = rho_pT(pA, tA + 273.15);
+		let xA = x_ph(pA, hA);
+		let fA_gas = f * xA;
+		let fA_liquid = f * (1 - xA);
+		
 		let veA = getVelocity(f / rhoA, d0 - 2 * thk);
-		console.log("veA:"+veA)
 		let re = reynolds(d0 - 2 * thk, veA, rhoA, my_pT(pA, tA + 273.15));
 		let resis = resistace(re, d0 - 2 * thk, rough);
-		let kt = (resis, l, d0 - 2 * thk);
+		let kt1 = kt(resis, lp, d0 - 2 * thk);
 		let pdA = pd(veA, 1 / rhoA);
-		console.log("pdA:"+pdA)
-		let pB = p2(pdA, pA*1e6, kt) / 1e6;
-		console.log("pB:"+pB)
+		let pB = p2(pdA, pA * 1e6, kt1) / 1e6;
 		let lambda = getLambda(tA, ta, lambdaArgs);
-		console.log("lambda:"+lambda)
 		let ts = getTs(tA, ta, w, d0, d0 + 2 * ithk, lambda, epsilon);
-		console.log("ts:"+ts)
 		let alpha = getAlpha(ts, ta, w, d0 + 2 * ithk, epsilon);
-		console.log("alpha:"+alpha)
-		let t0 = getT0(f, d0, d0 + 2 * ithk, l, tA, pA, pB, ta, lambda, alpha);
-		console.log("t0:"+t0)
+		let t0 = getT0(f, d0, d0 + 2 * ithk, l, tA, pA, pB, ta, lambda, alpha, Hbr, Pbr, A0br, numbr);
 		let Q = getQ(t0, ta, d0, d0 + 2 * ithk, lambda, alpha);
 		let q = getq(Q, d0 + 2 * ithk);
-		let hB = getHB(hA, f, q * l);
-		let tB = T_ph(pB, hB);
+		let qbr = numbr * qBracket(Hbr, Pbr, t0, ta, A0br);
+		let hB = getHB(hA, f, q * l + qbr);
+		let tB = T_ph(pB, hB) - 273.15;
+		let rhoB = rho_ph(pB, hB);
+		let xB = x_ph(pB, hB);
+		let fB_gas = f * xB;
+		let fB_liquid = f * (1 - xB);
+		let veB = getVelocity(f / rhoB, d0 - 2 * thk);
 		
-		
-		let strResult = "绝热材料传热系数：" + lambda.toFixed(3)          + "  W/(m.K)"
-					 +"\n外表面温度：      " + ts.toFixed(2)              + "  C"
-					 +"\n散热量：          " + Q.toFixed(2)               + "  W/m2"
-					 +"\n散热量：          " + (3.14 * d0 + 2 * ithk * Q).toFixed(2) + "  W/m"
+		let strResult =  "\t\t\t\t入口\t\t出口"
+						+"\n流量\t\tkg/h\t\t"				+ f * 3600
+						+"\n气相\t\tkg/h\t\t"				+ (fA_gas * 3600).toFixed(0)	+ "\t\t" + (fB_gas * 3600).toFixed(0)
+						+"\n液相\t\tkg/h\t\t"				+ (fA_liquid * 3600).toFixed(0)	+ "\t\t" + (fB_liquid * 3600).toFixed(2)
+						+"\n流速\t\tm/s\t\t"				+ veA.toFixed(2)				+ "\t\t" + veB.toFixed(2)
+						+"\n压力\t\tMPa(A)\t\t"				+ pA.toFixed(2)					+ "\t\t" + pB.toFixed(2)
+						+"\n温度\t\tC\t\t"					+ tA.toFixed(2)					+ "\t\t" + tB.toFixed(2)
+						+"\n焓值\t\tkj/kg\t\t"				+ hA.toFixed(2)					+ "\t\t" + hB.toFixed(2)
+						+"\n干度\t\t\t\t"					+ xA.toFixed(2)					+ "\t\t" + xB.toFixed(2)
+						+"\n\n----------------------------------------------------------"
+						+"\n压降\t\tMPa\t\t"				+ (pA - pB).toFixed(2)
+						+"\n温降\t\tC\t\t"					+ (tA - tB).toFixed(2)
+						+"\n焓降\t\tkj/kg\t\t"				+ (hA - hB).toFixed(2)
+						+"\n热损失\t\tW/m2\t\t"				+ Q.toFixed(2)
+						+"\n热损失\t\tW/m\t\t"				+ q.toFixed(2)
+						+"\n总热损失\tW\t\t"				+ (q * l + qbr).toFixed(2)
+						+"\n绝热材料传热系数W/(m.K)\t\t"	+ lambda.toFixed(3)
+						+"\n外表面温度\tC\t\t"			+ ts.toFixed(2)
+
 		document.getElementById("res").value = strResult
 	}
 	
