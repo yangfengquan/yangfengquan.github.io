@@ -122,7 +122,7 @@
 				strResult += propObj[prop].name + space + result[prop] + " " + propObj[prop].unit + "\n"
 			}
 		}
-		
+		strResult += "绝热指数：\t" + result.Cp / result.Cv
 		document.getElementById("res").value = strResult.substr(0, strResult.length - 2)
 	}
 	
