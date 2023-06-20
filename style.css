@@ -14,9 +14,22 @@ a, button{
 	color:#6190e8;
 	color: #99cccc;
 }
+small {
+	color: grey;
+}
+footer {
+	padding-top: 15px;
+	text-align: center;
+	color: #ccc;
+}
 .short {
 	width: 5em;
 }
+.list-item {
+	padding: 5px;
+	border-bottom: 1px grey solid;
+}
+
 @media(min-width:1024px)
 {
 	.wrap {

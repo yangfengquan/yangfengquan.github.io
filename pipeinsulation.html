@@ -13,7 +13,7 @@
 		<a href="./">列表</a>
 		<h1>管道绝热</h1>
 		<form>
-			<p><label>管子外表面温度</label><input id="t0" type="number" value="100"> C</p>
+			<p><label>物料温度</label><input id="t0" type="number" value="100"> C</p>
 			<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
 			<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
 			<p><label>管子外径</label><input id="d0" type="number" value="114"> mm</p>
@@ -112,8 +112,8 @@
 		
 		let strResult = "绝热材料传热系数：" + lambda.toFixed(3)          + "  W/(m.K)"
 					 +"\n外表面温度：      " + ts.toFixed(2)              + "  C"
-					 +"\n散热量：          " + Q.toFixed(2)               + "  W/m2"
-					 +"\n散热量：          " + (3.14 * d1 * Q).toFixed(2) + "  W/m"
+					 +"\n热损失：          " + Q.toFixed(2)               + "  W/m2"
+					 +"\n热损失：          " + (3.14 * d1 * Q).toFixed(2) + "  W/m"
 		document.getElementById("res").value = strResult
 	}
 	
