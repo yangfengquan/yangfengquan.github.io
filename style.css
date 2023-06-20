@@ -29,6 +29,9 @@ footer {
 	padding: 5px;
 	border-bottom: 1px grey solid;
 }
+.list-item h4, p {
+	margin: 0;
+}
 
 @media(min-width:1024px)
 {
