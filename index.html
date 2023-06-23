@@ -7,30 +7,18 @@
 <meta name="description" content="工程在线计算小程序，提供石油化工、电力等行业的工程设计计算程序，包含工艺流程、工艺设备、管道、物性等计算程序。无需注册，方便快捷，代码开源。">
 <title>工程在线计算小程序</title>
 <link rel="stylesheet" href="style.css">
-<!--
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
--->
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<h1><a href="./">yangfengquan.github.io</a></h1>
-		<!--
-		<ul>
-			<li><a href="pipediameter.html">管径</a></li>
-			<li><a href="pipeflowvelocity.html">管道流速</a></li>
-			<li><a href="pipeweight.html">管子重量</a></li>
-			<li><a href="pipesize.html">钢管尺寸</a></li>
-			<li><a href="pipewalltickness.html">管壁厚</a></li>
-			<li><a href="pipeinsulation.html">管道保温</a></li>
-			<li><a href="pipecoldinsulation.html">管道保冷</a></li>
-			<li><a href="waterpipe.html">水和水蒸汽管道</a></li>
-			<li><a href="waterprops.html">水和水蒸汽物性</a></li>
-			<li><a href="pumpaxlepower.html">泵轴功率</a></li>
-			<li><a href="safetyvalve.html">安全阀</a></li>
-		</ul>
-		-->
-		<div>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>说明</h2>
 			<div class="list-item">
 				<h4><a href="pipediameter.html">管径在线计算</a></h4>
 				<p>已知管道的体积流量和流速，计算管道内径。</p>
@@ -48,11 +36,11 @@
 			</div>
 			<div class="list-item">
 				<h4><a href="pipesize.html">钢管尺寸在线查询</a></h4>
-				<p>查询个壁厚系列的管道外径、壁厚和单重，数据来自标准SH/T3405-2017。</p>
+				<p>查询壁厚系列、管道外径、壁厚和单重，数据来自标准SH/T3405-2017。</p>
 				<small>2023-6-20</small>
 			</div>
 			<div class="list-item">
-				<h4><a href="pipewalltickness.html">管壁厚在线计算</a></h4>
+				<h4><a href="pipewalltickness.html">管道壁厚在线计算</a></h4>
 				<p>在设计压力、温度条件下，计算管子的壁厚，计算依据标准：GB/T 20801.3-2020。</p>
 				<small>2023-6-20</small>
 			</div>
@@ -63,7 +51,7 @@
 			</div>
 			<div class="list-item">
 				<h4><a href="pipecoldinsulation.html">管道保冷在线计算</a></h4>
-				<p>计算管道的热损失、保温外表面温度，保冷材料的传热系数，计算依据标准：GB 50264。</p>
+				<p>计算管道的冷损失、保冷外表面温度，保冷材料的传热系数，计算依据标准：GB 50264。</p>
 				<small>2023-6-20</small>
 			</div>
 			<div class="list-item">
@@ -86,25 +74,9 @@
 				<p>计算水、蒸汽的密度、焓值、内能、比热容、声速、导热系数等热力学性质，计算依据：国际水和水蒸气性质学会于1997年通过的工业用水和水蒸气热力学性质IF97公式<a href="http://www.iapws.org/relguide/IF97-Rev.pdf">http://www.iapws.org/relguide/IF97-Rev.pdf</a></p>
 				<small>2023-6-20</small>
 			</div>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
 		</div>
-		<div id="gitalk-container"></div>
-		<footer><p>关注微信公众号：jisuanhao</p></footer>
 	</div>
-	<!--
-	<script>
-		const gitalk = new Gitalk({
-		  clientID: '00dc4759e691a87d03ac',
-		  clientSecret: '68f058fff8d1af3c39f4df04c1079c29334f345c',
-		  repo: 'yangfengquan.github.io',
-		  owner: 'yangfengquan',
-		  admin: ['yangfengquan'],
-		  id: "https://yangfengquan.github.io/",
-		  distractionFreeMode: false
-		})
-
-		gitalk.render('gitalk-container')
-	</script>
-	-->
 	<script>	
 		var _hmt = _hmt || [];
 		(function() {

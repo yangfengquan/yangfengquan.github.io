@@ -3,33 +3,42 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="管道绝热在线计算">
-<meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
-<title>管道绝热在线计算，计算依据GB 50264</title>
+<meta name="keywords" content="管道,绝热,保温,在线计算">
+<meta name="description" content="计算管道的热损失、保温外表面温度，绝热材料的传热系数，计算依据标准：GB 50264。">
+<title>管道保温在线计算</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>管道绝热</h1>
-		<form>
-			<p><label>物料温度</label><input id="t0" type="number" value="100"> C</p>
-			<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
-			<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
-			<p><label>管子外径</label><input id="d0" type="number" value="114"> mm</p>
-			<p><label>绝热厚度</label><input id="delta" type="number" value="30"> mm</p>
-			<p><label>绝热材料导热系数</label>
-			λ=<input id="a0" class="short" type="number" value="0.043">
-			 +<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
-			 +<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
-			 +<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
-			</p>
-			<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>
-		<p>计算依据：GB 50264</p>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>管道保温</h2>
+			<form>
+				<p><label>物料温度</label><input id="t0" type="number" value="100"> C</p>
+				<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
+				<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
+				<p><label>管子外径</label><input id="d0" type="number" value="114"> mm</p>
+				<p><label>绝热厚度</label><input id="delta" type="number" value="30"> mm</p>
+				<p><label>绝热材料导热系数</label>
+				λ=<input id="a0" class="short" type="number" value="0.043">
+				+<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
+				+<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
+				+<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
+				</p>
+				<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<p>计算依据：GB 50264</p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];

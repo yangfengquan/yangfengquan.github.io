@@ -3,43 +3,52 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="管道绝热在线计算">
-<meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
+<meta name="keywords" content="水,水蒸汽,管道,管径,阻力,压降,温降,热损失,在线计算">
+<meta name="description" content="同时计算水和水蒸气管道的阻力、温降，不适用汽水混合、压降超过40%水和水蒸气管道计算，计算依据标准：GB 50264、DL/T5054等。">
 <title>水和水蒸汽管道在线计算</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>水和水蒸汽管道</h1>
-		<form>
-			<p><label>流量</label><input id="f" type="number" value="140000"> kg/h</p>
-			<p><label>温度</label><input id="tA" type="number" value="320"> C</p>
-			<p><label>压力</label><input id="pA" type="number" value="1.6"> MPa(A)</p>
-			<p><label>外径</label><input id="d0" type="number" value="762"> mm</p>
-			<p><label>壁厚</label><input id="thk" type="number" value="12.7"> mm</p>
-			<p><label>展开长度</label><input id="l" type="number" value="10000"> m</p>
-			<p><label>展开长度+当量长度</label><input id="lp" type="number" value="16500"> m</p>
-			<p><label>绝对粗糙度</label><input id="rough" type="number" value="0.2"> mm</p>
-			<p><label>管托数量</label><input id="numbr" type="number" value="750"> 个</p>
-			<p><label>管托截面周长</label><input id="Pbr" type="number" value="1600"> mm</p>
-			<p><label>管托截面面积</label><input id="A0br" type="number" value="9600"> mm2</p>
-			<p><label>管托高度</label><input id="Hbr" type="number" value="50"> mm</p>
-			<p><label>绝热厚度</label><input id="ithk" type="number" value="200"> mm</p>
-			<p><label>绝热材料导热系数</label>
-			λ=<input id="a0" class="short" type="number" value="0.043">
-			 +<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
-			 +<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
-			 +<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
-			</p>
-			<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
-			<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
-			<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>
-		<p>计算依据：GB 50264</p>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>水和水蒸汽管道</h2>
+			<form>
+				<p><label>流量</label><input id="f" type="number" value="140000"> kg/h</p>
+				<p><label>温度</label><input id="tA" type="number" value="320"> C</p>
+				<p><label>压力</label><input id="pA" type="number" value="1.6"> MPa(A)</p>
+				<p><label>外径</label><input id="d0" type="number" value="762"> mm</p>
+				<p><label>壁厚</label><input id="thk" type="number" value="12.7"> mm</p>
+				<p><label>展开长度</label><input id="l" type="number" value="10000"> m</p>
+				<p><label>展开长度+当量长度</label><input id="lp" type="number" value="16500"> m</p>
+				<p><label>绝对粗糙度</label><input id="rough" type="number" value="0.2"> mm</p>
+				<p><label>管托数量</label><input id="numbr" type="number" value="750"> 个</p>
+				<p><label>管托截面周长</label><input id="Pbr" type="number" value="1600"> mm</p>
+				<p><label>管托截面面积</label><input id="A0br" type="number" value="9600"> mm2</p>
+				<p><label>管托高度</label><input id="Hbr" type="number" value="50"> mm</p>
+				<p><label>绝热厚度</label><input id="ithk" type="number" value="200"> mm</p>
+				<p><label>绝热材料导热系数</label>
+				λ=<input id="a0" class="short" type="number" value="0.043">
+				+<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
+				+<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
+				+<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
+				</p>
+				<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
+				<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
+				<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<p>计算依据：GB 50264</p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];

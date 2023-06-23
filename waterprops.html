@@ -4,21 +4,30 @@
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="keywords" content="水,水蒸汽,蒸汽,物性,热力学性质,在线计算,water, properties">
-<title>水和蒸汽物性在线计算，计算依据：IAPWS-IF97</title>
+<title>水和蒸汽物性在线计算</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>水和蒸汽物性</h1>
-		<form>
-			<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
-			<div id="args"></div>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>
-		<p>计算依据：<a href="http://www.iapws.org/relguide/IF97-Rev.pdf">http://www.iapws.org/relguide/IF97-Rev.pdf</a></p>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>水和蒸汽物性</h2>
+			<form>
+				<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
+				<div id="args"></div>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<p>计算依据：<a href="http://www.iapws.org/relguide/IF97-Rev.pdf">http://www.iapws.org/relguide/IF97-Rev.pdf</a></p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];

@@ -3,39 +3,47 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="安全阀在线计算">
-<meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
+<meta name="keywords" content="安全阀，泄放面积,在线计算">
+<meta name="description" content="计算所需的安全阀的泄放面积，为安全阀提供依据，计算依据标准：GB 150。">
 <title>安全阀在线计算</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>安全阀</h1>
-		<form>
-			<p>
-				<label>物料</label>
-				<select name="stream" onchange="onSelected(this.options.selectedIndex)">
-					<option value="0">气体</option>
-					<option value="1">饱和蒸汽</option>
-					<option value="2">液体</option>
-				</select>
-			</p>
-			<p><label>泄放量</label><input name="W"/> kg/h</p>
-			<p><label>泄放装置出口侧压力</label><input name="p0"/> MPaA</p>
-			<p><label>泄放压力</label><input name="pf"/> MPaA</p>
-			<p><label>泄放温度</label><input name="Tf"/> K</p>
-			<p><label>泄放装置的泄放系数</label><input name="K"/></p>
-			<p><label>气体绝热指数</label><input name="k"></p>
-			<p><label>气体摩尔质量</label><input name="M"/> kg/kmol</p>
-			<p><label>气体压缩系数</label><input name="Z"/></p>
-			<p><label>液体动力粘度修正系数</label><input name="zeta" disabled="disabled"/></p>
-			<p><label>泄放条件下的介质密度</label><input name="rho" disabled="disabled"/> kg/m3</p>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>	
-		<p>计算依据：GB 150</p>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>安全阀</h2>
+			<form>
+				<p>
+					<label>物料</label>
+					<select name="stream" onchange="onSelected(this.options.selectedIndex)">
+						<option value="0">气体</option>
+						<option value="1">饱和蒸汽</option>
+						<option value="2">液体</option>
+					</select>
+				</p>
+				<p><label>泄放量</label><input name="W"/> kg/h</p>
+				<p><label>泄放装置出口侧压力</label><input name="p0"/> MPaA</p>
+				<p><label>泄放压力</label><input name="pf"/> MPaA</p>
+				<p><label>泄放温度</label><input name="Tf"/> K</p>
+				<p><label>泄放装置的泄放系数</label><input name="K"/></p>
+				<p><label>气体绝热指数</label><input name="k"></p>
+				<p><label>气体摩尔质量</label><input name="M"/> kg/kmol</p>
+				<p><label>气体压缩系数</label><input name="Z"/></p>
+				<p><label>液体动力粘度修正系数</label><input name="zeta" disabled="disabled"/></p>
+				<p><label>泄放条件下的介质密度</label><input name="rho" disabled="disabled"/> kg/m3</p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>	
+			<p>计算依据：GB 150</p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];

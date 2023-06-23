@@ -3,30 +3,39 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="管壁厚在线计算">
-<meta name="description" content="工程在线计算小程序，致力于实现ProII等模拟软件功能之外的工程设计计算功能，小而实用的在线计算。">
+<meta name="keywords" content="管道壁厚,在线计算">
+<meta name="description" content="在设计压力、温度条件下，计算管子的壁厚，计算依据标准：GB/T 20801.3-2020。">
 <title>管壁厚在线计算，计算依据：GB/T 20801.3</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>管壁厚</h1>
-		<form>
-			<p><label>管外径 D</label><input name="D"/> mm</p>
-			<p><label>设计压力 P</label><input name="P"/> MPa</p>
-			<p><label>许用应力 S</label><input name="S"/> MPa</p>
-			<p><label>计算系数 Y</label><input name="Y"/></p>
-			<p><label>焊接接头高温降低系数 W</label><input name="W"/></p>
-			<p><label>纵向焊接接头系数 Φ</label><input name="Phi"/></p>
-			<p><label>材料厚度负偏差 C1</label><input name="C1"/> mm</p>
-			<p><label>腐蚀、冲蚀裕量 C2</label><input name="C2"/> mm</p>
-			<p><label>机械加工深度 C3</label><input name="C3"/> mm</p>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>
-		<p>计算依据：GB/T 20801.3</p>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>管道壁厚</h2>
+			<form>
+				<p><label>管外径 D</label><input name="D"/> mm</p>
+				<p><label>设计压力 P</label><input name="P"/> MPa</p>
+				<p><label>许用应力 S</label><input name="S"/> MPa</p>
+				<p><label>计算系数 Y</label><input name="Y"/></p>
+				<p><label>焊接接头高温降低系数 W</label><input name="W"/></p>
+				<p><label>纵向焊接接头系数 Φ</label><input name="Phi"/></p>
+				<p><label>材料厚度负偏差 C1</label><input name="C1"/> mm</p>
+				<p><label>腐蚀、冲蚀裕量 C2</label><input name="C2"/> mm</p>
+				<p><label>机械加工深度 C3</label><input name="C3"/> mm</p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<p>计算依据：GB/T 20801.3</p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];

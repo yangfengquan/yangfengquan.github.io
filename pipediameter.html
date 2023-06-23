@@ -3,22 +3,31 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="管道绝热在线计算">
-<meta name="description" content="工程在线计算小程序，石油化工、电力等行业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
+<meta name="keywords" content="管径,在线计算">
+<meta name="description" content="已知管道的体积流量和流速，计算管道内径。">
 <title>管径在线计算</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>管径</h1>
-		<form>
-			<p><label>体积流量</label><input name="flowRate" type="number"> m3/h</p>
-			<p><label>流速</label><input name="v" type="number"> m/s</p>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>管径</h2>
+			<form>
+				<p><label>体积流量</label><input name="flowRate" type="number"> m3/h</p>
+				<p><label>流速</label><input name="v" type="number"> m/s</p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];
@@ -30,9 +39,7 @@
 		})();
 	</script>
 </body>
-<script>
-
-	
+<script>	
 	function run() {
 		let flowRate, v
 		
@@ -58,7 +65,6 @@
 		let strResult = "管道内径：\t" + diameter + "  mm"
 
 		document.getElementById("res").value = strResult
-	}
-	
+	}	
 </script>
 </html>

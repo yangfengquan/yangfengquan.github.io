@@ -3,29 +3,38 @@
 <meta charset="UTF-8">
 <meta http-equiv="content-language" content="zh-CN">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="keywords" content="钢管尺寸在线查询">
-<meta name="description" content="工程在线计算小程序，石油化工、电力等工业管道设计计算，简单的工艺设备计算，工艺流程计算等。">
-<title>钢管尺寸在线查询，数据来源：SH/T3405-2017</title>
+<meta name="keywords" content="钢管尺寸,在线查询,SH/T3405-2017">
+<meta name="description" content="查询壁厚系列、管道外径、壁厚和单重，数据来自标准SH/T3405-2017。">
+<title>钢管尺寸在线查询</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 </head>
 <body>
 	<div class="wrap">
-		<a href="./">列表</a>
-		<h1>钢管尺寸</h1>
-		<form>
-			<p>公称直径 <select name="DN"></select></p>
-			<p>壁厚系列 <select name="SCH"></select></p>
-		</form>
-		<p><button onclick="run()">计算</button></p>
-		<h3>结果</h3>
-		<textarea id="res"></textarea>
-		<p>计算依据：SH/T3405-2017</p>
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>钢管尺寸</h2>
+			<form>
+				<p>公称直径 <select name="DN"></select></p>
+				<p>壁厚系列 <select name="SCH"></select></p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<p>计算依据：SH/T3405-2017</p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
 	</div>
 	<script>
 		var _hmt = _hmt || [];
 		(function() {
 		  var hm = document.createElement("script");
-		  hm.src = "https://hm.baidu.com/hm.js?51fca3a38264de03a9a5ee61c891b038";
+		  hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";
 		  var s = document.getElementsByTagName("script")[0]; 
 		  s.parentNode.insertBefore(hm, s);
 		})();
