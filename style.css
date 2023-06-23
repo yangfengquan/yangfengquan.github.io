@@ -25,6 +25,9 @@ textarea {
 	width: 100%;
 	height: 20em;
 }
+.short {
+    width: 5em;
+}
 .footer {
 	padding-top: 15px;
 	text-align: center;
