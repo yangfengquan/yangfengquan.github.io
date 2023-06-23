@@ -46,6 +46,10 @@ textarea {
 	padding-bottom:25px;
 }
 
+#nav {
+    display: none;
+}
+
 @media (min-width: 40rem) {
 	#sidebar {
 	width: 160px;
@@ -55,6 +59,10 @@ textarea {
 	padding-bottom:0px;
     padding-top: 0px;
 	}
+
+    #nav {
+        display: block;
+    }
 }
 
 #sidebar ul {

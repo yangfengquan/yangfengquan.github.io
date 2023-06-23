@@ -1,22 +1,33 @@
 <h1><a href="./">YangFengQuan</a></h1>
-<h2>管道</h2>
-<ul>
-    <li><a href="pipediameter.html">管径</a></li>
-    <li><a href="pipeflowvelocity.html">管道流速</a></li>
-    <li><a href="pipeweight.html">管子重量</a></li>
-    <li><a href="pipesize.html">钢管尺寸</a></li>
-    <li><a href="pipewalltickness.html">管道壁厚</a></li>
-    <li><a href="pipeinsulation.html">管道保温</a></li>
-    <li><a href="pipecoldinsulation.html">管道保冷</a></li>
-    <li><a href="waterpipe.html">水和水蒸汽管道</a></li>
-</ul>
-<h2>设备</h2>
-<ul>
-    <li><a href="pumpaxlepower.html">泵轴功率</a></li>
-    <li><a href="safetyvalve.html">安全阀</a></li>
-</ul>
-<h2>物性</h2>
-<ul>
-    <li><a href="waterprops.html">水和水蒸汽物性</a></li>
-    <li><a href="props.html">纯物质物性</a></li>
-</ul>
+<img src="nav.png" alt="导航" width="30" height="30" onclick="ontoggledisplay()">
+<div id="nav">
+    
+    <h2>管道</h2>
+    <ul>
+        <li><a href="pipediameter.html">管径</a></li>
+        <li><a href="pipeflowvelocity.html">管道流速</a></li>
+        <li><a href="pipeweight.html">管子重量</a></li>
+        <li><a href="pipesize.html">钢管尺寸</a></li>
+        <li><a href="pipewalltickness.html">管道壁厚</a></li>
+        <li><a href="pipeinsulation.html">管道保温</a></li>
+        <li><a href="pipecoldinsulation.html">管道保冷</a></li>
+        <li><a href="waterpipe.html">水和水蒸汽管道</a></li>
+    </ul>
+    <h2>设备</h2>
+    <ul>
+        <li><a href="pumpaxlepower.html">泵轴功率</a></li>
+        <li><a href="safetyvalve.html">安全阀</a></li>
+    </ul>
+    <h2>物性</h2>
+    <ul>
+        <li><a href="waterprops.html">水和水蒸汽物性</a></li>
+        <li><a href="props.html">纯物质物性</a></li>
+    </ul>
+</div>
+
+<script>
+    function ontoggledisplay() {
+        let ele = document.querySelector("#nav");
+        ele.style.display = ele.style.display == "none" ? "block" : "none";
+    }
+</script>
