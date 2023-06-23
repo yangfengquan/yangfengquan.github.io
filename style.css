@@ -5,16 +5,13 @@ body {
     font-size: 14px;
 }
 
-h1 {
+h1,h2,h3,h4 {
     font-weight: lighter;
-}
-
-h2,h3,h4 {
     color: green;
 }
 
 a:visited {
-    color:rgb(0,0,238);
+    color:#0000ee;
 }
 
 label {
