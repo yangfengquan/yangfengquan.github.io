@@ -63,6 +63,9 @@ textarea {
     #nav {
         display: block;
     }
+    #navimg {
+        display: none;
+    }
 }
 
 #sidebar ul {
