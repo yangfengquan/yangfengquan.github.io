@@ -80,6 +80,7 @@ textarea {
 
 #tab {
     padding-left: 25px;
+    padding-right: 25px;
 }
 
 @media (min-width: 40rem) {
