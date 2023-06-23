@@ -53,14 +53,7 @@ textarea {
     padding-top: 0;
 }
 
-#sidebar ol {
-    margin: 0;
-    padding-left: 20px;
-    padding-top: 0;
-}
-
-#sidebar ul li,
-#sidebar ol li {
+#sidebar ul li{
     margin-top: 0;
     margin-bottom: 0.2rem;
     margin-left: 10px;
