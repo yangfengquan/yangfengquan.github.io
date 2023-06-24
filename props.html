@@ -274,7 +274,12 @@
 
 
 	function onProp(){
-		let name1, name2, value1, value2, fluidName
+		if (typeof Module.PropsSI != "function") {
+            alert("程序正在加载中，请稍候再试。");
+            return;
+        }
+        
+        let name1, name2, value1, value2, fluidName
 		
         fluidName = document.querySelector("#fluidName").value;
         name1 = document.querySelector("#name1").options[document.querySelector("#name1").selectedIndex].value;
