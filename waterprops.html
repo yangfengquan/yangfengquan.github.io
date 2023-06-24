@@ -19,6 +19,27 @@
 		<div id="tab">
 			<h2>水和蒸汽物性</h2>
 			<form>
+				<p>
+                    <label>输入1</label>
+                    <select id="name1" onchange="onname1change(this)">
+                        <option value="" hidden></option>
+                        <option value="P">压力[MPa(a)]</option>
+                        <option value="T">温度[℃]</option>
+                    </select>
+                    <input type="text" id="value1"> <span id="unit1"></span>
+                </p>
+                <p>
+                    <label>输入2</label>
+                    <select id="name2" disabled>
+                        <option value="" hidden></option>
+                        <option value="P">压力[MPa(a)]</option>
+                        <option value="T">温度[℃]</option>
+                        <option value="rho">密度[kg/m3]</option>
+                        <option value="h">比焓[J/kg]</option>
+                        <option value="x">干度</option>
+                    </select>
+                    <input type="text" id="value2"> <span id="unit2"></span>
+
 				<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
 				<div id="args"></div>
 			</form>
