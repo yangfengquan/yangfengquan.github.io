@@ -21,26 +21,22 @@
 			<form>
 				<p>
                     <label>输入1</label>
-                    <select id="name1" onchange="onname1change(this)">
-                        <option value="" hidden></option>
-                        <option value="P">压力[MPa(a)]</option>
-                        <option value="T">温度[℃]</option>
+                    <select id="arg1" onchange="onArg1Change(this)">
+                        <option value="p">压力</option>
+                        <option value="T">温度</option>
+						<option value="h">比焓</option>
                     </select>
-                    <input type="text" id="value1"> <span id="unit1"></span>
+                    <input type="text" id="value1"> <span id="unit1">MPaA</span>
                 </p>
                 <p>
                     <label>输入2</label>
-                    <select id="name2" disabled>
-                        <option value="" hidden></option>
-                        <option value="P">压力[MPa(a)]</option>
-                        <option value="T">温度[℃]</option>
-                        <option value="rho">密度[kg/m3]</option>
-                        <option value="h">比焓[J/kg]</option>
+                    <select id="arg2" onchange="onArg2Change(this)">
+                        <option value="T">温度</option>
+                        <option value="rho">密度</option>
+                        <option value="h">比焓</option>
                         <option value="x">干度</option>
                     </select>
-                    <input type="text" id="value2"> <span id="unit2"></span>
-
-				<p><label>已知</label><select id="select" onchange="onSelected(this.options.selectedIndex)"></select></p>
+                    <input type="text" id="value2"> <span id="unit2">C</span>
 				<div id="args"></div>
 			</form>
 			<p><button onclick="run()">计算</button></p>
@@ -79,7 +75,7 @@
 		x:   {name: "干度",         unit: "",         },
 		vx:  {name: "气态体积分数", unit: "",         }
 	}
-	
+
 	var modes = [
             ['p','T'],
 			['p','h'],
@@ -88,56 +84,70 @@
 			['T','x'],
             ['h','s']
         ]
-		
-	var selectedIndex
-	
-	(function(){
-		var select_ele = document.getElementById("select")
-		modes.forEach((item, index) => {
-			select_ele.options.add(new Option(propObj[item[0]].name + "-" + propObj[item[1]].name, index))
+
+	function onArg1Change(arg_ele) {
+		let arg1 = arg_ele.options[arg_ele.selectedIndex].value;
+
+		let name2_ele = document.getElementById("arg2");
+		name2_ele.innerHTML = "";
+		modes.forEach(item => {
+			if (item[0] == arg1) {
+				name2_ele.options.add(new Option(propObj[item[1]].name, item[1]));
+			}
 		})
-		
-		onSelected(0)
-	}())
-	
-	function onSelected(index){
-		let args_ele = document.getElementById("args")
-		args_ele.innerHTML = ''
-		selectedIndex = index
-		modes[index].forEach(prop => {
-				let input_ele = document.createElement("p")
-				input_ele.innerHTML = '<label>' + propObj[prop].name + '</label><input name="' + prop +'"/> ' + propObj[prop].unit
-				args_ele.appendChild(input_ele)
-		})
+
+		document.getElementById("unit1").innerHTML = propObj[arg1].unit;
+		document.getElementById("unit2").innerHTML = propObj[name2_ele.options[name2_ele.selectedIndex].value].unit;
 	}
-	
+
+	function onArg2Change(arg_ele) {
+		document.getElementById("unit2").innerHTML = propObj[arg_ele.options[arg_ele.selectedIndex].value].unit;
+	}
+
 	function run(){
-		let len = modes[selectedIndex].length, arg1, arg2, result = {}
+		let modeIndex = -1, arg1, arg2, value1, value2, result = {}
 		
-		arg1 = parseFloat(document.getElementsByName(modes[selectedIndex][0])[0].value)
-		arg2 = parseFloat(document.getElementsByName(modes[selectedIndex][len - 1])[0].value)
+		let arg1_ele = document.getElementById("arg1");
+		arg1 = arg1_ele.options[arg1_ele.selectedIndex].value;
+
+		let arg2_ele = document.getElementById("arg2");
+		arg2 = arg2_ele.options[arg2_ele.selectedIndex].value;
+
+		for (let index = 0; index < modes.length; index++) {
+			const mode = modes[index];
+			if (mode[0] == arg1 && mode[1] == arg2) {
+				modeIndex = index;
+			}
+		}
 		
-		if(modes[selectedIndex][0] == "T") arg1 += 273.15
-		if(modes[selectedIndex][len - 1] == "T") arg2 += 273.15
+		if (modeIndex == -1) {
+			return;
+		}
+
+		value1 = parseFloat(document.getElementById("value1").value)
+		value2 = parseFloat(document.getElementById("value2").value)
 		
-		switch(selectedIndex) {
+		if(arg1 == "T") value1 += 273.15
+		if(arg2 == "T") value2 += 273.15
+		
+		switch(modeIndex) {
 			case 0:
-				result = pT(arg1, arg2)
+				result = pT(value1, value2)
 				break;
 			case 1:
-				result = ph(arg1, arg2)
+				result = ph(avalue1, value2)
 				break;
 			case 2:
-				result = ps(arg1, arg2)
+				result = ps(value1, value2)
 				break;
 			case 3:
-				result = px(arg1, arg2)
+				result = px(value1, value2)
 				break;
 			case 4:
-				result = Tx(arg1, arg2)
+				result = Tx(value1, value2)
 				break;
 			case 5:
-				result = hs(arg1, arg2)
+				result = hs(value1, value2)
 				break;
 		}
 		
