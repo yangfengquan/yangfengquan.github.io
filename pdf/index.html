@@ -27,9 +27,9 @@ pdfMake.fonts = {
 let time = new Date();
 
 var docDefinition = {
-  footer: function(currentPage, pageCount) { return {text: currentPage.toString() + ' of ' + pageCount, alignment: 'center'} },
+  footer: function(currentPage, pageCount) { return {text: currentPage.toString() + ' / ' + pageCount, alignment: 'center'} },
   content: [
-    { text: 'yangfangquan.github.io', link: 'https://yangfengquan.github.io', style: 'right' },
+    { text: ['软件：',{text: 'yangfangquan.github.io', link: 'https://yangfengquan.github.io'}], style: 'right' },
     { text: time.toLocaleDateString(), style: 'right' },
     { 
         style: 'tablestyle1',
@@ -138,7 +138,7 @@ var docDefinition = {
 function onCreatePdfReport() {
     pdfMake.createPdf(docDefinition).getBase64().then((data) => {
 	    //window.open("r.html?data=" + data, "_blank", "resizable=1, modal=true, alwaysRaised=yes");
-        window.open("r.html", "_blank", "resizable=1, modal=true, alwaysRaised=yes")
+        window.open("r.html", "PDF Report", "toolbar=no, menubar=no, scrollbars=no")
         localStorage.setItem("pdfData", data);
     }, err => {
         console.error(err);
