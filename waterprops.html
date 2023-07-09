@@ -80,9 +80,11 @@
             ['p','T'],
 			['p','h'],
             ['p','s'],
+			['p','rho'],
 			['p','x'],
 			['T','x'],
-            ['h','s']
+            ['h','s'],
+			['h','rho']
         ]
 
 	function onArg1Change(arg_ele) {
@@ -135,19 +137,25 @@
 				result = pT(value1, value2)
 				break;
 			case 1:
-				result = ph(avalue1, value2)
+				result = ph(value1, value2)
 				break;
 			case 2:
 				result = ps(value1, value2)
 				break;
 			case 3:
-				result = px(value1, value2)
+				result = prho(value1, value2)
 				break;
 			case 4:
-				result = Tx(value1, value2)
+				result = px(value1, value2)
 				break;
 			case 5:
+				result = Tx(value1, value2)
+				break;
+			case 6:
 				result = hs(value1, value2)
+				break;
+			case 7:
+				result = hrho(value1, value2)
 				break;
 		}
 		

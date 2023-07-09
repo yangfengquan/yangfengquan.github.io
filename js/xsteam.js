@@ -3782,6 +3782,26 @@ function ps(p, s) {
 	return fn_return_value
 }
 
+function prho(p, rho) {
+	let fn_return_value = {}
+	fn_return_value.p = p
+	fn_return_value.rho = rho
+	fn_return_value.h = h_prho(p, rho)
+	fn_return_value.T = T_ph(p, fn_return_value.h)
+	fn_return_value.v = v_ph(p, fn_return_value.h)
+	fn_return_value.s = s_ph(p, fn_return_value.h)
+	fn_return_value.u = u_ph(p, fn_return_value.h)
+	fn_return_value.Cp = Cp_ph(p, fn_return_value.h)
+	fn_return_value.Cv = Cv_ph(p, fn_return_value.h)
+	fn_return_value.w = w_ph(p, fn_return_value.h)
+	fn_return_value.my = my_ph(p, fn_return_value.h)
+	fn_return_value.tc = tc_ph(p, fn_return_value.h)
+	fn_return_value.st = st_T(fn_return_value.T)
+	fn_return_value.x = x_ph(p, fn_return_value.h)
+	fn_return_value.vx = vx_ph(p, fn_return_value.h)
+	return fn_return_value
+}
+
 function px(p, x) {
 	let fn_return_value = {}
 	fn_return_value.p = p
@@ -3830,6 +3850,25 @@ function hs(h, s) {
 	fn_return_value.p = p_hs(h, s)
 	fn_return_value.v = v_ph(fn_return_value.p, fn_return_value.h)
 	fn_return_value.rho = rho_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.u = u_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.Cp = Cp_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.Cv = Cv_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.w = w_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.my = my_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.tc = tc_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.st = st_T(fn_return_value.T)
+	fn_return_value.x = x_ph(fn_return_value.p, h)
+	fn_return_value.vx = vx_ph(fn_return_value.p, fn_return_value.h)
+	return fn_return_value
+}
+
+function hrho(h, rho) {
+	let fn_return_value = {}
+	fn_return_value.h = h
+	fn_return_value.rho = rho
+	fn_return_value.p = p_hrho(h, rho)
+	fn_return_value.T = T_ph(fn_return_value.p, h)
+	fn_return_value.v = v_ph(fn_return_value.p, fn_return_value.h)
 	fn_return_value.s = s_ph(fn_return_value.p, fn_return_value.h)
 	fn_return_value.u = u_ph(fn_return_value.p, fn_return_value.h)
 	fn_return_value.Cp = Cp_ph(fn_return_value.p, fn_return_value.h)
