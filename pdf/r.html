@@ -19,13 +19,16 @@
         // url = url.replace(/\?/,'')
         // let data = url.match('(^|&)data=(.*?)(&|$)')
         // data = data ? data[2] : null;
-        let pdfData = localStorage.getItem("pdfData");
-        console.log("pdf:",pdfData);
+        const pdfData = localStorage.getItem("pdfData");
         if (pdfData != null) {
             const tagElement = document.querySelector("#iframeContainer")
             const iframe = document.createElement("iframe")
             iframe.src = "data:application/pdf; base64," + pdfData
             tagElement.appendChild(iframe);
+        }
+        else {
+            const tagElement = document.querySelector("#iframeContainer");
+            tagElement.innerHTML = "报告已被清理。<br>请返回输入页面，重新生成。"
         }
         localStorage.clear();
     </script>
