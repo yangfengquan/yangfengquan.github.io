@@ -138,6 +138,7 @@ var docDefinition = {
 function onCreatePdfReport() {
     pdfMake.createPdf(docDefinition).getBase64().then((data) => {
 	    //window.open("r.html?data=" + data, "_blank", "resizable=1, modal=true, alwaysRaised=yes");
+        window.open("r.html", "_blank", "resizable=1, modal=true, alwaysRaised=yes")
         localStorage.setItem("pdfData", data);
     }, err => {
         console.error(err);

@@ -20,12 +20,13 @@
         // let data = url.match('(^|&)data=(.*?)(&|$)')
         // data = data ? data[2] : null;
         let pdfData = localStorage.getItem("data");
-        if (data != null) {
+        if (pdfData != null) {
             const tagElement = document.querySelector("#iframeContainer")
             const iframe = document.createElement("iframe")
-            iframe.src = "data:application/pdf; base64," + data
+            iframe.src = "data:application/pdf; base64," + pdfData
             tagElement.appendChild(iframe);
         }
+        localStorage.clear();
     </script>
 </body>
 </html>
