@@ -15,10 +15,11 @@
 <body>
     <div id="iframeContainer"></div>
     <script>
-        let url = location.search;
-        url = url.replace(/\?/,'')
-        let data = url.match('(^|&)data=(.*?)(&|$)')
-        data = data ? data[2] : null;
+        // let url = location.search;
+        // url = url.replace(/\?/,'')
+        // let data = url.match('(^|&)data=(.*?)(&|$)')
+        // data = data ? data[2] : null;
+        let pdfData = localStorage.getItem("data");
         if (data != null) {
             const tagElement = document.querySelector("#iframeContainer")
             const iframe = document.createElement("iframe")
