@@ -19,7 +19,8 @@
         // url = url.replace(/\?/,'')
         // let data = url.match('(^|&)data=(.*?)(&|$)')
         // data = data ? data[2] : null;
-        let pdfData = localStorage.getItem("data");
+        let pdfData = localStorage.getItem("pdfData");
+        console.log("pdf:",pdfData);
         if (pdfData != null) {
             const tagElement = document.querySelector("#iframeContainer")
             const iframe = document.createElement("iframe")
