@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text">
+    <p id="cw"></p>
+    <p id="carg"></p>
+<script>
+    document.getElementById('carg').innerHTML='12';
+    window.opener.document.getElementById('carg').innerHTML='12';
+    console.log(this.opener);
+</script>
+</body>
+</html>
