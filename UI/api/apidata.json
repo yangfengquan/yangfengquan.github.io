@@ -1,0 +1,100 @@
+{
+    "管径": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "体积流量", "value": "输入体积流量", "unit": "m3/h", "attr1": ""},
+            {"itemid": 4, "argName": "流速", "value": "输入流体流速","unit": "m/s", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "管线内径", "value": "", "unit": "mm", "attr1": ""}
+        ]
+    },
+    "管线流速": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "体积流量", "value": "输入体积流量", "unit": "m3/h", "attr1": ""},
+            {"itemid": 4, "argName": "管线内径", "value": "输入管线内径","unit": "mm", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "流速", "value": "", "unit": "m/s", "attr1": ""}
+        ]
+    },
+    "管子重量": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "管子外径", "value": "输入管子外径", "unit": "mm", "attr1": ""},
+            {"itemid": 4, "argName": "管子壁厚", "value": "输入管子壁厚","unit": "mm", "attr1": ""},
+            {"itemid": 5, "argName": "管材密度", "value": "7850","unit": "kg/m3", "attr1": "默认值为碳钢密度。"},
+            {"itemid": 6, "argName": "管子长度", "value": "输入管子长度","unit": "m", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "单重", "value": "", "unit": "kg/m", "attr1": ""},
+            {"itemid": 2, "argName": "总重", "value": "", "unit": "kg", "attr1": ""}
+        ]
+    },
+    "钢管尺寸": {
+        "inp": [    
+            {"itemid": 1, "dn": "", "sch": "", "attr1": "SH/T3405-2017"}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "外径", "value": "", "unit": "mm", "attr1": ""},
+            {"itemid": 2, "argName": "壁厚", "value": "", "unit": "mm", "attr1": ""},
+            {"itemid": 3, "argName": "单重", "value": "", "unit": "kg/m", "attr1": ""}
+        ]
+    },
+    "壁厚": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "外径", "value": "输入外径","unit": "mm", "attr1": ""},  
+            {"itemid": 4, "argName": "设计压力", "value": "输入设计压力","unit": "MPa", "attr1": ""},
+            {"itemid": 5, "argName": "许用应力", "value": "输入许用应力","unit": "MPa", "attr1": "可查询GB/T20801.2 表A.1等。"},
+            {"itemid": 6, "argName": "计算系数", "value": "0.4", "unit": "", "attr1": "GB/T20801.2 6.1款 计算系数Y。"},
+            {"itemid": 7, "argName": "焊接接头高温强度降低系数", "value": "1","unit": "", "attr1": "GB/T20801.3 4.2.7款焊接接头高温强度降低系数W。"},
+            {"itemid": 8, "argName": "纵向焊接接头系数", "value": "1","unit": "", "attr1": "GB/T20801.2 表A.3、表A.4。"},
+            {"itemid": 9, "argName": "材料厚度负偏差", "value": "0.125","unit": "%", "attr1": "按材料标准规定。"},
+            {"itemid": 10, "argName": "腐蚀、冲蚀裕量", "value": "1.5","unit": "mm", "attr1": ""},
+            {"itemid": 11, "argName": "机械加工深度", "value": "0","unit": "mm", "attr1": ""},
+            {"itemid": 12, "argName": "弯管弯曲半径", "value": "","unit": "mm", "attr1": "管子中心处的弯曲半径。"}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "直管计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.1款。"},
+            {"itemid": 2, "argName": "直管名义厚度", "value": "", "unit": "mm", "attr1": "包含负偏差、腐蚀裕量、机械加工深度。"},
+            {"itemid": 3, "argName": "弯管内侧计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
+            {"itemid": 4, "argName": "弯管内侧名义厚度", "value": "", "unit": "mm", "attr1": ""},
+            {"itemid": 5, "argName": "弯管外侧计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
+            {"itemid": 6, "argName": "弯管外侧名义厚度", "value": "", "unit": "mm", "attr1": ""},
+            {"itemid": 7, "argName": "弯管中心线处侧壁计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
+            {"itemid": 8, "argName": "弯管中心线处侧壁名义厚度", "value": "", "unit": "mm", "attr1": ""}
+        ]
+    },
+    "管道保温": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "外径", "value": "输入外径","unit": "mm", "attr1": ""},  
+            {"itemid": 4, "argName": "设计压力", "value": "输入设计压力","unit": "MPa", "attr1": ""},
+            {"itemid": 5, "argName": "许用应力", "value": "输入许用应力","unit": "MPa", "attr1": "可查询GB/T20801.2 表A.1等。"},
+            {"itemid": 6, "argName": "计算系数", "value": "0.4", "unit": "", "attr1": "GB/T20801.2 6.1款 计算系数Y。"},
+            {"itemid": 7, "argName": "焊接接头高温强度降低系数", "value": "1","unit": "", "attr1": "GB/T20801.3 4.2.7款焊接接头高温强度降低系数W。"},
+            {"itemid": 8, "argName": "纵向焊接接头系数", "value": "1","unit": "", "attr1": "GB/T20801.2 表A.3、表A.4。"},
+            {"itemid": 9, "argName": "材料厚度负偏差", "value": "0.125","unit": "%", "attr1": "按材料标准规定。"},
+            {"itemid": 10, "argName": "腐蚀、冲蚀裕量", "value": "1.5","unit": "mm", "attr1": ""},
+            {"itemid": 11, "argName": "机械加工深度", "value": "0","unit": "mm", "attr1": ""},
+            {"itemid": 12, "argName": "弯管弯曲半径", "value": "","unit": "mm", "attr1": "管子中心处的弯曲半径。"}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "直管计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.1款。"},
+            {"itemid": 2, "argName": "直管名义厚度", "value": "", "unit": "mm", "attr1": "包含负偏差、腐蚀裕量、机械加工深度。"},
+            {"itemid": 3, "argName": "弯管内侧计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
+            {"itemid": 4, "argName": "弯管内侧名义厚度", "value": "", "unit": "mm", "attr1": ""},
+            {"itemid": 5, "argName": "弯管外侧计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
+            {"itemid": 6, "argName": "弯管外侧名义厚度", "value": "", "unit": "mm", "attr1": ""},
+            {"itemid": 7, "argName": "弯管中心线处侧壁计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
+            {"itemid": 8, "argName": "弯管中心线处侧壁名义厚度", "value": "", "unit": "mm", "attr1": ""}
+        ]
+    }
+}

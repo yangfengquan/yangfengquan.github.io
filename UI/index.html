@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="./jquery-easyui-1.10.17/themes/metro/easyui.css">
-	<link rel="stylesheet" type="text/css" href="./jquery-easyui-1.10.17/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/metro/easyui.css">
+	<link rel="stylesheet" type="text/css" href="http://www.jeasyui.com/easyui/themes/icon.css">
     <link rel="stylesheet" href="./jquery-easyui-1.10.17/themes/color.css">
-	<script type="text/javascript" src="./jquery-easyui-1.10.17/jquery.min.js"></script>
-	<script type="text/javascript" src="./jquery-easyui-1.10.17/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="http://www.jeasyui.com/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="http://www.jeasyui.com/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="./jquery-easyui-1.10.17/datagrid-cellediting.js"></script>
     <style>
         #wnav a {
@@ -44,24 +44,15 @@
                     <li><a href="javascript:;" onclick="addtab('管线流速','pipeVelocity')">管线流速</a></li>
                     <li><a href="javascript:;" onclick="addtab('管子重量','pipeWeight')">管子重量</a></li>
                     <li><a href="javascript:;" onclick="addtab('钢管尺寸','pipeSize')">钢管尺寸</a></li>
+                    <li><a href="javascript:;" onclick="addtab('壁厚','pipeStrength')">壁厚</a></li>
                 </ul>
             </li>
             <li>
-                <span>Folder</span>
+                <span>绝热</span>
                 <ul>
-                    <li>
-                        <span>Sub Folder 1</span>
-                        <ul>
-                            <li><span><a href="#">File 11</a></span></li>
-                            <li><span>File 12</span></li>
-                            <li><span>File 13</span></li>
-                        </ul>
-                    </li>
-                    <li><span>File 2</span></li>
-                    <li><span>File 3</span></li>
+                    <li><a href="javascript:;" onclick="addtab('管道保温','pipeInsultion')">管道保温</a></li>
                 </ul>
             </li>
-            <li><span>File21</span></li>
         </ul>
     </div>
     <div data-options="region:'center'" style="padding:5px;background:#eee;">
@@ -71,54 +62,92 @@
         </div>
     </div>
 <script>
-var dgData;
+var apiData;
 (function(){
-    $.getJSON("api/dgdata.json",function(data){
-        dgData = data;
+    $.getJSON("api/apidata.json",function(data){
+        apiData = data;
     })
 })();
 
 function addtab(plugin, callback){
+    const linkHtml = `<a href="javascript:;" class="easyui-linkbutton c5" data-options="iconCls:'icon-sum'"
+                       style="margin: 5px auto 5px 500px;" onclick="apiClac('${plugin}','${callback}')">运算</a>
+                      <a id="btn-report" href="javascript:;" class="easyui-linkbutton c2" data-options="iconCls:'icon-print'"
+                       style="margin: 5px auto 5px 10px;" onclick = "showPdf('${plugin}','${callback}')">生成报告</a>`;
+    let dgInpHtml = {}
+    dgInpHtml["default"] = `<table id="dg-inp-${plugin}" title="输入" style="width:100%; height: auto;">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:'itemid',width:40">编号</th>
+                                        <th data-options="field:'argName',width:100">项目</th>
+                                        <th data-options="field:'value',width:200,align:'right',editor:'text'">值</th>
+                                        <th data-options="field:'unit',width:80,align:'right'">单位</th>
+                                        <th data-options="field:'attr1',width:250,editor:'text'">说明</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <span class="c1" style="display:block; margin: 5px">注意：请将鼠标移出输入框，点击表格任意位置完成输入。</span>`;
+    dgInpHtml["钢管尺寸"] = `<table id="dg-inp-${plugin}" title="输入" style="width:100%; height: auto;">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:'itemid',width:40">编号</th>
+                                        <th data-options="field:'dn',width:100,
+                                        editor:{
+                                            type:'combobox',
+                                            options: { 
+                                                valueField: 'text',
+                                                textField: 'text',
+                                                url: './api/dn.json',
+                                                method: 'get',
+                                            }
+                                        }">公称直径</th>
+                                        <th data-options="field:'sch',width:200,align:'right',
+                                        editor:{
+                                            type:'combobox',
+                                            options: { 
+                                                valueField: 'text',
+                                                textField: 'text',
+                                                url: './api/sch.json',
+                                                method: 'get',
+                                            }
+                                        }">管表号</th>
+                                        <th data-options="field:'attr1',width:250,editor:'text'">说明</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <span class="c1" style="display:block; margin: 5px">注意：请将鼠标移出输入框，点击表格任意位置完成输入。</span>`;
+    const dgOutHtml = `<table id="dg-out-${plugin}" title="输出" style="width:100%; height: auto; display:none">
+                            <thead>
+                                <tr>
+                                    <th data-options="field:'itemid',width:40">编号</th>
+                                    <th data-options="field:'argName',width:100">项目</th>
+                                    <th data-options="field:'value',width:200,align:'right'">值</th>
+                                    <th data-options="field:'unit',width:80,align:'right'">单位</th>
+                                    <th data-options="field:'attr1',width:250">说明</th>
+                                </tr>
+                            </thead>
+                        </table>`;
+    let content = linkHtml;
+    if (dgInpHtml.hasOwnProperty(plugin)) {
+        content += dgInpHtml[plugin];
+    } else {
+        content += dgInpHtml['default'];
+    }
+    content += dgOutHtml;
+    
     if ($('#tt').tabs('exists',plugin)){
         $('#tt').tabs('select', plugin);
     } else {
         $('#tt').tabs('add',{
             title:plugin,
             //href:'api/'+plugin+'.html',
-            content: `
-            <a href="javascript:;" class="easyui-linkbutton c5" data-options="iconCls:'icon-sum'"
-                style="margin: 5px auto 5px 500px;" onclick="apiClac('${plugin}','${callback}')">运算</a>
-            <a id="btn-report" href="javascript:;" class="easyui-linkbutton c2" data-options="iconCls:'icon-print'"
-                style="margin: 5px auto 5px 10px;" onclick = "showPdf('${plugin}','${callback}')">生成报告</a>
-            <table id="dg-inp-${plugin}" title="输入" style="width:100%; height: auto;">
-                <thead>
-                    <tr>
-                        <th data-options="field:'itemid',width:40">编号</th>
-                        <th data-options="field:'argName',width:100">项目</th>
-                        <th data-options="field:'value',width:200,align:'right',editor:'text'">值</th>
-                        <th data-options="field:'unit',width:80,align:'right'">单位</th>
-                        <th data-options="field:'attr1',width:250,editor:'text'">说明</th>
-                    </tr>
-                </thead>
-            </table>
-            <span class="c1" style="display:block; margin: 5px">注意：请将鼠标移出输入框，点击表格任意位置完成输入。</span>
-            <table id="dg-out-${plugin}" title="输出" style="width:100%; height: auto; display:none">
-                <thead>
-                    <tr>
-                        <th data-options="field:'itemid',width:40">编号</th>
-                        <th data-options="field:'argName',width:100">项目</th>
-                        <th data-options="field:'value',width:200,align:'right'">值</th>
-                        <th data-options="field:'unit',width:80,align:'right'">单位</th>
-                        <th data-options="field:'attr1',width:250">说明</th>
-                    </tr>
-                </thead>
-            </table>`,
+            content: content,
             closable:true,
         });
     }
     $(function(){
         $('#dg-inp-' + plugin).datagrid({
-            data: dgData[plugin].inp
+            data: apiData[plugin].inp
         }).datagrid('enableCellEditing').datagrid('gotoCell', {
             index: 0,
             field: 'value'
@@ -144,7 +173,7 @@ function pipeDiameter(plugin) {
         return false;
     }
 
-    dgData[plugin].out[0].value = (Math.sqrt(flowRate / v / 3.14) * 2 * 1000).toFixed(2);
+    apiData[plugin].out[0].value = (Math.sqrt(flowRate / v / 3.14) * 2 * 1000).toFixed(2);
 
     return true;
 }
@@ -159,7 +188,7 @@ function pipeVelocity(plugin) {
         return false;
     }
 
-    dgData[plugin].out[0].value = (flowRate / (3.14 * d * d / 4)).toFixed(2);
+    apiData[plugin].out[0].value = (flowRate / (3.14 * d * d / 4)).toFixed(2);
 
     return true;
 }
@@ -176,10 +205,128 @@ function pipeWeight(plugin) {
         return false;
     }
 
-    dgData[plugin].out[0].value = (3.14 * rho * (d - thk) * thk).toFixed(2);
+    apiData[plugin].out[0].value = (3.14 * rho * (d - thk) * thk).toFixed(2);
 
     if (!isNaN(len)) {
-        dgData[plugin].out[1].value = (3.14 * rho * (d - thk) * thk * len).toFixed(2);  
+        apiData[plugin].out[1].value = (3.14 * rho * (d - thk) * thk * len).toFixed(2);  
+    }
+    
+    return true;
+}
+
+function pipeSize(plugin) {
+    let inpargs = $('#dg-inp-' + plugin).datagrid('getData').rows;
+    let dn = inpargs[0].dn;
+    let sch = inpargs[0].sch;
+    console.log(dn,sch);
+
+    if (dn == '' || sch == '') {
+        alert("请检查输入！\n输入完成后，需将鼠标移出输入框，并点击表格任意位置！");
+        return false;
+    }
+
+    const Schs = ["SCH5", "SCH10", "SCH20", "SCH30", "SCH40", "SCH60", "SCH80", "SCH100", "SCH120", "SCH140", "SCH160", "STD", "XS", "XXS", "SCH5S", "SCH10S", "SCH40S", "SCH80S"]
+	const D0 = {
+		DN6: 10.3,
+		DN8: 13.7,
+		DN10: 17.1,
+		DN15: 21.3,
+		DN20: 26.7,
+		DN25: 33.4,
+		DN32: 42.2,
+		DN40: 48.3,
+		DN50: 60.3,
+		DN65: 73,
+		DN80: 88.9,
+		DN90: 101.6,
+		DN100: 114.3,
+		DN125: 141.3,
+		DN150: 168.3,
+		DN200: 219.1,
+		DN250: 273.1,
+		DN300: 323.9,
+		DN350: 355.6,
+		DN400: 406.4,
+		DN450: 457,
+		DN500: 508,
+		DN550: 559,
+		DN600: 610,
+	}
+	const Thk = {
+		//["SCH5","SCH10","SCH20","SCH30","SCH40","SCH60","SCH80","SCH100","SCH120","SCH140","SCH160","STD","XS","XXS","SCH5S","SCH10S","SCH40S","SCH80S"]
+		DN6: [, 1.24, , 1.45, 1.73, , 2.41, , , , , 1.73, 2.41, , , 1.24, 1.73, 2.41],
+		DN8: [, 1.65, , 1.85, 2.24, , 3.02, , , , , 2.24, 3.02, , , 1.65, 2.24, 3.02],
+		DN10: [, 1.65, , 1.85, 2.31, , 3.2, , , , , 2.31, 3.2, , , 1.65, 2.31, 3.2],
+		DN15: [1.65, 2.11, , 2.41, 2.77, , 3.73, , , , 4.78, 2.77, 3.73, 7.47, 1.65, 2.11, 2.77, 3.73],
+		DN20: [1.65, 2.11, , 2.41, 2.87, , 3.91, , , , 5.56, , , 7.82, , , 2.87, 3.91],
+		DN25: [1.65, 2.77, , 2.91, 3.38, , 4.55, , , , 6.35, 3.38, 4.55, 9.09, 1.65, 2.77, 3.38, 4.55],
+		DN32: [1.65, 2.77, , 2.97, 3.56, , 4.85, , , , 6.35, 3.56, 4.85, 9.7, 1.65, 2.77, 3.56, 4.85],
+		DN40: [1.65, 2.77, , 3.18, 3.68, , 5.08, , , , 7.14, 3.68, 5.08, 10.15, 1.65, 2.77, 3.68, 5.08],
+		DN50: [1.65, 2.77, , 3.18, 3.91, , 5.54, , , , 8.74, 3.91, 5.54, 11.07, 1.65, 2.77, 3.91, 5.54],
+		DN65: [2.11, 3.05, , 4.78, 5.16, , 7.01, , , , 9.53, 5.16, 7.01, 14.02, 2.11, 3.05, 5.16, 7.01],
+		DN80: [2.11, 3.05, , 4.78, 5.49, , 7.62, , , , 11.13, 5.49, 7.62, 15.24, 2.11, 3.05, 5.49, 7.62],
+		DN90: [2.11, 3.05, , 4.78, 5.74, , 8.08, , , , , , , , 2.11, 3.05, 5.74, 8.08],
+		DN100: [2.11, 3.05, , 4.78, 6.02, , 8.56, , 11.13, , 13.49, 6.02, 8.56, 17.12, 2.11, 3.05, 6.02, 8.56],
+		DN125: [2.77, 3.4, , , 6.55, , 9.53, , 12.7, , 15.88, 6.55, 9.53, 19.05, 2.77, 3.4, 6.55, 9.53],
+		DN150: [2.77, 3.4, , , 7.11, , 10.97, , 12.7, , 18.26, 7.11, 10.97, 19.05, 2.77, 3.4, 7.11, 10.97],
+		DN200: [2.77, 3.76, 6.35, 7.04, 8.18, 10.13, 12.7, 15.09, 18.26, 20.62, 23.01, 8.18, 12.7, 22.23, 2.77, 3.76, 8.18, 12.7],
+		DN250: [3.4, 4.19, 6.35, 7.8, 9.27, 12.7, 15.09, 18.26, 21.44, 25.4, 28.58, 9.27, 12.7, 25.4, 3.4, 4.19, 9.27, 12.7],
+		DN300: [3.96, 4.57, 6.35, 8.38, 10.31, 14.27, 17.48, 21.44, 25.4, 28.58, 33.32, 9.53, 12.7, 25.4, 3.96, 4.78, 9.53, 12.7],
+		DN350: [3.96, 6.35, 7.92, 9.53, 11.13, 15.09, 19.05, 23.83, 27.79, 31.75, 35.71, 9.53, 12.7, , 3.96, 4.78, 9.53, 12.7],
+		DN400: [4.19, 6.35, 7.92, 9.53, 12.7, 16.66, 21.44, 26.19, 30.96, 36.53, 40.49, 9.53, 12.7, , 4.19, 4.78, 9.53, 12.7],
+		DN450: [4.19, 6.35, 7.92, 11.13, 14.27, 19.05, 23.83, 29.36, 34.93, 39.67, 45.24, 9.53, 12.7, , 4.19, 4.78, 9.53, 12.7],
+		DN500: [4.78, 6.35, 9.53, 12.7, 15.09, 20.62, 26.19, 32.54, 38.1, 44.45, 50.01, 9.53, 12.7, , 4.78, 5.54, 9.53, 12.7],
+		DN550: [4.78, 6.35, 9.53, 12.7, , 22.23, 28.58, 34.93, 41.28, 47.63, 53.98, 9.53, 12.7, , 4.78, 5.54, 9.53, 12.7],
+		DN600: [5.54, 6.35, 9.53, 14.27, 17.48, 24.61, 30.96, 38.89, 46.02, 52.37, 59.54, 9.53, 12.7, , 5.54, 6.35, 9.53, 12.7],
+	};
+    
+    let i = Schs.indexOf(sch);
+    let d = D0[dn];
+    let thk = Thk[dn][i];
+    apiData[plugin].out[0].value = d;
+    apiData[plugin].out[1].value = thk == undefined ? dn + "钢管无" + sch : thk;
+    if (thk != undefined) {
+        apiData[plugin].out[2].value = (3.14 * 7850 * (d / 1000 - thk / 1000) * thk / 1000).toFixed(2);
+    }
+    
+    return true;
+}
+
+function pipeStrength(plugin) {
+    let inpargs = $('#dg-inp-' + plugin).datagrid('getData').rows;
+    let d = parseFloat(inpargs[2].value);
+    let p = parseFloat(inpargs[3].value);
+    let s = parseFloat(inpargs[4].value);
+    let y = parseFloat(inpargs[5].value);
+    let w = parseFloat(inpargs[6].value);
+    let phi = parseFloat(inpargs[7].value);
+    let c1 = parseFloat(inpargs[8].value);
+    let c2 = parseFloat(inpargs[9].value);
+    let c3 = parseFloat(inpargs[10].value);
+    let r = parseFloat(inpargs[11].value);
+
+    if (isNaN(d) || isNaN(p) || isNaN(s) || isNaN(y) || isNaN(w) || isNaN(phi) || isNaN(c1) || isNaN(c2) || isNaN(c3)) {
+        alert("请检查输入！\n输入完成后，需将鼠标移出输入框，并点击表格任意位置！");
+        return false;
+    }
+
+    apiData[plugin].out[0].value = (p * d / (2 * (s * phi * w + p * y))).toFixed(2);
+    apiData[plugin].out[1].value = (apiData[plugin].out[0].value * (1 + c1) + c2 + c3).toFixed(2);
+
+    if (!isNaN(r)) {
+        //弯管内侧壁厚
+        let i1 = (4 * (r / d) - 1) / (4 * (r / d) - 2);
+        apiData[plugin].out[2].value = (p * d / (2 * (s * phi * w / i1 + p * y))).toFixed(2);
+        apiData[plugin].out[3].value = (apiData[plugin].out[2].value * (1 + c1) + c2 + c3).toFixed(2);
+
+        //弯管外侧壁厚
+        let i2 = (4 * (r / d) + 1) / (4 * (r / d) + 2);
+        apiData[plugin].out[4].value = (p * d / (2 * (s * phi * w / i2 + p * y))).toFixed(2);
+        apiData[plugin].out[5].value = (apiData[plugin].out[4].value * (1 + c1) + c2 + c3).toFixed(2);
+
+        //弯管中心线侧壁
+        apiData[plugin].out[6].value = (p * d / (2 * (s * phi * w / 1 + p * y))).toFixed(2); 
+        apiData[plugin].out[7].value = (apiData[plugin].out[6].value * (1 + c1) + c2 + c3).toFixed(2);
     }
     
     return true;
@@ -187,11 +334,16 @@ function pipeWeight(plugin) {
 
 function showDgout(plugin) {
     $('#dg-out-' + plugin).datagrid({
-        data: dgData[plugin].out
+        data: apiData[plugin].out
     })
 }
 
 function showPdf(plugin, callback) {
+    if (['钢管尺寸'].includes(plugin)) {
+        alert(plugin + "模块不支持生成报告。");
+        return false;
+    }
+
     if (!apiClac(plugin, callback)) {
         alert("未生成报告！")
         return false;
@@ -217,13 +369,15 @@ function showPdf(plugin, callback) {
         });
     }
 
+    $('#iframeContainer').innerHTML = "<p>&nbsp正在加载pdf字体文件，请耐心等待。</p>"
+
     let scriptpdfmake = document.createElement("script");
     scriptpdfmake.src = "./pdf/pdfmake.min.js";
     document.querySelector("#pdf").appendChild(scriptpdfmake);
     let scriptvfs_fonts = document.createElement("script");
     scriptvfs_fonts.src = "./pdf/vfs_fonts.js";
     document.querySelector("#pdf").appendChild(scriptvfs_fonts);
-    
+
     const docDefinition = fillDocDefinition(plugin);
 
     scriptvfs_fonts.onload = function(){
@@ -289,9 +443,9 @@ function fillDocDefinition(plugin) {
     };
 
     let columns = [];
-    let len = dgData[plugin].inp.length;
+    let len = apiData[plugin].inp.length;
     for (let i = 0; i < len; i++) {
-        const item = dgData[plugin].inp[i];
+        const item = apiData[plugin].inp[i];
         columns.push({text: item.argName + ': ' + item.value + ' ' + item.unit});
         if (i % 2 != 0 || len - 1 == i) {
             docDefinition.content[2].table.body[0][0].push({columns: columns});
@@ -304,9 +458,9 @@ function fillDocDefinition(plugin) {
     docDefinition.content[2].table.body[0][0].push('\n');
 
     let columns1 = [];
-    let len1 = dgData[plugin].out.length;
+    let len1 = apiData[plugin].out.length;
     for (let i = 0; i < len1; i++) {
-        const item = dgData[plugin].out[i];
+        const item = apiData[plugin].out[i];
         columns.push({text: item.argName + ': ' + item.value + ' ' + item.unit});
         if (i % 2 != 0 || len1 - 1 == i) {
             docDefinition.content[2].table.body[0][0].push({columns: columns});
@@ -316,10 +470,6 @@ function fillDocDefinition(plugin) {
     }
     
     return docDefinition;
-}
-function ef() {
-    console.log($('#ef2 option:selected').text());
-    
 }
 </script>
 </body>
