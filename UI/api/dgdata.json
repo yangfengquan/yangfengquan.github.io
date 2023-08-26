@@ -1,0 +1,51 @@
+{
+    "管径": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "体积流量", "value": "输入体积流量", "unit": "m3/h", "attr1": ""},
+            {"itemid": 4, "argName": "流速", "value": "输入流体流速","unit": "m/s", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "管线内径", "value": "", "unit": "mm", "attr1": ""}
+        ]
+    },
+    "管线流速": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "体积流量", "value": "输入体积流量", "unit": "m3/h", "attr1": ""},
+            {"itemid": 4, "argName": "管线内径", "value": "输入管线内径","unit": "mm", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "流速", "value": "", "unit": "m/s", "attr1": ""}
+        ]
+    },
+    "管子重量": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "管子外径", "value": "输入管子外径", "unit": "mm", "attr1": ""},
+            {"itemid": 4, "argName": "管子壁厚", "value": "输入管子壁厚","unit": "mm", "attr1": ""},
+            {"itemid": 5, "argName": "管材密度", "value": "7850","unit": "kg/m3", "attr1": "默认值为碳钢密度。"},
+            {"itemid": 6, "argName": "管子长度", "value": "输入管子长度","unit": "m", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "单重", "value": "", "unit": "kg/m", "attr1": ""},
+            {"itemid": 1, "argName": "总重", "value": "", "unit": "kg", "attr1": ""}
+        ]
+    },
+    "钢管尺寸": {
+        "inp": [    
+            {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "公称直径", "value": "<select id='ef2' class='easyui-combobox' name='language' label='Language' style='width:100%' onclick='ef()'><option value='ar'>Arabic</option><option value='ar1'>bArabic</option></select>", "unit": "", "attr1": ""},
+            {"itemid": 4, "argName": "壁厚系列", "value": "","unit": "mm", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "外径", "value": "", "unit": "mm", "attr1": "SH/T3405-2017"},
+            {"itemid": 1, "argName": "壁厚", "value": "", "unit": "mm", "attr1": "SH/T3405-2017"},
+            {"itemid": 1, "argName": "单重", "value": "", "unit": "kg/m", "attr1": ""}
+        ]
+    }
+}
