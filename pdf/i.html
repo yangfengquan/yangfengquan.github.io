@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="send()">弹窗</button>
+    <p id="carg"></p>
+<script>
+let obj=window;
+obj.name = 'parent';
+function send() {
+    let a = window.open("ia.html", "window", "height=400,width=400,toolbar=no, menubar=no, scrollbar=no, location=no, status=no,resizeable=no");
+    a.document.getElementById('cw').innerHTML = '来自父窗口';
+    a.x;
+}
+</script>
+</body>
+</html>

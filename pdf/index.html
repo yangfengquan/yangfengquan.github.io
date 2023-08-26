@@ -16,11 +16,11 @@ window.onload = function () {
     btnRepor.disabled = false;
 }
 pdfMake.fonts = {
-    simfang: {
-        normal: 'simfang.ttf',
-        bold: 'simfang.ttf',
-        italics: 'simfang.ttf',
-        bolditalics: 'simfang.ttf'
+    songti: {
+        normal: '长城宋体.TTF',
+        bold: '长城宋体.TTF',
+        italics: '长城宋体.TTF',
+        bolditalics: '长城宋体.TTF'
     }
 }
 
@@ -121,18 +121,18 @@ var docDefinition = {
 
   styles: {
     header: {
-      fontSize: 22,
-      alignment: 'center'
+        fontSize: 22,
+        alignment: 'center'
     },
     right: {
-      alignment: 'right'
+        alignment: 'right'
     },
     footer: {
         alignment: 'right'
     }
   },
   defaultStyle: {
-    font: 'simfang'
+    font: 'songti'
   }
 };
 function onCreatePdfReport() {
