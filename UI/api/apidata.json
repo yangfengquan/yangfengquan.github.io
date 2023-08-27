@@ -75,26 +75,26 @@
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
-            {"itemid": 3, "argName": "外径", "value": "输入外径","unit": "mm", "attr1": ""},  
-            {"itemid": 4, "argName": "设计压力", "value": "输入设计压力","unit": "MPa", "attr1": ""},
-            {"itemid": 5, "argName": "许用应力", "value": "输入许用应力","unit": "MPa", "attr1": "可查询GB/T20801.2 表A.1等。"},
-            {"itemid": 6, "argName": "计算系数", "value": "0.4", "unit": "", "attr1": "GB/T20801.2 6.1款 计算系数Y。"},
-            {"itemid": 7, "argName": "焊接接头高温强度降低系数", "value": "1","unit": "", "attr1": "GB/T20801.3 4.2.7款焊接接头高温强度降低系数W。"},
-            {"itemid": 8, "argName": "纵向焊接接头系数", "value": "1","unit": "", "attr1": "GB/T20801.2 表A.3、表A.4。"},
-            {"itemid": 9, "argName": "材料厚度负偏差", "value": "0.125","unit": "%", "attr1": "按材料标准规定。"},
-            {"itemid": 10, "argName": "腐蚀、冲蚀裕量", "value": "1.5","unit": "mm", "attr1": ""},
-            {"itemid": 11, "argName": "机械加工深度", "value": "0","unit": "mm", "attr1": ""},
-            {"itemid": 12, "argName": "弯管弯曲半径", "value": "","unit": "mm", "attr1": "管子中心处的弯曲半径。"}
+            {"itemid": 3, "argName": "外径", "value": "219","unit": "mm", "attr1": ""},  
+            {"itemid": 4, "argName": "物料温度", "value": "200","unit": "C", "attr1": ""},
+            {"itemid": 5, "argName": "环境温度", "value": "14.7","unit": "C", "attr1": "可查询GB50264 表C.0.1。"},
+            {"itemid": 6, "argName": "风速", "value": "2.9", "unit": "m/s", "attr1": "可查询GB50264 表C.0.1。"},
+            {"itemid": 7, "argName": "保温厚度", "value": "100","unit": "mm", "attr1": ""},
+            {"itemid": 8, "argName": "系数 a", "value": "0.044","unit": "", "attr1": "λ=a+b(Tm-c)+d(Tm-e)<sup>2</sup>+f(Tm-g)<sup>3</sup>"},
+            {"itemid": 9, "argName": "系数 b", "value": "0.0002","unit": "", "attr1": "可查询GB50264 表A.0.1。"},
+            {"itemid": 10, "argName": "系数 c", "value": "70","unit": "", "attr1": "默认保温材料为硅酸铝（即系数 a b c d e f g 默认值）。"},
+            {"itemid": 11, "argName": "系数 d", "value": "0","unit": "", "attr1": ""},
+            {"itemid": 12, "argName": "系数 e", "value": "0","unit": "", "attr1": ""},
+            {"itemid": 13, "argName": "系数 f", "value": "0","unit": "", "attr1": ""},
+            {"itemid": 14, "argName": "系数 g", "value": "0","unit": "", "attr1": ""},
+            {"itemid": 15, "argName": "黑度", "value": "0.3","unit": "", "attr1": ""}
         ],
         "out": [
-            {"itemid": 1, "argName": "直管计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.1款。"},
-            {"itemid": 2, "argName": "直管名义厚度", "value": "", "unit": "mm", "attr1": "包含负偏差、腐蚀裕量、机械加工深度。"},
-            {"itemid": 3, "argName": "弯管内侧计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
-            {"itemid": 4, "argName": "弯管内侧名义厚度", "value": "", "unit": "mm", "attr1": ""},
-            {"itemid": 5, "argName": "弯管外侧计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
-            {"itemid": 6, "argName": "弯管外侧名义厚度", "value": "", "unit": "mm", "attr1": ""},
-            {"itemid": 7, "argName": "弯管中心线处侧壁计算厚度", "value": "", "unit": "mm", "attr1": "GB/T20801.3 6.2款。"},
-            {"itemid": 8, "argName": "弯管中心线处侧壁名义厚度", "value": "", "unit": "mm", "attr1": ""}
+            {"itemid": 1, "argName": "传热系数", "value": "", "unit": "W/(m.K)", "attr1": "GB50264 表A.0.1"},
+            {"itemid": 2, "argName": "表面传热系数", "value": "", "unit": "W/(m2.K)", "attr1": "GB50264 表A.0.1"},
+            {"itemid": 3, "argName": "外表面温度", "value": "", "unit": "C", "attr1": "GB50264"},
+            {"itemid": 4, "argName": "单位面积热损失", "value": "", "unit": "W/m2", "attr1": "GB50264"},
+            {"itemid": 5, "argName": "单位长度热损失", "value": "", "unit": "W/m", "attr1": "GB50264"}
         ]
     }
 }
