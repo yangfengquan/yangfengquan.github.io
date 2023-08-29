@@ -49,8 +49,7 @@ function pipeWeight(rows) {
 function pipeSize(rows) {
     let dn = rows[0].dn;
     let sch = rows[0].sch;
-
-    if (dn == '' || sch == '') {
+    if (dn == '--请选择--' || sch == '--请选择--') {
         alert("请检查输入！\n输入完成后，需将鼠标移出输入框，并点击表格任意位置！");
         return false;
     }
@@ -257,10 +256,10 @@ function waterpipe(rows) {
         (q * li).toFixed(2),
         b_p.toFixed(2),
         b_t.toFixed(2),
-        a_f_gas.toFixed(2),
-        a_f_liquid.toFixed(2),
-        b_f_gas.toFixed(2),
-        b_f_liquid.toFixed(2),
+        (a_f_gas * 3600).toFixed(2),
+        (a_f_liquid * 3600).toFixed(2),
+        (b_f_gas * 3600).toFixed(2),
+        (b_f_liquid * 3600).toFixed(2),
         a_ve.toFixed(2),
         b_ve.toFixed(2),
         a_h.toFixed(2),

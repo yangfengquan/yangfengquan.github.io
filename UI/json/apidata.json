@@ -37,7 +37,7 @@
     },
     "钢管尺寸": {
         "inp": [    
-            {"itemid": 1, "dn": "", "sch": "", "attr1": "SH/T3405-2017"}
+            {"itemid": 1, "dn": "--请选择--", "sch": "--请选择--", "attr1": "SH/T3405-2017"}
         ],
         "out": [
             {"itemid": 1, "argName": "外径", "value": "", "unit": "mm", "attr1": ""},
@@ -133,7 +133,7 @@
             {"itemid": 6, "argName": "外径", "value": "219.1", "unit": "mm", "attr1": ""},
             {"itemid": 7, "argName": "壁厚", "value": "6.35","unit": "mm", "attr1": ""},
             {"itemid": 8, "argName": "展开长度", "value": "1000","unit": "m", "attr1": ""},
-            {"itemid": 9, "argName": "管件当量长度", "value": "600","unit": "m", "attr1": "管件、阀门等当量长度之和。"},
+            {"itemid": 9, "argName": "局部阻力当量长度", "value": "600","unit": "m", "attr1": "管件、阀门等当量长度之和。"},
             {"itemid": 10, "argName": "绝对粗糙度", "value": "0.2","unit": "mm", "attr1": ""},
             {"itemid": 11, "argName": "保温厚度", "value": "100","unit": "mm", "attr1": ""},
            {"itemid": 12, "argName": "系数 a", "value": "0.044","unit": "", "attr1": "λ=a+b(Tm-c)+d(Tm-e)<sup>2</sup>+f(Tm-g)<sup>3</sup>"},
@@ -169,5 +169,30 @@
 			{"itemid": 19, "argName": "入口干度", "value": "", "unit": "", "attr1": ""},
 			{"itemid": 20, "argName": "出口干度", "value": "", "unit": "", "attr1": ""}
         ]
+    },
+    "水和水蒸汽": {
+        "inp": [],
+        "out": [
+            {"itemid": 1, "argName": "压力", "value": "", "unit": "MPa(A)", "attr1": ""},
+            {"itemid": 2, "argName": "温度", "value": "", "unit": "C", "attr1": ""},
+            {"itemid": 3, "argName": "比焓", "value": "", "unit": "kj/kg", "attr1": ""},
+            {"itemid": 4, "argName": "比体积", "value": "", "unit": "m3/kg", "attr1": ""},
+            {"itemid": 5, "argName": "密度", "value": "", "unit": "kg/m3", "attr1": ""},
+            {"itemid": 6, "argName": "比熵", "value": "", "unit": "kj/kg", "attr1": ""},
+            {"itemid": 7, "argName": "内能", "value": "", "unit": "kj/kg", "attr1": ""},
+            {"itemid": 8, "argName": "定压比热容", "value": "", "unit": "kJ/(kg·K)", "attr1": ""},
+            {"itemid": 9, "argName": "定容比热容", "value": "", "unit": "kJ/(kg·K)", "attr1": ""},
+            {"itemid": 10, "argName": "声速", "value": "", "unit": "m/s", "attr1": ""},
+            {"itemid": 11, "argName": "动力粘度", "value": "", "unit": "Pa·s", "attr1": ""},
+            {"itemid": 12, "argName": "导热系数", "value": "", "unit": "W/(m·K)", "attr1": ""},
+            {"itemid": 13, "argName": "表面张力", "value": "", "unit": "N/m", "attr1": ""},
+            {"itemid": 14, "argName": "干度", "value": "", "unit": "", "attr1": ""},
+            {"itemid": 15, "argName": "气相体积分数", "value": "", "unit": "", "attr1": ""},
+            {"itemid": 16, "argName": "绝热指数", "value": "", "unit": "", "attr1": ""}
+        ]
+    },
+    "纯物质": {
+        "inp": [],
+        "out": []
     }
 }
