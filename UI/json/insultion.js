@@ -13,7 +13,6 @@ function pipeInsultion(rows) {
         }
     }
     let epsilon = parseFloat(rows[14].value);
-
     if (isNaN(d0) || isNaN(t0) || isNaN(ta) || isNaN(w) || isNaN(d1) || isNaN(epsilon)) {
         alert("请检查输入！\n输入完成后，需将鼠标移出输入框，并点击表格任意位置！");
         return false;
@@ -45,6 +44,7 @@ function getTs(Q, ta, alpha) {
 }
 
 //计算表面传热系数
+//epsilon = -1 表示计算，表面传热系数
 function getAlpha(ts, ta, w, d1, epsilon) {
     let alpha_r = 5.669 * epsilon / (ts - ta) * (Math.pow((273 + ts) / 100, 4) - Math.pow((273 + ta) / 100, 4))
     let alpha_c

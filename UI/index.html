@@ -10,8 +10,8 @@
 	<script src="jquery-easyui-1.10.17/jquery.min.js"></script>
 	<script src="jquery-easyui-1.10.17/jquery.easyui.min.js"></script>
     <script src="jquery-easyui-1.10.17/datagrid-cellediting.js"></script>
-    <script src="api/pipeapi.js"></script>
-    <script src="api/insultion.js"></script>
+    <script src="js/pipe.js"></script>
+    <script src="js/xsteam.js"></script>
     <style>
         #wnav a {
             color: #444;
@@ -53,8 +53,10 @@
                 <span>绝热</span>
                 <ul>
                     <li><a href="javascript:;" onclick="addtab('管道保温','pipeInsultion')">管道保温</a></li>
+                    <li><a href="javascript:;" onclick="addtab('管道保冷','pipeInsultion')">管道保冷</a></li>
                 </ul>
             </li>
+            <li><a href="javascript:;" onclick="addtab('水和水蒸汽管道','waterpipe')">水和水蒸汽管道</a></li>
         </ul>
     </div>
     <div data-options="region:'center'" style="padding:5px;background:#eee;">
@@ -66,7 +68,7 @@
 <script>
 var apiData;
 (function(){
-    $.getJSON("api/apidata.json",function(data){
+    $.getJSON("json/apidata.json",function(data){
         apiData = data;
     })
 })();
@@ -99,7 +101,7 @@ function addtab(plugin, callback){
                                             options: { 
                                                 valueField: 'text',
                                                 textField: 'text',
-                                                url: './api/dn.json',
+                                                url: './json/dn.json',
                                                 method: 'get',
                                             }
                                         }">公称直径</th>
@@ -109,7 +111,7 @@ function addtab(plugin, callback){
                                             options: { 
                                                 valueField: 'text',
                                                 textField: 'text',
-                                                url: './api/sch.json',
+                                                url: './json/sch.json',
                                                 method: 'get',
                                             }
                                         }">管表号</th>
@@ -212,10 +214,10 @@ function showPdf(plugin, callback) {
     $('#iframeContainer').innerHTML = "<p>&nbsp正在加载pdf字体文件，请耐心等待。</p>"
 
     let scriptpdfmake = document.createElement("script");
-    scriptpdfmake.src = "./pdf/pdfmake.min.js";
+    scriptpdfmake.src = "./pdfmake/pdfmake.min.js";
     document.querySelector("#pdf").appendChild(scriptpdfmake);
     let scriptvfs_fonts = document.createElement("script");
-    scriptvfs_fonts.src = "./pdf/vfs_fonts.js";
+    scriptvfs_fonts.src = "./pdfmake/vfs_fonts.js";
     document.querySelector("#pdf").appendChild(scriptvfs_fonts);
 
     const docDefinition = fillDocDefinition(plugin);
@@ -240,7 +242,7 @@ function showPdf(plugin, callback) {
                 console.error(err);
             });  
         } catch (error) {
-            alert(error);
+            alert(error + "\n请稍后重试。");
         }
         
     }
