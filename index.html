@@ -445,13 +445,15 @@ function showPdf(plugin, callback) {
                 }
             </style>
             <div id="pdf">
-                <div id="iframeContainer"></div>
+                <div id="iframeContainer">
+                    <img style="position: absolute;top: 100px; left: 100px;" src="jquery-easyui-1.10.17/themes/metro/images/loading.gif"/>
+                </div>
             </div>`,
             closable:true,
         });
     }
 
-    $('#iframeContainer').innerHTML = "<p>&nbsp正在加载pdf字体文件，请耐心等待。</p>"
+    
 
     let scriptpdfmake = document.createElement("script");
     scriptpdfmake.src = "./pdfmake/pdfmake.min.js";
@@ -463,6 +465,7 @@ function showPdf(plugin, callback) {
     const docDefinition = fillDocDefinition(plugin);
 
     scriptvfs_fonts.onload = function(){
+        $('#iframeContainer').html("");
         try {
             pdfMake.fonts = {
                 songti: {
