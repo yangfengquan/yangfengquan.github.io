@@ -194,5 +194,18 @@
     "纯物质": {
         "inp": [],
         "out": []
+    },
+    "泵轴功率": {
+        "inp": [    
+            {"itemid": 1, "argName": "位号", "value": "P1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "名称", "value": "","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "流量", "value": "", "unit": "m3/h", "attr1": ""},
+            {"itemid": 4, "argName": "扬程", "value": "","unit": "m", "attr1": ""},
+            {"itemid": 5, "argName": "密度", "value": "","unit": "kg/m3", "attr1": ""},
+            {"itemid": 6, "argName": "效率", "value": "","unit": "%", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "轴功率", "value": "", "unit": "kw", "attr1": ""}
+        ]
     }
 }
