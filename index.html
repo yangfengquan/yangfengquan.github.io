@@ -209,7 +209,7 @@ function addtab(plugin, callback){
                         $('#waterpropsargname2').combobox('loadData', opts);
                     }
                 ">
-                <input id="waterpropsvalue1" class="easyui-numberbox" type="text"/>
+                <input id="waterpropsvalue1" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
                 <label id="waterpropsunit1" for="waterpropsunit1"></label>
             </div>
             <div style="margin:5px">
@@ -242,7 +242,7 @@ function addtab(plugin, callback){
                         $('#waterpropsunit2').html(propObj[record.id].unit);
                     }
                 ">
-                <input id="waterpropsvalue2" class="easyui-numberbox" type="text"/>
+                <input id="waterpropsvalue2" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
                 <label id="waterpropsunit2" for="waterpropsunit2"></label>
             </div>
         `;
@@ -314,7 +314,7 @@ function addtab(plugin, callback){
                         $('#propsargname2').combobox('loadData', opts);
                     }
                 ">
-                <input id="propsvalue1" class="easyui-numberbox" type="text"/>
+                <input id="propsvalue1" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
                 <label id="propsunit1" for="propsunit1"></label>
             </div>
             <div style="margin:5px">
@@ -339,7 +339,7 @@ function addtab(plugin, callback){
                         $('#propsunit2').html(propObj[record.id].unit);
                     }
                 ">
-                <input id="propsvalue2" class="easyui-numberbox" type="text"/>
+                <input id="propsvalue2" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
                 <label id="propsunit2" for="propsunit2"></label>
             </div>
         `;
