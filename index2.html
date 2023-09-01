@@ -114,7 +114,6 @@ var ApiData, CurPlugin;
         $('#wnav').tree({
             data: ApiData.tree,
             onClick: function(node){
-                console.log(node);
                 addtab(node.attributes.url);
             }
         })
@@ -141,7 +140,6 @@ function addtab(plugin){
             closable:true,
         });
     }
-    
 }
 
 function apiCalc() {
