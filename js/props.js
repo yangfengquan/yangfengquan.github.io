@@ -255,6 +255,6 @@ function props(rows) {
     } catch (error) {
         alert(error, "\n请稍候再试。");
     }             
-    
+    console.log(JSON.stringify(apiData["纯物质"].out));
     showDgout("纯物质");
 }

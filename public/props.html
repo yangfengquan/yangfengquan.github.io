@@ -1,0 +1,119 @@
+<div style="margin:5px">
+    <label for="fluid">物质 :</label>
+    <input id="propsfluid" class="easyui-combobox"
+        data-options="
+        url: 'json/fluidlist.json',
+        method: 'get',
+        valueField: 'id',
+        textField: 'text',
+        onSelect: function(record){
+            if(record.id == '0') return;
+            ApiData['props'].inp[0].value = record.text;
+        }
+    ">
+</div>
+<div style="margin:5px">
+    <label for="argname1">参数1:</label>
+    <input id="propsargname1" class="easyui-combobox"
+        data-options="
+        valueField: 'id',
+        textField: 'text',
+        data: [{
+            'id': '0',
+            'text':  '--请选择--',
+            'selected':true
+        },{
+            'id': 'P',
+            'text': '压力'
+        },{
+            'id': 'T',
+            'text': '温度'
+        }],
+        formatter: function(row){
+            var opts = $(this).combobox('options');
+            return row[opts.textField];
+        },
+        onSelect: function(record){
+            if(record.id == '0') return;
+            var propObj = {
+                T:     {name: '温度',     unit: 'C',     },
+                P:     {name: '压力',     unit: 'MPaA',  },
+                DMOLAR:{name: '摩尔密度', unit: 'mol/m3',},
+                D:     {name: '质量密度', unit: 'kg/m3', },
+                HMOLAR:{name: '摩尔比焓', unit: 'j/mol', },
+                H:     {name: '质量比焓', unit: 'j/kg',  },
+                Q:     {name: '干度',     unit: '',      }
+            };
+            $('#propsunit1').html(propObj[record.id].unit);
+            
+            var modes = [
+                ['P','T'],
+                ['P','DMOLAR'],
+                ['P','D'],
+                ['P','HMOLAR'],
+                ['P','H'],
+                ['P','Q'],
+                ['T','DMOLAR'],
+                ['T','D'],
+                ['T','HMOLAR'],
+                ['T','H'],
+                ['T','Q'],
+            ]
+            let opts = [];
+            modes.forEach(item => {
+                if (item[0] == record.id) {
+                    opts.push({'id': item[1], 'text': propObj[item[1]].name})
+                }
+            })
+            opts[0]['selected'] = true;
+            $('#propsargname2').combobox('loadData', opts);
+
+            ApiData['props'].inp[1].id = record.id;
+            ApiData['props'].inp[1].argName = record.text;
+            ApiData['props'].inp[1].unit = propObj[record.id].unit;
+        }
+    ">
+    <input id="propsvalue1" class="easyui-numberbox" type="text" data-options="
+        min:0,
+        precision:2,
+        onChange: function(record){
+            ApiData['props'].inp[1].value = record;
+        }
+    "/>
+    <label id="propsunit1" for="propsunit1"></label>
+</div>
+<div style="margin:5px">
+    <label for="argname2">参数2:</label>
+    <input id="propsargname2" class="easyui-combobox" data-options="
+        valueField:'id',
+        textField:'text',
+        formatter: function(row){
+            var opts = $(this).combobox('options');
+            return row[opts.textField];
+        },
+        onSelect: function(record){
+            var propObj = {
+                T:     {name: '温度',     unit: 'C',     },
+                P:     {name: '压力',     unit: 'MPaA',  },
+                DMOLAR:{name: '摩尔密度', unit: 'mol/m3',},
+                D:     {name: '质量密度', unit: 'kg/m3', },
+                HMOLAR:{name: '摩尔比焓', unit: 'j/mol', },
+                H:     {name: '质量比焓', unit: 'j/kg',  },
+                Q:     {name: '干度',     unit: '',      }
+            };
+            $('#propsunit2').html(propObj[record.id].unit);
+
+            ApiData['props'].inp[2].id = record.id;
+            ApiData['props'].inp[2].argName = record.text;
+            ApiData['props'].inp[2].unit = propObj[record.id].unit;
+        }
+    ">
+    <input id="propsvalue2" class="easyui-numberbox" type="text" data-options="
+        min:0,
+        precision:2,
+        onChange: function(record){
+            ApiData['props'].inp[2].value = record;
+        }
+    "/>
+    <label id="propsunit2" for="propsunit2"></label>
+</div>

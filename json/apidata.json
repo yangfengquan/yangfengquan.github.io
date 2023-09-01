@@ -1,5 +1,29 @@
 {
-    "管径": {
+    "tree": [{
+        "id": 0,
+        "text" : "管线",
+        "children": []
+        },{
+            "id": 1,
+            "text" : "绝热",
+            "children": []
+        },{
+            "id": 2,
+            "text" : "水和水蒸汽管道",
+            "children": []
+        },{
+            "id": 3,
+            "text" : "设备",
+            "children": []
+        },{
+            "id": 4,
+            "text" : "物性",
+            "children": []
+    }],
+    "pipeDiameter": {
+        "pid": 0,
+        "title": "管径",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -10,7 +34,10 @@
             {"itemid": 1, "argName": "管线内径", "value": "", "unit": "mm", "attr1": ""}
         ]
     },
-    "管线流速": {
+    "pipeVelocity": {
+        "pid": 0,
+        "title": "管线流速",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -21,7 +48,10 @@
             {"itemid": 1, "argName": "流速", "value": "", "unit": "m/s", "attr1": ""}
         ]
     },
-    "管子重量": {
+    "pipeWeight": {
+        "pid": 0,
+        "title": "管子重量",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -35,7 +65,10 @@
             {"itemid": 2, "argName": "总重", "value": "", "unit": "kg", "attr1": ""}
         ]
     },
-    "钢管尺寸": {
+    "pipeSize": {
+        "pid": 0,
+        "title": "钢管尺寸",
+        "url" : "pipesize",
         "inp": [    
             {"itemid": 1, "dn": "--请选择--", "sch": "--请选择--", "attr1": "SH/T3405-2017"}
         ],
@@ -45,7 +78,10 @@
             {"itemid": 3, "argName": "单重", "value": "", "unit": "kg/m", "attr1": ""}
         ]
     },
-    "壁厚": {
+    "pipeStrength": {
+        "pid": 0,
+        "title": "壁厚",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -71,7 +107,10 @@
             {"itemid": 8, "argName": "弯管中心线处侧壁名义厚度", "value": "", "unit": "mm", "attr1": ""}
         ]
     },
-    "管道保温": {
+    "pipeHInsultion": {
+        "pid": 1,
+        "title": "管道保温",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -97,7 +136,10 @@
             {"itemid": 5, "argName": "单位长度热损失", "value": "", "unit": "W/m", "attr1": "GB50264"}
         ]
     },
-    "管道保冷": {
+    "pipeCInsultion": {
+        "pid": 1,
+        "title": "管道保冷",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -123,7 +165,10 @@
             {"itemid": 5, "argName": "单位长度热损失", "value": "", "unit": "W/m", "attr1": "GB50264"}
         ]
     },
-    "水和水蒸汽管道": {
+    "waterpipe": {
+        "pid": 2,
+        "title": "水和水蒸汽管道",
+        "url" : "default",
         "inp": [    
             {"itemid": 1, "argName": "管线编号", "value": "PI1", "unit": "", "attr1": ""},
             {"itemid": 2, "argName": "管线名称", "value": "输入管线名称","unit": "", "attr1": ""},
@@ -170,8 +215,30 @@
 			{"itemid": 20, "argName": "出口干度", "value": "", "unit": "", "attr1": ""}
         ]
     },
-    "水和水蒸汽": {
-        "inp": [],
+    "pumpPower": {
+        "pid": 3,
+        "title": "泵轴功率",
+        "url" : "default",
+        "inp": [    
+            {"itemid": 1, "argName": "位号", "value": "P1", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "名称", "value": "","unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "流量", "value": "", "unit": "m3/h", "attr1": ""},
+            {"itemid": 4, "argName": "扬程", "value": "","unit": "m", "attr1": ""},
+            {"itemid": 5, "argName": "密度", "value": "","unit": "kg/m3", "attr1": ""},
+            {"itemid": 6, "argName": "效率", "value": "","unit": "%", "attr1": ""}
+        ],
+        "out": [
+            {"itemid": 1, "argName": "轴功率", "value": "", "unit": "kw", "attr1": ""}
+        ]
+    },
+    "waterprops": {
+        "pid": 4,
+        "title": "水和水蒸汽物性",
+        "url" : "waterprops",
+        "inp": [
+            {"itemid": 1, "argName": "", "id": "", "value": "", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "", "id": "", "value": "", "unit": "", "attr1": ""}
+        ],
         "out": [
             {"itemid": 1, "argName": "压力", "value": "", "unit": "MPa(A)", "attr1": ""},
             {"itemid": 2, "argName": "温度", "value": "", "unit": "C", "attr1": ""},
@@ -191,21 +258,83 @@
             {"itemid": 16, "argName": "绝热指数", "value": "", "unit": "", "attr1": ""}
         ]
     },
-    "纯物质": {
-        "inp": [],
-        "out": []
-    },
-    "泵轴功率": {
-        "inp": [    
-            {"itemid": 1, "argName": "位号", "value": "P1", "unit": "", "attr1": ""},
-            {"itemid": 2, "argName": "名称", "value": "","unit": "", "attr1": ""},
-            {"itemid": 3, "argName": "流量", "value": "", "unit": "m3/h", "attr1": ""},
-            {"itemid": 4, "argName": "扬程", "value": "","unit": "m", "attr1": ""},
-            {"itemid": 5, "argName": "密度", "value": "","unit": "kg/m3", "attr1": ""},
-            {"itemid": 6, "argName": "效率", "value": "","unit": "%", "attr1": ""}
+    "props": {
+        "pid": 4,
+        "title": "纯物质",
+        "url" : "props",
+        "inp": [
+            {"itemid": 1, "argName": "物质", "id": "", "value": "", "unit": "", "attr1": ""},
+            {"itemid": 2, "argName": "", "id": "", "value": "", "unit": "", "attr1": ""},
+            {"itemid": 3, "argName": "", "id": "", "value": "", "unit": "", "attr1": ""}
         ],
         "out": [
-            {"itemid": 1, "argName": "轴功率", "value": "", "unit": "kw", "attr1": ""}
+            {"itemid":1,"argName":"压力","value":"","unit":"MPaA","attr1":""},
+            {"itemid":2,"argName":"温度","value":"","unit":"℃","attr1":""},
+            {"itemid":3,"argName":"摩尔密度","value":"","unit":"mol/m^3","attr1":""},
+            {"itemid":4,"argName":"质量密度","value":"","unit":"kg/m^3","attr1":""},
+            {"itemid":5,"argName":"摩尔比焓","value":"","unit":"J/mol","attr1":""},
+            {"itemid":6,"argName":"质量比焓","value":"","unit":"J/kg","attr1":""},
+            {"itemid":7,"argName":"摩尔比熵","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":8,"argName":"质量比熵","value":"","unit":"J/kg/K","attr1":""},
+            {"itemid":9,"argName":"摩尔比内能","value":"","unit":"J/mol","attr1":""},
+            {"itemid":10,"argName":"质量比内能","value":"","unit":"J/kg","attr1":""},
+            {"itemid":11,"argName":"质量比定压比热","value":"","unit":"J/kg/K","attr1":""},
+            {"itemid":12,"argName":"摩尔比定压比热","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":13,"argName":"质量比定容比热","value":"","unit":"J/kg/K","attr1":""},
+            {"itemid":14,"argName":"摩尔比定容比热","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":15,"argName":"声速","value":"","unit":"m/s","attr1":""},
+            {"itemid":16,"argName":"导热系数","value":"","unit":"W/m/K","attr1":""},
+            {"itemid":17,"argName":"粘度","value":"","unit":"Pa s","attr1":""},
+            {"itemid":18,"argName":"摩尔质量","value":"","unit":"kg/mol","attr1":""},
+            {"itemid":19,"argName":"压缩因子","value":"","unit":"","attr1":""},
+            {"itemid":20,"argName":"偏心因子","value":"","unit":"","attr1":""},
+            {"itemid":21,"argName":"理想亥姆霍兹能量","value":"","unit":"","attr1":""},
+            {"itemid":22,"argName":"剩余亥姆霍兹能量","value":"","unit":"","attr1":""},
+            {"itemid":23,"argName":"第二维里系数","value":"","unit":"","attr1":""},
+            {"itemid":24,"argName":"理想气体质量比恒压比热","value":"","unit":"J/kg/K","attr1":""},
+            {"itemid":25,"argName":"理想气体摩尔比恒压比热","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":26,"argName":"第三维里系数","value":"","unit":"","attr1":""},
+            {"itemid":27,"argName":"理想亥姆霍兹能与δ的导数","value":"","unit":"","attr1":""},
+            {"itemid":28,"argName":"理想亥姆霍兹能与τ的导数","value":"","unit":"","attr1":""},
+            {"itemid":29,"argName":"剩余亥姆霍兹能量与δ的导数","value":"","unit":"","attr1":""},
+            {"itemid":30,"argName":"剩余亥姆霍兹能量与τ的导数","value":"","unit":"","attr1":""},
+            {"itemid":31,"argName":"第二维里系数对T的导数","value":"","unit":"","attr1":""},
+            {"itemid":32,"argName":"第三维里系数对T的导数","value":"","unit":"","attr1":""},
+            {"itemid":33,"argName":"偶极矩","value":"","unit":"C m","attr1":""},
+            {"itemid":34,"argName":"可燃性危险","value":"","unit":"","attr1":""},
+            {"itemid":35,"argName":"不可压缩溶液分数（摩尔，质量，体积）的最大值","value":"","unit":"","attr1":""},
+            {"itemid":36,"argName":"不可压缩溶液分数（摩尔、质量、体积）的最小值","value":"","unit":"","attr1":""},
+            {"itemid":37,"argName":"气体动力学的基本导数","value":"","unit":"","attr1":""},
+            {"itemid":38,"argName":"摩尔气体常数","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":39,"argName":"残余摩尔吉布斯能","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":40,"argName":"摩尔比吉布斯能","value":"","unit":"J/mol","attr1":""},
+            {"itemid":41,"argName":"20年全球变暖潜能值","value":"","unit":"","attr1":""},
+            {"itemid":42,"argName":"百年全球变暖潜能值","value":"","unit":"","attr1":""},
+            {"itemid":43,"argName":"500年全球变暖潜能值","value":"","unit":"","attr1":""},
+            {"itemid":44,"argName":"质量比吉布斯能","value":"","unit":"J/kg","attr1":""},
+            {"itemid":45,"argName":"质量比亥姆霍兹能量","value":"","unit":"J/kg","attr1":""},
+            {"itemid":46,"argName":"摩尔比亥姆霍兹能","value":"","unit":"J/mol","attr1":""},
+            {"itemid":47,"argName":"健康危害","value":"","unit":"","attr1":""},
+            {"itemid":48,"argName":"残余摩尔焓","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":49,"argName":"等熵膨胀系数","value":"","unit":"","attr1":""},
+            {"itemid":50,"argName":"等压膨胀系数","value":"","unit":"1/K","attr1":""},
+            {"itemid":51,"argName":"等温压缩性","value":"","unit":"1/Pa","attr1":""},
+            {"itemid":52,"argName":"表面张力","value":"","unit":"N/m","attr1":""},
+            {"itemid":53,"argName":"臭氧消耗潜能值","value":"","unit":"","attr1":""},
+            {"itemid":54,"argName":"临界点压力","value":"","unit":"Pa","attr1":""},
+            {"itemid":55,"argName":"物理危害","value":"","unit":"","attr1":""},
+            {"itemid":56,"argName":"普朗特数","value":"","unit":"","attr1":""},
+            {"itemid":57,"argName":"三相点的压力","value":"","unit":"Pa","attr1":""},
+            {"itemid":58,"argName":"还原点压力","value":"","unit":"Pa","attr1":""},
+            {"itemid":59,"argName":"临界点质量密度","value":"","unit":"kg/m^3","attr1":""},
+            {"itemid":60,"argName":"还原点质量密度","value":"","unit":"kg/m^3","attr1":""},
+            {"itemid":61,"argName":"临界点摩尔密度","value":"","unit":"mol/m^3","attr1":""},
+            {"itemid":62,"argName":"还原点摩尔密度","value":"","unit":"mol/m^3","attr1":""},
+            {"itemid":63,"argName":"残差摩尔熵","value":"","unit":"J/mol/K","attr1":""},
+            {"itemid":64,"argName":"临界点温度","value":"","unit":"K","attr1":""},
+            {"itemid":65,"argName":"三相点的温度","value":"","unit":"K","attr1":""},
+            {"itemid":66,"argName":"不可压缩溶液的冻结温度","value":"","unit":"K","attr1":""},
+            {"itemid":67,"argName":"还原点温度","value":"","unit":"K","attr1":""}
         ]
     }
 }
