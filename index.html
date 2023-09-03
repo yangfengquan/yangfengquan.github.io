@@ -130,7 +130,10 @@ var ApiData, CurPlugin;
                     CurPlugin = key;
                 }
             }
-        } 
+        },
+        onBeforeClose: function(title){
+            return confirm('[ ' + title + ' ] 已打开，确定要关闭吗？');
+        }
     });
 })();
 
@@ -187,23 +190,13 @@ function openfile() {
 
 function addtab(title, url, isclose = false){
     if ($('#tt').tabs('exists', title)){
-        if (isclose) {
-            $('#tt').tabs('close', title);
-            $('#tt').tabs('add',{
-                title: title,
-                href: 'public/' + url + '.html',
-                closable:true,
-            });
-        } else {
-            $('#tt').tabs('select', title);
-        }
-    } else {
-        $('#tt').tabs('add',{
-            title: title,
-            href: 'public/' + url + '.html',
-            closable:true,
-        });
-    }
+        $('#tt').tabs('close', title);
+    } 
+    $('#tt').tabs('add',{
+        title: title,
+        href: 'public/' + url + '.html',
+        closable:true,
+    });  
 }
 
 function tyCalc() {
