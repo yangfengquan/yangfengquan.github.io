@@ -1,6 +1,6 @@
 <div style="margin:5px">
-    <label for="argname1">参数1:</label>
-    <input id="waterpropsargname1" class="easyui-combobox"
+    <label for="name1">参数1:</label>
+    <input id="waterpropsname1" class="easyui-combobox"
         data-options="
         valueField: 'id',
         textField: 'text',
@@ -60,10 +60,10 @@
                 }
             })
             opts[0]['selected'] = true;
-            $('#waterpropsargname2').combobox('loadData', opts);
+            $('#waterpropsname2').combobox('loadData', opts);
 
-            ApiData['waterprops'].inp[0].id = record.id;
-            ApiData['waterprops'].inp[0].argName = record.text;
+            ApiData['waterprops'].inp[0].key = record.id;
+            ApiData['waterprops'].inp[0].name = record.text;
             ApiData['waterprops'].inp[0].unit = propObj[record.id].unit;
         }
     ">
@@ -77,8 +77,8 @@
     <label id="waterpropsunit1" for="waterpropsunit1"></label>
 </div>
 <div style="margin:5px">
-    <label for="argname2">参数2:</label>
-    <input id="waterpropsargname2" class="easyui-combobox" data-options="
+    <label for="name2">参数2:</label>
+    <input id="waterpropsname2" class="easyui-combobox" data-options="
         valueField:'id',
         textField:'text',
         formatter: function(row){
@@ -105,8 +105,8 @@
             };
             $('#waterpropsunit2').html(propObj[record.id].unit);
             
-            ApiData['waterprops'].inp[1].id = record.id;
-            ApiData['waterprops'].inp[1].argName = record.text;
+            ApiData['waterprops'].inp[1].key = record.id;
+            ApiData['waterprops'].inp[1].name = record.text;
             ApiData['waterprops'].inp[1].unit = propObj[record.id].unit;
         }
     ">

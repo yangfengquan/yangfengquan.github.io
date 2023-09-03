@@ -13,8 +13,8 @@
     ">
 </div>
 <div style="margin:5px">
-    <label for="argname1">参数1:</label>
-    <input id="propsargname1" class="easyui-combobox"
+    <label for="name1">参数1:</label>
+    <input id="propsname1" class="easyui-combobox"
         data-options="
         valueField: 'id',
         textField: 'text',
@@ -66,10 +66,10 @@
                 }
             })
             opts[0]['selected'] = true;
-            $('#propsargname2').combobox('loadData', opts);
+            $('#propsname2').combobox('loadData', opts);
 
-            ApiData['props'].inp[1].id = record.id;
-            ApiData['props'].inp[1].argName = record.text;
+            ApiData['props'].inp[1].key = record.id;
+            ApiData['props'].inp[1].name = record.text;
             ApiData['props'].inp[1].unit = propObj[record.id].unit;
         }
     ">
@@ -83,8 +83,8 @@
     <label id="propsunit1" for="propsunit1"></label>
 </div>
 <div style="margin:5px">
-    <label for="argname2">参数2:</label>
-    <input id="propsargname2" class="easyui-combobox" data-options="
+    <label for="name2">参数2:</label>
+    <input id="propsname2" class="easyui-combobox" data-options="
         valueField:'id',
         textField:'text',
         formatter: function(row){
@@ -103,8 +103,8 @@
             };
             $('#propsunit2').html(propObj[record.id].unit);
 
-            ApiData['props'].inp[2].id = record.id;
-            ApiData['props'].inp[2].argName = record.text;
+            ApiData['props'].inp[2].key = record.id;
+            ApiData['props'].inp[2].name = record.text;
             ApiData['props'].inp[2].unit = propObj[record.id].unit;
         }
     ">

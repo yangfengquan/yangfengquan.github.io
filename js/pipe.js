@@ -160,6 +160,14 @@ function pipeStrength(rows) {
     return [t, t_, t0, t0_, t1, t1_, t2, t2_];
 }
 
+function pipeHInsultion(rows) {
+    return pipeInsultion(rows);
+}
+
+function pipeCInsultion(rows) {
+    return pipeInsultion(rows);
+}
+
 function pipeInsultion(rows) {
     let d0 = parseFloat(rows[2].value) / 1000;
     let t0 = parseFloat(rows[3].value);

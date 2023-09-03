@@ -10,6 +10,7 @@
 	<script src="jquery-easyui-1.10.17/jquery.min.js"></script>
 	<script src="jquery-easyui-1.10.17/jquery.easyui.min.js"></script>
     <script src="jquery-easyui-1.10.17/datagrid-cellediting.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.js"></script>
     <script src="js/pipe.js"></script>
     <script src="js/xsteam.js"></script>
     <script src="js/props.js"></script>
@@ -47,513 +48,188 @@
             <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
         </div>
     </div>
-    <div data-options="region:'west',title:'导航菜单',split:true" style="width:200px;">
-        <ul id="wnav" class="easyui-tree">
-            <li>
-                <span>管道</span>
-                <ul>
-                    <li><a href="javascript:;" onclick="addtab('管径','pipeDiameter')">管径</a></li>
-                    <li><a href="javascript:;" onclick="addtab('管线流速','pipeVelocity')">管线流速</a></li>
-                    <li><a href="javascript:;" onclick="addtab('管子重量','pipeWeight')">管子重量</a></li>
-                    <li><a href="javascript:;" onclick="addtab('钢管尺寸','pipeSize')">钢管尺寸</a></li>
-                    <li><a href="javascript:;" onclick="addtab('壁厚','pipeStrength')">壁厚</a></li>
-                </ul>
-            </li>
-            <li>
-                <span>绝热</span>
-                <ul>
-                    <li><a href="javascript:;" onclick="addtab('管道保温','pipeInsultion')">管道保温</a></li>
-                    <li><a href="javascript:;" onclick="addtab('管道保冷','pipeInsultion')">管道保冷</a></li>
-                </ul>
-            </li>
-            <li><a href="javascript:;" onclick="addtab('水和水蒸汽管道','waterpipe')">水和水蒸汽管道</a></li>
-            <li>
-                <span>物性</span>
-                <ul>
-                    <li><a href="javascript:;" onclick="addtab('水和水蒸汽','waterprops')">水和水蒸汽</a></li>
-                    <li><a href="javascript:;" onclick="addtab('纯物质','props')">纯物质</a></li>
-                </ul>
-            </li>
-            <li>
-                <span>设备</span>
-                <ul>
-                    <li><a href="javascript:;" onclick="addtab('泵轴功率','pumpPower')">泵轴功率</a></li>
-                </ul>
-            </li>
-        </ul>
+    <div data-options="region:'west',title:'导航菜单',split:true" style="width:250px;">
+        <ul id="wnav"></ul>
+        <br/>
+        <ul id="lastlist"  class="easyui-tree"></ul>
     </div>
     <div data-options="region:'center'" style="padding:5px;background:#eee;">
+        <input id="fb" type="file" style="display: none;" onchange="openfile()">
+        <a  href="javascript:;" class="easyui-linkbutton c2" data-options="iconCls:'icon-save'"
+            style="margin: 5px auto 5px 10px;" onclick="save1()">保存</a>
+        <a  href="javascript:;" class="easyui-linkbutton c2" data-options="iconCls:'icon-search'"
+            style="margin: 5px auto 5px 10px;" onclick="open1()">打开</a>
+        <a  href="javascript:;" class="easyui-linkbutton c5" data-options="iconCls:'icon-sum'"
+            style="margin: 5px auto 5px 10px;" onclick="tyCalc()">运算</a>
+        <a href="javascript:;" class="easyui-linkbutton c2" data-options="iconCls:'icon-print'"
+            style="margin: 5px auto 5px 10px;" onclick = "typdf()">生成报告</a>
         <div id="tt" class="easyui-tabs">
             <div title="Welcome" href="Welcome.html" style="padding:20px;display:none;">
             </div>
         </div>
     </div>
 <script>
-var apiData;
-(function(){
-    $.getJSON("json/apidata.json",function(data){
-        apiData = data;
-    })
+var ApiData, CurPlugin;
+
+(function(){   
+    $.when($.getJSON("json/apidata.json",function(data){
+        ApiData = data;
+    })).done(function(){
+        for(let item in ApiData){
+            if (item != "tree") {
+                ApiData.tree[ApiData[item].pid].children.push({
+                    "text": ApiData[item].title,
+                    "attributes":{
+                        "url": item,
+                    }
+                })
+            }
+        }
+
+        $('#wnav').tree({
+            data: ApiData.tree,
+            onClick: function(node){
+                if (!node.hasOwnProperty('children')) {
+                    addtab(ApiData[node.attributes.url].title, ApiData[node.attributes.url].url);
+                }
+            }
+        })
+
+        let lasttree = [{
+            "id": 0,
+            "text": "最近打开的文件",
+            "children": []
+        }];
+        if (localStorage.getItem('lastlist') != null) {
+            let lastlist = JSON.parse(localStorage.getItem('lastlist'));
+            lastlist.reverse();
+            
+            lastlist.forEach(item => {
+                let ar = item.split('_');
+                lasttree[0].children.push({"text": ApiData[ar[0]].title + '_' + ar[1], url: ar[0]});
+            });
+        }
+
+        $('#lastlist').tree({
+            data: lasttree,
+            onClick: function(node){
+                if (!node.hasOwnProperty('children')) {
+                    let t = node.text.split('_')[1];
+                    let f = localStorage.getItem(node.url + '_' + t);
+                    ApiData[node.url].inp = JSON.parse(f).inp;
+                    addtab(ApiData[node.url].title, ApiData[node.url].url);
+                }
+            }
+        });
+    });
+
+    $('#tt').tabs({
+        onSelect: function(title){
+            for (let key in ApiData){
+                if (ApiData[key].title == title) {
+                    CurPlugin = key;
+                }
+            }
+        } 
+    });
 })();
 
-function addtab(plugin, callback){
-    const linkHtml = `<a href="javascript:;" class="easyui-linkbutton c5" data-options="iconCls:'icon-sum'"
-                       style="margin: 5px auto 5px 500px;" onclick="apiClac('${plugin}','${callback}')">运算</a>
-                      <a id="btn-report" href="javascript:;" class="easyui-linkbutton c2" data-options="iconCls:'icon-print'"
-                       style="margin: 5px auto 5px 10px;" onclick = "showPdf('${plugin}','${callback}')">生成报告</a>`;
-    let dgInpHtml = {}
-    dgInpHtml["default"] = `<table id="dg-inp-${plugin}" title="输入" style="width:100%; height: auto;">
-                                <thead>
-                                    <tr>
-                                        <th data-options="field:'itemid',width:40">编号</th>
-                                        <th data-options="field:'argName',width:100">项目</th>
-                                        <th data-options="field:'value',width:200,align:'right',editor:'text'">值</th>
-                                        <th data-options="field:'unit',width:80,align:'right'">单位</th>
-                                        <th data-options="field:'attr1',width:350,editor:'text'">说明</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <span class="c1" style="display:block; margin: 5px">注意：请将鼠标移出输入框，点击表格任意位置完成输入。</span>`;
-    dgInpHtml["钢管尺寸"] = `<table id="dg-inp-${plugin}" title="输入" style="width:100%; height: auto;">
-                                <thead>
-                                    <tr>
-                                        <th data-options="field:'itemid',width:40">编号</th>
-                                        <th data-options="field:'dn',width:100,align:'right',
-                                        editor:{
-                                            type:'combobox',
-                                            options: { 
-                                                valueField: 'text',
-                                                textField: 'text',
-                                                url: './json/dn.json',
-                                                method: 'get',
-                                            }
-                                        }">公称直径</th>
-                                        <th data-options="field:'sch',width:200,align:'right',
-                                        editor:{
-                                            type:'combobox',
-                                            options: { 
-                                                valueField: 'text',
-                                                textField: 'text',
-                                                url: './json/sch.json',
-                                                method: 'get',
-                                            }
-                                        }">管表号</th>
-                                        <th data-options="field:'attr1',width:350,editor:'text'">说明</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <span class="c1" style="display:block; margin: 5px">注意：请将鼠标移出输入框，点击表格任意位置完成输入。</span>`;
-    dgInpHtml["水和水蒸汽"] = `
-            <div style="margin:5px">
-                <label for="argname1">参数1:</label>
-                <input id="waterpropsargname1" class="easyui-combobox"
-                    data-options="
-                    valueField: 'id',
-                    textField: 'text',
-                    data: [{
-                        'id': '0',
-                        'text':  '--请选择--',
-                        'selected':true
-                    },{
-                        'id': 'p',
-                        'text': '压力'
-                    },{
-                        'id': 'T',
-                        'text': '温度'
-                    },{
-                        'id': 'h',
-                        'text': '比焓'
-                    }],
-                    formatter: function(row){
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onSelect: function(record){
-                        if(record.id == '0') return;
-                        var propObj = {
-                            T:   {name: '温度',         unit: 'C',        },
-                            p:   {name: '压力',         unit: 'MPaA',     },
-                            h:   {name: '比焓',         unit: 'kj/kg',    },
-                            v:   {name: '比体积',       unit: 'm3/kg',    },
-                            rho: {name: '密度',         unit: 'kg/m3',    },
-                            s:   {name: '比熵',         unit: 'kj/kg',    },
-                            u:   {name: '内能',         unit: 'kj/kg',    },
-                            Cp:  {name: '定压比热容',   unit: 'kj/(kg·K)',},
-                            Cv:  {name: '定容比热容',   unit: 'kj/(kg·K)',},
-                            w:   {name: '声速',         unit: 'm/s',      },
-                            my:  {name: '动力粘度',     unit: 'Pa·s',     },
-                            tc:  {name: '导热系数',     unit: 'W/(m·K)',  },
-                            st:  {name: '表面张力',     unit: 'N/m',      },
-                            x:   {name: '干度',         unit: '',         },
-                            vx:  {name: '气态体积分数', unit: '',         }
-                        };
-                        $('#waterpropsunit1').html(propObj[record.id].unit);
-                        
-                        var modes = [
-                            ['p','T'],
-                            ['p','h'],
-                            ['p','s'],
-                            ['p','rho'],
-                            ['p','x'],
-                            ['T','x'],
-                            ['h','s'],
-                            ['h','rho']
-                        ]
-                        let opts = [];
-                        modes.forEach(item => {
-                            if (item[0] == record.id) {
-                                opts.push({'id': item[1], 'text': propObj[item[1]].name})
-                            }
-                        })
-                        opts[0]['selected'] = true;
-                        $('#waterpropsargname2').combobox('loadData', opts);
-                    }
-                ">
-                <input id="waterpropsvalue1" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
-                <label id="waterpropsunit1" for="waterpropsunit1"></label>
-            </div>
-            <div style="margin:5px">
-                <label for="argname2">参数2:</label>
-                <input id="waterpropsargname2" class="easyui-combobox" data-options="
-                    valueField:'id',
-                    textField:'text',
-                    formatter: function(row){
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onSelect: function(record){
-                        var propObj = {
-                            T:   {name: '温度',         unit: 'C',        },
-                            p:   {name: '压力',         unit: 'MPaA',     },
-                            h:   {name: '比焓',         unit: 'kj/kg',    },
-                            v:   {name: '比体积',       unit: 'm3/kg',    },
-                            rho: {name: '密度',         unit: 'kg/m3',    },
-                            s:   {name: '比熵',         unit: 'kj/kg',    },
-                            u:   {name: '内能',         unit: 'kj/kg',    },
-                            Cp:  {name: '定压比热容',   unit: 'kj/(kg·K)',},
-                            Cv:  {name: '定容比热容',   unit: 'kj/(kg·K)',},
-                            w:   {name: '声速',         unit: 'm/s',      },
-                            my:  {name: '动力粘度',     unit: 'Pa·s',     },
-                            tc:  {name: '导热系数',     unit: 'W/(m·K)',  },
-                            st:  {name: '表面张力',     unit: 'N/m',      },
-                            x:   {name: '干度',         unit: '',         },
-                            vx:  {name: '气态体积分数', unit: '',         }
-                        };
-                        $('#waterpropsunit2').html(propObj[record.id].unit);
-                    }
-                ">
-                <input id="waterpropsvalue2" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
-                <label id="waterpropsunit2" for="waterpropsunit2"></label>
-            </div>
-        `;
-        dgInpHtml["纯物质"] = `
-            <div style="margin:5px">
-                <label for="fluid">物质：</label>
-                <input id="propsfluid" class="easyui-combobox"
-                    data-options="
-                    url: 'json/fluidlist.json',
-                    method: 'get',
-                    valueField: 'id',
-                    textField: 'text'
-                ">
-            </div>
-            <div style="margin:5px">
-                <label for="argname1">参数1:</label>
-                <input id="propsargname1" class="easyui-combobox"
-                    data-options="
-                    valueField: 'id',
-                    textField: 'text',
-                    data: [{
-                        'id': '0',
-                        'text':  '--请选择--',
-                        'selected':true
-                    },{
-                        'id': 'P',
-                        'text': '压力'
-                    },{
-                        'id': 'T',
-                        'text': '温度'
-                    }],
-                    formatter: function(row){
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onSelect: function(record){
-                        if(record.id == '0') return;
-                        var propObj = {
-                            T:     {name: '温度',     unit: 'C',     },
-                            P:     {name: '压力',     unit: 'MPaA',  },
-                            DMOLAR:{name: '摩尔密度', unit: 'mol/m3',},
-                            D:     {name: '质量密度', unit: 'kg/m3', },
-                            HMOLAR:{name: '摩尔比焓', unit: 'j/mol', },
-                            H:     {name: '质量比焓', unit: 'j/kg',  },
-                            Q:     {name: '干度',     unit: '',      }
-                        };
-                        $('#propsunit1').html(propObj[record.id].unit);
-                        
-                        var modes = [
-                            ['P','T'],
-                            ['P','DMOLAR'],
-                            ['P','D'],
-                            ['P','HMOLAR'],
-                            ['P','H'],
-                            ['P','Q'],
-                            ['T','DMOLAR'],
-                            ['T','D'],
-                            ['T','HMOLAR'],
-                            ['T','H'],
-                            ['T','Q'],
-                        ]
-                        let opts = [];
-                        modes.forEach(item => {
-                            if (item[0] == record.id) {
-                                opts.push({'id': item[1], 'text': propObj[item[1]].name})
-                            }
-                        })
-                        opts[0]['selected'] = true;
-                        $('#propsargname2').combobox('loadData', opts);
-                    }
-                ">
-                <input id="propsvalue1" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
-                <label id="propsunit1" for="propsunit1"></label>
-            </div>
-            <div style="margin:5px">
-                <label for="argname2">参数2:</label>
-                <input id="propsargname2" class="easyui-combobox" data-options="
-                    valueField:'id',
-                    textField:'text',
-                    formatter: function(row){
-                        var opts = $(this).combobox('options');
-                        return row[opts.textField];
-                    },
-                    onSelect: function(record){
-                        var propObj = {
-                            T:     {name: '温度',     unit: 'C',     },
-                            P:     {name: '压力',     unit: 'MPaA',  },
-                            DMOLAR:{name: '摩尔密度', unit: 'mol/m3',},
-                            D:     {name: '质量密度', unit: 'kg/m3', },
-                            HMOLAR:{name: '摩尔比焓', unit: 'j/mol', },
-                            H:     {name: '质量比焓', unit: 'j/kg',  },
-                            Q:     {name: '干度',     unit: '',      }
-                        };
-                        $('#propsunit2').html(propObj[record.id].unit);
-                    }
-                ">
-                <input id="propsvalue2" class="easyui-numberbox" type="text" data-options="min:0,precision:2"/>
-                <label id="propsunit2" for="propsunit2"></label>
-            </div>
-        `;
-    const dgOutHtml = `<table id="dg-out-${plugin}" title="输出" style="width:100%; height: auto; display:none">
-                            <thead>
-                                <tr>
-                                    <th data-options="field:'itemid',width:40">编号</th>
-                                    <th data-options="field:'argName',width:100">项目</th>
-                                    <th data-options="field:'value',width:200,align:'right'">值</th>
-                                    <th data-options="field:'unit',width:80,align:'right'">单位</th>
-                                    <th data-options="field:'attr1',width:250">说明</th>
-                                </tr>
-                            </thead>
-                        </table>`;
-    let content = linkHtml;
-    if (dgInpHtml.hasOwnProperty(plugin)) {
-        content += dgInpHtml[plugin];
-    } else {
-        content += dgInpHtml['default'];
+window.onbeforeunload = function(e){
+    e.returnValue=('你所做的更改可能未保存。')
+}
+
+function save1() {
+    if (typeof CurPlugin ==="undefined") {
+        return;
     }
-    content += dgOutHtml;
+    const c = {"plugin": CurPlugin, "inp": ApiData[CurPlugin].inp};
+    const cjson = JSON.stringify(c);
+    const blob = new Blob([cjson], {type: "application/json; charset=utf-8"});
+    saveAs(blob, '新建文件.ty');
     
-    if ($('#tt').tabs('exists',plugin)){
-        $('#tt').tabs('select', plugin);
+    let item = CurPlugin + '_' + (new Date()).toLocaleString();
+    localStorage.setItem(item , cjson);
+    let lastlist = [];
+    
+    if (Array.isArray(JSON.parse(localStorage.getItem('lastlist')))) {
+        lastlist = JSON.parse(localStorage.getItem('lastlist'));
+    }
+    lastlist.push(item)
+    if (lastlist.length > 10) {
+        localStorage.removeItem(lastlist[0]);
+        lastlist.shift();
+    }
+    localStorage.setItem('lastlist', JSON.stringify(lastlist));
+}
+
+
+function open1() {
+    $('#fb').click();
+}
+
+function openfile() {
+    //let path = $('#fb').val();
+    //console.log($.get(path));
+    let file = $('#fb').prop('files')[0];
+    console.log(file);
+    if (file) {
+        const reader = new FileReader();
+        reader.readAsText(file, 'utf-8');
+        reader.onload = function(evt){
+            const fs = evt.target.result;
+            
+            let o = JSON.parse(fs);console.log(o);
+            ApiData[o.plugin].inp = o.inp;
+            addtab(ApiData[o.plugin].title, ApiData[o.plugin].url);
+        }
+    }
+}
+
+function addtab(title, url, isclose = false){
+    if ($('#tt').tabs('exists', title)){
+        if (isclose) {
+            $('#tt').tabs('close', title);
+            $('#tt').tabs('add',{
+                title: title,
+                href: 'public/' + url + '.html',
+                closable:true,
+            });
+        } else {
+            $('#tt').tabs('select', title);
+        }
     } else {
         $('#tt').tabs('add',{
-            title:plugin,
-            //href:'api/'+plugin+'.html',
-            content: content,
+            title: title,
+            href: 'public/' + url + '.html',
             closable:true,
         });
     }
-    $(function(){
-        $('#dg-inp-' + plugin).datagrid({
-            data: apiData[plugin].inp
-        }).datagrid('enableCellEditing').datagrid('gotoCell', {
-            index: 0,
-            field: 'value'
-        });
-    });
 }
 
-function apiClac(plugin, callback) {
-    let rows = [];
-    if (plugin == "水和水蒸汽") {
-        rows[0] = $("#waterpropsargname1").combobox("getValue") 
-                + $("#waterpropsargname2").combobox("getValue");
-        rows[1] = parseFloat($("#waterpropsvalue1").numberbox('getValue'));
-        rows[2] = parseFloat($("#waterpropsvalue2").numberbox('getValue'));
-    }
-    else if (plugin == "纯物质") {
-        rows[0] = $("#propsfluid").combobox("getText");
-        rows[1] = $("#propsargname1").combobox("getValue");
-        rows[2] = parseFloat($("#propsvalue1").numberbox("getValue"));
-        rows[3] = $("#propsargname2").combobox("getValue");
-        rows[4] = parseFloat($("#propsvalue2").numberbox("getValue"));
-    }
-    else {
-        rows = $('#dg-inp-' + plugin).datagrid('getData').rows;
-    }
-    
-    let res = eval(callback)(rows);
-    if (!res) {
+function tyCalc() {
+    if (typeof CurPlugin ==="undefined") {
         return false;
     }
+    let res = eval(CurPlugin)(ApiData[CurPlugin].inp);
 
-    res.forEach((value, i) => {
-        apiData[plugin].out[i].value = value;
-    })
-    
-    showDgout(plugin);
-    return true;
-}
-
-function showDgout(plugin) {
-    $('#dg-out-' + plugin).datagrid({
-        data: apiData[plugin].out
-    })
-}
-
-function showPdf(plugin, callback) {
-    if (['钢管尺寸', '水和水蒸汽', '纯物质'].includes(plugin)) {
-        alert(plugin + "模块不支持生成报告。");
-        return false;
+    if(res){
+        res.forEach((value, i) => {
+            ApiData[CurPlugin].out[i].value = value;
+        })
+        addtab('结果', 'result', true);
+        return true;
     }
 
-    if (!apiClac(plugin, callback)) {
+    return false;
+}
+
+function typdf() {
+    if (!tyCalc()) {
         alert("未生成报告！")
         return false;
     }
 
-    if ($('#tt').tabs('exists','report')){
-        $('#tt').tabs('select', 'report');
-    } else {
-        $('#tt').tabs('add',{
-            title:'report',
-            content: `
-            <style>
-                #iframeContainer>iframe {
-                    width: 98%;
-                    height: 98%;
-                    position: absolute;
-                }
-            </style>
-            <div id="pdf">
-                <div id="iframeContainer">
-                    <img style="position: absolute;top: 100px; left: 100px;" src="jquery-easyui-1.10.17/themes/metro/images/loading.gif"/>
-                </div>
-            </div>`,
-            closable:true,
-        });
-    }
-
-    
-
-    let scriptpdfmake = document.createElement("script");
-    scriptpdfmake.src = "./pdfmake/pdfmake.min.js";
-    document.querySelector("#pdf").appendChild(scriptpdfmake);
-    let scriptvfs_fonts = document.createElement("script");
-    scriptvfs_fonts.src = "./pdfmake/vfs_fonts.js";
-    document.querySelector("#pdf").appendChild(scriptvfs_fonts);
-
-    const docDefinition = fillDocDefinition(plugin);
-
-    scriptvfs_fonts.onload = function(){
-        $('#iframeContainer').html("");
-        try {
-            pdfMake.fonts = {
-                songti: {
-                    normal: '长城宋体.TTF',
-                    bold: '长城宋体.TTF',
-                    italics: '长城宋体.TTF',
-                    bolditalics: '长城宋体.TTF'
-                }
-            }
-
-            pdfMake.createPdf(docDefinition).getDataUrl().then((dataUrl) => {
-                const targetElement = document.querySelector('#iframeContainer');
-                const iframe = document.createElement('iframe');
-                iframe.src = dataUrl;
-                targetElement.appendChild(iframe);
-                }, err => {
-                console.error(err);
-            });  
-        } catch (error) {
-            alert(error + "\n请稍后重试。");
-        } 
-    }
-
-    return true;
-}
-
-function fillDocDefinition(plugin) {
-    let time = new Date();
-    var  docDefinition = {
-        footer: function(currentPage, pageCount) { return {text: currentPage.toString() + ' / ' + pageCount, alignment: 'center'} },
-        content: [
-            { text: ['软件：',{decoration: 'underline', color: 'blue', text: 'yangfengquan.github.io', link: 'https://yangfengquan.github.io'}], style: 'right' },
-            { text: time.toLocaleDateString(), style: 'right' },
-            { 
-                style: 'tablestyle1',
-                table: {
-                    widths: [510],
-                    heights: [720],
-                    body: [[['\n',{ text: '计算报告\n\n', style: 'header' } ]]]
-                }
-            }
-        ],
-
-        styles: {
-            header: {
-                fontSize: 22,
-                alignment: 'center'
-            },
-            right: {
-                alignment: 'right'
-            },
-            footer: {
-                alignment: 'right'
-            }
-        },
-        defaultStyle: {
-            font: 'songti'
-        }
-    };
-
-    let columns = [];
-    let len = apiData[plugin].inp.length;
-    for (let i = 0; i < len; i++) {
-        const item = apiData[plugin].inp[i];
-        columns.push({text: item.argName + ': ' + item.value + ' ' + item.unit});
-        if (i % 2 != 0 || len - 1 == i) {
-            docDefinition.content[2].table.body[0][0].push({columns: columns});
-            docDefinition.content[2].table.body[0][0].push('\n');
-            columns = [];
-        }
-    }
-
-    docDefinition.content[2].table.body[0][0].push({text: "---"});
-    docDefinition.content[2].table.body[0][0].push('\n');
-
-    let columns1 = [];
-    let len1 = apiData[plugin].out.length;
-    for (let i = 0; i < len1; i++) {
-        const item = apiData[plugin].out[i];
-        columns.push({text: item.argName + ': ' + item.value + ' ' + item.unit});
-        if (i % 2 != 0 || len1 - 1 == i) {
-            docDefinition.content[2].table.body[0][0].push({columns: columns});
-            docDefinition.content[2].table.body[0][0].push('\n');
-            columns = [];
-        }
-    }
-    
-    return docDefinition;
+    addtab('PDF', 'pdf', true)
 }
 </script>
 <script>
