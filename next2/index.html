@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #a,#b,#c,#d,#e,#f,#g{
+            width: 60px;
+        }
+        .a,.b,.c,.d,.e,.f,.g{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="sidebar">
+            <h2><a href="./">TangYuan</a></h2>
+            <img src="./icons/nav.png" width="30" height="30" onclick="ontoggledisplay()" id="navimg">
+            <div id="nav">
+                <h2>目录</h2>
+                <ul id="list"></ul>
+                <h2>手机扫码访问</h2>
+                <img src="icons/addr.png" alt="手机扫码访问" width="125" height="125">
+                <h2>微信公众号</h2>
+                <img src="icons/gzh.bmp" alt="手机扫码访问" width="120" height="120">
+            </div>
+            
+        </div>
+        <div id="tab"></div>
+    </div>
+    <script>
+        var response = {}
+        var fm = ''
+        var curFormDataObj = {}
+        const dataPath = 'data.json'
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', dataPath, true)
+        xhr.send()
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                response = JSON.parse(xhr.responseText)
+                let navEle = document.getElementById('list')
+                Object.keys(response).forEach( v => {
+                    let liEle = document.createElement('li')
+                    let aEle = document.createElement('a')
+                    aEle.href = "#" + v
+                    aEle.innerText = response[v].text
+                    liEle.appendChild(aEle)
+                    navEle.appendChild(liEle)
+                }) 
+            }
+        }
+        window.onhashchange = function (){
+            fm = window.location.hash.substring(1)
+            curFormDataObj = response[fm]
+
+            let tabEle = document.getElementById('tab')
+            tabEle.innerHTML = ''
+            //document.getElementById('form-title').innerText = curFormDataObj.text
+            let titleEle = document.createElement('h2')
+            titleEle.innerText = curFormDataObj.text
+            tabEle.appendChild(titleEle)
+
+            let formEle = document.createElement('form')
+            form(curFormDataObj.form, formEle)
+            let warningEle = document.createElement('p')
+            warningEle.id = 'warning'
+            warningEle.style.color = '#ff0000'
+            formEle.appendChild(warningEle)
+            tabEle.appendChild(formEle)
+
+            let calcBtn = document.createElement('button')
+            calcBtn.innerText = '运算'
+            calcBtn.addEventListener('click', calc)
+            tabEle.appendChild(calcBtn)
+
+            let pdfBtn = document.createElement('button')
+            pdfBtn.innerText = 'Pdf报告'
+            pdfBtn.addEventListener('click', pdf)
+            tabEle.appendChild(pdfBtn)
+
+            let resTitleEle = document.createElement('h2')
+            resTitleEle.innerText = '结果'
+            tabEle.appendChild(resTitleEle)
+
+            let resultEle = document.createElement('form')
+            form(curFormDataObj.result, resultEle)
+            tabEle.appendChild(resultEle)
+        }
+        function calc() {
+            getFormValue()
+            try {
+                let r = eval(fm)(curFormDataObj.form)
+                r.forEach((v, i) => {
+                    curFormDataObj.result[i].value = v
+                });
+            } catch (error) {
+                console.log(error);
+            }
+            
+            curFormDataObj.result.forEach(item => {
+                document.getElementById(item.id).value = item.value
+            });
+        }
+        function pdf() {
+            calc()
+            window.data1 = [], window.data2 = []
+            curFormDataObj.form.forEach(item => {
+                window.data1.push({name: item.name, value: item.value, other: item.other})
+            });
+            curFormDataObj.result.forEach(item => {
+                window.data2.push({name: item.name, value: item.value, other: item.other})
+            });
+            //window.open('pdf.html?data1=' + JSON.stringify(window.data1) +'&data2=' + JSON.stringify(window.data2))
+            window.open('pdf.html')
+        }
+    </script>
+    <script src="form.js"></script>
+    <script src="JS/xsteam.js"></script>
+    <script src="JS/pipe.js"></script>
+    <script src="JS/equipment.js"></script>
+    <script src="JS/props.js"></script>
+</body>
+</html>
