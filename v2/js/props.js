@@ -1,15 +1,19 @@
 /**
  * 
- * @param {example: rows['pT', p, T]} rows 
+ * @param {*} rows 
  */
 function waterprops(rows) {
-    if (rows[0][0] == 'T') {
-        rows[1] += 273.15
+    let name1 = rows[0].key;
+    let name2 = rows[1].key;
+    let value1 = parseFloat(rows[0].value)
+    let value2 = parseFloat(rows[1].value)
+    if (name1 == 'T') {
+        value1 += 273.15
     }
-    if (rows[0][1] == 'T') {
-        rows[2] += 273.15
+    if (name2 == 'T') {
+        value2 += 273.15
     }
-    let res = eval(rows[0])(rows[1], rows[2]);
+    let res = eval(name1 + name2)(value1, value2);
     return [
         res.p,
         res.T - 273.15,
@@ -32,7 +36,7 @@ function waterprops(rows) {
 
 /**
  * 
- * @param {example: rows['fluidname', 'argname1', value1, 'argname2', value2]} rows 
+ * @param {*} rows 
  */
 function props(rows) {
     const Props_En = {
@@ -204,35 +208,34 @@ function props(rows) {
                         "P_REDUCING","RHOCRIT","RHOMASS_REDUCING","RHOMOLAR_CRITICAL","RHOMOLAR_REDUCING",
                         "SMOLAR_RESIDUAL","TCRIT","TTRIPLE","T_FREEZE","T_REDUCING"];
     
-    if (rows[0] == '' || rows[1] == '0' || isNaN(rows[2] || isNaN[rows(4)])) {
+    
+    let fluid = rows[0].value;
+    let name1 = rows[1].key;
+    let name2 = rows[2].key;
+    let value1 = parseFloat(rows[1].value);
+    let value2 = parseFloat(rows[2].value);
+    if (fluid == '' || name1 == '0' || isNaN(value1) || isNaN(value2)) {
         alert("输入错误！");
         return;
     }
 
-    if(rows[1] == "T") rows[2] += 273.15;
-    if(rows[3] == "T") rows[4] += 273.15;
+    if(name1 == "T") value1 += 273.15;
+    if(name2 == "T") value2 += 273.15;
 
-    if(rows[1] == "P") rows[2] *= 1E6;
-    if(rows[3] == "P") rows[4] *= 1E6;
+    if(name1 == "P") value1 *= 1E6;
+    if(name2 == "P") value2 *= 1E6;
  
+    let res = [];
     try {
-        let i = 1;
-        normalArgs.forEach(prop => {
-            let v = Module.PropsSI(prop,rows[1],rows[2],rows[3],rows[4],rows[0]);
-            if (prop == "P") {
+        normalArgs.forEach(key => {
+            let v = Module.PropsSI(key, name1, value1, name2, value2, fluid);
+            if (key == "P") {
                 v /= 1e6;
             }
-            if (prop == "T") {
+            if (key == "T") {
                 v -= 273.15;
             }
-            apiData["纯物质"].out.push({
-                "itemid": i,
-                "argName": Props_zh[prop].description,
-                "value": v,
-                "unit": Props_zh[prop].unit,
-                "attr1": ""
-            });
-            i++;
+            res.push(v);
         })
 
         otherArgs.forEach(prop => {
@@ -243,18 +246,10 @@ function props(rows) {
             if (prop == "T") {
                 v -= 273.15;
             }
-            apiData["纯物质"].out.push({
-                "itemid": i,
-                "argName": Props_zh[prop].description,
-                "value": v,
-                "unit": Props_zh[prop].unit,
-                "attr1": ""
-            });
-            i++;
+            res.push(v)
         })
     } catch (error) {
         alert(error, "\n请稍候再试。");
     }             
-    
-    showDgout("纯物质");
+    return res;
 }
