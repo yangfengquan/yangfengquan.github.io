@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>报告</title>
+    <title>计算书</title>
     <script src="pdfmake/pdfmake.min.js"></script>
     <script src="pdfmake/vfs_fonts.js"></script>
 </head>
@@ -103,7 +103,7 @@ var _hmt = _hmt || [];
         let len = data1.length;
         for (let i = 0; i < len; i++) {
             const item = data1[i];
-            columns.push({text: item.name + ': ' + item.value + ' ' + item.other});
+            columns.push({text: item.name + ': ' + item.value + item.other});
             if (i % 2 != 0 || len - 1 == i) {
                 docDefinition.content[2].table.body[0][0].push({columns: columns});
                 docDefinition.content[2].table.body[0][0].push('\n');
@@ -118,7 +118,7 @@ var _hmt = _hmt || [];
         let len1 = data2.length;
         for (let i = 0; i < len1; i++) {
             const item = data2[i];
-            columns.push({text: item.name + ': ' + item.value + ' ' + item.other});
+            columns.push({text: item.name + ': ' + item.value + item.other});
             if (i % 2 != 0 || len1 - 1 == i) {
                 docDefinition.content[2].table.body[0][0].push({columns: columns});
                 docDefinition.content[2].table.body[0][0].push('\n');
