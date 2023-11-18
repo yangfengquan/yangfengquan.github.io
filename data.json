@@ -125,7 +125,7 @@
             {
                 "name": "流速",
                 "tag": "input",
-                "id": "d",
+                "id": "v",
                 "type": "text",
                 "placeholder": "",
                 "value": "",
