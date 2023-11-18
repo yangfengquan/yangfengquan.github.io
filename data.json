@@ -1,0 +1,2069 @@
+{
+    "pipeDiameter": {
+        "text": "管径计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "体积流量",
+                "tag": "input",
+                "id": "flowrate",
+                "type": "number",
+                "placeholder": "输入体积流量",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m3/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "流速",
+                "tag": "input",
+                "id": "v",
+                "type": "number",
+                "placeholder": "输入流速",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "管线内径",
+                "tag": "input",
+                "id": "d",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pipeVelocity": {
+        "text": "管线流速计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "体积流量",
+                "tag": "input",
+                "id": "flowrate",
+                "type": "number",
+                "placeholder": "输入体积流量",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m3/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线内径",
+                "tag": "input",
+                "id": "d",
+                "type": "number",
+                "placeholder": "输入管线内径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "流速",
+                "tag": "input",
+                "id": "d",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pipeWeight": {
+        "text": "管子重量计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子外径",
+                "tag": "input",
+                "id": "d",
+                "type": "number",
+                "placeholder": "输入管子外径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子壁厚",
+                "tag": "input",
+                "id": "thk",
+                "type": "number",
+                "placeholder": "输入管子壁厚",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管材密度",
+                "tag": "input",
+                "id": "rho",
+                "type": "number",
+                "placeholder": "",
+                "value": "7850",
+                "required": true,
+                "readonly": false,
+                "other": "kg/m3",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子长度",
+                "tag": "input",
+                "id": "l",
+                "type": "number",
+                "placeholder": "输入管子长度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "单重",
+                "tag": "input",
+                "id": "q",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "总重",
+                "tag": "input",
+                "id": "tq",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pipeSize": {
+        "text": "管子尺寸查询[SH/T3405]",
+        "form": [
+            {
+                "name": "公称直径",
+                "tag": "select",
+                "id": "dn",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "opts": [
+                    {
+                        "value": 0,
+                        "text": "DN6"
+                    },{
+                        "value": 1, 
+                        "text": "DN8"
+                    },{
+                        "value": 2, 
+                        "text": "DN10"
+                    },{
+                        "value": 3, 
+                        "text": "DN15"
+                    },{
+                        "value": 4, 
+                        "text": "DN20"
+                    },{
+                        "value": 5, 
+                        "text": "DN25"
+                    },{
+                        "value": 6, 
+                        "text": "DN32"
+                    },{
+                        "value": 7, 
+                        "text": "DN40"
+                    },{
+                        "value": 8, 
+                        "text": "DN50"
+                    },{
+                        "value": 9, 
+                        "text": "DN65"
+                    },{
+                        "value": 10, 
+                        "text": "DN80"
+                    },{
+                        "value": 11, 
+                        "text": "DN90"
+                    },{
+                        "value": 12, 
+                        "text": "DN100"
+                    },{
+                        "value": 13, 
+                        "text": "DN125"
+                    },{
+                        "value": 14, 
+                        "text": "DN150"
+                    },{
+                        "value": 15, 
+                        "text": "DN200"
+                    },{
+                        "value": 16, 
+                        "text": "DN250"
+                    },{
+                        "value": 17, 
+                        "text": "DN300"
+                    },{
+                        "value": 18, 
+                        "text": "DN350"
+                    },{
+                        "value": 19, 
+                        "text": "DN400"
+                    },{
+                        "value": 20, 
+                        "text": "DN450"
+                    },{
+                        "value": 21, 
+                        "text": "DN500"
+                    },{
+                        "value": 22, 
+                        "text": "DN550"
+                    },{
+                        "value": 23, 
+                        "text": "DN600"
+                    }
+                ],
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "壁厚系列",
+                "tag": "select",
+                "id": "sch",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "opts": [
+                    {
+                        "value": 0,
+                        "text": "SCH5"
+                    },{
+                        "value": 1, 
+                        "text": "SCH10"
+                    },{
+                        "value": 2, 
+                        "text": "SCH20"
+                    },{
+                        "value": 3, 
+                        "text": "SCH30"
+                    },{
+                        "value": 4, 
+                        "text": "SCH40"
+                    },{
+                        "value": 5, 
+                        "text": "SCH60"
+                    },{
+                        "value": 6, 
+                        "text": "SCH80"
+                    },{
+                        "value": 7, 
+                        "text": "SCH100"
+                    },{
+                        "value": 8, 
+                        "text": "SCH120"
+                    },{
+                        "value": 9, 
+                        "text": "SCH140"
+                    },{
+                        "value": 10, 
+                        "text": "SCH160"
+                    },{
+                        "value": 11, 
+                        "text": "STD"
+                    },{
+                        "value": 12, 
+                        "text": "XS"
+                    },{
+                        "value": 13, 
+                        "text": "XXS"
+                    },{
+                        "value": 14, 
+                        "text": "SCH5S"
+                    },{
+                        "value": 15, 
+                        "text": "SCH10S"
+                    },{
+                        "value": 16, 
+                        "text": "SCH40S"
+                    },{
+                        "value": 17, 
+                        "text": "SCH80S"
+                    }
+                ],
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "外径",
+                "tag": "input",
+                "id": "d",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "壁厚",
+                "tag": "input",
+                "id": "thk",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm"
+            },{
+                "name": "单重",
+                "tag": "input",
+                "id": "m",
+                "type": "text",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/m",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pipeStrength": {
+        "text": "管子强度[壁厚]计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子外径",
+                "tag": "input",
+                "id": "d",
+                "type": "number",
+                "placeholder": "输入管子外径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "设计压力",
+                "tag": "input",
+                "id": "p",
+                "type": "number",
+                "placeholder": "输入设计压力",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "MPa",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "许用应力",
+                "tag": "input",
+                "id": "S",
+                "type": "number",
+                "placeholder": "查GB/T20801.2 表A.1",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "MPa",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "计算系数",
+                "tag": "input",
+                "id": "Y",
+                "type": "number",
+                "placeholder": "查GB/T20801.2 6.1款 计算系数Y",
+                "value": "0.4",
+                "required": true,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "焊接接头高温强度降低系数",
+                "tag": "input",
+                "id": "W",
+                "type": "number",
+                "placeholder": "查GB/T20801.3 4.2.7款焊接接头高温强度降低系数W",
+                "value": "1",
+                "required": true,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "纵向焊接接头系数",
+                "tag": "input",
+                "id": "Phi",
+                "type": "number",
+                "placeholder": "查GB/T20801.2 表A.3、表A.4",
+                "value": "1",
+                "required": true,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "材料厚度负偏差",
+                "tag": "input",
+                "id": "C1",
+                "type": "number",
+                "placeholder": "查按管子标准",
+                "value": "0.125",
+                "required": true,
+                "readonly": false,
+                "other": "%",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "腐蚀、冲蚀裕量",
+                "tag": "input",
+                "id": "C2",
+                "type": "number",
+                "placeholder": "",
+                "value": "1.5",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "机械加工深度",
+                "tag": "input",
+                "id": "C3",
+                "type": "number",
+                "placeholder": "",
+                "value": "0",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管弯曲半径",
+                "tag": "input",
+                "id": "R",
+                "type": "number",
+                "placeholder": "输入管子中心处的弯曲半径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "直管计算厚度",
+                "tag": "input",
+                "id": "thk",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "直管名义厚度",
+                "tag": "input",
+                "id": "thk2",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管内侧计算厚度",
+                "tag": "input",
+                "id": "enthk1",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管内侧名义厚度",
+                "tag": "input",
+                "id": "enthk2",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管外侧计算厚度",
+                "tag": "input",
+                "id": "eothk1",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管外侧名义厚度",
+                "tag": "input",
+                "id": "eothk2",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管中心线处侧壁计算厚度",
+                "tag": "input",
+                "id": "ethk",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "弯管中心线处侧壁名义厚度",
+                "tag": "input",
+                "id": "ethk2",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pipeHInsultion": {
+        "text": "管道保温计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子外径",
+                "tag": "input",
+                "id": "d0",
+                "type": "number",
+                "placeholder": "输入管子外径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "物料温度",
+                "tag": "input",
+                "id": "t0",
+                "type": "number",
+                "placeholder": "输入物料温度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "环境温度",
+                "tag": "input",
+                "id": "ta",
+                "type": "number",
+                "placeholder": "输入环境温度",
+                "value": "14.7",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "风速",
+                "tag": "input",
+                "id": "w",
+                "type": "number",
+                "placeholder": "输入风速",
+                "value": "2.9",
+                "required": true,
+                "readonly": false,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "保温厚度",
+                "tag": "input",
+                "id": "delta",
+                "type": "number",
+                "placeholder": "输入保温厚度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "黑度",
+                "tag": "input",
+                "id": "epsilon",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.3",
+                "required": true,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "导热系数 λ=",
+                "tag": "input",
+                "id": "a",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.044",
+                "required": true,
+                "readonly": false,
+                "other": "+",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "b",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.0002",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "c",
+                "type": "number",
+                "placeholder": "",
+                "value": "70",
+                "required": true,
+                "readonly": false,
+                "other": ") +",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "d",
+                "type": "number",
+                "placeholder": "",
+                "value": "0",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "e",
+                "type": "number",
+                "placeholder": "",
+                "value": "70",
+                "required": true,
+                "readonly": false,
+                "other": ")^2 +",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "f",
+                "type": "number",
+                "placeholder": "",
+                "value": "0",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "g",
+                "type": "number",
+                "placeholder": "",
+                "value": "70",
+                "required": true,
+                "readonly": false,
+                "other": ")^3",
+                "pclass": "form-group inline",
+                "class": "short"
+            }
+        ],
+        "result": [
+            {
+                "name": "传热系数",
+                "tag": "input",
+                "id": "k",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m.K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "表面传热系数",
+                "tag": "input",
+                "id": "alpha",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m2.K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "外表面温度",
+                "tag": "input",
+                "id": "ts",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "单位面积热损失",
+                "tag": "input",
+                "id": "Q",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/m2",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "单位长度热损失",
+                "tag": "input",
+                "id": "q",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/m",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pipeCInsultion": {
+        "text": "管道保冷计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子外径",
+                "tag": "input",
+                "id": "d0",
+                "type": "number",
+                "placeholder": "输入管子外径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "物料温度",
+                "tag": "input",
+                "id": "t0",
+                "type": "number",
+                "placeholder": "输入物料温度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "环境温度",
+                "tag": "input",
+                "id": "ta",
+                "type": "number",
+                "placeholder": "输入环境温度",
+                "value": "34.7",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "风速",
+                "tag": "input",
+                "id": "w",
+                "type": "number",
+                "placeholder": "输入风速",
+                "value": "2.8",
+                "required": true,
+                "readonly": false,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "保冷厚度",
+                "tag": "input",
+                "id": "delta",
+                "type": "number",
+                "placeholder": "输入保冷厚度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "黑度",
+                "tag": "input",
+                "id": "epsilon",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.3",
+                "required": true,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "导热系数 λ=",
+                "tag": "input",
+                "id": "a",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.023",
+                "required": true,
+                "readonly": false,
+                "other": "+",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "b",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.000122",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "c",
+                "type": "number",
+                "placeholder": "",
+                "value": "25",
+                "required": true,
+                "readonly": false,
+                "other": "+",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "d",
+                "type": "number",
+                "placeholder": "",
+                "value": "3.15E-7",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "e",
+                "type": "number",
+                "placeholder": "",
+                "value": "25",
+                "required": true,
+                "readonly": false,
+                "other": "^2 +",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "f",
+                "type": "number",
+                "placeholder": "",
+                "value": "0",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "g",
+                "type": "number",
+                "placeholder": "",
+                "value": "25",
+                "required": true,
+                "readonly": false,
+                "other": "^3",
+                "pclass": "form-group inline",
+                "class": "short"
+            }
+        ],
+        "result": [
+            {
+                "name": "传热系数",
+                "tag": "input",
+                "id": "k",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m.K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "表面传热系数",
+                "tag": "input",
+                "id": "alpha",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m2.K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "外表面温度",
+                "tag": "input",
+                "id": "ts",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "单位面积热损失",
+                "tag": "input",
+                "id": "Q",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/m2",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "单位长度热损失",
+                "tag": "input",
+                "id": "q",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/m",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "waterpipe": {
+        "text": "水和水蒸汽管道计算",
+        "form": [
+            {
+                "name": "管线编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "PI1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管线名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入管线名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "流量",
+                "tag": "input",
+                "id": "flowrate",
+                "type": "number",
+                "placeholder": "输入流量",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "kg/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口温度",
+                "tag": "input",
+                "id": "at",
+                "type": "number",
+                "placeholder": "输入入口温度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口压力",
+                "tag": "input",
+                "id": "ap",
+                "type": "number",
+                "placeholder": "输入入口压力",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "MPa(A)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子外径",
+                "tag": "input",
+                "id": "d0",
+                "type": "number",
+                "placeholder": "输入管子外径",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "管子壁厚",
+                "tag": "input",
+                "id": "thk",
+                "type": "number",
+                "placeholder": "输入管子壁厚",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "展开长度",
+                "tag": "input",
+                "id": "li",
+                "type": "number",
+                "placeholder": "输入展开长度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "局部阻力当量长度",
+                "tag": "input",
+                "id": "li",
+                "type": "number",
+                "placeholder": "输入局部阻力当量长度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "绝对粗糙度",
+                "tag": "input",
+                "id": "rough",
+                "type": "number",
+                "placeholder": "输入绝对粗糙度",
+                "value": "0.2",
+                "required": true,
+                "readonly": false,
+                "other": "m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "保温厚度",
+                "tag": "input",
+                "id": "delta",
+                "type": "number",
+                "placeholder": "输入保温厚度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "mm",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "导热系数 λ=",
+                "tag": "input",
+                "id": "a",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.044",
+                "required": true,
+                "readonly": false,
+                "other": "+",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "b",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.0002",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "c",
+                "type": "number",
+                "placeholder": "",
+                "value": "70",
+                "required": true,
+                "readonly": false,
+                "other": ") +",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "d",
+                "type": "number",
+                "placeholder": "",
+                "value": "0",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "e",
+                "type": "number",
+                "placeholder": "",
+                "value": "70",
+                "required": true,
+                "readonly": false,
+                "other": ")^2 +",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "f",
+                "type": "number",
+                "placeholder": "",
+                "value": "0",
+                "required": true,
+                "readonly": false,
+                "other": "×(Tm-",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "g",
+                "type": "number",
+                "placeholder": "",
+                "value": "70",
+                "required": true,
+                "readonly": false,
+                "other": ")^3",
+                "pclass": "form-group inline",
+                "class": "short"
+            },{
+                "name": "黑度",
+                "tag": "input",
+                "id": "epsilon",
+                "type": "number",
+                "placeholder": "",
+                "value": "0.3",
+                "required": true,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "环境温度",
+                "tag": "input",
+                "id": "ta",
+                "type": "number",
+                "placeholder": "输入环境温度",
+                "value": "34.7",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "风速",
+                "tag": "input",
+                "id": "w",
+                "type": "number",
+                "placeholder": "输入风速",
+                "value": "2.8",
+                "required": true,
+                "readonly": false,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "压力降",
+                "tag": "input",
+                "id": "dp",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "MPa",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "温度降",
+                "tag": "input",
+                "id": "dt",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "传热系数",
+                "tag": "input",
+                "id": "k",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m.K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "表面传热系数",
+                "tag": "input",
+                "id": "alpha",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m2.K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "外表面温度",
+                "tag": "input",
+                "id": "ts",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "单位面积热损失",
+                "tag": "input",
+                "id": "Q",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/m2",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "单位长度热损失",
+                "tag": "input",
+                "id": "q",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "总热损失",
+                "tag": "input",
+                "id": "tQ",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口压力",
+                "tag": "input",
+                "id": "bp",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "MPa(A)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口温度",
+                "tag": "input",
+                "id": "bt",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口流量（气相）",
+                "tag": "input",
+                "id": "afgas",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口流量（液相）",
+                "tag": "input",
+                "id": "afliquid",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口流量（气相）",
+                "tag": "input",
+                "id": "bfgas",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口流量（液相）",
+                "tag": "input",
+                "id": "bfliquid",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口流速",
+                "tag": "input",
+                "id": "ave",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口流速",
+                "tag": "input",
+                "id": "bve",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口比焓",
+                "tag": "input",
+                "id": "ah",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kj/kg",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口比焓",
+                "tag": "input",
+                "id": "bh",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kj/kg",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "入口干度",
+                "tag": "input",
+                "id": "ax",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "出口干度",
+                "tag": "input",
+                "id": "bx",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "pumpPower": {
+        "text": "泵轴功率计算",
+        "form": [
+            {
+                "name": "编号",
+                "tag": "input",
+                "id": "pcode",
+                "type": "text",
+                "placeholder": "",
+                "value": "P1",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "名称",
+                "tag": "input",
+                "id": "pname",
+                "type": "text",
+                "placeholder": "输入名称",
+                "value": "",
+                "required": false,
+                "readonly": false,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "体积流量",
+                "tag": "input",
+                "id": "flowrate",
+                "type": "number",
+                "placeholder": "输入体积流量",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m3/h",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "扬程",
+                "tag": "input",
+                "id": "h",
+                "type": "number",
+                "placeholder": "输入扬程",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "密度",
+                "tag": "input",
+                "id": "rho",
+                "type": "number",
+                "placeholder": "输入密度",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "kg/m3",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "效率",
+                "tag": "input",
+                "id": "eta",
+                "type": "number",
+                "placeholder": "输入效率",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "%",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ],
+        "result": [
+            {
+                "name": "轴功率",
+                "tag": "input",
+                "id": "p",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kW",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    },
+    "waterprops": {
+        "text": "水和水蒸汽物性计算",
+        "form": [
+            {
+                "name": "介质",
+                "tag": "input",
+                "id": "fluid",
+                "type": "text",
+                "value": "水和水蒸汽",
+                "required": true,
+                "readonly": true,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "参数1",
+                "tag": "select",
+                "id": "waterArg1",
+                "type": "number",
+                "value": "p",
+                "required": true,
+                "readonly": false,
+                "opts": [
+                    {
+                        "text": "压力",
+                        "value": "p"
+                    },{
+                        "text": "温度",
+                        "value": "T"
+                    },{
+                        "text": "比焓",
+                        "value": "h"
+                    }
+                ],
+                "listener": "onWaterArg1Change()",
+                "other": "",
+                "pclass": "form-group inline",
+                "class": ""
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "waterValue1",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "MPa(A)",
+                "pclass": "form-group inline",
+                "class": "short"
+            },
+            {
+                "name": "参数2",
+                "tag": "select",
+                "id": "waterArg2",
+                "type": "number",
+                "value": "T",
+                "required": true,
+                "readonly": false,
+                "opts": [
+                    {
+                        "text": "温度",
+                        "value": "T"
+                    },{
+                        "text": "密度",
+                        "value": "rho"
+                    },{
+                        "text": "比焓",
+                        "value": "h"
+                    },{
+                        "text": "干度",
+                        "value": "x"
+                    }
+                ],
+                "listener": "onWaterArg2Change()",
+                "other": "",
+                "pclass": "form-group inline",
+                "class": ""
+            },{
+                "name": "",
+                "tag": "input",
+                "id": "waterValue2",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": true,
+                "readonly": false,
+                "other": "C",
+                "pclass": "form-group inline",
+                "class": "short"
+            }
+        ],
+        "result": [
+            {
+                "name": "压力",
+                "tag": "input",
+                "id": "p",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "MPa(A)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "温度",
+                "tag": "input",
+                "id": "T",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "C",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "比焓",
+                "tag": "input",
+                "id": "h",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kj/kg",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "比体积",
+                "tag": "input",
+                "id": "v",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "m3/kg",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "密度",
+                "tag": "input",
+                "id": "rho",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kg/m3",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "比熵",
+                "tag": "input",
+                "id": "s",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kj/kg",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "内能",
+                "tag": "input",
+                "id": "u",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kj/kg",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "定压比热容",
+                "tag": "input",
+                "id": "Cp",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kJ/(kg·K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "定容比热容",
+                "tag": "input",
+                "id": "Cv",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "kJ/(kg·K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "声速",
+                "tag": "input",
+                "id": "w",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "m/s",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "动力粘度",
+                "tag": "input",
+                "id": "my",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "Pa·s",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "导热系数",
+                "tag": "input",
+                "id": "tc",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "W/(m·K)",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "表面张力",
+                "tag": "input",
+                "id": "st",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "N/m",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "干度",
+                "tag": "input",
+                "id": "x",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "气相体积分数",
+                "tag": "input",
+                "id": "vx",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            },{
+                "name": "绝热指数",
+                "tag": "input",
+                "id": "k",
+                "type": "number",
+                "placeholder": "",
+                "value": "",
+                "required": false,
+                "readonly": true,
+                "other": "",
+                "pclass": "form-group",
+                "class": ""
+            }
+        ]
+    }
+}

@@ -4,49 +4,34 @@ body {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 14px;
 }
-
-h1 {
+h1,h2,h3,h4 {
     font-weight: lighter;
-}
-
-h2,h3,h4 {
     color: green;
 }
-
-p {
-    margin: 5px;
-    display: flex;
-    align-items: center;
-}
-
 a:visited {
-    color:rgb(0,0,238);
+    color:#0000ee;
 }
-
-button {
-    margin: 15px 120px;
-}
-
 label {
-    width: 130px;
-    margin-right: 15px;
-    text-align: right;
+	display: block;
 }
-input {
-    width: 92px;
-    height: 15px;
+span {
+    padding-left: 0.1em;
 }
-select {
-    width: 100px;
-    height: 23px;
+button {
+    margin-right: 1em;
 }
-
+textarea {
+	width: 100%;
+	height: 20em;
+}
 #sidebar {
     margin-top: 0;
     padding-left: 25px;
 	padding-bottom:25px;
 }
-
+#nav {
+    display: none;
+}
 @media (min-width: 40rem) {
 	#sidebar {
 	width: 160px;
@@ -56,35 +41,49 @@ select {
 	padding-bottom:0px;
     padding-top: 0px;
 	}
-}
 
+    #nav {
+        display: block;
+    }
+    #navimg {
+        display: none;
+    }
+}
 #sidebar ul {
     margin: 0;
     padding-left: 10px;
     padding-top: 0;
 }
-
-#sidebar ol {
-    margin: 0;
-    padding-left: 20px;
-    padding-top: 0;
-}
-
-#sidebar ul li,
-#sidebar ol li {
+#sidebar ul li{
     margin-top: 0;
     margin-bottom: 0.2rem;
     margin-left: 10px;
     padding: 0;
 }
-
+#tab {
+    padding-left: 25px;
+    padding-right: 25px;
+}
 @media (min-width: 40rem) {
 	#tab {
-		padding-left:200px;
+		padding-left:15rem;
 		margin-left: 0px;
 		margin-right: 0px;
 	}
-    .formWrapper {
-        display: flex;
-    }
+    .wrap {
+		width: 800px;
+		margin: 0 auto;
+	}
+}
+.form-group {
+    margin-bottom: 10px;
+}
+.inline {
+    display: inline-block;
+}
+.inline>select {
+    margin-right: 5px;
+}
+.short {
+    width: 50px;
 }

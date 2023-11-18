@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="管道工程软件 管径计算 管道阻力计算 管道尺寸查询 管道重量计算 管道绝热计算 管道保温计算 水蒸气管道压降温降计算 水和水蒸气物性查询">
+    <title>安全阀-Yangshu</title>
+    <script src="./src/coolprop.js"></script>
+    <link rel="stylesheet" href="style.css">
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+</head>
+<body>
+    <script>
+        function iePrompt() {
+             if(!!window.ActiveXObject ||"ActiveXObject" in window){
+                document.write('<p style="background-color: beige; padding: 10px;">非常抱歉，本站不兼容IE浏览器，您需要更换其它浏览器。</p>')
+             }
+         }
+         iePrompt();
+    </script>
+    <div id="sidebar">
+        <h1> <a href="./">Yang shu</a></h1>
+        <h2>目录</h2>
+        <ul>
+            <li><a href="./">说明</a></li>
+            <li><a href="pipe.html">管道设计</a></li>
+            <li><a href="props.html">物性</a></li>
+            <li><a href="waterprops.html">水和水蒸汽物性</a></li>
+            <li><a href="reliefvalve.html">蒸汽安全阀</a></li>
+        </ul>
+        <h2>其它</h2>
+        <ul>
+            <li><a href="javascript:;" onclick="javascript:addFavorite('yangshu-工程计算软件','https://yangshu.gitee.io')" title="收藏本站到收藏夹">收藏本站</a></li>
+            <li><a href="contact.html">联系</a></li>
+            <li><a href="changelog.html">更新日志</a></li>
+        </ul>
+		<h2>下载</h2>
+	<ul>
+	<li><a href="download.html">水蒸汽管道设计计算软件</a></li>
+	</ul>
+    </div>
+    <div id="tab">
+        <h2 id="tab-title">蒸汽安全阀</h2>
+        <div id="tab-panel">
+            <p>
+                <label>泄放物料</label>
+                <input type="text" name="fluidName" list="fluids" placeholder="英文名称" value="Water" disabled>
+                <datalist id="fluids"></datalist>
+            </p>
+            <p>
+                <label>泄放量<br>kg/h</label>
+                <input type="text" name="w">
+            </p>
+            <p>
+                <label>泄放压力<br>MPa(a)</label>
+                <input type="text" name="pf">
+            </p>
+            <p>
+                <label>泄放装置出口侧压力<br>MPa(a)</label>
+                <input type="text" name="po">
+            </p>
+            <p>
+                <label>泄放温度<br>℃</label>
+                <input type="text" name="tf">
+            </p>
+            <p>
+                <label>泄放系数</label>
+                <input type="text" name="tf" value="0.7">
+            </p>
+            <p>
+                <label>采用标准</label>
+                <select name="stdCode">
+                    <option>TSG 11</option>
+                </select>
+            </p>
+            <button onclick="reliefvalve()">计算</button>
+        </div>
+    </div>
+<script>
+    (function () {
+        var lists = document.querySelector("#fluids")
+        if (lists.options.length != 0) {
+            return ;
+        }
+        var fluidsListString = "Acetone,Air,Ammonia,Argon,Benzene,CarbonDioxide,CarbonMonoxide,CarbonylSulfide,CycloHexane,CycloPropane,Cyclopentane,D4,D6,Deuterium,DiethylEther,DimethylCarbonate,DimethylEther,Ethane,D5,Dichloroethane,Ethanol,EthylBenzene,Ethylene,EthyleneOxide,Fluorine,HFE143m,HeavyWater,Helium,Hydrogen,HydrogenChloride,HydrogenSulfide,IsoButane,IsoButene,Isohexane,Isopentane,Krypton,MD2M,MD3M,MD4M,MDM,MM,Methane,Methanol,MethylLinoleate,MethylLinolenate,MethylOleate,MethylPalmitate,MethylStearate,Neon,Neopentane,Nitrogen,NitrousOxide,Novec649,OrthoDeuterium,OrthoHydrogen,Oxygen,ParaDeuterium,ParaHydrogen,Propylene,Propyne,R11,R113,R114,R115,R116,R12,R123,R1233zd(E),R1234yf,R1234ze(E),R1234ze(Z),R124,R1243zf,R125,R13,R134a,R13I1,R14,R141b,R142b,R143a,R152A,R161,R21,R218,R22,R227EA,R23,R236EA,R236FA,R245ca,R245fa,R32,R365MFC,R40,R404A,R407C,R41,R410A,R507A,RC318,SES36,SulfurDioxide,SulfurHexafluoride,Toluene,Water,Xenon,cis-2-Butene,m-Xylene,n-Butane,n-Decane,n-Dodecane,n-Heptane,n-Hexane,n-Nonane,n-Octane,n-Pentane,n-Propane,n-Undecane,o-Xylene,p-Xylene,trans-2-Butene,1-Butene";
+        (fluidsListString.split(',')).forEach(fluidName => {
+            lists.appendChild(new Option(fluidName));
+        });
+    })();
+
+    function reliefvalve() {
+        var w = Number(document.getElementsByName("w")[0].value);
+        var po = Number(document.getElementsByName("po")[0].value);
+        var pf = Number(document.getElementsByName("pf")[0].value);
+        var tf = Number(document.getElementsByName("tf")[0].value);
+        var stdIndex = document.getElementsByName("stdCode")[0].selectedIndex;
+        
+        var a;
+
+        switch (stdIndex) {
+            case 0:
+                var vg = 1 / Module.PropsSI("D","P",pf * 1e6,"T",tf + 273.15,"Water");
+                var vb = 1 / Module.PropsSI("D","P",pf * 1e6,"Q",1,"Water");
+                var k;
+                if (pf <= 12) {
+                    k = Math.sqrt(vb / vg);
+                }else{
+                    k = Math.sqrt(2.1 / (10.2 * (pf - 0.1) + 1) * vg);
+                }
+                a = w / 0.235 / (10.2 * (pf - 0.1) + 1) / k;
+                break;
+        
+            default:
+                break;
+        }
+
+        var d = Math.sqrt(4 * a / Math.PI);
+
+        var resEl = document.createElement("div");
+        [["安全阀流道面积","mm2",a],["安全阀流道直径","mm",d]].forEach(el => {
+            var p = document.createElement("p");
+            var label = document.createElement("label");
+            label.innerText = el[0] + "\n" + el[1];
+            var span = document.createElement("span");
+            span.innerText = el[2];
+            p.appendChild(label);
+            p.appendChild(span);
+            resEl.appendChild(p);
+        })
+        document.querySelector("#tab-panel").appendChild(resEl);
+        var str='';
+        var fluidsListString = "Acetone,Air,Ammonia,Argon,Benzene,CarbonDioxide,CarbonMonoxide,CarbonylSulfide,CycloHexane,CycloPropane,Cyclopentane,D4,D6,Deuterium,DiethylEther,DimethylCarbonate,DimethylEther,Ethane,D5,Dichloroethane,Ethanol,EthylBenzene,Ethylene,EthyleneOxide,Fluorine,HFE143m,HeavyWater,Helium,Hydrogen,HydrogenChloride,HydrogenSulfide,IsoButane,IsoButene,Isohexane,Isopentane,Krypton,MD2M,MD3M,MD4M,MDM,MM,Methane,Methanol,MethylLinoleate,MethylLinolenate,MethylOleate,MethylPalmitate,MethylStearate,Neon,Neopentane,Nitrogen,NitrousOxide,Novec649,OrthoDeuterium,OrthoHydrogen,Oxygen,ParaDeuterium,ParaHydrogen,Propylene,Propyne,R11,R113,R114,R115,R116,R12,R123,R1233zd(E),R1234yf,R1234ze(E),R1234ze(Z),R124,R1243zf,R125,R13,R134a,R13I1,R14,R141b,R142b,R143a,R152A,R161,R21,R218,R22,R227EA,R23,R236EA,R236FA,R245ca,R245fa,R32,R365MFC,R40,R404A,R407C,R41,R410A,R507A,RC318,SES36,SulfurDioxide,SulfurHexafluoride,Toluene,Water,Xenon,cis-2-Butene,m-Xylene,n-Butane,n-Decane,n-Dodecane,n-Heptane,n-Hexane,n-Nonane,n-Octane,n-Pentane,n-Propane,n-Undecane,o-Xylene,p-Xylene,trans-2-Butene,1-Butene";
+            //var fluidsListString = Module.get_global_param_string("FluidsList");
+            (fluidsListString.split(',')).forEach(fluidName => {
+                var f = Module.get_fluid_param_string("Water","formula")
+                str += f;
+                str += ',';
+            });
+        console.log(str);
+    }
+    
+</script>
+</body>
+</html>

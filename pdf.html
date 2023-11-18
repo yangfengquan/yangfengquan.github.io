@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="pdfmake/pdfmake.min.js"></script>
+    <script src="pdfmake/vfs_fonts.js"></script>
+</head>
+<body>
+    <style>
+        #iframeContainer>iframe {
+            width: 98%;
+            height: 98%;
+            position: absolute;
+        }
+    </style>
+    <div id="pdf">
+        <div id="iframeContainer">
+            <img src="icons/loading.gif" /><span>Loading...</span>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    window.onload = function () {
+        document.querySelector('#iframeContainer').innerHTML = ''
+        // let data = new URLSearchParams(window.location.search)
+        // let data1 = JSON.parse(data.get('data1'))
+        // let data2 = JSON.parse(data.get('data2'));
+        let data1 = window.opener.data1
+        let data2 = window.opener.data2
+        const docDefinition = fillDocDefinition(data1, data2);
+        try {
+            pdfMake.fonts = {
+                songti: {
+                    normal: '长城宋体.TTF',
+                    bold: '长城宋体.TTF',
+                    italics: '长城宋体.TTF',
+                    bolditalics: '长城宋体.TTF'
+                }
+            }
+
+            pdfMake.createPdf(docDefinition).getDataUrl().then((dataUrl) => {
+                const targetElement = document.querySelector('#iframeContainer');
+                const iframe = document.createElement('iframe');
+                iframe.src = dataUrl;
+                targetElement.appendChild(iframe);
+                }, err => {
+                console.error(err);
+            });  
+        } catch (error) {
+            alert(error + "\n页面正在加载，请稍后刷新页面。");
+        }
+    }
+    
+    function fillDocDefinition(data1, data2) {
+        let time = new Date();
+        var  docDefinition = {
+            footer: function(currentPage, pageCount) { return {text: currentPage.toString() + ' / ' + pageCount, alignment: 'center'} },
+            content: [
+                { text: ['软件：',{decoration: 'underline', color: 'blue', text: window.location.hostname, link: 'https://' + window.location.hostname}], style: 'right' },
+                { text: time.toLocaleDateString(), style: 'right' },
+                { 
+                    style: 'tablestyle1',
+                    table: {
+                        widths: [510],
+                        heights: [720],
+                        body: [[['\n',{ text: '计算报告\n\n', style: 'header' } ]]]
+                    }
+                }
+            ],
+
+            styles: {
+                header: {
+                    fontSize: 22,
+                    alignment: 'center'
+                },
+                right: {
+                    alignment: 'right'
+                },
+                footer: {
+                    alignment: 'right'
+                }
+            },
+            defaultStyle: {
+                font: 'songti'
+            }
+        };
+
+        let columns = [];
+        let len = data1.length;
+        for (let i = 0; i < len; i++) {
+            const item = data1[i];
+            columns.push({text: item.name + ': ' + item.value + ' ' + item.other});
+            if (i % 2 != 0 || len - 1 == i) {
+                docDefinition.content[2].table.body[0][0].push({columns: columns});
+                docDefinition.content[2].table.body[0][0].push('\n');
+                columns = [];
+            }
+        }
+
+        docDefinition.content[2].table.body[0][0].push({text: "---"});
+        docDefinition.content[2].table.body[0][0].push('\n');
+
+        let columns1 = [];
+        let len1 = data2.length;
+        for (let i = 0; i < len1; i++) {
+            const item = data2[i];
+            columns.push({text: item.name + ': ' + item.value + ' ' + item.other});
+            if (i % 2 != 0 || len1 - 1 == i) {
+                docDefinition.content[2].table.body[0][0].push({columns: columns});
+                docDefinition.content[2].table.body[0][0].push('\n');
+                columns = [];
+            }
+        }
+        
+        return docDefinition;
+    }
+</script>

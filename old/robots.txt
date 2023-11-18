@@ -1,0 +1,2 @@
+Sitemap: https://yangshu.gitee.io/sitemap.xml
+Sitemap: https://yangshu.gitee.io/sitemap.html

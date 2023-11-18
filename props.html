@@ -1,116 +1,88 @@
-<!DOCTYPE html>
-<html lang="zh">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="水 蒸汽 氮气 氧气 甲烷 乙烷 乙炔 物性计算">
-    <title>物性计算</title>
-    <script src="./src/coolprop.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        input[type=checkbox] {
-            padding: 0;
-            margin: 0;
-            margin-left: 85px;
-        }
-        select {
-            width: 130px;
-        }
-        #fluidName {
-            width: 237px;
-        }
-        #value1,#value2 {
-            margin-left: 15px;
-        }
-    </style>
-	<script>
-		var _hmt = _hmt || [];
-		(function() {
-		  var hm = document.createElement("script");
-		  hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";
-		  var s = document.getElementsByTagName("script")[0]; 
-		  s.parentNode.insertBefore(hm, s);
-		})();
-	</script>
+<meta charset="UTF-8">
+<meta http-equiv="content-language" content="zh-CN">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="物性,热力学性质,在线计算,properties">
+<title>物性在线计算</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    input[type=checkbox] {
+        padding: 0;
+        margin: 0;
+        margin-left: 85px;
+    }
+    select {
+        width: 130px;
+    }
+    #fluidName {
+        width: 237px;
+    }
+    #value1,#value2 {
+        width: 107px;
+    }
+</style>
+<script src="./JS/coolprop.js"></script>
 </head>
 <body>
-    <script>
-        function iePrompt() {
-             if(!!window.ActiveXObject ||"ActiveXObject" in window){
-                document.write('<p style="background-color: beige; padding: 10px;">非常抱歉，本站不兼容IE浏览器，您需要更换其它浏览器。</p>')
-             }
-         }
-         iePrompt();
-     </script>
-    <div id="sidebar">
-        <h1> <a href="./">Yang shu</a></h1>
-        <h2>目录</h2>
-        <ul>
-            <li><a href="./">说明</a></li>
-            <li><a href="pipe.html">管道设计</a></li>
-            <li><a href="props.html">物性</a></li>
-            <li><a href="waterprops.html">水和水蒸汽物性</a></li>
-            <li><a href="reliefvalve.html">蒸汽安全阀</a></li>
-        </ul>
-        <h2>其它</h2>
-        <ul>
-            <li><a href="javascript:;" onclick="javascript:addFavorite('yangshu-工程计算软件','https://yangshu.gitee.io')" title="收藏本站到收藏夹">收藏本站</a></li>
-            <li><a href="contact.html">联系</a></li>
-            <li><a href="changelog.html">更新日志</a></li>
-        </ul>
-		<h2>下载</h2>
-	<ul>
-	<li><a href="download.html">水蒸汽管道设计计算软件</a></li>
-	</ul>
-    </div>
-    <div id="tab">
-        <h2 id="tab-title">物性</h2>
-        <div id="tab-panel">
-            <p>
-                <label>物质</label>
-                <input type="text" id="fluidName" list="Fluids" placeholder="输入英文名称" onfocus="fillDataist()">
-                <datalist id="Fluids"></datalist>
-            </p>
-            <p>
-                <label>输入1</label>
-                <select id="name1" onchange="name1Change(this)">
-                    <option value="" hidden></option>
-                    <option value="P">压力[MPa(a)]</option>
-                    <option value="T">温度[℃]</option>
-                </select>
-                <input type="text" id="value1">
-            </p>
-            <p>
-                <label>输入2</label>
-                <select id="name2" disabled>
-                    <option value="" hidden></option>
-                    <option value="P">压力[MPa(a)]</option>
-                    <option value="T">温度[℃]</option>
-                    <option value="DMOLAR">摩尔密度[mol/m3]</option>
-                    <option value="DMOLAR">质量密度[kg/m3]</option>
-                    <option value="DMOLAR">摩尔比焓[J/mol]</option>
-                    <option value="DMOLAR">质量比焓[J/kg]</option>
-                    <option value="Q">气态体积分数</option>
-                </select>
-                <input type="text" id="value2">
-            </p>
-            <p>
-                <label>输出参数</label>
-            </p>
-            <p><input type="checkbox" id="out1" checked disabled>常用参数</p>
-            <p><input type="checkbox" id="out2">其它参数</p>
-            <p><button onclick="props()">计算</button></p>
-            <div id="out"></div>
-        </div>
-    </div>
-    <script>
-        const Props = {
+	<div class="wrap">
+		<div id="sidebar"></div>
+		<script>
+
+		</script>
+		<div id="tab">
+			<h2>纯物质物性</h2>
+			<form>
+				<p>
+                    <label>物质</label>
+                    <input type="text" id="fluidName" list="Fluids" placeholder="输入英文名称" onfocus="fillDataist()">
+                    <datalist id="Fluids"></datalist>
+                </p>
+                <p>
+                    <label>输入1</label>
+                    <select id="name1" onchange="name1Change(this)">
+                        <option value="" hidden></option>
+                        <option value="P">压力[MPa(a)]</option>
+                        <option value="T">温度[℃]</option>
+                    </select>
+                    <input type="text" id="value1">
+                </p>
+                <p>
+                    <label>输入2</label>
+                    <select id="name2" disabled>
+                        <option value="" hidden></option>
+                        <option value="P">压力[MPa(a)]</option>
+                        <option value="T">温度[℃]</option>
+                        <option value="DMOLAR">摩尔密度[mol/m3]</option>
+                        <option value="D">质量密度[kg/m3]</option>
+                        <option value="HMOLAR">摩尔比焓[J/mol]</option>
+                        <option value="H">质量比焓[J/kg]</option>
+                        <option value="Q">干度</option>
+                    </select>
+                    <input type="text" id="value2">
+                </p>
+                <p>
+                    <label>输出参数</label>
+                </p>
+                <p><input type="checkbox" id="out1" checked disabled>常用参数</p>
+                <p><input type="checkbox" id="out2">其它参数</p>
+			</form>
+			<p><button onclick="onProp()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
+	</div>
+</body>
+
+<script>
+	const Props = {
             DELTA:  {unit: "",  description: "Reduced density (rho/rhoc)"},
             DMOLAR: {unit: "mol/m^3",  description: "Molar density"},
             D: {unit: "kg/m^3",  description: "Mass density"},
             HMOLAR: {unit: "J/mol",  description: "Molar specific enthalpy"},
             H: {unit: "J/kg",  description: "Mass specific enthalpy"},
-            P: {unit: "MPa(a)",  description: "Pressure"},// coolProp Pa
+            P: {unit: "MPaA",  description: "Pressure"},// coolProp Pa
             Q: {unit: "mol/mol",  description: "Mass vapor quality"},
             SMOLAR: {unit: "J/mol/K",  description: "Molar specific entropy"},
             S: {unit: "J/kg/K",  description: "Mass specific entropy"},
@@ -189,8 +161,8 @@
             D: {unit: "kg/m^3",  description: "质量密度"},
             HMOLAR: {unit: "J/mol",  description: "摩尔比焓"},
             H: {unit: "J/kg",  description: "质量比焓"},
-            P: {unit: "MPa(a)",  description: "压力"},// coolProp Pa
-            Q: {unit: "mol/mol",  description: "质量蒸汽质量"},
+            P: {unit: "MPaA",  description: "压力"},// coolProp Pa
+            Q: {unit: "mol/mol",  description: "干度"},
             SMOLAR: {unit: "J/mol/K",  description: "摩尔比熵"},
             S: {unit: "J/kg/K",  description: "质量比熵"},
             TAU: {unit: "",  description: "倒数还原温度 (Tc/T)"},
@@ -262,55 +234,55 @@
             Z: {unit: "",  description: "压缩因子"}
         }
 
-        function fillDataist() {
-            var lists = document.querySelector("#Fluids");
-            if (lists.options.length != 0) {
-                return ;
-            }
-            var fluidsListString = "Acetone,Air,Ammonia,Argon,Benzene,CarbonDioxide,CarbonMonoxide,CarbonylSulfide,CycloHexane,CycloPropane,Cyclopentane,D4,D6,Deuterium,DiethylEther,DimethylCarbonate,DimethylEther,Ethane,D5,Dichloroethane,Ethanol,EthylBenzene,Ethylene,EthyleneOxide,Fluorine,HFE143m,HeavyWater,Helium,Hydrogen,HydrogenChloride,HydrogenSulfide,IsoButane,IsoButene,Isohexane,Isopentane,Krypton,MD2M,MD3M,MD4M,MDM,MM,Methane,Methanol,MethylLinoleate,MethylLinolenate,MethylOleate,MethylPalmitate,MethylStearate,Neon,Neopentane,Nitrogen,NitrousOxide,Novec649,OrthoDeuterium,OrthoHydrogen,Oxygen,ParaDeuterium,ParaHydrogen,Propylene,Propyne,R11,R113,R114,R115,R116,R12,R123,R1233zd(E),R1234yf,R1234ze(E),R1234ze(Z),R124,R1243zf,R125,R13,R134a,R13I1,R14,R141b,R142b,R143a,R152A,R161,R21,R218,R22,R227EA,R23,R236EA,R236FA,R245ca,R245fa,R32,R365MFC,R40,R404A,R407C,R41,R410A,R507A,RC318,SES36,SulfurDioxide,SulfurHexafluoride,Toluene,Water,Xenon,cis-2-Butene,m-Xylene,n-Butane,n-Decane,n-Dodecane,n-Heptane,n-Hexane,n-Nonane,n-Octane,n-Pentane,n-Propane,n-Undecane,o-Xylene,p-Xylene,trans-2-Butene,1-Butene";
-            //var fluidsListString = Module.get_global_param_string("FluidsList");
-            (fluidsListString.split(',')).forEach(fluidName => {
-                lists.appendChild(new Option(fluidName));
-            });
+	function fillDataist() {
+		var lists = document.querySelector("#Fluids");
+		if (lists.options.length != 0) {
+			return ;
+		}
+		var fluidsListString = "Acetone,Air,Ammonia,Argon,Benzene,CarbonDioxide,CarbonMonoxide,CarbonylSulfide,CycloHexane,CycloPropane,Cyclopentane,D4,D6,Deuterium,DiethylEther,DimethylCarbonate,DimethylEther,Ethane,D5,Dichloroethane,Ethanol,EthylBenzene,Ethylene,EthyleneOxide,Fluorine,HFE143m,HeavyWater,Helium,Hydrogen,HydrogenChloride,HydrogenSulfide,IsoButane,IsoButene,Isohexane,Isopentane,Krypton,MD2M,MD3M,MD4M,MDM,MM,Methane,Methanol,MethylLinoleate,MethylLinolenate,MethylOleate,MethylPalmitate,MethylStearate,Neon,Neopentane,Nitrogen,NitrousOxide,Novec649,OrthoDeuterium,OrthoHydrogen,Oxygen,ParaDeuterium,ParaHydrogen,Propylene,Propyne,R11,R113,R114,R115,R116,R12,R123,R1233zd(E),R1234yf,R1234ze(E),R1234ze(Z),R124,R1243zf,R125,R13,R134a,R13I1,R14,R141b,R142b,R143a,R152A,R161,R21,R218,R22,R227EA,R23,R236EA,R236FA,R245ca,R245fa,R32,R365MFC,R40,R404A,R407C,R41,R410A,R507A,RC318,SES36,SulfurDioxide,SulfurHexafluoride,Toluene,Water,Xenon,cis-2-Butene,m-Xylene,n-Butane,n-Decane,n-Dodecane,n-Heptane,n-Hexane,n-Nonane,n-Octane,n-Pentane,n-Propane,n-Undecane,o-Xylene,p-Xylene,trans-2-Butene,1-Butene";
+		//var fluidsListString = Module.get_global_param_string("FluidsList");
+		(fluidsListString.split(',')).forEach(fluidName => {
+			lists.appendChild(new Option(fluidName));
+		});
+	}
+
+    function name1Change(name1) {
+        var name2 = document.querySelector("#name2");
+        if (name1.selectedIndex == 1) {
+            name2.options[1].hidden = true;
+            name2.options[2].hidden = false;
+        }else{
+            name2.options[1].hidden = false;
+            name2.options[2].hidden = true;
         }
 
-        function name1Change(name1) {
-            var name2 = document.querySelector("#name2");
-            if (name1.selectedIndex == 1) {
-                name2.options[1].hidden = true;
-                name2.options[2].hidden = false;
-            }else{
-                name2.options[1].hidden = false;
-                name2.options[2].hidden = true;
-            }
+        name2.selectedIndex = 0;
+        name2.disabled = false; 
+    }
 
-            name2.selectedIndex = 0;
-            name2.disabled = false; 
+
+	function onProp(){
+		if (typeof Module.PropsSI != "function") {
+            alert("程序正在加载中，请稍候再试。");
+            return;
         }
+        
+        let name1, name2, value1, value2, fluidName
+		
+        fluidName = document.querySelector("#fluidName").value;
+        name1 = document.querySelector("#name1").options[document.querySelector("#name1").selectedIndex].value;
+        name2 = document.querySelector("#name2").options[document.querySelector("#name2").selectedIndex].value;
+        value1 = Number(document.querySelector("#value1").value);
+        value2 = Number(document.querySelector("#value2").value);
+		
+		if(name1 == "T") value1 += 273.15
+		if(name2 == "T") value2 += 273.15
 
-        function props() {
-            var out = document.querySelector("#out");
-            out.innerHTML = '';
-            var fluidName = document.querySelector("#fluidName").value;
-            var name1 = document.querySelector("#name1").options[document.querySelector("#name1").selectedIndex].value;
-            var name2 = document.querySelector("#name2").options[document.querySelector("#name2").selectedIndex].value;
-            var value1 = Number(document.querySelector("#value1").value);
-            var value2 = Number(document.querySelector("#value2").value);
-            if (name1 == "P") {
-                value1 = value1 * 1e6;
-            }
-            if (name2 == "P") {
-                value2 = value2 * 1e6;
-            }
-            if (name1 == "T") {
-                value1 = value1 + 273.15;
-            }
-            if (name2 == "T") {
-                value2 = value2 + 273.15;
-            }
-
-            var normalArgs = ["P","T","DMOLAR","D","HMOLAR","H","SMOLAR","S","UMOLAR","U","C","CPMOLAR","CVMASS","CVMOLAR","A","CONDUCTIVITY","V","M","Z"];
-            var otherArgs = ["ACENTRIC","ALPHA0","ALPHAR","BVIRIAL","CP0MASS","CP0MOLAR","CVIRIA","DALPHA0_DDELTA_CONSTTAU",
+        if(name1 == "P") value1 *= 1E6
+		if(name2 == "P") value2 *= 1E6
+		
+		var normalArgs = ["P","T","DMOLAR","D","HMOLAR","H","SMOLAR","S","UMOLAR","U","C","CPMOLAR","CVMASS","CVMOLAR","A","CONDUCTIVITY","V","M","Z"];
+        var otherArgs = ["ACENTRIC","ALPHA0","ALPHAR","BVIRIAL","CP0MASS","CP0MOLAR","CVIRIA","DALPHA0_DDELTA_CONSTTAU",
                             "DALPHA0_DTAU_CONSTDELTA","DALPHAR_DDELTA_CONSTTAU","DALPHAR_DTAU_CONSTDELTA",
                             "DBVIRIAL_DT","DCVIRIAL_DT","DIPOLE_MOMENT","FH","FRACTION_MAX","FRACTION_MIN",
                             "FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS","GAS_CONSTANT","GMOLAR_RESIDUAL","GMOLAR",
@@ -319,37 +291,30 @@
                             "SURFACE_TENSION","ODP","PCRIT","PH","PRANDTL","PTRIPLE",
                             "P_REDUCING","RHOCRIT","RHOMASS_REDUCING","RHOMOLAR_CRITICAL","RHOMOLAR_REDUCING",
                             "SMOLAR_RESIDUAL","TCRIT","TTRIPLE","T_FREEZE","T_REDUCING"];
-            normalArgs.forEach(arg => {
-                var v = Module.PropsSI(arg,name1,value1,name2,value2,fluidName);
-                if (arg == "P") {
-                    v = v / 1e6;
-                }
-                if (arg == "T") {
-                    v = v - 273.15;
-                }
-                out.appendChild(outEl(arg,v));
-            });
-            var out2 = document.querySelector("#out2");
-            if (out2.checked) {
-                otherArgs.forEach(arg => {
-                    var v = Module.PropsSI(arg,name1,value1,name2,value2,fluidName);
-                    
-                    out.appendChild(outEl(arg,v));
-                });
+
+		let strResult = ''
+        normalArgs.forEach(prop => {
+            let v = Module.PropsSI(prop,name1,value1,name2,value2,fluidName);
+            if (prop == "P") {
+                v /= 1e6;
             }
-            
+            if (prop == "T") {
+                v -= 273.15;
+            }
+			strResult += Props_zh[prop].description + "： " + v + " " + Props_zh[prop].unit + "\n"
+        })
+       
+        var out2 = document.querySelector("#out2");
+        if (out2.checked) {
+            otherArgs.forEach(prop => {
+                var v = Module.PropsSI(prop,name1,value1,name2,value2,fluidName);
+                
+                strResult += Props_zh[prop].description + "： " + v + " " + Props_zh[prop].unit + "\n"
+            });
         }
 
-        function outEl(name,value) {
-            var p = document.createElement("p");
-            var label = document.createElement("label");
-            label.innerText = (Props_zh[name].description) + "\n" + (Props_zh[name].unit || '');
-            p.appendChild(label);
-            var span = document.createElement("span");
-            span.innerText = value; 
-            p.appendChild(span);
-            return p;
-        }
-    </script>
-</body>
+		document.getElementById("res").value = strResult.substr(0, strResult.length - 2)
+	}
+	
+</script>
 </html>
