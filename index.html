@@ -89,7 +89,20 @@
         var response = {}
         var fm = ''
         var curFormDataObj = {}
-        const dataPath = 'data.json'
+        const dataPath = 'data.json';
+
+        (function () {
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', dataPath, true)
+            xhr.send()
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    response = JSON.parse(xhr.responseText)
+                    createNavlist(response)
+                    createMainEle()
+                }
+            }
+        })()
 
         function createNavlist(data){
             let navEle = document.getElementById('list')
@@ -108,19 +121,15 @@
             liEle1.appendChild(aEle1)
             navEle.appendChild(liEle1)
         }
-        (function () {
-            const xhr = new XMLHttpRequest()
-            xhr.open('GET', dataPath, true)
-            xhr.send()
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    response = JSON.parse(xhr.responseText)
-                    createNavlist(response)
-                    createMainEle()
-                }
-            }
-        })()
 
+        function ontoggledisplay() {
+            if (document.getElementById('nav').style.display == 'block') {
+                document.getElementById('nav').style.display = 'none'
+            } else {
+                document.getElementById('nav').style.display = 'block'
+            }
+        }
+        
         window.onhashchange = createMainEle
 
         function createMainEle() {
