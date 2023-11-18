@@ -156,6 +156,7 @@
             formEle.appendChild(warningEle)
             tabEle.appendChild(formEle)
 
+            //添加<br>，表单项连续为inline，实现换行
             if (fm == 'waterprops') {
                 let brEle = document.createElement('br')
                 formEle.insertBefore(brEle, formEle.childNodes[3])
@@ -178,6 +179,11 @@
             let resultEle = document.createElement('form')
             form(curFormDataObj.result, resultEle)
             tabEle.appendChild(resultEle)
+
+            //手机端生成表单后，隐藏导航列表
+            if (window.screen.width <= 600) {
+                document.getElementById('nav').style.display = 'none'
+            }
         }
 
         function calc() {
