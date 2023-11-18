@@ -1,0 +1,163 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="content-language" content="zh-CN">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="管道,保冷,在线计算">
+<meta name="description" content="计算管道的冷损失、保冷外表面温度，保冷材料的传热系数，计算依据标准：GB 50264。">
+<title>管道保冷在线计算，计算依据GB 50264</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+</head>
+<body>
+	<div class="wrap">
+		<div id="sidebar"></div>
+		<script>
+			$(function(){
+				$("#sidebar").load("sidebar.html");
+			});
+		</script>
+		<div id="tab">
+			<h2>管道保冷</h2>
+			<form>
+				<p><label>管子外表面温度</label><input id="t0" type="number" value="100"> C</p>
+				<p><label>环境温度</label><input id="ta" type="number" value="14.7"> C</p>
+				<p><label>风速</label><input id="w" type="number" value="2.9"> m/s</p>
+				<p><label>管子外径</label><input id="d0" type="number" value="114"> mm</p>
+				<p><label>保冷厚度</label><input id="delta" type="number" value="30"> mm</p>
+				<p><label>保冷材料导热系数</label>
+				λ=<input id="a0" class="short" type="number" value="0.043">
+				+<input id="a1" class="short" type="number" value="0.00015">×(Tm-<input id="a2" class="short" type="number" value="70">)
+				+<input id="a3" class="short" type="number" value="0">×(Tm-<input id="a4" class="short" type="number" value="0">)<sup>2</sup>
+				+<input id="a5" class="short" type="number" value="0">×(Tm-<input id="a6" class="short" type="number" value="0">)<sup>3</sup>
+				</p>
+				<p><label>黑度</label><input id="epsilon" type="number" value="0.3"></p>
+				<p><label>保冷厚度修正系数</label><input id="zeta" type="number"></p>
+			</form>
+			<p><button onclick="run()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res" rows="20", cols="45"></textarea>
+			<p>计算依据：GB 50264</p>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
+	</div>
+</body>
+<script>
+
+	/**
+	t0				管子外表面温度 [C]
+	ta				环境温度 [C]
+	w				风速 [m/s]
+	d0				管子外径 [mm]
+	d1				绝热外径 [mm]
+	epsilon			黑度 [-]
+	*/
+	function run() {
+		let t0, ta, w, d0, d1, epsilon
+		if (document.getElementById("t0").value == ""){
+			alert("管子外表面温度不可为空！")
+			return
+		}
+		else {
+			t0 = parseFloat(document.getElementById("t0").value)
+		}
+		
+		if (document.getElementById("ta").value == ""){
+			alert("环境温度不可为空！")
+			return
+		}
+		else {
+			ta = parseFloat(document.getElementById("ta").value)
+		}
+		
+		if (document.getElementById("w").value == ""){
+			alert("未输入风速，将取默认风速 0！")
+			document.getElementById("w").value = 0
+			w = 0
+		}
+		else {
+			w = parseFloat(document.getElementById("w").value)
+		}
+		
+		if (document.getElementById("d0").value == ""){
+			alert("管子外径不可为空！")
+			return
+		}
+		else {
+			d0 = parseFloat(document.getElementById("d0").value) / 1000
+		}
+		
+		if (document.getElementById("delta").value == ""){
+			alert("绝热厚度不可为空！")
+			return
+		}
+		else {
+			d1 = d0 + 2 * parseFloat(document.getElementById("delta").value) / 1000
+		}
+		
+		if (document.getElementById("epsilon").value == ""){
+			alert("黑度不可为空！")
+			return
+		}
+		else {
+			epsilon = parseFloat(document.getElementById("epsilon").value)
+		}
+		
+		let lambda = getLambda(t0, ta)
+		
+		let ts = getTsS(t0, ta, w, d0, d1, lambda, epsilon)
+		
+		let alpha = getAlpha(ts, ta, w, d1, epsilon)
+		console.log(alpha)
+		let Q = getQ(t0, ta, d0, d1, lambda, alpha)
+		
+		let strResult = "绝热材料传热系数：" + lambda.toFixed(3)          + "  W/(m.K)"
+					 +"\n外表面温度：      " + ts.toFixed(2)              + "  C"
+					 +"\n散热量：          " + Q.toFixed(2)               + "  W/m2"
+					 +"\n散热量：          " + (3.14 * d1 * Q).toFixed(2) + "  W/m"
+		document.getElementById("res").value = strResult
+	}
+	
+	//计算绝热层传热系数
+	function getLambda(t0, ta) {
+		let lambdaArgs = []
+		for(let i = 0; i <7; ++i) {
+			lambdaArgs[i] = parseFloat(document.getElementById("a"+i.toString()).value)
+		}
+
+		let lambda = lambdaArgs[0] + lambdaArgs[1] * (0.5 * (t0 + ta) - lambdaArgs[2]) + lambdaArgs[3] * Math.pow(0.5 * (t0 + ta) - lambdaArgs[4], 2) + lambdaArgs[5] * Math.pow(0.5 * (t0 + ta) - lambdaArgs[6], 3)
+
+		return lambda
+	}
+	
+	//计算散热量 [W/m2]
+	function getQ(t0, ta, d0, d1, lambda, alpha) {
+		return (t0 - ta) / (d1 / (2 * lambda) * Math.log(d1 / d0) + 1 / alpha)
+	}
+	
+	//计算外表面温度[C]
+	function getTs(Q, ta, alpha) {
+		return Q / alpha + ta
+	}
+	
+	//计算表面传热系数
+	function getAlpha() {
+		return 8.141
+	}
+	
+	//迭代计算外表面温度[C]
+	function getTsS(t0, ta, w, d0, d1, lambda, epsilon) {
+		let ts_pre = ta + 0.1 * (t0 - ta), ts
+		do
+		{
+			ts = ts_pre
+			let alpha = getAlpha(ts, ta, w, d1, epsilon)
+			let Q = getQ(t0, ta, d0, d1, lambda, alpha)
+			ts_pre = getTs(Q, ta, alpha)
+		}
+		while(Math.abs(ts - ts_pre) > 1e-3)
+		
+		return ts
+	}
+</script>
+</html>

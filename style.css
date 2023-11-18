@@ -4,10 +4,15 @@ body {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 14px;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 h1,h2,h3,h4 {
     font-weight: lighter;
     color: green;
 }
+<<<<<<< HEAD
 a:visited {
     color:#0000ee;
 }
@@ -23,15 +28,51 @@ button {
 textarea {
 	width: 100%;
 	height: 20em;
+=======
+
+a:visited {
+    color:#0000ee;
+}
+
+label {
+	display: block;
+}
+
+textarea {
+	width: 100%;
+	height: 20em;
+}
+
+.short {
+    width: 5em;
+}
+
+.list-item {
+    border-bottom: #ccc 1px solid;
+}
+
+.footer {
+	padding-top: 15px;
+	text-align: center;
+	color: #ccc;
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 }
 #sidebar {
     margin-top: 0;
     padding-left: 25px;
 	padding-bottom:25px;
 }
+<<<<<<< HEAD
 #nav {
     display: none;
 }
+=======
+
+#nav {
+    display: none;
+}
+
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 @media (min-width: 40rem) {
 	#sidebar {
 	width: 160px;
@@ -41,6 +82,17 @@ textarea {
 	padding-bottom:0px;
     padding-top: 0px;
 	}
+<<<<<<< HEAD
+=======
+
+    #nav {
+        display: block;
+    }
+    #navimg {
+        display: none;
+    }
+}
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 
     #nav {
         display: block;
@@ -54,26 +106,43 @@ textarea {
     padding-left: 10px;
     padding-top: 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 #sidebar ul li{
     margin-top: 0;
     margin-bottom: 0.2rem;
     margin-left: 10px;
     padding: 0;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 #tab {
     padding-left: 25px;
     padding-right: 25px;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
 @media (min-width: 40rem) {
 	#tab {
 		padding-left:15rem;
 		margin-left: 0px;
 		margin-right: 0px;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b
     .wrap {
 		width: 800px;
 		margin: 0 auto;
 	}
+<<<<<<< HEAD
 }
 .form-group {
     margin-bottom: 10px;
@@ -87,3 +156,6 @@ textarea {
 .short {
     width: 50px;
 }
+=======
+}
+>>>>>>> 7422d0bb1150027ddede6e68b32d7cdd41c6c42b

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        label{
+            display: block;
+        }
+        #a,#b,#c,#d,#e,#f,#g{
+            width: 60px;
+        }
+        .a,.b,.c,.d,.e,.f,.g{
+            display: inline-block;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="wrap">
+        <div style="height:50px; background-color: #eee;">
+            <a id="logo" href="./" style="font:25px Arial,'Microsoft YaHei',sans-serif; position: relative; top:10px; left:5px; color: #000; text-decoration: none;">TangYuan</a>
+            <span style="font-style: italic; font-family: 'STXingkai','KaiTi'; position: relative; top:10px; left:25px; color: #000;">工程设计在线计算程序</span>
+        </div>
+        <a href="javascript:history.go(-1)"><img src="icons/back.png" alt="返回"></a>
+        <a href="javascript:;" onclick="calc()"><img src="icons/sum.png" alt="运算">运算</a>
+        <a href="javascript:;" onclick="pdf()"><img src="icons/print.png" alt="生成报告书">生成报告书</a>
+        <h3 id="form-title"></h3>
+        <form id="form"></form>
+        <p id="warning" style="color: #ff0000;"></p>
+        <h4>结果</h4>
+        <form id="result"></form>
+    </div>
+</body>
+<script src="form.js"></script>
+<script src="JS/xsteam.js"></script>
+<script src="JS/pipe.js"></script>
+<script src="JS/equipment.js"></script>
+<script src="JS/props.js"></script>
+<script>
+    function calc() {
+        getFormValue()
+        try {
+            let r = eval(fm)(curFormDataObj.form)
+            r.forEach((v, i) => {
+                curFormDataObj.result[i].value = v
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        
+        curFormDataObj.result.forEach(item => {
+            document.getElementById(item.id).value = item.value
+        });
+    }
+    function pdf() {
+        calc()
+        window.data1 = [], window.data2 = []
+        curFormDataObj.form.forEach(item => {
+            window.data1.push({name: item.name, value: item.value, other: item.other})
+        });
+        curFormDataObj.result.forEach(item => {
+            window.data2.push({name: item.name, value: item.value, other: item.other})
+        });
+console.log(window.data1);
+        //window.open('pdf.html?data1=' + JSON.stringify(window.data1) +'&data2=' + JSON.stringify(window.data2))
+        window.open('pdf.html')
+    }
+</script>
+
+</html>
