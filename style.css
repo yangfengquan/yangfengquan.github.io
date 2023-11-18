@@ -11,6 +11,9 @@ h1,h2,h3,h4 {
 a:visited {
     color:#0000ee;
 }
+h1 a {
+    text-decoration-line: none;
+}
 label {
 	display: block;
 }
@@ -34,7 +37,7 @@ textarea {
 }
 @media (min-width: 40rem) {
 	#sidebar {
-	width: 160px;
+	width: 220px;
     position: fixed;
     height: 100%;
     margin-right: 20px;
@@ -66,7 +69,7 @@ textarea {
 }
 @media (min-width: 40rem) {
 	#tab {
-		padding-left:15rem;
+		padding-left:16rem;
 		margin-left: 0px;
 		margin-right: 0px;
 	}
