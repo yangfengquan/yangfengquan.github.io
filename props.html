@@ -1,0 +1,330 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="content-language" content="zh-CN">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="物性,热力学性质,在线计算,properties">
+<title>物性在线计算</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    input[type=checkbox] {
+        padding: 0;
+        margin: 0;
+        margin-left: 85px;
+    }
+    select {
+        width: 130px;
+    }
+    #fluidName {
+        width: 237px;
+    }
+    #value1,#value2 {
+        width: 107px;
+    }
+</style>
+<script src="./JS/coolprop.js"></script>
+</head>
+<body>
+	<div class="wrap">
+		<div id="sidebar"></div>
+		<script>
+
+		</script>
+		<div id="tab">
+			<h2>纯物质物性</h2>
+			<form>
+				<p>
+                    <label>物质</label>
+                    <input type="text" id="fluidName" list="Fluids" placeholder="输入英文名称" onfocus="fillDataist()">
+                    <datalist id="Fluids"></datalist>
+                </p>
+                <p>
+                    <label>输入1</label>
+                    <select id="name1" onchange="name1Change(this)">
+                        <option value="" hidden></option>
+                        <option value="P">压力[MPa(a)]</option>
+                        <option value="T">温度[℃]</option>
+                    </select>
+                    <input type="text" id="value1">
+                </p>
+                <p>
+                    <label>输入2</label>
+                    <select id="name2" disabled>
+                        <option value="" hidden></option>
+                        <option value="P">压力[MPa(a)]</option>
+                        <option value="T">温度[℃]</option>
+                        <option value="DMOLAR">摩尔密度[mol/m3]</option>
+                        <option value="D">质量密度[kg/m3]</option>
+                        <option value="HMOLAR">摩尔比焓[J/mol]</option>
+                        <option value="H">质量比焓[J/kg]</option>
+                        <option value="Q">干度</option>
+                    </select>
+                    <input type="text" id="value2">
+                </p>
+                <p>
+                    <label>输出参数</label>
+                </p>
+                <p><input type="checkbox" id="out1" checked disabled>常用参数</p>
+                <p><input type="checkbox" id="out2">其它参数</p>
+			</form>
+			<p><button onclick="onProp()">计算</button></p>
+			<h3>结果</h3>
+			<textarea id="res"></textarea>
+			<div class="footer"><p>微信公众号：jisuanhao</p></div>
+		</div>
+	</div>
+</body>
+
+<script>
+	const Props = {
+            DELTA:  {unit: "",  description: "Reduced density (rho/rhoc)"},
+            DMOLAR: {unit: "mol/m^3",  description: "Molar density"},
+            D: {unit: "kg/m^3",  description: "Mass density"},
+            HMOLAR: {unit: "J/mol",  description: "Molar specific enthalpy"},
+            H: {unit: "J/kg",  description: "Mass specific enthalpy"},
+            P: {unit: "MPaA",  description: "Pressure"},// coolProp Pa
+            Q: {unit: "mol/mol",  description: "Mass vapor quality"},
+            SMOLAR: {unit: "J/mol/K",  description: "Molar specific entropy"},
+            S: {unit: "J/kg/K",  description: "Mass specific entropy"},
+            TAU: {unit: "",  description: "Reciprocal reduced temperature (Tc/T)"},
+            T: {unit: "℃",  description: "Temperature"},// coolProp K
+            UMOLAR: {unit: "J/mol",  description: "Molar specific internal energy"},
+            U: {unit: "J/kg",  description: "Mass specific internal energy"},
+            ACENTRIC: {unit: "",  description: "Acentric factor"},
+            ALPHA0: {unit: "",  description: "Ideal Helmholtz energy"},
+            ALPHAR: {unit: "",  description: "Residual Helmholtz energy"},
+            A: {unit: "m/s",  description: "Speed of sound"},
+            BVIRIAL: {unit: "",  description: "Second virial coefficient"},
+            CONDUCTIVITY: {unit: "W/m/K",  description: "Thermal conductivity"},
+            CP0MASS: {unit: "J/kg/K",  description: "Ideal gas mass specific constant pressure specific heat"},
+            CP0MOLAR: {unit: "J/mol/K",  description: "Ideal gas molar specific constant pressure specific heat"},
+            CPMOLAR: {unit: "J/mol/K",  description: "Molar specific constant pressure specific heat"},
+            CVIRIA: {unit: "",  description: "Third virial coefficient"},
+            CVMASS: {unit: "J/kg/K",  description: "Mass specific constant volume specific heat"},
+            CVMOLAR: {unit: "J/mol/K",  description: "Molar specific constant volume specific heat"},
+            C: {unit: "J/kg/K",  description: "Mass specific constant pressure specific heat"},
+            DALPHA0_DDELTA_CONSTTAU: {unit: "",  description: "Derivative of ideal Helmholtz energy with delta"},
+            DALPHA0_DTAU_CONSTDELTA: {unit: "",  description: "Derivative of ideal Helmholtz energy with tau"},
+            DALPHAR_DDELTA_CONSTTAU: {unit: "",  description: "Derivative of residual Helmholtz energy with delta"},
+            DALPHAR_DTAU_CONSTDELTA: {unit: "",  description: "Derivative of residual Helmholtz energy with tau"},
+            DBVIRIAL_DT: {unit: "",  description: "Derivative of second virial coefficient with respect to T"},
+            DCVIRIAL_DT: {unit: "",  description: "Derivative of third virial coefficient with respect to T"},
+            DIPOLE_MOMENT: {unit: "C m",  description: "Dipole moment"},
+            FH: {unit: "",  description: "Flammability hazard"},
+            FRACTION_MAX: {unit: "",  description: "Fraction (mole,mass,volume) maximum value for incompressible solutions"},
+            FRACTION_MIN: {unit: "",  description: "Fraction (mole,mass,volume) minimum value for incompressible solutions"},
+            FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS: {unit: "",  description: "Fundamental derivative of gas dynamics"},
+            GAS_CONSTANT: {unit: "J/mol/K",  description: "Molar gas constant"},
+            GMOLAR_RESIDUAL: {unit: "J/mol/K",  description: "Residual molar Gibbs energy"},
+            GMOLAR: {unit: "J/mol",  description: "Molar specific Gibbs energy"},
+            GWP100: {unit: "",  description: "100-year global warming potential"},
+            GWP20: {unit: "",  description: "20-year global warming potential"},
+            GWP500: {unit: "",  description: "500-year global warming potential"},
+            G: {unit: "J/kg",  description: "Mass specific Gibbs energy"},
+            HELMHOLTZMASS: {unit: "J/kg",  description: "Mass specific Helmholtz energy"},
+            HELMHOLTZMOLAR: {unit: "J/mol",  description: "Molar specific Helmholtz energy"},
+            HH: {unit: "",  description: "Health hazard"},
+            HMOLAR_RESIDUAL: {unit: "J/mol/K",  description: "Residual molar enthalpy"},
+            ISENTROPIC_EXPANSION_COEFFICIENT: {unit: "",  description: "Isentropic expansion coefficient"},
+            ISOBARIC_EXPANSION_COEFFICIENT: {unit: "1/K",  description: "Isobaric expansion coefficient"},
+            ISOTHERMAL_COMPRESSIBILITY: {unit: "1/Pa",  description: "Isothermal compressibility"},
+            SURFACE_TENSION: {unit: "N/m",  description: "Surface tension"},
+            M: {unit: "kg/mol",  description: "Molar mass"},
+            ODP: {unit: "",  description: "Ozone depletion potential"},
+            PCRIT: {unit: "Pa",  description: "Pressure at the critical point"},
+            PHASE: {unit: "",  description: "Phase index as a float"},
+            PH: {unit: "",  description: "Physical hazard"},
+            PIP: {unit: "",  description: "Phase identification parameter"},
+            PMAX: {unit: "Pa",  description: "Maximum pressure limit"},
+            PMIN: {unit: "Pa",  description: "Minimum pressure limit"},
+            PRANDTL: {unit: "",  description: "Prandtl number"},
+            PTRIPLE: {unit: "Pa",  description: "Pressure at the triple point (pure only)"},
+            P_REDUCING: {unit: "Pa",  description: "Pressure at the reducing point"},
+            RHOCRIT: {unit: "kg/m^3",  description: "Mass density at critical point"},
+            RHOMASS_REDUCING: {unit: "kg/m^3",  description: "Mass density at reducing point"},
+            RHOMOLAR_CRITICAL: {unit: "mol/m^3",  description: "Molar density at critical point"},
+            RHOMOLAR_REDUCING: {unit: "mol/m^3",  description: "Molar density at reducing point"},
+            SMOLAR_RESIDUAL: {unit: "J/mol/K",  description: "Residual molar entropy (sr/R = s(T,rho) - s^0(T,rho))"},
+            TCRIT: {unit: "K",  description: "Temperature at the critical point"},
+            TMAX: {unit: "K",  description: "Maximum temperature limit"},
+            TMIN: {unit: "K",  description: "Minimum temperature limit"},
+            TTRIPLE: {unit: "K",  description: "Temperature at the triple point"},
+            T_FREEZE: {unit: "K",  description: "Freezing temperature for incompressible solutions"},
+            T_REDUCING: {unit: "K",  description: "Temperature at the reducing point"},
+            V: {unit: "Pa s",  description: "Viscosity"},
+            Z: {unit: "",  description: "Compressibility factor"}
+        };
+
+        const Props_zh = {
+            DELTA:  {unit: "",  description: "还原密度 (rho/rhoc)"},
+            DMOLAR: {unit: "mol/m^3",  description: "摩尔密度"},
+            D: {unit: "kg/m^3",  description: "质量密度"},
+            HMOLAR: {unit: "J/mol",  description: "摩尔比焓"},
+            H: {unit: "J/kg",  description: "质量比焓"},
+            P: {unit: "MPaA",  description: "压力"},// coolProp Pa
+            Q: {unit: "mol/mol",  description: "干度"},
+            SMOLAR: {unit: "J/mol/K",  description: "摩尔比熵"},
+            S: {unit: "J/kg/K",  description: "质量比熵"},
+            TAU: {unit: "",  description: "倒数还原温度 (Tc/T)"},
+            T: {unit: "℃",  description: "温度"},// coolProp K
+            UMOLAR: {unit: "J/mol",  description: "摩尔比内能"},
+            U: {unit: "J/kg",  description: "质量比内能"},
+            ACENTRIC: {unit: "",  description: "偏心因子"},
+            ALPHA0: {unit: "",  description: "理想亥姆霍兹能量"},
+            ALPHAR: {unit: "",  description: "剩余亥姆霍兹能量"},
+            A: {unit: "m/s",  description: "声速"},
+            BVIRIAL: {unit: "",  description: "第二维里系数"},
+            CONDUCTIVITY: {unit: "W/m/K",  description: "导热系数"},
+            CP0MASS: {unit: "J/kg/K",  description: "理想气体质量比恒压比热"},
+            CP0MOLAR: {unit: "J/mol/K",  description: "理想气体摩尔比恒压比热"},
+            CPMOLAR: {unit: "J/mol/K",  description: "摩尔比定压比热"},
+            CVIRIA: {unit: "",  description: "第三维里系数"},
+            CVMASS: {unit: "J/kg/K",  description: "质量比定容比热"},
+            CVMOLAR: {unit: "J/mol/K",  description: "摩尔比定容比热"},
+            C: {unit: "J/kg/K",  description: "质量比定压比热"},
+            DALPHA0_DDELTA_CONSTTAU: {unit: "",  description: "理想亥姆霍兹能与δ的导数"},
+            DALPHA0_DTAU_CONSTDELTA: {unit: "",  description: "理想亥姆霍兹能与τ的导数"},
+            DALPHAR_DDELTA_CONSTTAU: {unit: "",  description: "剩余亥姆霍兹能量与δ的导数"},
+            DALPHAR_DTAU_CONSTDELTA: {unit: "",  description: "剩余亥姆霍兹能量与τ的导数"},
+            DBVIRIAL_DT: {unit: "",  description: "第二维里系数对T的导数"},
+            DCVIRIAL_DT: {unit: "",  description: "第三维里系数对T的导数"},
+            DIPOLE_MOMENT: {unit: "C m",  description: "偶极矩"},
+            FH: {unit: "",  description: "可燃性危险"},
+            FRACTION_MAX: {unit: "",  description: "不可压缩溶液分数（摩尔，质量，体积）的最大值"},
+            FRACTION_MIN: {unit: "",  description: "不可压缩溶液分数（摩尔、质量、体积）的最小值"},
+            FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS: {unit: "",  description: "气体动力学的基本导数"},
+            GAS_CONSTANT: {unit: "J/mol/K",  description: "摩尔气体常数"},
+            GMOLAR_RESIDUAL: {unit: "J/mol/K",  description: "残余摩尔吉布斯能"},
+            GMOLAR: {unit: "J/mol",  description: "摩尔比吉布斯能"},
+            GWP100: {unit: "",  description: "百年全球变暖潜能值"},
+            GWP20: {unit: "",  description: "20年全球变暖潜能值"},
+            GWP500: {unit: "",  description: "500年全球变暖潜能值"},
+            G: {unit: "J/kg",  description: "质量比吉布斯能"},
+            HELMHOLTZMASS: {unit: "J/kg",  description: "质量比亥姆霍兹能量"},
+            HELMHOLTZMOLAR: {unit: "J/mol",  description: "摩尔比亥姆霍兹能"},
+            HH: {unit: "",  description: "健康危害"},
+            HMOLAR_RESIDUAL: {unit: "J/mol/K",  description: "残余摩尔焓"},
+            ISENTROPIC_EXPANSION_COEFFICIENT: {unit: "",  description: "等熵膨胀系数"},
+            ISOBARIC_EXPANSION_COEFFICIENT: {unit: "1/K",  description: "等压膨胀系数"},
+            ISOTHERMAL_COMPRESSIBILITY: {unit: "1/Pa",  description: "等温压缩性"},
+            SURFACE_TENSION: {unit: "N/m",  description: "表面张力"},
+            M: {unit: "kg/mol",  description: "摩尔质量"},
+            ODP: {unit: "",  description: "臭氧消耗潜能值"},
+            PCRIT: {unit: "Pa",  description: "临界点压力"},
+            PHASE: {unit: "",  description: "Phase index as a float"},
+            PH: {unit: "",  description: "物理危害"},
+            PIP: {unit: "",  description: "Phase identification parameter"},
+            PMAX: {unit: "Pa",  description: "最大压力限制"},
+            PMIN: {unit: "Pa",  description: "最小压力限制"},
+            PRANDTL: {unit: "",  description: "普朗特数"},
+            PTRIPLE: {unit: "Pa",  description: "三相点的压力"},
+            P_REDUCING: {unit: "Pa",  description: "还原点压力"},
+            RHOCRIT: {unit: "kg/m^3",  description: "临界点质量密度"},
+            RHOMASS_REDUCING: {unit: "kg/m^3",  description: "还原点质量密度"},
+            RHOMOLAR_CRITICAL: {unit: "mol/m^3",  description: "临界点摩尔密度"},
+            RHOMOLAR_REDUCING: {unit: "mol/m^3",  description: "还原点摩尔密度"},
+            SMOLAR_RESIDUAL: {unit: "J/mol/K",  description: "残差摩尔熵"},
+            TCRIT: {unit: "K",  description: "临界点温度"},
+            TMAX: {unit: "K",  description: "最高温度限制"},
+            TMIN: {unit: "K",  description: "最低温度限制"},
+            TTRIPLE: {unit: "K",  description: "三相点的温度"},
+            T_FREEZE: {unit: "K",  description: "不可压缩溶液的冻结温度"},
+            T_REDUCING: {unit: "K",  description: "还原点温度"},
+            V: {unit: "Pa s",  description: "粘度"},
+            Z: {unit: "",  description: "压缩因子"}
+        }
+
+	function fillDataist() {
+		var lists = document.querySelector("#Fluids");
+		if (lists.options.length != 0) {
+			return ;
+		}
+		var fluidsListString = "Acetone,Air,Ammonia,Argon,Benzene,CarbonDioxide,CarbonMonoxide,CarbonylSulfide,CycloHexane,CycloPropane,Cyclopentane,D4,D6,Deuterium,DiethylEther,DimethylCarbonate,DimethylEther,Ethane,D5,Dichloroethane,Ethanol,EthylBenzene,Ethylene,EthyleneOxide,Fluorine,HFE143m,HeavyWater,Helium,Hydrogen,HydrogenChloride,HydrogenSulfide,IsoButane,IsoButene,Isohexane,Isopentane,Krypton,MD2M,MD3M,MD4M,MDM,MM,Methane,Methanol,MethylLinoleate,MethylLinolenate,MethylOleate,MethylPalmitate,MethylStearate,Neon,Neopentane,Nitrogen,NitrousOxide,Novec649,OrthoDeuterium,OrthoHydrogen,Oxygen,ParaDeuterium,ParaHydrogen,Propylene,Propyne,R11,R113,R114,R115,R116,R12,R123,R1233zd(E),R1234yf,R1234ze(E),R1234ze(Z),R124,R1243zf,R125,R13,R134a,R13I1,R14,R141b,R142b,R143a,R152A,R161,R21,R218,R22,R227EA,R23,R236EA,R236FA,R245ca,R245fa,R32,R365MFC,R40,R404A,R407C,R41,R410A,R507A,RC318,SES36,SulfurDioxide,SulfurHexafluoride,Toluene,Water,Xenon,cis-2-Butene,m-Xylene,n-Butane,n-Decane,n-Dodecane,n-Heptane,n-Hexane,n-Nonane,n-Octane,n-Pentane,n-Propane,n-Undecane,o-Xylene,p-Xylene,trans-2-Butene,1-Butene";
+		//var fluidsListString = Module.get_global_param_string("FluidsList");
+		(fluidsListString.split(',')).forEach(fluidName => {
+			lists.appendChild(new Option(fluidName));
+		});
+	}
+
+    function name1Change(name1) {
+        var name2 = document.querySelector("#name2");
+        if (name1.selectedIndex == 1) {
+            name2.options[1].hidden = true;
+            name2.options[2].hidden = false;
+        }else{
+            name2.options[1].hidden = false;
+            name2.options[2].hidden = true;
+        }
+
+        name2.selectedIndex = 0;
+        name2.disabled = false; 
+    }
+
+
+	function onProp(){
+		if (typeof Module.PropsSI != "function") {
+            alert("程序正在加载中，请稍候再试。");
+            return;
+        }
+        
+        let name1, name2, value1, value2, fluidName
+		
+        fluidName = document.querySelector("#fluidName").value;
+        name1 = document.querySelector("#name1").options[document.querySelector("#name1").selectedIndex].value;
+        name2 = document.querySelector("#name2").options[document.querySelector("#name2").selectedIndex].value;
+        value1 = Number(document.querySelector("#value1").value);
+        value2 = Number(document.querySelector("#value2").value);
+		
+		if(name1 == "T") value1 += 273.15
+		if(name2 == "T") value2 += 273.15
+
+        if(name1 == "P") value1 *= 1E6
+		if(name2 == "P") value2 *= 1E6
+		
+		var normalArgs = ["P","T","DMOLAR","D","HMOLAR","H","SMOLAR","S","UMOLAR","U","C","CPMOLAR","CVMASS","CVMOLAR","A","CONDUCTIVITY","V","M","Z"];
+        var otherArgs = ["ACENTRIC","ALPHA0","ALPHAR","BVIRIAL","CP0MASS","CP0MOLAR","CVIRIA","DALPHA0_DDELTA_CONSTTAU",
+                            "DALPHA0_DTAU_CONSTDELTA","DALPHAR_DDELTA_CONSTTAU","DALPHAR_DTAU_CONSTDELTA",
+                            "DBVIRIAL_DT","DCVIRIAL_DT","DIPOLE_MOMENT","FH","FRACTION_MAX","FRACTION_MIN",
+                            "FUNDAMENTAL_DERIVATIVE_OF_GAS_DYNAMICS","GAS_CONSTANT","GMOLAR_RESIDUAL","GMOLAR",
+                            "GWP20","GWP100","GWP500","G","HELMHOLTZMASS","HELMHOLTZMOLAR","HH","HMOLAR_RESIDUAL",
+                            "ISENTROPIC_EXPANSION_COEFFICIENT","ISOBARIC_EXPANSION_COEFFICIENT","ISOTHERMAL_COMPRESSIBILITY",
+                            "SURFACE_TENSION","ODP","PCRIT","PH","PRANDTL","PTRIPLE",
+                            "P_REDUCING","RHOCRIT","RHOMASS_REDUCING","RHOMOLAR_CRITICAL","RHOMOLAR_REDUCING",
+                            "SMOLAR_RESIDUAL","TCRIT","TTRIPLE","T_FREEZE","T_REDUCING"];
+
+		let strResult = ''
+        normalArgs.forEach(prop => {
+            let v = Module.PropsSI(prop,name1,value1,name2,value2,fluidName);
+            if (prop == "P") {
+                v /= 1e6;
+            }
+            if (prop == "T") {
+                v -= 273.15;
+            }
+			strResult += Props_zh[prop].description + "： " + v + " " + Props_zh[prop].unit + "\n"
+        })
+       
+        var out2 = document.querySelector("#out2");
+        if (out2.checked) {
+            otherArgs.forEach(prop => {
+                var v = Module.PropsSI(prop,name1,value1,name2,value2,fluidName);
+                
+                strResult += Props_zh[prop].description + "： " + v + " " + Props_zh[prop].unit + "\n"
+            });
+        }
+
+		document.getElementById("res").value = strResult.substr(0, strResult.length - 2)
+	}
+	
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</html>
