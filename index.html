@@ -113,7 +113,7 @@
             Object.keys(response).forEach( key => {
                 let liEle = document.createElement('li')
                 let aEle = document.createElement('a')
-                aEle.href = "#" + key
+                aEle.href = "?fm=" + key
                 aEle.innerText = response[key].text
                 liEle.appendChild(aEle)
                 navEle.appendChild(liEle)
@@ -134,10 +134,13 @@
             }
         }
 
-        window.onhashchange = createMainEle
+        //window.onhashchange = createMainEle
 
         function createMainEle() {
             fm = window.location.hash.substring(1)
+            urlSearchParams = new URLSearchParams(window.location.search)
+            console.log(urlSearchParams.get('fm'));
+            fm = urlSearchParams.get('fm')
             if (fm == '') {
                 return
             }
