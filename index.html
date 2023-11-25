@@ -96,6 +96,8 @@
         const dataPath = 'data.json';
 
         (function () {
+            const urlSearchParams = new URLSearchParams(window.location.search)
+            fm = urlSearchParams.get('fm')
             const xhr = new XMLHttpRequest()
             xhr.open('GET', dataPath, true)
             xhr.send()
@@ -136,11 +138,7 @@
 
         //window.onhashchange = createMainEle
 
-        function createMainEle() {
-            fm = window.location.hash.substring(1)
-            urlSearchParams = new URLSearchParams(window.location.search)
-            console.log(urlSearchParams.get('fm'));
-            fm = urlSearchParams.get('fm')
+        function createMainEle() {            
             if (fm == '') {
                 return
             }
