@@ -139,9 +139,10 @@
         //window.onhashchange = createMainEle
 
         function createMainEle() {            
-            if (fm == '') {
+            if (fm == '' || fm == null) {
                 return
             }
+
             curFormDataObj = response[fm]
 
             let tabEle = document.getElementById('tab')
