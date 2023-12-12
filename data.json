@@ -1421,7 +1421,7 @@
                 "id": "ta",
                 "type": "number",
                 "placeholder": "输入环境温度",
-                "value": "34.7",
+                "value": "12.7",
                 "required": true,
                 "readonly": false,
                 "other": "C",
