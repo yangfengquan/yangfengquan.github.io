@@ -1433,7 +1433,7 @@
                 "id": "w",
                 "type": "number",
                 "placeholder": "输入风速",
-                "value": "2.8",
+                "value": "2.9",
                 "required": true,
                 "readonly": false,
                 "other": "m/s",
