@@ -26,7 +26,22 @@
 </head>
 <body>
 	<div class="wrap">
-		<div id="sidebar"></div>
+		<div id="sidebar">
+            <h1><a href="./">TangYuan</a></h1>
+            <img src="./img/nav.png" width="30" height="30" onclick="ontoggledisplay()" id="navimg">
+            <div id="nav">
+                <h2>目录</h2>
+                <ul id="list"></ul>
+                <h2>手机扫码访问</h2>
+                <img src="img/addr.png" alt="手机扫码访问" width="125" height="125">
+                <h2>微信公众号</h2>
+                <img src="img/gzh.bmp" alt="微信公众号" width="120" height="120">
+                <p>网站作者：杨奉全</p>
+                <p>邮箱： <a href="mailto:yangfengquan@126.com">yangfengquan@126.com</a></p>
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+                <p style="font-size: 14px; color: #ccc;"><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></p>
+            </div> 
+        </div>
 		<script>
 
 		</script>
@@ -326,5 +341,42 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
+<script>
+    var response = {}
+        var fm = ''
+        
+        const dataPath = 'data.json';
 
+        (function () {
+            const urlSearchParams = new URLSearchParams(window.location.search)
+            
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', dataPath, true)
+            xhr.send()
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    response = JSON.parse(xhr.responseText)
+                    createNavlist(response)  
+                }
+            }
+        })()
+
+        function createNavlist(data){
+            let navEle = document.getElementById('list')
+            Object.keys(response).forEach( key => {
+                let liEle = document.createElement('li')
+                let aEle = document.createElement('a')
+                aEle.href = "./index.html?fm=" + key
+                aEle.innerText = response[key].text
+                liEle.appendChild(aEle)
+                navEle.appendChild(liEle)
+            })
+            let liEle1 = document.createElement('li')
+            let aEle1 = document.createElement('a')
+            aEle1.href = "./props.html"
+            aEle1.innerText = '纯物质物性计算'
+            liEle1.appendChild(aEle1)
+            navEle.appendChild(liEle1)
+        }
+</script>
 </html>

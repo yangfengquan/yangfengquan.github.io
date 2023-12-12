@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="工程在线计算软件">
+    <meta name="keywords" content="">
     <title>工程在线计算软件</title>
     <link rel="stylesheet" href="style.css">
     <script src="JS/form.js"></script>
@@ -27,8 +29,7 @@
                 <p>邮箱： <a href="mailto:yangfengquan@126.com">yangfengquan@126.com</a></p>
                 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
                 <p style="font-size: 14px; color: #ccc;"><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></p>
-            </div>
-            
+            </div> 
         </div>
         <div id="tab">
             <h2>功能列表</h2>
@@ -105,7 +106,13 @@
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     response = JSON.parse(xhr.responseText)
                     createNavlist(response)
-                    createMainEle()
+                    if (fm != '' && fm != null) {
+                        createMainEle()
+                        document.title = response[fm].text + '-' + document.title
+                        var metaEle = document.getElementsByTagName('meta')
+                        console.log(metaEle['keywords']);
+                        metaEle['keywords'].setAttribute('content', response[fm].text)
+                    }
                 }
             }
         })()
@@ -261,7 +268,6 @@
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
-  console.log(window.location);
   if (window.location.hostname == "yangshu.gitee.io") {
     hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";
   } else {
