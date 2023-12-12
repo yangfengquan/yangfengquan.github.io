@@ -16,9 +16,11 @@
         }
     </style>
     <div id="pdf">
-        <div id="iframeContainer">
-            <img src="./img/loading.gif" /><span>Loading...</span>
-        </div>
+        <div id="loading">
+			<img src="./img/loading.gif" />
+			<span>Loading...</span>
+		</div>
+		<div id="iframeContainer"></div>
     </div>
 <script>
 var _hmt = _hmt || [];
@@ -35,7 +37,9 @@ var _hmt = _hmt || [];
 
 <script>
     window.onload = function () {
-        document.querySelector('#iframeContainer').innerHTML = ''
+        document.querySelector('#loading').style.display = 'none'
+		
+		console.log("onload")
         // let data = new URLSearchParams(window.location.search)
         // let data1 = JSON.parse(data.get('data1'))
         // let data2 = JSON.parse(data.get('data2'));
