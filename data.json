@@ -1286,7 +1286,7 @@
             },{
                 "name": "局部阻力当量长度",
                 "tag": "input",
-                "id": "li",
+                "id": "lp",
                 "type": "number",
                 "placeholder": "输入局部阻力当量长度",
                 "value": "",
