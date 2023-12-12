@@ -20,7 +20,7 @@ jobs:
           destination-repo: "git@gitee.com:yangshu/yangshu.git"
 
     - name: Build Gitee Pages
-      uses: yangshu/gitee-pages-action@master
+      uses: yanglbme/gitee-pages-action@master
       with:
           # 注意替换为你的 Gitee 用户名
           gitee-username: yangshu
