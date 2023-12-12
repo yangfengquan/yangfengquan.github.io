@@ -110,8 +110,18 @@
                         createMainEle()
                         document.title = response[fm].text + '-' + document.title
                         var metaEle = document.getElementsByTagName('meta')
-                        console.log(metaEle['keywords']);
                         metaEle['keywords'].setAttribute('content', response[fm].text)
+                    } else {
+                        var content = ''
+
+                        Object.keys(response).forEach( key => {
+                            content += response[key].text + ','
+                        })
+
+                        //content = content.slice(0, -1)
+                        content += '纯物质物性计算'
+                        var metaEle = document.getElementsByTagName('meta')
+                        metaEle['keywords'].setAttribute('content', content)
                     }
                 }
             }
