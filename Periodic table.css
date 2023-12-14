@@ -1,0 +1,474 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono");
+:root {
+  --reactive-nonmetal: #f0ff8f;
+  --alkali-metal: #f66;
+  --alkaline-earth-metal: #ffdead;
+  --noble-gas: #c0ffff;
+  --transition-metal: #ffc0c0;
+  --post-transition-metal: #ccc;
+  --metaloid: #cc9;
+  --unknown: #e8e8e8;
+  --lanthanide: #ffbfff;
+  --actinide: #f9c;
+  --background-color: #212424;
+  --base-text-color: #fff;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 12px;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: "Roboto Mono", monospace;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--base-text-color);
+}
+
+.wrapper {
+  max-width: 90vw;
+  height: 100vh;
+  padding: 0 10px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.wrapper .title {
+  display: block;
+}
+
+.periodic-table {
+  display: grid;
+  grid-template: repeat(7, auto)/repeat(18, auto);
+  grid-gap: 2px;
+}
+.periodic-table__element {
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--base-text-color);
+  background: var(--background-color);
+  color: var(--base-text-color);
+}
+.periodic-table__element .atomic-number {
+  order: 1;
+  align-self: flex-start;
+}
+.periodic-table__element .atomic-number.atomic-number--green {
+  color: green;
+}
+.periodic-table__element .atomic-number.atomic-number--red {
+  color: red;
+}
+.periodic-table__element .symbol {
+  font-size: 15px;
+  font-weight: bold;
+  order: 2;
+}
+.periodic-table__element .name {
+  order: 3;
+}
+.periodic-table__element .atomic-weight {
+  order: 4;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal .symbol {
+  color: var(--reactive-nonmetal);
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.c {
+  grid-area: 2/14;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.n {
+  grid-area: 2/15;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.o {
+  grid-area: 2/16;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.f {
+  grid-area: 2/17;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.p {
+  grid-area: 3/15;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.s {
+  grid-area: 3/16;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.cl {
+  grid-area: 3/17;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.se {
+  grid-area: 4/16;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.br {
+  grid-area: 4/17;
+}
+.periodic-table__element.periodic-table__element--reactive-nonmetal.i {
+  grid-area: 5/17;
+}
+.periodic-table__element.periodic-table__element--alkali-metal {
+  grid-column: 1;
+}
+.periodic-table__element.periodic-table__element--alkali-metal .symbol {
+  color: var(--alkali-metal);
+}
+.periodic-table__element.periodic-table__element--alkali-metal.li {
+  grid-row: 2;
+}
+.periodic-table__element.periodic-table__element--alkali-metal.na {
+  grid-row: 3;
+}
+.periodic-table__element.periodic-table__element--alkali-metal.k {
+  grid-row: 4;
+}
+.periodic-table__element.periodic-table__element--alkali-metal.rb {
+  grid-row: 5;
+}
+.periodic-table__element.periodic-table__element--alkali-metal.cs {
+  grid-row: 6;
+}
+.periodic-table__element.periodic-table__element--alkali-metal.fr {
+  grid-row: 7;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal {
+  grid-column: 2;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal .symbol {
+  color: var(--alkaline-earth-metal);
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal.be {
+  grid-row: 2;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal.mg {
+  grid-row: 3;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal.ca {
+  grid-row: 4;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal.sr {
+  grid-row: 5;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal.ba {
+  grid-row: 6;
+}
+.periodic-table__element.periodic-table__element--alkaline-earth-metal.ra {
+  grid-row: 7;
+}
+.periodic-table__element.periodic-table__element--noble-gas {
+  grid-column: 18;
+}
+.periodic-table__element.periodic-table__element--noble-gas .symbol {
+  color: var(--noble-gas);
+}
+.periodic-table__element.periodic-table__element--transition-metal .symbol {
+  color: var(--transition-metal);
+}
+.periodic-table__element.periodic-table__element--transition-metal.sc {
+  grid-area: 4/3;
+}
+.periodic-table__element.periodic-table__element--transition-metal.y {
+  grid-area: 5/3;
+}
+.periodic-table__element.periodic-table__element--transition-metal.ti {
+  grid-area: 4/4;
+}
+.periodic-table__element.periodic-table__element--transition-metal.zr {
+  grid-area: 5/4;
+}
+.periodic-table__element.periodic-table__element--transition-metal.hf {
+  grid-area: 6/4;
+}
+.periodic-table__element.periodic-table__element--transition-metal.rf {
+  grid-area: 7/4;
+}
+.periodic-table__element.periodic-table__element--transition-metal.v {
+  grid-area: 4/5;
+}
+.periodic-table__element.periodic-table__element--transition-metal.nb {
+  grid-area: 5/5;
+}
+.periodic-table__element.periodic-table__element--transition-metal.ta {
+  grid-area: 6/5;
+}
+.periodic-table__element.periodic-table__element--transition-metal.db {
+  grid-area: 7/5;
+}
+.periodic-table__element.periodic-table__element--transition-metal.cr {
+  grid-area: 4/6;
+}
+.periodic-table__element.periodic-table__element--transition-metal.mo {
+  grid-area: 5/6;
+}
+.periodic-table__element.periodic-table__element--transition-metal.w {
+  grid-area: 6/6;
+}
+.periodic-table__element.periodic-table__element--transition-metal.sg {
+  grid-area: 7/6;
+}
+.periodic-table__element.periodic-table__element--transition-metal.mn {
+  grid-area: 4/7;
+}
+.periodic-table__element.periodic-table__element--transition-metal.tc {
+  grid-area: 5/7;
+}
+.periodic-table__element.periodic-table__element--transition-metal.re {
+  grid-area: 6/7;
+}
+.periodic-table__element.periodic-table__element--transition-metal.bh {
+  grid-area: 7/7;
+}
+.periodic-table__element.periodic-table__element--transition-metal.fe {
+  grid-area: 4/8;
+}
+.periodic-table__element.periodic-table__element--transition-metal.ru {
+  grid-area: 5/8;
+}
+.periodic-table__element.periodic-table__element--transition-metal.os {
+  grid-area: 6/8;
+}
+.periodic-table__element.periodic-table__element--transition-metal.hs {
+  grid-area: 7/8;
+}
+.periodic-table__element.periodic-table__element--transition-metal.co {
+  grid-area: 4/9;
+}
+.periodic-table__element.periodic-table__element--transition-metal.rh {
+  grid-area: 5/9;
+}
+.periodic-table__element.periodic-table__element--transition-metal.ir {
+  grid-area: 6/9;
+}
+.periodic-table__element.periodic-table__element--transition-metal.ni {
+  grid-area: 4/10;
+}
+.periodic-table__element.periodic-table__element--transition-metal.pd {
+  grid-area: 5/10;
+}
+.periodic-table__element.periodic-table__element--transition-metal.pt {
+  grid-area: 6/10;
+}
+.periodic-table__element.periodic-table__element--transition-metal.cu {
+  grid-area: 4/11;
+}
+.periodic-table__element.periodic-table__element--transition-metal.ag {
+  grid-area: 5/11;
+}
+.periodic-table__element.periodic-table__element--transition-metal.au {
+  grid-area: 6/11;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal .symbol {
+  color: var(--post-transition-metal);
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.zn {
+  grid-area: 4/12;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.cd {
+  grid-area: 5/12;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.hg {
+  grid-area: 6/12;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.cn {
+  grid-area: 7/12;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.al {
+  grid-area: 3/13;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.ga {
+  grid-area: 4/13;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.in {
+  grid-area: 5/13;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.tl {
+  grid-area: 6/13;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.sn {
+  grid-area: 5/14;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.pb {
+  grid-area: 6/14;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.bi {
+  grid-area: 6/15;
+}
+.periodic-table__element.periodic-table__element--post-transition-metal.po {
+  grid-area: 6/16;
+}
+.periodic-table__element.periodic-table__element--metaloid .symbol {
+  color: var(--metaloid);
+}
+.periodic-table__element.periodic-table__element--metaloid.b {
+  grid-area: 2/13;
+}
+.periodic-table__element.periodic-table__element--metaloid.si {
+  grid-area: 3/14;
+}
+.periodic-table__element.periodic-table__element--metaloid.ge {
+  grid-area: 4/14;
+}
+.periodic-table__element.periodic-table__element--metaloid.as {
+  grid-area: 4/15;
+}
+.periodic-table__element.periodic-table__element--metaloid.sb {
+  grid-area: 5/15;
+}
+.periodic-table__element.periodic-table__element--metaloid.te {
+  grid-area: 5/16;
+}
+.periodic-table__element.periodic-table__element--metaloid.at {
+  grid-area: 6/17;
+}
+.periodic-table__element.periodic-table__element--unknown .symbol {
+  color: var(--unknown);
+}
+.periodic-table__element.periodic-table__element--unknown.og {
+  grid-area: 7/18;
+}
+.periodic-table__element.periodic-table__element--lanthanide .symbol {
+  color: var(--lanthanide);
+}
+.periodic-table__element.periodic-table__element--lanthanide.la {
+  grid-column: 3;
+  grid-row: 6;
+}
+.periodic-table__element.periodic-table__element--actinide .symbol {
+  color: var(--actinide);
+}
+.periodic-table__element.periodic-table__element--actinide.ac {
+  grid-column: 3;
+  grid-row: 7;
+}
+
+.periodic-subtable {
+  display: grid;
+  grid-template: repeat(2, auto)/repeat(14, auto);
+  margin-top: 10px;
+  grid-gap: 2px;
+}
+.periodic-subtable__element {
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--base-text-color);
+}
+.periodic-subtable__element .atomic-number {
+  order: 1;
+  align-self: flex-start;
+}
+.periodic-subtable__element .atomic-number.atomic-number--green {
+  color: green;
+}
+.periodic-subtable__element .atomic-number.atomic-number--red {
+  color: red;
+}
+.periodic-subtable__element .symbol {
+  font-size: 15px;
+  font-weight: bold;
+  order: 2;
+}
+.periodic-subtable__element .name {
+  order: 3;
+}
+.periodic-subtable__element .atomic-weight {
+  order: 4;
+}
+.periodic-subtable__element.periodic-subtable__element--lanthanide {
+  grid-row: 1;
+}
+.periodic-subtable__element.periodic-subtable__element--lanthanide .symbol {
+  color: var(--lanthanide);
+}
+.periodic-subtable__element.periodic-subtable__element--actinide {
+  grid-row: 2;
+}
+.periodic-subtable__element.periodic-subtable__element--actinide .symbol {
+  color: var(--actinide);
+}
+
+.extra-info {
+  display: flex;
+  margin-top: 20px;
+}
+.extra-info__legend {
+  flex: 1 1 30%;
+  padding: 10px;
+}
+.extra-info__legend .list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+.extra-info__legend .list__single-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+.extra-info__legend .list__single-item .title {
+  font-weight: bold;
+}
+.extra-info__legend .list__single-item .box {
+  width: 10px;
+  height: 10px;
+  background-color: var(--alkali-metal);
+  margin-right: 3px;
+}
+.extra-info__legend .list__single-item .box.box--metaloid {
+  background-color: var(--metaloid);
+}
+.extra-info__legend .list__single-item .box.box--unknown {
+  background-color: var(--unknown);
+}
+.extra-info__legend .list__item {
+  flex: 1 1 50%;
+  padding: 5px;
+}
+.extra-info__legend .list__item .title {
+  margin: 0;
+  font-weight: bold;
+}
+.extra-info__legend .list__item .sublist {
+  list-style: none;
+}
+.extra-info__legend .list__item .sublist__item {
+  display: flex;
+  align-items: center;
+}
+.extra-info__legend .list__item .sublist__item.box {
+  width: 10px;
+  height: 10px;
+  background-color: var(--alkali-metal);
+  margin-right: 3px;
+}
+.extra-info__legend .list__item .sublist__item.box.box--transition-metal {
+  background-color: var(--transition-metal);
+}
+.extra-info__legend .list__item .sublist__item.box.box--alkaline-earth {
+  background-color: var(--alkaline-earth-metal);
+}
+.extra-info__legend .list__item .sublist__item.box.box--lanthanide {
+  background-color: var(--lanthanide);
+}
+.extra-info__legend .list__item .sublist__item.box.box--actinide {
+  background-color: var(--actinide);
+}
+.extra-info__legend .list__item .sublist__item.box.box--post-transition {
+  background-color: var(--post-transition-metal);
+}
+.extra-info__legend .list__item .sublist__item.box.box--reactive-nonmetal {
+  background-color: var(--reactive-nonmetal);
+}
+.extra-info__legend .list__item .sublist__item.box.box--noble-gas {
+  background-color: var(--noble-gas);
+}
