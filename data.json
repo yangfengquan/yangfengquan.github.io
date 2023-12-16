@@ -69,7 +69,7 @@
         ]
     },
     "pipeVelocity": {
-        "text": "管线流速计算",
+        "text": "管道流速计算",
         "form": [
             {
                 "name": "管线编号",
