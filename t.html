@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="JS/pipe2.js"></script>
+</head>
+<body>
+    <script>
+        function name2(params) {
+            let f = function (params) {
+                return params *2
+            }
+            return f(params)*2
+        }
+        
+console.log(name2(1));
+        
+        function clac(fmData, fm) {
+            
+            switch (fm) {
+                case "pipeDiameter":
+                    pipeDiameter(fmData);
+                    break;
+            
+                default:
+                    break;
+            }
+            console.log(fmData);
+        }
+        
+    </script>
+</body>
+</html>
