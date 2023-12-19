@@ -11,6 +11,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -23,19 +24,21 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "体积流量",
                 "tag": "input",
-                "id": "flowrate",
+                "id": "flowRate",
                 "type": "number",
                 "placeholder": "输入体积流量",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m3/h",
+                "unit": "m3/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -47,7 +50,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -56,13 +60,14 @@
             {
                 "name": "管线内径",
                 "tag": "input",
-                "id": "d",
+                "id": "di",
                 "type": "text",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -80,6 +85,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -92,31 +98,34 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "体积流量",
                 "tag": "input",
-                "id": "flowrate",
+                "id": "flowRate",
                 "type": "number",
                 "placeholder": "输入体积流量",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m3/h",
+                "unit": "m3/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "管线内径",
                 "tag": "input",
-                "id": "d",
+                "id": "di",
                 "type": "number",
                 "placeholder": "输入管线内径",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -131,7 +140,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -149,6 +159,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -161,6 +172,7 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -173,19 +185,21 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "管子壁厚",
                 "tag": "input",
-                "id": "thk",
+                "id": "delta",
                 "type": "number",
                 "placeholder": "输入管子壁厚",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -197,19 +211,21 @@
                 "value": "7850",
                 "required": true,
                 "readonly": false,
-                "other": "kg/m3",
+                "unit": "kg/m3",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "管子长度",
                 "tag": "input",
-                "id": "l",
+                "id": "len",
                 "type": "number",
                 "placeholder": "输入管子长度",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m",
+                "unit": "m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -218,25 +234,27 @@
             {
                 "name": "单重",
                 "tag": "input",
-                "id": "q",
+                "id": "pw",
                 "type": "text",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/m",
+                "unit": "kg/m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "总重",
                 "tag": "input",
-                "id": "tq",
+                "id": "tw",
                 "type": "text",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg",
+                "unit": "kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -327,6 +345,7 @@
                         "text": "DN600"
                     }
                 ],
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -394,6 +413,7 @@
                         "text": "SCH80S"
                     }
                 ],
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -409,19 +429,20 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "壁厚",
                 "tag": "input",
-                "id": "thk",
+                "id": "delta",
                 "type": "text",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm"
+                "unit": "mm"
             },{
                 "name": "单重",
                 "tag": "input",
@@ -431,7 +452,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/m",
+                "unit": "kg/m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -449,6 +471,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -461,6 +484,7 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -473,7 +497,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -485,7 +510,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "MPa",
+                "unit": "MPa",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -497,7 +523,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "MPa",
+                "unit": "MPa",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -509,6 +536,7 @@
                 "value": "0.4",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -521,6 +549,7 @@
                 "value": "1",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -533,6 +562,7 @@
                 "value": "1",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -545,7 +575,8 @@
                 "value": "0.125",
                 "required": true,
                 "readonly": false,
-                "other": "%",
+                "unit": "%",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -557,7 +588,8 @@
                 "value": "1.5",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -569,7 +601,8 @@
                 "value": "0",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -581,7 +614,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -590,97 +624,105 @@
             {
                 "name": "直管计算厚度",
                 "tag": "input",
-                "id": "thk",
+                "id": "delta",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "直管名义厚度",
                 "tag": "input",
-                "id": "thk2",
+                "id": "delta2",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "弯管内侧计算厚度",
                 "tag": "input",
-                "id": "enthk1",
+                "id": "endelta1",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "弯管内侧名义厚度",
                 "tag": "input",
-                "id": "enthk2",
+                "id": "endelta2",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "弯管外侧计算厚度",
                 "tag": "input",
-                "id": "eothk1",
+                "id": "eodelta1",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "弯管外侧名义厚度",
                 "tag": "input",
-                "id": "eothk2",
+                "id": "eodelta2",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "弯管中心线处侧壁计算厚度",
                 "tag": "input",
-                "id": "ethk",
+                "id": "edelta",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "弯管中心线处侧壁名义厚度",
                 "tag": "input",
-                "id": "ethk2",
+                "id": "edelta2",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -698,6 +740,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -710,6 +753,7 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -722,7 +766,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -734,7 +779,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -746,7 +792,8 @@
                 "value": "14.7",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -758,7 +805,8 @@
                 "value": "2.9",
                 "required": true,
                 "readonly": false,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -770,7 +818,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -782,6 +831,7 @@
                 "value": "0.3",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -794,6 +844,7 @@
                 "value": "0.044",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "+",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -806,7 +857,8 @@
                 "value": "0.0002",
                 "required": true,
                 "readonly": false,
-                "other": "×(Tm-",
+                "unit": "",
+                "other": "×(Tm-",                
                 "pclass": "form-group inline",
                 "class": "short"
             },{
@@ -818,6 +870,7 @@
                 "value": "70",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": ") +",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -830,6 +883,7 @@
                 "value": "0",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -842,6 +896,7 @@
                 "value": "70",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": ")^2 +",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -854,6 +909,7 @@
                 "value": "0",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -866,6 +922,7 @@
                 "value": "70",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": ")^3",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -881,7 +938,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m.K)",
+                "unit": "W/(m.K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -893,7 +951,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m2.K)",
+                "unit": "W/(m2.K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -905,7 +964,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -917,7 +977,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/m2",
+                "unit": "W/m2",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -929,7 +990,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/m",
+                "unit": "W/m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -947,6 +1009,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -959,6 +1022,7 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -971,7 +1035,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -983,7 +1048,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -995,7 +1061,8 @@
                 "value": "34.7",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1007,7 +1074,8 @@
                 "value": "2.8",
                 "required": true,
                 "readonly": false,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1019,7 +1087,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1031,6 +1100,7 @@
                 "value": "0.3",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1043,6 +1113,7 @@
                 "value": "0.023",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "+",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1055,6 +1126,7 @@
                 "value": "0.000122",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1067,6 +1139,7 @@
                 "value": "25",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "+",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1079,6 +1152,7 @@
                 "value": "3.15E-7",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1091,6 +1165,7 @@
                 "value": "25",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "^2 +",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1103,6 +1178,7 @@
                 "value": "0",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1115,6 +1191,7 @@
                 "value": "25",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "^3",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1130,7 +1207,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m.K)",
+                "unit": "W/(m.K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1142,7 +1220,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m2.K)",
+                "unit": "W/(m2.K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1154,7 +1233,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1166,7 +1246,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/m2",
+                "unit": "W/m2",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1178,7 +1259,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/m",
+                "unit": "W/m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -1196,6 +1278,7 @@
                 "value": "PI1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1208,43 +1291,47 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "流量",
                 "tag": "input",
-                "id": "flowrate",
+                "id": "flowRate",
                 "type": "number",
                 "placeholder": "输入流量",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "kg/h",
+                "unit": "kg/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "入口温度",
                 "tag": "input",
-                "id": "at",
+                "id": "a_t",
                 "type": "number",
                 "placeholder": "输入入口温度",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "入口压力",
                 "tag": "input",
-                "id": "ap",
+                "id": "a_p",
                 "type": "number",
                 "placeholder": "输入入口压力",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "MPa(A)",
+                "unit": "MPa",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1256,19 +1343,21 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "管子壁厚",
                 "tag": "input",
-                "id": "thk",
+                "id": "delta",
                 "type": "number",
                 "placeholder": "输入管子壁厚",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1280,7 +1369,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m",
+                "unit": "m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1292,7 +1382,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m",
+                "unit": "m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1304,7 +1395,8 @@
                 "value": "0.2",
                 "required": true,
                 "readonly": false,
-                "other": "m",
+                "unit": "m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1316,7 +1408,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "mm",
+                "unit": "mm",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1328,6 +1421,7 @@
                 "value": "0.044",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "+",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1340,6 +1434,7 @@
                 "value": "0.0002",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1352,6 +1447,7 @@
                 "value": "70",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": ") +",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1364,6 +1460,7 @@
                 "value": "0",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1376,6 +1473,7 @@
                 "value": "70",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": ")^2 +",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1388,6 +1486,7 @@
                 "value": "0",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "×(Tm-",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1400,6 +1499,7 @@
                 "value": "70",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": ")^3",
                 "pclass": "form-group inline",
                 "class": "short"
@@ -1412,6 +1512,7 @@
                 "value": "0.3",
                 "required": true,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1424,7 +1525,8 @@
                 "value": "12.7",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1436,7 +1538,8 @@
                 "value": "2.9",
                 "required": true,
                 "readonly": false,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -1451,7 +1554,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "MPa",
+                "unit": "MPa",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1463,7 +1567,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1475,7 +1580,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m.K)",
+                "unit": "W/(m.K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1487,7 +1593,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m2.K)",
+                "unit": "W/(m2.K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1499,7 +1606,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1511,7 +1619,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/m2",
+                "unit": "W/m2",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1523,7 +1632,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/m",
+                "unit": "W/m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1535,7 +1645,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W",
+                "unit": "W",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1547,7 +1658,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "MPa(A)",
+                "unit": "MPa",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1559,7 +1671,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1571,7 +1684,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/h",
+                "unit": "kg/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1583,7 +1697,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/h",
+                "unit": "kg/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1595,7 +1710,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/h",
+                "unit": "kg/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1607,7 +1723,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/h",
+                "unit": "kg/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1619,7 +1736,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1631,7 +1749,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1643,7 +1762,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kj/kg",
+                "unit": "kj/kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1655,7 +1775,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kj/kg",
+                "unit": "kj/kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1667,6 +1788,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1679,6 +1801,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1697,6 +1820,7 @@
                 "value": "P1",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1709,19 +1833,21 @@
                 "value": "",
                 "required": false,
                 "readonly": false,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
                 "name": "体积流量",
                 "tag": "input",
-                "id": "flowrate",
+                "id": "flowRate",
                 "type": "number",
                 "placeholder": "输入体积流量",
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m3/h",
+                "unit": "m3/h",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1733,7 +1859,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "m",
+                "unit": "m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1745,7 +1872,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "kg/m3",
+                "unit": "kg/m3",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1757,7 +1885,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "%",
+                "unit": "%",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -1772,7 +1901,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kW",
+                "unit": "kW",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             }
@@ -1789,6 +1919,7 @@
                 "value": "水和水蒸汽",
                 "required": true,
                 "readonly": true,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1813,6 +1944,7 @@
                     }
                 ],
                 "listener": "onWaterArg1Change()",
+                "unit": "",
                 "other": "",
                 "pclass": "form-group inline",
                 "class": ""
@@ -1825,7 +1957,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "MPa(A)",
+                "unit": "MPaA",
+                "other": "",
                 "pclass": "form-group inline",
                 "class": "short"
             },
@@ -1853,7 +1986,7 @@
                     }
                 ],
                 "listener": "onWaterArg2Change()",
-                "other": "",
+                "unit": "",
                 "pclass": "form-group inline",
                 "class": ""
             },{
@@ -1865,7 +1998,8 @@
                 "value": "",
                 "required": true,
                 "readonly": false,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group inline",
                 "class": "short"
             }
@@ -1880,7 +2014,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "MPa(A)",
+                "unit": "MPaA",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1892,7 +2027,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "C",
+                "unit": "C",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1904,7 +2040,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kj/kg",
+                "unit": "kj/kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1916,7 +2053,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "m3/kg",
+                "unit": "m3/kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1928,7 +2066,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kg/m3",
+                "unit": "kg/m3",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1940,7 +2079,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kj/kg",
+                "unit": "kj/kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1952,7 +2092,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kj/kg",
+                "unit": "kj/kg",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1964,7 +2105,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kJ/(kg·K)",
+                "unit": "kJ/(kg·K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1976,7 +2118,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "kJ/(kg·K)",
+                "unit": "kJ/(kg·K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -1988,7 +2131,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "m/s",
+                "unit": "m/s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -2000,7 +2144,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "Pa·s",
+                "unit": "Pa·s",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -2012,7 +2157,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "W/(m·K)",
+                "unit": "W/(m·K)",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -2024,7 +2170,8 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "other": "N/m",
+                "unit": "N/m",
+                "other": "",
                 "pclass": "form-group",
                 "class": ""
             },{
@@ -2036,6 +2183,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -2048,6 +2196,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -2060,6 +2209,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
+                "unit": "",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""

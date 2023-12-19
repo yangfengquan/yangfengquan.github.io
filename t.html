@@ -7,29 +7,30 @@
     <script src="JS/pipe2.js"></script>
 </head>
 <body>
+    <input type="text" name="aa" id="aa">
+    <button type="button" onclick="onC()">12</button>
     <script>
-        function name2(params) {
-            let f = function (params) {
-                return params *2
+        let a = [1,2,3,4];
+        a=a.map(v=>{
+            if (v == 2) {
+                v = 100;
+                return v;
             }
-            return f(params)*2
-        }
-        
-console.log(name2(1));
-        
-        function clac(fmData, fm) {
-            
-            switch (fm) {
-                case "pipeDiameter":
-                    pipeDiameter(fmData);
-                    break;
-            
-                default:
-                    break;
+        })
+        console.log(a);
+        console.log(document.getElementById("aa").value);
+        function onC() {
+            if (document.getElementById("aa").value) {
+                console.log(document.getElementById("aa").value);
             }
-            console.log(fmData);
         }
-        
+
+        let s = "m3mtomm";
+        let s1 = "mto";
+        let ar = s.split("to")
+        if (ar.length != 2 || !ar[0] || !ar[1] || ar[0] == ar[1]) {
+            console.log('s1.split("to")[1]');
+        }
     </script>
 </body>
 </html>

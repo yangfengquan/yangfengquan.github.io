@@ -29,10 +29,11 @@ function pipe_velocity(flowRate, di) {
  * @returns {number[]} [单重, 总重] [kg/m, kg]
  */
 function pipe_weight(d, deta, len = 0, rho = 7850) {
-    let perweight = 3.14 * rho * (d - deta) * deta;
-    let weight = len == 0 ? NaN : len * perweight
+    let r = {};
+    r.pw = 3.14 * rho * (d - deta) * deta;
+    r.tw = len == 0 ? NaN : len * perweight
 
-    return [perweight, weight];
+    return r;
 }
 
 const Schs = ["SCH5", "SCH10", "SCH20", "SCH30", "SCH40", "SCH60", "SCH80", "SCH100", "SCH120", "SCH140", "SCH160", "STD", "XS", "XXS", "SCH5S", "SCH10S", "SCH40S", "SCH80S"];
@@ -426,7 +427,7 @@ function insul_q(Q, d1) {
  * @param {number} w 风速[m/s]
  * @param {number} d1 内层绝热层外径[m]
  * @param {number} epsilon 绝热结构外面材料的黑度
- * @returns 
+ * @returns {number} 对流换热系数 [W/(m2*K)]
  */
 function insul_alpha(ts, ta, w, d1, epsilon) {
 	let alpha_r = 5.669 * epsilon / (ts - ta) * (Math.pow((273 + ts) / 100, 4) - Math.pow((273 + ta) / 100, 4));
@@ -448,7 +449,7 @@ function insul_alpha(ts, ta, w, d1, epsilon) {
 
 /**
  * 表面换热系数计算，防烫保温
- * @returns
+ * @returns {number} 对流换热系数 [W/(m2*K)]
  */
 function insul_alphaAS() {
     return 8.141;
@@ -456,108 +457,90 @@ function insul_alphaAS() {
 
 /**
  * 计算管道末端介质焓值
- * @param a_h 始端焓值[kj/kg]
- * @param f 流量[kg/s]
- * @param qTotal 总散热量[W]
- * @param l 管道长度[m]
- * @returns 末端焓值 kj/kg
+ * @param {number} a_h 始端焓值[kj/kg]
+ * @param {number} f 流量[kg/s]
+ * @param {number} qTotal 总散热量[W]
+ * @returns {number} 末端焓值 kj/kg
  */
-function getHB(a_h, f, qTotal) {
+function insul_bH(a_h, f, qTotal) {
     return a_h - qTotal / 1000 / f;
 }
+
 /**
- * 仅限于蒸汽
- * @param a_t 始端温度[℃]
- * @param a_h 始端压力[MPaA]
- * @param b_p 末端压力[MPaA]
- * @param ta 环境温度[℃]
- * @param d0 管道外径[m]
- * @param d1 保温外径[m]
- * @param epsilon 黑度
- * @param w 风速[m/s]
- * @param f 流量[kg/s]
- * @param l 管道长度[m]
- * @returns 管道或设备外表面平均温度[℃]
+ * 管道或设备外表面平均温度,仅限于蒸汽
+ * @param {number} flowRate 流量[kg/s]
+ * @param {number} d0 管道外径[m]
+ * @param {number} d1 保温外径[m]
+ * @param {number} l 管道长度[m]
+ * @param {number} a_t 始端温度[C]
+ * @param {number} a_p 始端压力[MPaA]
+ * @param {number} b_p 末端压力[MPaA]
+ * @param {number} ta 环境温度[C]
+ * @param {number} lambda 绝热材料在平均温度下的导热系数[W/(m*K)]
+ * @param {number} alpha 对流换热系数 [W/(m2*K)]
+ * @returns {number} 道或设备外表面平均温度[C]
  */
-function getT0(f, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
+function insul_t0(flowRate, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
 	var t0 = a_t, Q, q, b_h, b_t, qbr;
     var t0_tmp; // = t_A;
     do {
         t0_tmp = t0;
-        Q = getQ(t0, ta, d0, d1, lambda, alpha);
-        q = getq(Q, d1);
+        Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
+        q = insul_q(Q, d1);
 		
-        b_h = getHB(h_pT(a_p, a_t + 273.15), f, q * l);
+        b_h = insul_bH(h_pT(a_p, a_t + 273.15), f, q * l);
 		b_t = T_ph(b_p, b_h) - 273.15;
         t0 = (a_t + b_t) / 2;
     } while (Math.abs(t0 - t0_tmp) > 0.01);
     return t0;
 }
 
-function pipeInsultion(rows) {
-    let d0 = parseFloat(rows[2].value) / 1000;
-    let t0 = parseFloat(rows[3].value);
-    let ta = parseFloat(rows[4].value);
-    let w = parseFloat(rows[5].value);
-    let d1 = d0 + 2 * parseFloat(rows[6].value) / 1000;
-    let epsilon = parseFloat(rows[7].value);
-    let lambdaArgs = [];
-    for (let i = 0; i < 7; i++) {
-        lambdaArgs[i] = parseFloat(rows[8 + i].value);
-        if (isNaN(lambdaArgs[i])) {
-            alert("请检查输入！");
-            return false;
-        }
-    }
-    
-    if (isNaN(d0) || isNaN(t0) || isNaN(ta) || isNaN(w) || isNaN(d1) || isNaN(epsilon)) {
-        alert("请检查输入！");
-        return false;
-    }
+/**
+ * 已知绝热厚度，计算绝热材料传热系数、表面对流换热系数、表面温度、单位面积传热量、单位长度传热量
+ * @param {number} t0 管道或设备的外表面温度[C]
+ * @param {number} ta 环境温度[C]
+ * @param {number} w 风速[m/s]
+ * @param {number} d0 管道或设备外径[m]
+ * @param {number} d1 内层绝热层外径[m]
+ * @param {number[]} lambdaArgs 绝热材料传热系数计算系数
+ * @param {number} epsilon 绝热结构外面材料的黑度
+ * @returns {number[]} [绝热材料传热系数,表面对流换热系数,表面温度,单位面积传热量,单位长度传热量] [W/(m*K),W/(m2*K),C,W/m2,w/m]
+ */
+function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
+    let lambda = insul_lambda(t0, ta, lambdaArgs);
+    let ts = insul_ts(t0, ta, w, d0, d1, lambda, epsilon);
+    let alpha = insul_alpha(ts, ta, w, d1, epsilon);
+    let Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
+    let q = insul_q(Q, d1);
 
-    let lambda = getLambda(t0, ta, lambdaArgs);
-    let ts = getTs(t0, ta, w, d0, d1, lambda, epsilon);
-    let alpha = getAlpha(ts, ta, w, d1, epsilon);
-    let Q = getQ(t0, ta, d0, d1, lambda, alpha);
-    let q = 3.14 * d1 * Q;
-
-    return [lambda.toFixed(2), alpha.toFixed(2), ts.toFixed(2), Q.toFixed(2), q.toFixed(2)];
+    return [lambda, alpha, ts, Q, q];
 }
 
-function waterpipe(rows) {
-    let flowRate = parseFloat(rows[2].value) / 3600;
-    let a_t = parseFloat(rows[3].value);//入口温度
-    let a_p = parseFloat(rows[4].value);//出口压力
-    let d0 = parseFloat(rows[5].value) / 1000;
-    let di = d0 - 2 * parseFloat(rows[6].value) / 1000;
-    let li = parseFloat(rows[7].value);
-    let lp = li + parseFloat(rows[8].value);
-    let rough = parseFloat(rows[9].value) / 1000;
-    let d1 = d0 + 2 * parseFloat(rows[10].value) / 1000;
-    let lambdaArgs = [];
-    for (let i = 0; i < 7; i++) {
-        lambdaArgs[i] = parseFloat(rows[11 + i].value);
-        if (isNaN(lambdaArgs[i])) {
-            alert("请检查输入！");
-            return false;
-        }
-    }
-    let epsilon = parseFloat(rows[18].value);
-    let ta = parseFloat(rows[19].value);
-    let w = parseFloat(rows[20].value);
-
-    if (isNaN(flowRate) || isNaN(a_t) || isNaN(a_p) || isNaN(d0) || isNaN(di) || isNaN(li) 
-        || isNaN(lp) ||isNaN(rough) || isNaN(d1) || isNaN(ta) || isNaN(w) || isNaN(epsilon)) {
-        alert("请检查输入！");
-        return false;
-    }
-
+/**
+ * 蒸汽管道阻力和绝热计算
+ * @param {number} flowRate 流量[kg/s]
+ * @param {number} a_t 始端温度[C]
+ * @param {number} a_p 始端压力[MPaA]
+ * @param {number} di 管道内径[m]
+ * @param {number} d0 管道外径[m]
+ * @param {number} d1 绝热外径[m]
+ * @param {number} li 直管长度[m]
+ * @param {number} lf 局部当量长度[m]
+ * @param {number} rough 粗糙度 [m]
+ * @param {number} delta1 管子壁厚[m]
+ * @param {number} delta2 保温厚度[m]
+ * @param {number[]} lambdaArgs 绝热材料传热系数计算系数
+ * @returns {number[]} 
+ */
+function water_pipe(flowRate, a_t, a_p, di, d0, d1, li, lf, rough, lambdaArgs) {
+    let lp = li + lf;
+    
     let a_h = h_pT(a_p, a_t + 273.15);
     let a_rho = rho_pT(a_p, a_t + 273.15);
     let a_x = x_ph(a_p, a_h);
     let a_f_gas = flowRate * a_x;
     let a_f_liquid = flowRate * (1 - a_x);
-    let a_ve = getVelocity(flowRate / a_rho, di);
+    let a_ve = pipe_velocity(flowRate / a_rho, di);
     let a_pd = pd(a_ve, 1 / a_rho);
 
     let re = reynolds(di, a_ve, a_rho, my_pT(a_p, a_t + 273.15));
@@ -566,40 +549,21 @@ function waterpipe(rows) {
 
     let b_p = p2(a_pd, a_p * 1e6, kt0) / 1e6;
 
-    let lambda = getLambda(a_t, ta, lambdaArgs);
-    let ts = getTs(a_t, ta, w, d0, d1, lambda, epsilon);
-    let alpha = getAlpha(ts, ta, w, d1, epsilon);
-    let t0 = getT0(flowRate, d0, d1, li, a_t, a_p, b_p, ta, lambda, alpha);
-    let Q = getQ(t0, ta, d0, d1, lambda, alpha);
-    let q = getq(Q, d1);
+    let lambda = insul_lambda(a_t, ta, lambdaArgs);
+    let ts = insul_ts(a_t, ta, w, d0, d1, lambda, epsilon);
+    let alpha = insul_alpha(ts, ta, w, d1, epsilon);
+    let t0 = insul_t0(flowRate, d0, d1, li, a_t, a_p, b_p, ta, lambda, alpha);
+    let Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
+    let q = insul_q(Q, d1);
 
-    let b_h = getHB(a_h, flowRate, q * li);
+    let b_h = insul_bH(a_h, flowRate, q * li);
     let b_t = T_ph(b_p, b_h) - 273.15;
     let b_rho = rho_ph(b_p, b_h);
     let b_x = x_ph(b_p, b_h);
     let b_f_gas = flowRate * b_x;
     let b_f_liquid = flowRate * (1 - b_x);
-    let b_ve = getVelocity(flowRate / b_rho, di);
+    let b_ve = pipe_velocity(flowRate / b_rho, di);
 
-    return [(a_p - b_p).toFixed(2),
-        (a_t - b_t).toFixed(2),
-        lambda.toFixed(4),
-        alpha.toFixed(2),
-        ts.toFixed(2),
-        Q.toFixed(2),
-        q.toFixed(2),
-        (q * li).toFixed(2),
-        b_p.toFixed(2),
-        b_t.toFixed(2),
-        (a_f_gas * 3600).toFixed(2),
-        (a_f_liquid * 3600).toFixed(2),
-        (b_f_gas * 3600).toFixed(2),
-        (b_f_liquid * 3600).toFixed(2),
-        a_ve.toFixed(2),
-        b_ve.toFixed(2),
-        a_h.toFixed(2),
-        b_h.toFixed(2),
-        a_x.toFixed(2),
-        b_x.toFixed(2)
-    ];
+    return [a_p - b_p, a_t - b_t, lambda, alpha, ts, Q, q, q * li, b_p, b_t, a_f_gas,
+        a_f_liquid, b_f_gas, b_f_liquid, a_ve, b_ve, a_h, b_h, a_x, b_x];
 }
