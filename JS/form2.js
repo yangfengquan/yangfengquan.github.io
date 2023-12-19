@@ -1,78 +1,6 @@
 "use strict"
 import unitConverter from "./unitConverter.js"
 
-
-
-let fmData = {
-    "text": "管径计算",
-    "form": [
-        {
-            "name": "管线编号",
-            "tag": "input",
-            "id": "pcode",
-            "type": "text",
-            "placeholder": "",
-            "value": "PI1",
-            "required": false,
-            "readonly": false,
-            "other": "",
-            "pclass": "form-group",
-            "class": ""
-        },{
-            "name": "管线名称",
-            "tag": "input",
-            "id": "pname",
-            "type": "text",
-            "placeholder": "输入管线名称",
-            "value": "",
-            "required": false,
-            "readonly": false,
-            "other": "",
-            "pclass": "form-group",
-            "class": ""
-        },{
-            "name": "体积流量",
-            "tag": "input",
-            "id": "flowRate",
-            "type": "number",
-            "placeholder": "输入体积流量",
-            "value": "",
-            "required": true,
-            "readonly": false,
-            "other": "m3/h",
-            "pclass": "form-group",
-            "class": ""
-        },{
-            "name": "流速",
-            "tag": "input",
-            "id": "v",
-            "type": "number",
-            "placeholder": "输入流速",
-            "value": "",
-            "required": true,
-            "readonly": false,
-            "other": "m/s",
-            "pclass": "form-group",
-            "class": ""
-        }
-    ],
-    "result": [
-        {
-            "name": "管线内径",
-            "tag": "input",
-            "id": "d",
-            "type": "text",
-            "placeholder": "",
-            "value": "",
-            "required": false,
-            "readonly": true,
-            "other": "mm",
-            "pclass": "form-group",
-            "class": ""
-        }
-    ]
-}
-
 class Fm {
     constructor(text, form, result){
         this.text = text;
@@ -206,7 +134,7 @@ class Fm {
         this.setValue("Q", unitConverter('W/m2to' + this.getUnit("Q"), insul.Q));
         this.setValue("q", unitConverter('W/mto' + this.getUnit("q"), insul.q));
     }
-    waterPipe(fmData) {
+    waterPipe() {
         let flowRate = unitConverter(this.getUnit("flowRate") + "tokg/s", this.getValue("flowRate"));
         let a_t = unitConverter(this.getUnit("a_t") + "toC", this.getValue("a_t"));
         let a_p = unitConverter(this.getUnit("a_p") + "toMPaA", this.getValue("a_p"));
