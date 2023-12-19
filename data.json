@@ -517,7 +517,7 @@
             },{
                 "name": "许用应力",
                 "tag": "input",
-                "id": "S",
+                "id": "s",
                 "type": "number",
                 "placeholder": "查GB/T20801.2 表A.1",
                 "value": "",
@@ -530,7 +530,7 @@
             },{
                 "name": "计算系数",
                 "tag": "input",
-                "id": "Y",
+                "id": "y",
                 "type": "number",
                 "placeholder": "查GB/T20801.2 6.1款 计算系数Y",
                 "value": "0.4",
@@ -543,7 +543,7 @@
             },{
                 "name": "焊接接头高温强度降低系数",
                 "tag": "input",
-                "id": "W",
+                "id": "w",
                 "type": "number",
                 "placeholder": "查GB/T20801.3 4.2.7款焊接接头高温强度降低系数W",
                 "value": "1",
@@ -556,7 +556,7 @@
             },{
                 "name": "纵向焊接接头系数",
                 "tag": "input",
-                "id": "Phi",
+                "id": "phi",
                 "type": "number",
                 "placeholder": "查GB/T20801.2 表A.3、表A.4",
                 "value": "1",
@@ -569,7 +569,7 @@
             },{
                 "name": "材料厚度负偏差",
                 "tag": "input",
-                "id": "C1",
+                "id": "c1",
                 "type": "number",
                 "placeholder": "查按管子标准",
                 "value": "0.125",
@@ -582,7 +582,7 @@
             },{
                 "name": "腐蚀、冲蚀裕量",
                 "tag": "input",
-                "id": "C2",
+                "id": "c2",
                 "type": "number",
                 "placeholder": "",
                 "value": "1.5",
@@ -595,7 +595,7 @@
             },{
                 "name": "机械加工深度",
                 "tag": "input",
-                "id": "C3",
+                "id": "c3",
                 "type": "number",
                 "placeholder": "",
                 "value": "0",
@@ -608,7 +608,7 @@
             },{
                 "name": "弯管弯曲半径",
                 "tag": "input",
-                "id": "R",
+                "id": "r",
                 "type": "number",
                 "placeholder": "输入管子中心处的弯曲半径",
                 "value": "",
@@ -624,7 +624,7 @@
             {
                 "name": "直管计算厚度",
                 "tag": "input",
-                "id": "delta",
+                "id": "t",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -637,7 +637,7 @@
             },{
                 "name": "直管名义厚度",
                 "tag": "input",
-                "id": "delta2",
+                "id": "nt",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -650,7 +650,7 @@
             },{
                 "name": "弯管内侧计算厚度",
                 "tag": "input",
-                "id": "endelta1",
+                "id": "t1",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -663,7 +663,7 @@
             },{
                 "name": "弯管内侧名义厚度",
                 "tag": "input",
-                "id": "endelta2",
+                "id": "nt1",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -676,7 +676,7 @@
             },{
                 "name": "弯管外侧计算厚度",
                 "tag": "input",
-                "id": "eodelta1",
+                "id": "t2",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -689,7 +689,7 @@
             },{
                 "name": "弯管外侧名义厚度",
                 "tag": "input",
-                "id": "eodelta2",
+                "id": "nt2",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -702,7 +702,7 @@
             },{
                 "name": "弯管中心线处侧壁计算厚度",
                 "tag": "input",
-                "id": "edelta",
+                "id": "t3",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -715,7 +715,7 @@
             },{
                 "name": "弯管中心线处侧壁名义厚度",
                 "tag": "input",
-                "id": "edelta2",
+                "id": "nt3",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -932,13 +932,13 @@
             {
                 "name": "传热系数",
                 "tag": "input",
-                "id": "k",
+                "id": "lambda",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "unit": "W/(m.K)",
+                "unit": "W/(m*K)",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -951,7 +951,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "unit": "W/(m2.K)",
+                "unit": "W/(m2*K)",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1207,7 +1207,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "unit": "W/(m.K)",
+                "unit": "W/(m*K)",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1220,7 +1220,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "unit": "W/(m2.K)",
+                "unit": "W/(m2*K)",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1363,7 +1363,7 @@
             },{
                 "name": "展开长度",
                 "tag": "input",
-                "id": "li",
+                "id": "ll",
                 "type": "number",
                 "placeholder": "输入展开长度",
                 "value": "",
@@ -1376,7 +1376,7 @@
             },{
                 "name": "局部阻力当量长度",
                 "tag": "input",
-                "id": "lp",
+                "id": "lf",
                 "type": "number",
                 "placeholder": "输入局部阻力当量长度",
                 "value": "",
@@ -1402,7 +1402,7 @@
             },{
                 "name": "保温厚度",
                 "tag": "input",
-                "id": "delta",
+                "id": "insuldelta",
                 "type": "number",
                 "placeholder": "输入保温厚度",
                 "value": "",
@@ -1574,13 +1574,13 @@
             },{
                 "name": "传热系数",
                 "tag": "input",
-                "id": "k",
+                "id": "lambda",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "unit": "W/(m.K)",
+                "unit": "W/(m*K)",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1593,7 +1593,7 @@
                 "value": "",
                 "required": false,
                 "readonly": true,
-                "unit": "W/(m2.K)",
+                "unit": "W/(m2*K)",
                 "other": "",
                 "pclass": "form-group",
                 "class": ""
@@ -1639,7 +1639,7 @@
             },{
                 "name": "总热损失",
                 "tag": "input",
-                "id": "tQ",
+                "id": "tq",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1652,7 +1652,7 @@
             },{
                 "name": "出口压力",
                 "tag": "input",
-                "id": "bp",
+                "id": "b_p",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1665,7 +1665,7 @@
             },{
                 "name": "出口温度",
                 "tag": "input",
-                "id": "bt",
+                "id": "b_t",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1678,7 +1678,7 @@
             },{
                 "name": "入口流量（气相）",
                 "tag": "input",
-                "id": "afgas",
+                "id": "a_f-gas",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1691,7 +1691,7 @@
             },{
                 "name": "入口流量（液相）",
                 "tag": "input",
-                "id": "afliquid",
+                "id": "a_f_liquid",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1704,7 +1704,7 @@
             },{
                 "name": "出口流量（气相）",
                 "tag": "input",
-                "id": "bfgas",
+                "id": "b_f_gas",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1717,7 +1717,7 @@
             },{
                 "name": "出口流量（液相）",
                 "tag": "input",
-                "id": "bfliquid",
+                "id": "b_f_liquid",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1730,7 +1730,7 @@
             },{
                 "name": "入口流速",
                 "tag": "input",
-                "id": "ave",
+                "id": "a_ve",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1743,7 +1743,7 @@
             },{
                 "name": "出口流速",
                 "tag": "input",
-                "id": "bve",
+                "id": "b_ve",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1756,7 +1756,7 @@
             },{
                 "name": "入口比焓",
                 "tag": "input",
-                "id": "ah",
+                "id": "a_h",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1769,7 +1769,7 @@
             },{
                 "name": "出口比焓",
                 "tag": "input",
-                "id": "bh",
+                "id": "b_h",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1782,7 +1782,7 @@
             },{
                 "name": "入口干度",
                 "tag": "input",
-                "id": "ax",
+                "id": "a_x",
                 "type": "number",
                 "placeholder": "",
                 "value": "",
@@ -1795,7 +1795,7 @@
             },{
                 "name": "出口干度",
                 "tag": "input",
-                "id": "bx",
+                "id": "b_x",
                 "type": "number",
                 "placeholder": "",
                 "value": "",

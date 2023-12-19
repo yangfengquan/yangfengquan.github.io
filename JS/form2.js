@@ -156,67 +156,93 @@ class Fm {
         this.setValue("pw", unitConverter("kg/mto" + this.getUnit("pw"), w.pw));
         this.setValue("tw", unitConverter("kg/to" + this.getUnit("tw"), w.tw));        
     }
-    pipeStrength(fmData) {
-        let d = unitConverter(fmData.form[2].other + "tomm", fmData.form[2].value);
-        let p = unitConverter(fmData.form[3].other + "toMPa", fmData.form[3].value);
-        let s = unitConverter(fmData.form[4].other + "toMPa", fmData.form[4].value);
-        let y = fmData.form[5].value;
-        let w = fmData.form[6].value;
-        let phi = fmData.form[7].value;
-        let c1 = fmData.form[8].value;
-        let c2 = unitConverter(fmData.form[9].other + "tomm", fmData.form[9].value);
-        let c3 = unitConverter(fmData.form[10].other + "tomm", fmData.form[10].value);
-        let r = unitConverter(fmData.form[11].other + "tomm", fmData.form[11].value);
+    pipeStrength() {
+        let d = unitConverter(this.getUnit("d") + "tomm", this.getValue("d"));
+        let p = unitConverter(this.getUnit("p") + "toMPa", this.getValue("p"));
+        let s = unitConverter(this.getUnit("s") + "toMPa", this.getValue("s"));
+        let y = this.getValue("y");
+        let w = this.getValue("w");
+        let phi = this.getValue("phi");
+        let c1 = this.getValue("c1");
+        let c2 = unitConverter(this.getUnit("c2") + "tomm", this.getValue("c2"));
+        let c3 = unitConverter(this.getUnit("c3") + "tomm", this.getValue("c3"));
+        let r = unitConverter(this.getUnit("r") + "tomm", this.getValue("r"));
     
         let l = pipe_strength(d, p, s, y, w, phi, c1, c2, c3);
         let b = bend_strength(d, p, s, y, w, phi, c1, c2, c3, r);
     
-        for (let i = 0; i < l.length; i++) {
-            fmData.result[i].value = unitConverter('mm' + fmData.result[i].other, l[i]).toFixed(2);
-        }
-        for (let i = 0; i < b.length; i++) {
-            fmData.result[i + l.length].value = unitConverter('mm' + fmData.result[ + l.length].other, b[i]).toFixed(2);
-        }
+        this.setValue("t", unitConverter("mto" + this.getUnit("t"), l.t));
+        this.setValue("nt", unitConverter("mto" + this.getUnit("nt"), l.nt));
+        this.setValue("t1", unitConverter("mto" + this.getUnit("t1"), b.t1));
+        this.setValue("nt1", unitConverter("mto" + this.getUnit("nt1"), b.nt1));
+        this.setValue("t2", unitConverter("mto" + this.getUnit("t2"), b.t2));
+        this.setValue("nt2", unitConverter("mto" + this.getUnit("nt2"), b.nt2));
+        this.setValue("t3", unitConverter("mto" + this.getUnit("t3"), b.t3));
+        this.setValue("nt3", unitConverter("mto" + this.getUnit("nt3"), b.nt3));
     }
-    function pipeInsultion(fmData) {
-        let d0 = unitConverter(fmData.form[2].other + "tom", fmData.form[2].value);
-        let t0 = unitConverter(fmData.form[3].other + "toC", fmData.form[3].value);
-        let ta = unitConverter(fmData.form[4].other + "toC", fmData.form[4].value);
-        let w = unitConverter(fmData.form[5].other + "tom/s", fmData.form[5].value);
-        let delta = unitConverter(fmData.form[6].other + "tom", fmData.form[6].value);
+    pipeInsultion(fmData) {
+        let d0 = unitConverter(this.getUnit("d0") + "tom", this.getValue("d0"));
+        let t0 = unitConverter(this.getUnit("t0") + "toC", this.getValue("t0"));
+        let ta = unitConverter(this.getUnit("ta") + "toC", this.getValue("ta"));
+        let w = unitConverter(this.getUnit("w") + "tom/s", this.getValue("w"));
+        let delta = unitConverter(this.getUnit("delta") + "tom", this.getValue("delta"));
         let d1 = d0 + 2 * delta;
-        let epsilon = fmData.form[7].value;
-        let lambdaArgs = []
-        for (let i = 0; index < 7; i++) {
-            lambdaArgs.push(fmData.form[i + 8].value);
-        }
-    
+        let epsilon = this.getValue("epsilon");
+        
+        let lambdaArgs = [];
+        lambdaArgs.push(this.getValue("a"));
+        lambdaArgs.push(this.getValue("b"));
+        lambdaArgs.push(this.getValue("c"));
+        lambdaArgs.push(this.getValue("d"));
+        lambdaArgs.push(this.getValue("e"));
+        lambdaArgs.push(this.getValue("f"));
+        lambdaArgs.push(this.getValue("g"));
+
         let insul = pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon);
         
-        for (let i = 0; index < insul.length; i++) {
-            fmData.result[i].value = insul[i].toFixed(2);
-        }
+        this.setValue("lambda", unitConverter('W/(m*K)to' + this.getUnit("lambda"), insul.lambda));
+        this.setValue("alpha", unitConverter('W/(m2*K)to' + this.getUnit("alpha"), insul.alpha));
+        this.setValue("ts", unitConverter('Cto' + this.getUnit("ts"), insul.ts));
+        this.setValue("Q", unitConverter('W/m2to' + this.getUnit("Q"), insul.Q));
+        this.setValue("q", unitConverter('W/mto' + this.getUnit("q"), insul.q));
     }
-    function waterPipe(fmData) {
-        let flowRate = unitConverter(fmData.form[2].other + "tokg/s", fmData.form[2].value);
-        let a_t = unitConverter(fmData.form[3].other + "toC", fmData.form[3].value);
-        let a_p = unitConverter(fmData.form[4].other + "toMPaA", fmData.form[4].value);
-        let d0 = unitConverter(fmData.form[2].other + "tom", fmData.form[2].value);
-        let t0 = unitConverter(fmData.form[3].other + "toC", fmData.form[3].value);
-        let ta = unitConverter(fmData.form[4].other + "toC", fmData.form[4].value);
-        let w = unitConverter(fmData.form[5].other + "tom/s", fmData.form[5].value);
-        let delta = unitConverter(fmData.form[6].other + "tom", fmData.form[6].value);
-        let d1 = d0 + 2 * delta;
-        let epsilon = fmData.form[7].value;
-        let lambdaArgs = []
-        for (let i = 0; index < 7; i++) {
-            lambdaArgs.push(fmData.form[i + 8].value);
-        }
-    
-        let insul = pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon);
+    waterPipe(fmData) {
+        let flowRate = unitConverter(this.getUnit("flowRate") + "tokg/s", this.getValue("flowRate"));
+        let a_t = unitConverter(this.getUnit("a_t") + "toC", this.getValue("a_t"));
+        let a_p = unitConverter(this.getUnit("a_p") + "toMPaA", this.getValue("a_p"));
+        let d0 = unitConverter(this.getUnit("d0") + "tom", this.getValue("d0"));
+        let delta = unitConverter(this.getUnit("delta") + "tom", this.getValue("delta"));
+        let ll = unitConverter(this.getUnit("ll") + "tom", this.getValue("ll"));
+        let lf = unitConverter(this.getUnit("lf") + "tom", this.getValue("lf"));
+        let rough = unitConverter(this.getUnit("rough") + "tom", this.getValue("rough"));
+        let insuldelta = unitConverter(this.getUnit("insuldelta") + "tom", this.getValue("insuldelta"));
         
-        for (let i = 0; index < insul.length; i++) {
-            fmData.result[i].value = insul[i].toFixed(2);
+        let lambdaArgs = [];
+        lambdaArgs.push(this.getValue("a"));
+        lambdaArgs.push(this.getValue("b"));
+        lambdaArgs.push(this.getValue("c"));
+        lambdaArgs.push(this.getValue("d"));
+        lambdaArgs.push(this.getValue("e"));
+        lambdaArgs.push(this.getValue("f"));
+        lambdaArgs.push(this.getValue("g"));
+        
+        let epsilon = this.getValue("epsilon");
+
+        let ta = unitConverter(this.getUnit("ta") + "toC", this.getValue("ta"));
+        let w = unitConverter(this.getUnit("w") + "tom/s", this.getValue("w"));
+        
+        let di = d0 - 2 * delta;
+        let d1 = d0 + 2 * insuldelta;
+        let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w);
+        
+        for (const key in wp) {
+            if (Object.hasOwnProperty.call(wp, key)) {
+                if (this.getUnit(key) == "MPa") {
+                    this.setValue(unitConverter("MPaAto" + this.getUnit(key), wp[key]));
+                } else {
+                    this.setValue(unitConverter(this.getUnit(key) + "to" + this.getUnit(key), wp[key]));
+                }
+            }
         }
     }
 }

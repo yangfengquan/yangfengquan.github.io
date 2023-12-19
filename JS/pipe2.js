@@ -526,11 +526,14 @@ function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
  * @param {number} delta1 管子壁厚[m]
  * @param {number} delta2 保温厚度[m]
  * @param {number[]} lambdaArgs 绝热材料传热系数计算系数
+ * @param {number} epsilon 绝热结构外面材料的黑度
+ * @param {number} ta 环境温度[C]
+ * @param {number} w 风速[m/s]
  * @returns {object} 
  */
-function water_pipe(flowRate, a_t, a_p, di, d0, d1, li, lf, rough, lambdaArgs) {
-    let lp = li + lf;
-    
+function water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w) {
+    let lp = ll + lf;
+
     let a_h = h_pT(a_p, a_t + 273.15);
     let a_rho = rho_pT(a_p, a_t + 273.15);
     let a_x = x_ph(a_p, a_h);
@@ -560,6 +563,6 @@ function water_pipe(flowRate, a_t, a_p, di, d0, d1, li, lf, rough, lambdaArgs) {
     let b_f_liquid = flowRate * (1 - b_x);
     let b_ve = pipe_velocity(flowRate / b_rho, di);
 
-    return [a_p - b_p, a_t - b_t, lambda, alpha, ts, Q, q, q * li, b_p, b_t, a_f_gas,
-        a_f_liquid, b_f_gas, b_f_liquid, a_ve, b_ve, a_h, b_h, a_x, b_x];
+    return {dp: a_p - b_p, dt: a_t - b_t, lambda: lambda, alpha: alpha, ts: ts, Q: Q, q: q, tq: q * li, b_p: b_p, b_t: b_t, a_f_gas: a_f_gas,
+        a_f_liquid: a_f_liquid, b_f_gas: b_f_gas, b_f_liquid: b_f_liquid, a_ve: a_ve, b_ve: b_ve, a_h: a_h, b_h: b_h, a_x: a_x, b_x: b_x};
 }
