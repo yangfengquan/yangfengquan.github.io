@@ -26,7 +26,7 @@ function pipe_velocity(flowRate, di) {
  * @param {number} deta 壁厚 m
  * @param {number} len 长度 m
  * @param {number} rho 密度 kg/m3
- * @returns {number[]} [单重, 总重] [kg/m, kg]
+ * @returns {object} [单重, 总重] [kg/m, kg]
  */
 function pipe_weight(d, deta, len = 0, rho = 7850) {
     let r = {};
@@ -98,18 +98,19 @@ const SCH_Delta = {
  * 查询管子外径、壁厚，计算管子单重
  * @param {string} dn 公称直径 例如‘DN20’
  * @param {string} sch 壁厚系列 例如‘SCH20’
- * @returns {number[]} [外径,壁厚,单重] [mm,mm,kg/m]
+ * @returns {object} {外径,壁厚,单重} {mm,mm,kg/m}
  */
 function pipeSize(dn, sch) {
+    let r = {}
     let i = Schs.indexOf(sch);
-    let d = D0[dn];
-    let delta = SCH_Delta[dn][i];
-    if (delta == undefined) {
+    r.d = D0[dn];
+    r.delta = SCH_Delta[dn][i];
+    if (r.delta == undefined) {
         alert(dn + "钢管无" + sch)
     }
    
-    let m = pipe_weight(d, delta);   
-    return [d, delta, m];
+    r.m = pipe_weight(d, delta);   
+    return r;
 }
 
 /**
@@ -123,14 +124,14 @@ function pipeSize(dn, sch) {
  * @param {number} c1 材料负厚度偏差 %
  * @param {number} c2 腐蚀、冲蚀裕量 mm
  * @param {number} c3 机械加工深度 mm
- * @returns {number[]} [直管计算厚度,直管名义厚度] [mm,mm]
+ * @returns {object} [直管计算厚度,直管名义厚度] [mm,mm]
  */
 function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
-    let t = p * d / (2 * (s * phi * w + p * y));
-    let nt = t * (1 + c1 / 100) + c2 + c3;
-    
-    
-    return [t, nt];
+    let r = {};
+    r.t = p * d / (2 * (s * phi * w + p * y));
+    r.nt = t * (1 + c1 / 100) + c2 + c3;
+
+    return r;
 }
 
 /**
@@ -145,7 +146,7 @@ function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
  * @param {number} c2 腐蚀、冲蚀裕量 mm
  * @param {number} c3 机械加工深度 mm
  * @param {number} r 弯管或弯头在管子中心线处的弯曲半径 mm
- * @returns {number[]} [内侧计算厚度,内侧名义厚度,外侧计算厚度,外侧名义厚度,中心侧计算厚度,中心侧名义厚度] [mm,mm,mm,mm,mm,mm]
+ * @returns {object} [内侧计算厚度,内侧名义厚度,外侧计算厚度,外侧名义厚度,中心侧计算厚度,中心侧名义厚度] [mm,mm,mm,mm,mm,mm]
  */
 function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
     let tw = function (i) {
@@ -160,14 +161,15 @@ function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
     let i2 = (4 * (r / d) + 1) / (4 * (r / d) + 2); //外侧计算系数
     let i3 = 1; //中心侧壁计算系数
 
-    let t1 = tw(i1); //内侧计算厚度
-    let t2 = tw(i2); //外侧计算厚度
-    let t3 = tw(i3); //中心侧计算厚度
+    let r = {}
+    r.t1 = tw(i1); //内侧计算厚度
+    r.t2 = tw(i2); //外侧计算厚度
+    r.t3 = tw(i3); //中心侧计算厚度
 
-    let nt1 = ntw(t1); //内侧名义厚度
-    let nt2 = ntw(t2); //外侧名义厚度
-    let nt3 = ntw(t3); //中心侧名义厚度
-    return(t1, nt1, t2, nt2, t3, nt3);
+    r.nt1 = ntw(t1); //内侧名义厚度
+    r.nt2 = ntw(t2); //外侧名义厚度
+    r.nt3 = ntw(t3); //中心侧名义厚度
+    return r;
 }
 
 
@@ -407,18 +409,11 @@ function insul_Q(t0, ta, d0, d1, lambda, alpha) {
  * 每米管道热损失量计算，GB50264公式5.4.3-2
  * @param {number} Q 每平方米绝热层外表面积的热损失量[W/m2]
  * @param {number} d1 内层绝热层外径[m]
- * @returns {number}
+ * @returns {number} [W]
  */
 function insul_q(Q, d1) {
     return Math.PI * d1 * Q;
 }
-
-/**
- * 表面换热系数计算
- * @param
- * @param
- * @returns
- */
 
 /**
  * 表面换热系数计算，GB50264公式5.8.4
@@ -504,16 +499,17 @@ function insul_t0(flowRate, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
  * @param {number} d1 内层绝热层外径[m]
  * @param {number[]} lambdaArgs 绝热材料传热系数计算系数
  * @param {number} epsilon 绝热结构外面材料的黑度
- * @returns {number[]} [绝热材料传热系数,表面对流换热系数,表面温度,单位面积传热量,单位长度传热量] [W/(m*K),W/(m2*K),C,W/m2,w/m]
+ * @returns {object} [绝热材料传热系数,表面对流换热系数,表面温度,单位面积传热量,单位长度传热量] [W/(m*K),W/(m2*K),C,W/m2,w/m]
  */
 function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
-    let lambda = insul_lambda(t0, ta, lambdaArgs);
-    let ts = insul_ts(t0, ta, w, d0, d1, lambda, epsilon);
-    let alpha = insul_alpha(ts, ta, w, d1, epsilon);
-    let Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
-    let q = insul_q(Q, d1);
+    let r = {};
+    r.lambda = insul_lambda(t0, ta, lambdaArgs);
+    r.ts = insul_ts(t0, ta, w, d0, d1, lambda, epsilon);
+    r.alpha = insul_alpha(ts, ta, w, d1, epsilon);
+    r.Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
+    r.q = insul_q(Q, d1);
 
-    return [lambda, alpha, ts, Q, q];
+    return r;
 }
 
 /**
@@ -530,7 +526,7 @@ function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
  * @param {number} delta1 管子壁厚[m]
  * @param {number} delta2 保温厚度[m]
  * @param {number[]} lambdaArgs 绝热材料传热系数计算系数
- * @returns {number[]} 
+ * @returns {object} 
  */
 function water_pipe(flowRate, a_t, a_p, di, d0, d1, li, lf, rough, lambdaArgs) {
     let lp = li + lf;

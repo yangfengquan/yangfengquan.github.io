@@ -156,7 +156,7 @@ class Fm {
         this.setValue("pw", unitConverter("kg/mto" + this.getUnit("pw"), w.pw));
         this.setValue("tw", unitConverter("kg/to" + this.getUnit("tw"), w.tw));        
     }
-    function pipeStrength(fmData) {
+    pipeStrength(fmData) {
         let d = unitConverter(fmData.form[2].other + "tomm", fmData.form[2].value);
         let p = unitConverter(fmData.form[3].other + "toMPa", fmData.form[3].value);
         let s = unitConverter(fmData.form[4].other + "toMPa", fmData.form[4].value);
