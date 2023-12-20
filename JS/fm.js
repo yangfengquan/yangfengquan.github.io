@@ -181,4 +181,7 @@ export default class Fm {
             }
         }
     }
+    pumpPower() {
+
+    }
 }
