@@ -7,11 +7,7 @@
     <meta name="keywords" content="管径，管道流速，管子重量，管子尺寸，管子强度，管子壁厚，管道保温，管道保冷，水、水蒸汽物性计算，纯物质物性计算，泵轴功率，在线计算软件">
     <title>管道工程在线计算，物质物性在线计算软件</title>
     <link rel="stylesheet" href="style.css">
-    <script src="JS/form.js"></script>
-    <script src="JS/xsteam.js"></script>
-    <script src="JS/pipe.js"></script>
-    <script src="JS/equipment.js"></script>
-    <script src="JS/props.js"></script>
+    <script src="JS/link.js"></script>
     
 </head>
 <body>
@@ -33,7 +29,7 @@
                 <p style="font-size: 14px; color: #ccc;"><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></p>
             </div> 
         </div>
-        <div id="tab">
+        <div id="main">
             <h2>功能列表</h2>
 			<div class="list-item">
 				<h4><a href="?fm=pipeDiameter">管径在线计算</a></h4>
@@ -93,6 +89,23 @@
         </div>
     </div>
     <script>
+        (function () {
+            const dataPath = 'data.json';
+            const urlSearchParams = new URLSearchParams(window.location.search)
+            const xhr = new XMLHttpRequest()
+            xhr.open('GET', dataPath, true)
+            xhr.send()
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    response = JSON.parse(xhr.responseText)
+                    
+                    createLinkEle(response);
+                }
+            }
+            if (window.screen.width <= 600) {
+                document.getElementById('nav').style.display = 'none'
+            }
+        })();
         function calc() {
             if (getFormValue()) {
                 let r = eval(fm)(curFormDataObj.form)
@@ -174,6 +187,5 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<script src="JS/html.js"></script>
 </body>
 </html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="JS/pipe2.js"></script>
+    <script src="JS/link.js"></script>
+</head>
+<body>
+    <div class="wrap">
+        <div id="sidebar">
+            <h1><a href="./">TangYuan</a></h1>
+            <img src="./img/nav.png" width="30" height="30" onclick="ontoggledisplay()" id="navimg">
+            <div id="nav">
+                <h2>目录</h2>
+                <ul id="list"></ul>
+                <h2>手机扫码访问</h2>
+                <img src="img/addr.png" alt="手机扫码访问" width="125" height="125">
+                <h2>微信公众号</h2>
+                <img src="img/gzh.bmp" alt="微信公众号" width="120" height="120">
+                <p>杨奉全</p>
+                <p>邮箱： <a href="mailto:yangfengquan@126.com">yangfengquan@126.com</a></p>
+				<p><a href="sitemap.html">网站地图</a></p>
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+                <p style="font-size: 14px; color: #ccc;"><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></p>
+            </div> 
+        </div>
+        <div id="main">
+            <h1 id="main-title"></h1>
+            
+            <div id="form"></div>
+            <p id="warning"></p>
+            <p>
+                <button onclick="calc()">运算</button>
+                <button onclick="pdf()">计算书</button>
+            </p>
+            <h2>结果：</h2>
+            <div id="result"></div>
+        </div> 
+    </div>
+    <script type="module">
+        import Fm from "./JS/fm.js";
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        let url_fm = urlSearchParams.get('fm');
+        const dataPath = 'data.json';
+        let response;
+        (function () {
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', dataPath, true);
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    response = JSON.parse(xhr.responseText);
+                    
+                    createLinkEle(response);
+                    
+                    if (url_fm != '' && url_fm != null) {
+                        document.title = response[url_fm].text;
+
+                        //fm = new Fm(response[url_fm].form, response[url_fm].result);
+                        let formEle = document.getElementById("form");
+                        createFormEle(response[url_fm].form, formEle);
+                        let resultEle = document.getElementById("result");
+                        createFormEle(response[url_fm].result, resultEle);
+                        if (document.getElementsByClassName("br").length > 0) {
+                            document.getElementsByClassName("br")[0].parentNode.insertBefore(
+                                document.createElement("br"),
+                                document.getElementsByClassName("br")[0]);
+                        }
+                    } else {
+                        window.location.href='./';
+                    }
+                }
+            }
+            if (window.screen.width <= 600) {
+                document.getElementById('nav').style.display = 'none'
+            }
+        })();
+        
+        function createFormEle(data, ele){
+            data.forEach(item => {
+                switch (item.tag) {
+                    case 'input':
+                        ele.appendChild(createInputEle(item));
+                        break;
+                    case 'select':
+                        ele.appendChild(createSelectEle(item));
+                    default:
+                        break;
+                }
+            });
+        }
+
+        function createInputEle(inp) {
+            let groupEle = document.createElement('div')
+            groupEle.className = inp.pclass
+            let labelEle = document.createElement('label')
+            labelEle.innerText = inp.name
+            labelEle.setAttribute('for', inp.id)
+            groupEle.appendChild(labelEle)
+        
+            let inputEle = document.createElement('input')
+            inputEle.setAttribute('name', inp.id)
+            inputEle.setAttribute('id', inp.id)
+            inputEle.setAttribute('autocomplete', 'on')
+            inputEle.type = inp.type
+            inputEle.value = inp.value
+            inputEle.placeholder = inp.placeholder
+            inputEle.required = inp.required
+            inputEle.readOnly = inp.readonly
+            inputEle.className = inp.class
+            groupEle.appendChild(inputEle)
+        
+            if (inp.unit != '' && inp.hasOwnProperty("unit")) {
+                let spanEle = document.createElement('span')
+                spanEle.innerText = inp.unit
+                groupEle.appendChild(spanEle)
+            }
+
+            if (inp.other != '' && inp.hasOwnProperty("other")) {
+                let spanEle = document.createElement('span')
+                spanEle.innerText = inp.other
+                groupEle.appendChild(spanEle)
+            }
+            return groupEle
+        }
+
+        function createSelectEle(sel) {
+            let groupEle = document.createElement('div')
+            groupEle.className = sel.pclass
+            let labelEle = document.createElement('label')
+            labelEle.innerText = sel.name
+            labelEle.setAttribute('for', sel.id)
+            groupEle.appendChild(labelEle)
+        
+            let selectEle = document.createElement('select')
+            selectEle.setAttribute('name', sel.id)
+            selectEle.setAttribute('id', sel.id)
+            selectEle.setAttribute('autocomplete', 'on')
+            selectEle.required = sel.required
+            selectEle.readOnly = sel.readonly
+            selectEle.setAttribute('onchange', sel.listener)
+            sel.opts.forEach(opt => {
+                selectEle.add(new Option(opt.text, opt.value))
+            });
+            selectEle.value = sel.value
+            groupEle.appendChild(selectEle)
+        
+            if (sel.unit != '' && sel.hasOwnProperty("unit")) {
+                let spanEle = document.createElement('span')
+                spanEle.innerText = sel.unit
+                groupEle.appendChild(spanEle)
+            }
+
+            if (sel.other != '' && sel.hasOwnProperty("other")) {
+                let spanEle = document.createElement('span')
+                spanEle.innerText = sel.other
+                groupEle.appendChild(spanEle)
+            }
+            
+            return groupEle
+        }
+        
+        window.calc = function() {
+            let fm = new Fm(response[url_fm].form, response[url_fm].result);
+            let f = fm.fillFormValue();
+            if (f != 0) {
+                document.getElementById("warning").innerText = "警告：“" + f + "” 未正确填写！" ;
+                document.getElementById("warning").style.display = "block";
+            } else {
+                document.getElementById("warning").style.display = "none";
+                fm[url_fm]();
+                fm.render();
+            } 
+        }
+        function pdf(){}
+    </script>
+    <script>
+        var propObj = {
+            T:   {name: "温度",         unit: "C",        },
+            p:   {name: "压力",         unit: "MPaA",     },
+            h:   {name: "比焓",         unit: "kJ/kg",    },
+            v:   {name: "比体积",       unit: "m3/kg",    },
+            rho: {name: "密度",         unit: "kg/m3",    },
+            s:   {name: "比熵",         unit: "kJ/kg",    },
+            u:   {name: "内能",         unit: "kJ/kg",    },
+            Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)",},
+            Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)",},
+            w:   {name: "声速",         unit: "m/s",      },
+            my:  {name: "动力粘度",     unit: "Pa·s",     },
+            tc:  {name: "导热系数",     unit: "W/(m·K)",  },
+            st:  {name: "表面张力",     unit: "N/m",      },
+            x:   {name: "干度",         unit: "",         },
+            vx:  {name: "气态体积分数", unit: "",         }
+        }
+
+        var modes = [
+                ['p','T'],
+                ['p','h'],
+                ['p','s'],
+                ['p','rho'],
+                ['p','x'],
+                ['T','x'],
+                ['h','s'],
+                ['h','rho']
+            ]
+        function onWaterArg1Change() {
+            let arg1 = document.getElementById('waterArg1').value;
+
+            let arg2_ele = document.getElementById("waterArg2");
+            arg2_ele.innerHTML = "";
+            modes.forEach(item => {
+                if (item[0] == arg1) {
+                    arg2_ele.options.add(new Option(propObj[item[1]].name, item[1]));
+                }
+            })
+            document.getElementById('waterValue1').parentNode.lastChild.innerHTML = propObj[arg1].unit;
+            document.getElementById('waterValue2').parentNode.lastChild.innerHTML = propObj[arg2_ele.value].unit;
+        }
+        function onWaterArg2Change() {
+            let arg2_ele = document.getElementById("waterArg2");
+            document.getElementById('waterValue2').parentNode.lastChild.innerHTML = propObj[arg2_ele.value].unit;
+        }
+    </script>
+</body>
+</html>

@@ -1,20 +1,20 @@
 "use strict"
 import unitConverter from "./unitConverter.js"
 
-class Fm {
-    constructor(text, form, result){
-        this.text = text;
+export default class Fm {
+    constructor(form, result){
         this._form = [...form];
         this._result = [...result];
     }
+    
     getValue(key){
         let d = this._form.concat(this._result);
         for (let i = 0; i < d.length; i++) {
             if (d[i].id == key) {
                 if (d[i].type == "number") {
-                    return parseFloat(d.value);
+                    return parseFloat(d[i].value);
                 } else {
-                    return d.value;
+                    return d[i].value;
                 }
             }
         }
@@ -51,18 +51,18 @@ class Fm {
     }
     fillFormValue(){
         for (let i = 0; i < this._form.length; i++) {
-            if (this._form[i].required && !document.getElementById(item.id).value) {
-                document.getElementById("waring").innerText = item.name + "必须填写";
-                return false;
+            if (this._form[i].required && !document.getElementById(this._form[i].id).value) {
+                //document.getElementById("warning").innerText = this._form[i].name + "必须填写";
+                return this._form[i].name;
             } else {
-                this._form[i].value = document.getElementById(item.id).value;
+                this._form[i].value = document.getElementById(this._form[i].id).value;
             }
         }
-        return true;
+        return 0;
     }
     render(){
         this._result.forEach(item => {
-            document.getElementById(item.id).value = value;
+            document.getElementById(item.id).value = item.value;
         });
     }
     pipeDiameter() {
@@ -80,9 +80,17 @@ class Fm {
         let delta = unitConverter(this.getUnit("delta") + "tom", this.getValue("delta"));
         let len = unitConverter(this.getUnit("len") + "tom", this.getValue("len"));
         let rho = unitConverter(this.getUnit("rho") + "tokg/m3", this.getValue("rho"));
-        let w = pipe_weight(d, delta, len, rho);
-        this.setValue("pw", unitConverter("kg/mto" + this.getUnit("pw"), w.pw));
-        this.setValue("tw", unitConverter("kg/to" + this.getUnit("tw"), w.tw));        
+        let w = pipe_weight(d, delta, rho);
+        this.setValue("pw", unitConverter("kg/mto" + this.getUnit("pw"), w));
+        this.setValue("tw", unitConverter("kgto" + this.getUnit("tw"), w * len));        
+    }
+    pipeSize() {
+        let dn = this.getValue("dn");
+        let sch = this.getValue("sch");
+        let p = pipe_size(dn, sch);
+        this.setValue("d", unitConverter("mmto" + this.getUnit("d"), p.d));
+        this.setValue("delta", unitConverter("mmto" + this.getUnit("delta"), p.delta));
+        this.setValue("m", unitConverter("kg/mto" + this.getUnit("m"), p.m));
     }
     pipeStrength() {
         let d = unitConverter(this.getUnit("d") + "tomm", this.getValue("d"));
@@ -108,7 +116,7 @@ class Fm {
         this.setValue("t3", unitConverter("mto" + this.getUnit("t3"), b.t3));
         this.setValue("nt3", unitConverter("mto" + this.getUnit("nt3"), b.nt3));
     }
-    pipeInsultion(fmData) {
+    pipeInsultion() {
         let d0 = unitConverter(this.getUnit("d0") + "tom", this.getValue("d0"));
         let t0 = unitConverter(this.getUnit("t0") + "toC", this.getValue("t0"));
         let ta = unitConverter(this.getUnit("ta") + "toC", this.getValue("ta"));

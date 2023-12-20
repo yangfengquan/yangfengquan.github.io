@@ -21,19 +21,15 @@ function pipe_velocity(flowRate, di) {
 }
 
 /**
- * 计算管子单重、总重
+ * 计算管子单重
  * @param {number} d 外径 m
  * @param {number} deta 壁厚 m
  * @param {number} len 长度 m
  * @param {number} rho 密度 kg/m3
- * @returns {object} [单重, 总重] [kg/m, kg]
+ * @returns {number} 单重 kg/m
  */
-function pipe_weight(d, deta, len = 0, rho = 7850) {
-    let r = {};
-    r.pw = 3.14 * rho * (d - deta) * deta;
-    r.tw = len == 0 ? NaN : len * perweight
-
-    return r;
+function pipe_weight(d, deta, rho = 7850) {
+    return 3.14 * rho * (d - deta) * deta;
 }
 
 const Schs = ["SCH5", "SCH10", "SCH20", "SCH30", "SCH40", "SCH60", "SCH80", "SCH100", "SCH120", "SCH140", "SCH160", "STD", "XS", "XXS", "SCH5S", "SCH10S", "SCH40S", "SCH80S"];
@@ -100,17 +96,17 @@ const SCH_Delta = {
  * @param {string} sch 壁厚系列 例如‘SCH20’
  * @returns {object} {外径,壁厚,单重} {mm,mm,kg/m}
  */
-function pipeSize(dn, sch) {
+function pipe_size(dn, sch) {
     let r = {}
     let i = Schs.indexOf(sch);
-    r.d = D0[dn];
-    r.delta = SCH_Delta[dn][i];
-    if (r.delta == undefined) {
+    let d = D0[dn];
+    let delta = SCH_Delta[dn][i];
+    if (delta == undefined) {
         alert(dn + "钢管无" + sch)
     }
    
-    r.m = pipe_weight(d, delta);   
-    return r;
+    let m = pipe_weight(d / 1000, delta / 1000);
+    return {d: d, delta: delta, m: m};
 }
 
 /**
@@ -161,15 +157,14 @@ function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
     let i2 = (4 * (r / d) + 1) / (4 * (r / d) + 2); //外侧计算系数
     let i3 = 1; //中心侧壁计算系数
 
-    let r = {}
-    r.t1 = tw(i1); //内侧计算厚度
-    r.t2 = tw(i2); //外侧计算厚度
-    r.t3 = tw(i3); //中心侧计算厚度
+    let t1 = tw(i1); //内侧计算厚度
+    let t2 = tw(i2); //外侧计算厚度
+    let t3 = tw(i3); //中心侧计算厚度
 
-    r.nt1 = ntw(t1); //内侧名义厚度
-    r.nt2 = ntw(t2); //外侧名义厚度
-    r.nt3 = ntw(t3); //中心侧名义厚度
-    return r;
+    let nt1 = ntw(t1); //内侧名义厚度
+    let nt2 = ntw(t2); //外侧名义厚度
+    let nt3 = ntw(t3); //中心侧名义厚度
+    return {t1: t1, t2: t2, t3: t3, nt1: nt1, nt2:nt2, nt3: nt3};
 }
 
 

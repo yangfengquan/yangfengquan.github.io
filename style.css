@@ -63,12 +63,12 @@ textarea {
     margin-left: 10px;
     padding: 0;
 }
-#tab {
+#main {
     padding-left: 25px;
     padding-right: 25px;
 }
 @media (min-width: 40rem) {
-	#tab {
+	#main {
 		padding-left:16rem;
 		margin-left: 0px;
 		margin-right: 0px;
@@ -89,4 +89,15 @@ textarea {
 }
 .short {
     width: 50px;
+}
+#warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    display: none;
 }

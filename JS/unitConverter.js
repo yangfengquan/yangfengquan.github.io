@@ -1,5 +1,11 @@
 "use strict"
 
+/**
+ * 单位转换器，返回转换后的数值
+ * @param {string} type 例如："mmtom"
+ * @param {number} value 
+ * @returns {number} 
+ */
 export default function unitConverter(type, value) {
     let units = type.split("to");
     if (units.length != 2 || !units[0] || !units[1] || units[0] == units[1]) {
