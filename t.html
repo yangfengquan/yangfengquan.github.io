@@ -1,4 +1,12 @@
-"use strict"
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
 const length_unit = {
     "mm": {
         to_anchor: 1 / 1000
@@ -118,22 +126,6 @@ const speed_unit = {
         to_anchor: 1 / 3.6,
     }
 }
-const density_unit = {
-    "g/m3": {
-        to_anchor: 1 / 1000,
-    },
-    "kg/m3": {
-        to_anchor: 1,
-    }
-}
-const specificVolume_unit = {
-    "m3/g": {
-        to_anchor: 1000,
-    },
-    "m3/kg": {
-        to_anchor: 1,
-    }
-}
 const massFlowRate_unit = {
     "kg/s": {
         to_anchor: 1
@@ -150,60 +142,28 @@ const volumeFlowRate_unit = {
         to_anchor: 1 / 3600
     }
 }
+function converter(value, originalUnit, targetUnit) { 
+    if (originalUnit === targetUnit) {
+        return value;
+    }
 
-//基础单位
-const SI_unit = {
-    "SI": {
-        to_anchor: 1,
-        anchor_shift: 0
-    }
-}
-/**
- * 单位换算，并返回换算后数值
- * @param {number} value 
- * @param {string} originalUnit 
- * @param {string} destUnit 
- * @returns {number}
- */
-export default function unitConverter(value, originalUnit = "SI", destUnit = "SI") { 
-    if (originalUnit === destUnit) {
-        return value;
-    }
-    
     let unit = Object.assign({}, length_unit, mass_unit, time_unit, temperature_unit, 
-        pressure_unit, energy_unit, power_unit, force_unit, speed_unit, density_unit,
-        specificVolume_unit, massFlowRate_unit, volumeFlowRate_unit, SI_unit);
+        pressure_unit, energy_unit, power_unit, force_unit, speed_unit, massFlowRate_unit, volumeFlowRate_unit);
     
-    //缺少的单位，直接返回原数值。
-    if (!unit.hasOwnProperty(originalUnit) || !unit.hasOwnProperty(destUnit)) {
-        return value;
-    }
     //下列语句顺序不可修改
     value *= unit[originalUnit].to_anchor;
     if (unit[originalUnit].hasOwnProperty("anchor_shift")) {
         value += unit[originalUnit].anchor_shift;
     }
 
-    if (unit[destUnit].hasOwnProperty("anchor_shift")) {
-        value -= unit[destUnit].anchor_shift;
+    if (unit[targetUnit].hasOwnProperty("anchor_shift")) {
+        value -= unit[targetUnit].anchor_shift;
     }
-    value /= unit[destUnit].to_anchor;
+    value /= unit[targetUnit].to_anchor;
     
     return value;
 }
-
-export {
-    length_unit,
-    mass_unit,
-    time_unit,
-    temperature_unit,
-    pressure_unit,
-    energy_unit,
-    power_unit,
-    force_unit, 
-    speed_unit,
-    density_unit,
-    specificVolume_unit,
-    massFlowRate_unit,
-    volumeFlowRate_unit
-};
+       console.log(converter(1,"MPaA","MPa")); 
+    </script>
+</body>
+</html>

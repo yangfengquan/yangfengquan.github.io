@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <script src="JS/pipe2.js"></script>
     <script src="JS/link.js"></script>
 </head>
 <body>
@@ -41,13 +40,14 @@
         </div> 
     </div>
     <script type="module">
+        import * as unit from "./JS/unitConverter.js"
         import Fm from "./JS/fm.js";
+
         const urlSearchParams = new URLSearchParams(window.location.search);
         let url_fm = urlSearchParams.get('fm');
         const dataPath = 'data.json';
-        let response;
-        (function () {
-            
+        let response, fm;
+        (function () {    
             const xhr = new XMLHttpRequest();
             xhr.open('GET', dataPath, true);
             xhr.send();
@@ -58,9 +58,9 @@
                     createLinkEle(response);
                     
                     if (url_fm != '' && url_fm != null) {
+                        fm = new Fm(response[url_fm].form, response[url_fm].result);
                         document.title = response[url_fm].text;
 
-                        //fm = new Fm(response[url_fm].form, response[url_fm].result);
                         let formEle = document.getElementById("form");
                         createFormEle(response[url_fm].form, formEle);
                         let resultEle = document.getElementById("result");
@@ -114,58 +114,83 @@
             inputEle.className = inp.class
             groupEle.appendChild(inputEle)
         
-            if (inp.unit != '' && inp.hasOwnProperty("unit")) {
-                let spanEle = document.createElement('span')
-                spanEle.innerText = inp.unit
-                groupEle.appendChild(spanEle)
+            if (inp.hasOwnProperty("unitset")) {
+                groupEle.appendChild(createUnitSelect(inp.id, inp.unitset, inp.unit));
             }
 
             if (inp.other != '' && inp.hasOwnProperty("other")) {
-                let spanEle = document.createElement('span')
-                spanEle.innerText = inp.other
-                groupEle.appendChild(spanEle)
+                let spanEle = document.createElement('span');
+                spanEle.innerText = inp.other;
+                groupEle.appendChild(spanEle);
             }
             return groupEle
         }
 
         function createSelectEle(sel) {
-            let groupEle = document.createElement('div')
-            groupEle.className = sel.pclass
-            let labelEle = document.createElement('label')
-            labelEle.innerText = sel.name
-            labelEle.setAttribute('for', sel.id)
-            groupEle.appendChild(labelEle)
+            let groupEle = document.createElement('div');
+            groupEle.className = sel.pclass;
+            let labelEle = document.createElement('label');
+            labelEle.innerText = sel.name;
+            labelEle.setAttribute('for', sel.id);
+            groupEle.appendChild(labelEle);
         
-            let selectEle = document.createElement('select')
-            selectEle.setAttribute('name', sel.id)
-            selectEle.setAttribute('id', sel.id)
-            selectEle.setAttribute('autocomplete', 'on')
+            let selectEle = document.createElement('select');
+            selectEle.setAttribute('name', sel.id);
+            selectEle.setAttribute('id', sel.id);
+            selectEle.setAttribute('autocomplete', 'on');
             selectEle.required = sel.required
             selectEle.readOnly = sel.readonly
-            selectEle.setAttribute('onchange', sel.listener)
+            selectEle.setAttribute('onchange', sel.listener);
             sel.opts.forEach(opt => {
-                selectEle.add(new Option(opt.text, opt.value))
+                selectEle.add(new Option(opt.text, opt.value));
             });
-            selectEle.value = sel.value
-            groupEle.appendChild(selectEle)
+            selectEle.value = sel.value;
+            groupEle.appendChild(selectEle);
         
             if (sel.unit != '' && sel.hasOwnProperty("unit")) {
-                let spanEle = document.createElement('span')
-                spanEle.innerText = sel.unit
-                groupEle.appendChild(spanEle)
+                let spanEle = document.createElement('span');
+                spanEle.innerText = sel.unit;
+                groupEle.appendChild(spanEle);
             }
 
             if (sel.other != '' && sel.hasOwnProperty("other")) {
-                let spanEle = document.createElement('span')
-                spanEle.innerText = sel.other
-                groupEle.appendChild(spanEle)
+                let spanEle = document.createElement('span');
+                spanEle.innerText = sel.other;
+                groupEle.appendChild(spanEle);
             }
             
-            return groupEle
+            return groupEle;
         }
-        
+        function createUnitSelect(id, unitsetName, seld) {
+            let unitset = {}
+            if (unitsetName === "*") {//unitConverter缺少的单位集合
+                unitset[seld] = "";
+            } else {
+                unitset = unit[unitsetName]
+            }     
+            let selectEle = document.createElement("select");
+            selectEle.setAttribute('id', id + "-unit");
+            selectEle.className = "unit";
+            Object.keys(unitset).forEach(unit => {
+                selectEle.add(new Option(unit, unit));
+            });
+            selectEle.value = seld;
+            selectEle.addEventListener("change", function () {
+                let preUnit = fm.getUnit(id);
+                let curUnit = this.value;
+                fm.setUnit(id, this.value);
+
+                let preValue = document.getElementById(id).value;
+                if (preValue) {
+                    let curValue = unit.default(preValue, preUnit, curUnit);
+                    fm.setValue(id, curValue);
+                    document.getElementById(id).value = curValue;
+                }
+            });
+            
+            return selectEle;
+        }
         window.calc = function() {
-            let fm = new Fm(response[url_fm].form, response[url_fm].result);
             let f = fm.fillFormValue();
             if (f != 0) {
                 document.getElementById("warning").innerText = "警告：“" + f + "” 未正确填写！" ;
@@ -177,24 +202,22 @@
             } 
         }
         function pdf(){}
-    </script>
-    <script>
         var propObj = {
-            T:   {name: "温度",         unit: "C",        },
-            p:   {name: "压力",         unit: "MPaA",     },
-            h:   {name: "比焓",         unit: "kJ/kg",    },
-            v:   {name: "比体积",       unit: "m3/kg",    },
-            rho: {name: "密度",         unit: "kg/m3",    },
-            s:   {name: "比熵",         unit: "kJ/kg",    },
-            u:   {name: "内能",         unit: "kJ/kg",    },
-            Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)",},
-            Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)",},
-            w:   {name: "声速",         unit: "m/s",      },
-            my:  {name: "动力粘度",     unit: "Pa·s",     },
-            tc:  {name: "导热系数",     unit: "W/(m·K)",  },
-            st:  {name: "表面张力",     unit: "N/m",      },
-            x:   {name: "干度",         unit: "",         },
-            vx:  {name: "气态体积分数", unit: "",         }
+            T:   {name: "温度",         unit: "C",        unitset: "temperature_unit"},
+            p:   {name: "压力",         unit: "MPaA",     unitset: "pressure_unit"},
+            h:   {name: "比焓",         unit: "kJ/kg",    unitset: "*"},
+            v:   {name: "比体积",       unit: "m3/kg",    unitset: "specificVolume_unit"},
+            rho: {name: "密度",         unit: "kg/m3",    unitset: "density_unit"},
+            s:   {name: "比熵",         unit: "kJ/kg",    unitset: "*"},
+            u:   {name: "内能",         unit: "kJ/kg",    unitset: "*"},
+            Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)", unitset: "*"},
+            Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)", unitset: "*"},
+            w:   {name: "声速",         unit: "m/s",      unitset: "speed_unit"},
+            my:  {name: "动力粘度",     unit: "Pa·s",     unitset: "*"},
+            tc:  {name: "导热系数",     unit: "W/(m·K)",  unitset: "*"},
+            st:  {name: "表面张力",     unit: "N/m",      unitset: "*"},
+            x:   {name: "干度",         unit: "",},
+            vx:  {name: "气态体积分数", unit: "",}
         }
 
         var modes = [
@@ -207,7 +230,7 @@
                 ['h','s'],
                 ['h','rho']
             ]
-        function onWaterArg1Change() {
+        window.onWaterArg1Change = function() {
             let arg1 = document.getElementById('waterArg1').value;
 
             let arg2_ele = document.getElementById("waterArg2");
@@ -216,13 +239,29 @@
                 if (item[0] == arg1) {
                     arg2_ele.options.add(new Option(propObj[item[1]].name, item[1]));
                 }
-            })
-            document.getElementById('waterValue1').parentNode.lastChild.innerHTML = propObj[arg1].unit;
-            document.getElementById('waterValue2').parentNode.lastChild.innerHTML = propObj[arg2_ele.value].unit;
+            });
+
+            if (document.getElementById('waterValue1-unit')) {
+                document.getElementById('waterValue1-unit').remove();
+            }
+            if (document.getElementById('waterValue2-unit')) {
+                document.getElementById('waterValue2-unit').remove();
+            }
+            if (propObj[arg1].unitset) {
+                document.getElementById('waterValue1').parentNode.appendChild(createUnitSelect("waterValue1", propObj[arg1].unitset, propObj[arg1].unit))
+            }
+            if (propObj[arg2_ele.value].unitset) {
+                document.getElementById('waterValue2').parentNode.appendChild(createUnitSelect("waterValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
+            }
         }
-        function onWaterArg2Change() {
+        window.onWaterArg2Change = function() {
             let arg2_ele = document.getElementById("waterArg2");
-            document.getElementById('waterValue2').parentNode.lastChild.innerHTML = propObj[arg2_ele.value].unit;
+            if (document.getElementById('waterValue2-unit')) {
+                document.getElementById('waterValue2-unit').remove();
+            }
+            if (propObj[arg2_ele.value].unitset) {
+                document.getElementById('waterValue2').parentNode.appendChild(createUnitSelect("waterValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
+            }
         }
     </script>
 </body>

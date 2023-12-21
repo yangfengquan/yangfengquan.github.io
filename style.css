@@ -90,6 +90,9 @@ textarea {
 .short {
     width: 50px;
 }
+.unit {
+    margin-left: 5px;
+}
 #warning {
     color: #856404;
     background-color: #fff3cd;

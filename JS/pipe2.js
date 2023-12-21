@@ -6,7 +6,7 @@
  * @param {number} v 流速 m/s
  * @returns {number} 管径 m
  */
-function pipe_diameter(flowRate, v) {
+export function pipe_diameter(flowRate, v) {
     return 2 * Math.sqrt(flowRate / Math.PI / v)
 }
 
@@ -16,7 +16,7 @@ function pipe_diameter(flowRate, v) {
  * @param {number} di 内径 m
  * @returns {number} 流速 m/s
  */
-function pipe_velocity(flowRate, di) {
+export function pipe_velocity(flowRate, di) {
     return flowRate / (3.14 * di * di / 4);
 }
 
@@ -28,7 +28,7 @@ function pipe_velocity(flowRate, di) {
  * @param {number} rho 密度 kg/m3
  * @returns {number} 单重 kg/m
  */
-function pipe_weight(d, deta, rho = 7850) {
+export function pipe_weight(d, deta, rho = 7850) {
     return 3.14 * rho * (d - deta) * deta;
 }
 
@@ -94,57 +94,58 @@ const SCH_Delta = {
  * 查询管子外径、壁厚，计算管子单重
  * @param {string} dn 公称直径 例如‘DN20’
  * @param {string} sch 壁厚系列 例如‘SCH20’
- * @returns {object} {外径,壁厚,单重} {mm,mm,kg/m}
+ * @returns {object} {外径,壁厚,单重} {m,m,kg/m}
  */
-function pipe_size(dn, sch) {
+export function pipe_size(dn, sch) {
     let r = {}
     let i = Schs.indexOf(sch);
-    let d = D0[dn];
-    let delta = SCH_Delta[dn][i];
-    if (delta == undefined) {
+    let d = D0[dn] / 1000;
+    let delta = SCH_Delta[dn][i] / 1000;
+    if (delta === undefined) {
         alert(dn + "钢管无" + sch)
     }
    
-    let m = pipe_weight(d / 1000, delta / 1000);
+    let m = pipe_weight(d, delta);
     return {d: d, delta: delta, m: m};
 }
 
 /**
  * 计算直管壁厚 GB/T20801
- * @param {number} d 外径 mm
- * @param {number} p 设计压力 MPa
+ * @param {number} d 外径 m
+ * @param {number} p 设计压力 Pa
  * @param {number} s 设计温度下管道材料许用应力 MPa
  * @param {number} y 计算系数
  * @param {number} w 焊接接头高温降低系数
  * @param {number} phi 焊件的纵向焊接接头系数或铸件质量系数
  * @param {number} c1 材料负厚度偏差 %
- * @param {number} c2 腐蚀、冲蚀裕量 mm
- * @param {number} c3 机械加工深度 mm
- * @returns {object} [直管计算厚度,直管名义厚度] [mm,mm]
+ * @param {number} c2 腐蚀、冲蚀裕量 m
+ * @param {number} c3 机械加工深度 m
+ * @returns {object} [直管计算厚度,直管名义厚度] [m,m]
  */
-function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
-    let r = {};
-    r.t = p * d / (2 * (s * phi * w + p * y));
-    r.nt = t * (1 + c1 / 100) + c2 + c3;
+export function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
+    p /= 1e6;
+    let t = p * d / (2 * (s * phi * w + p * y));
+    let nt = t * (1 + c1 / 100) + c2 + c3;
 
-    return r;
+    return {t: t, nt: nt};
 }
 
 /**
  * 计算弯管壁厚 GB/T20801
- * @param {number} d 外径 mm
- * @param {number} p 设计压力 MPa
+ * @param {number} d 外径 m
+ * @param {number} p 设计压力 Pa
  * @param {number} s 设计温度下管道材料许用应力 MPa
  * @param {number} y 计算系数
  * @param {number} w 焊接接头高温降低系数
  * @param {number} phi 焊件的纵向焊接接头系数或铸件质量系数
  * @param {number} c1 材料负厚度偏差 %
- * @param {number} c2 腐蚀、冲蚀裕量 mm
- * @param {number} c3 机械加工深度 mm
- * @param {number} r 弯管或弯头在管子中心线处的弯曲半径 mm
- * @returns {object} [内侧计算厚度,内侧名义厚度,外侧计算厚度,外侧名义厚度,中心侧计算厚度,中心侧名义厚度] [mm,mm,mm,mm,mm,mm]
+ * @param {number} c2 腐蚀、冲蚀裕量 m
+ * @param {number} c3 机械加工深度 m
+ * @param {number} r 弯管或弯头在管子中心线处的弯曲半径 m
+ * @returns {object} [内侧计算厚度,内侧名义厚度,外侧计算厚度,外侧名义厚度,中心侧计算厚度,中心侧名义厚度] [m,m,m,m,m,m]
  */
-function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
+export function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
+    p /= 1e6;
     let tw = function (i) {
         return p * d / (2 * (s * phi * w / i + p * y));
     }
@@ -264,7 +265,7 @@ function pipe_fDpK(flowRate, di, ksum, rho) {
  * @param {number} rho density [kg/m3]
  * @returns {number} [Pa]
  */
-function pipe_fDpK(flowRate, di, le, rho, mu) {
+function pipe_fDpl(flowRate, di, le, rho, mu) {
     var ve = pipe_velocity(flowRate, di);
     var re = reynolds(di, ve, rho, mu);
     var lambda = resistace(re, di, e);
@@ -314,20 +315,20 @@ function p2(pd1, p1, kt) {
 
 /**
  * 绝热材料在平均温度下的导热系数
- * @param {number} t0 管道或设备的外表面温度[C]
- * @param {number} ta 环境温度[C]
+ * @param {number} t0 管道或设备的外表面温度[K]
+ * @param {number} ta 环境温度[K]
  * @param {number[]} coefArgs 绝热材料系数
  * @returns {number} [W/(m*K)]
  */
 function insul_lambda(t0, ta, coefArgs) {
-	let tm = 0.5 * (t0 + ta);
+	let tm = 0.5 * (t0 + ta) - 273.15;
     return coefArgs[0] + coefArgs[1] * (tm - coefArgs[2]) + coefArgs[3] * Math.pow(tm - coefArgs[4], 2) + coefArgs[5] * Math.pow(tm - coefArgs[6], 3);
 }
 
 /**
  * 外表面温度计算，GB50264公式5.3.11，假定外表面温度，迭代计算
- * @param {number} t0 管道或设备的外表面温度[C]
- * @param {number} ta 环境温度[C]
+ * @param {number} t0 管道或设备的外表面温度[k]
+ * @param {number} ta 环境温度[k]
  * @param {number} w 风速[m/s]
  * @param {number} d0 管道或设备外径[m]
  * @param {number} d1 内层绝热层外径[m]
@@ -352,9 +353,9 @@ function insul_ts(t0, ta, w, d0, d1, lambda, epsilon) {
 /**
  * 已知Q，计算绝热结构的外表面温度，GB50264公式5.5.1
  * @param {number} Q 以每平方米绝热层外表面积表示的热损失量[W/m2]
- * @param {number} ta 环境温度[C]
+ * @param {number} ta 环境温度[k]
  * @param {number} alpha 对流换热系数[W/(m2*K)]
- * @returns {number} [C]
+ * @returns {number} [k]
  */
 function ts_Q(Q, ta, alpha) {
     return Q / alpha + ta;
@@ -362,8 +363,8 @@ function ts_Q(Q, ta, alpha) {
 
 /**
  * 已知最大允许热损失，计算Lc，Lc=d1ln(d1/d0)，GB50264公式5.3.3-1
- * @param {number} t0 管道或设备的外表面温度[C]
- * @param {number} ta 环境温度[C]
+ * @param {number} t0 管道或设备的外表面温度[K]
+ * @param {number} ta 环境温度[K]
  * @param {number} Q 以每平方米绝热层外表面积表示的热损失量[W/m2]
  * @param {number} lambda 绝热材料在平均温度下的导热系数[W/(m*K)]
  * @param {number} alphas 对流换热系数[W/(m2*K)]
@@ -375,9 +376,9 @@ function lc_Q(t0, ta, Q, lambda, alphas) {
 
 /**
  * 已知表面温度，计算特征长度，GB50264公式5.3.11
- * @param {number} t0 管道或设备的外表面温度[C]
- * @param {number} ta 环境温度[C]
- * @param {number} ts 绝热层外表面温度[C]
+ * @param {number} t0 管道或设备的外表面温度[K]
+ * @param {number} ta 环境温度[K]
+ * @param {number} ts 绝热层外表面温度[K]
  * @param {number} lambda 绝热材料在平均温度下的导热系数[W/(m*K)]
  * @param {number} alphas 对流换热系数[W/(m2*K)]
  * @returns {number}
@@ -388,8 +389,8 @@ function lc_ts(t0, ta, ts, lambda, alphas) {
 
 /**
  * 圆筒型单层绝热结构热、冷损失量计算，GB50264公式：5.4.3-1
- * @param {number} t0 管道或设备的外表面温度[C]
- * @param {number} ta 环境温度[C]
+ * @param {number} t0 管道或设备的外表面温度[K]
+ * @param {number} ta 环境温度[K]
  * @param {number} d0 管道或设备外径[m]
  * @param {number} d1 内层绝热层外径[m]
  * @param {number} lambda 绝热材料在平均温度下的导热系数[W/(m*K)]
@@ -412,14 +413,16 @@ function insul_q(Q, d1) {
 
 /**
  * 表面换热系数计算，GB50264公式5.8.4
- * @param {number} ts 绝热层外表面温度[C]
- * @param {number} ta 环境温度[C]
+ * @param {number} ts 绝热层外表面温度[K]
+ * @param {number} ta 环境温度[K]
  * @param {number} w 风速[m/s]
  * @param {number} d1 内层绝热层外径[m]
  * @param {number} epsilon 绝热结构外面材料的黑度
  * @returns {number} 对流换热系数 [W/(m2*K)]
  */
 function insul_alpha(ts, ta, w, d1, epsilon) {
+    ts -= 273.15;
+    ta -= 273.15;
 	let alpha_r = 5.669 * epsilon / (ts - ta) * (Math.pow((273 + ts) / 100, 4) - Math.pow((273 + ta) / 100, 4));
 	let alpha_c;
 	if (w == 0) {
@@ -462,24 +465,26 @@ function insul_bH(a_h, f, qTotal) {
  * @param {number} d0 管道外径[m]
  * @param {number} d1 保温外径[m]
  * @param {number} l 管道长度[m]
- * @param {number} a_t 始端温度[C]
- * @param {number} a_p 始端压力[MPaA]
- * @param {number} b_p 末端压力[MPaA]
- * @param {number} ta 环境温度[C]
+ * @param {number} a_t 始端温度[k]
+ * @param {number} a_p 始端压力[Pa]
+ * @param {number} b_p 末端压力[Pa]
+ * @param {number} ta 环境温度[k]
  * @param {number} lambda 绝热材料在平均温度下的导热系数[W/(m*K)]
  * @param {number} alpha 对流换热系数 [W/(m2*K)]
- * @returns {number} 道或设备外表面平均温度[C]
+ * @returns {number} 道或设备外表面平均温度[k]
  */
 function insul_t0(flowRate, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
-	var t0 = a_t, Q, q, b_h, b_t, qbr;
+	a_p = a_p / 1e6 + 0.101325;
+    b_p = b_p / 1e6 + 0.101325;
+    var t0 = a_t, Q, q, b_h, b_t;
     var t0_tmp; // = t_A;
     do {
         t0_tmp = t0;
         Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
         q = insul_q(Q, d1);
 		
-        b_h = insul_bH(h_pT(a_p, a_t + 273.15), f, q * l);
-		b_t = T_ph(b_p, b_h) - 273.15;
+        b_h = insul_bH(h_pT(a_p, a_t), flowRate, q * l);
+		b_t = T_ph(b_p, b_h);
         t0 = (a_t + b_t) / 2;
     } while (Math.abs(t0 - t0_tmp) > 0.01);
     return t0;
@@ -487,8 +492,8 @@ function insul_t0(flowRate, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
 
 /**
  * 已知绝热厚度，计算绝热材料传热系数、表面对流换热系数、表面温度、单位面积传热量、单位长度传热量
- * @param {number} t0 管道或设备的外表面温度[C]
- * @param {number} ta 环境温度[C]
+ * @param {number} t0 管道或设备的外表面温度[k]
+ * @param {number} ta 环境温度[k]
  * @param {number} w 风速[m/s]
  * @param {number} d0 管道或设备外径[m]
  * @param {number} d1 内层绝热层外径[m]
@@ -496,7 +501,7 @@ function insul_t0(flowRate, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
  * @param {number} epsilon 绝热结构外面材料的黑度
  * @returns {object} [绝热材料传热系数,表面对流换热系数,表面温度,单位面积传热量,单位长度传热量] [W/(m*K),W/(m2*K),C,W/m2,w/m]
  */
-function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
+export function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
     let r = {};
     r.lambda = insul_lambda(t0, ta, lambdaArgs);
     r.ts = insul_ts(t0, ta, w, d0, d1, lambda, epsilon);
@@ -510,8 +515,8 @@ function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
 /**
  * 蒸汽管道阻力和绝热计算
  * @param {number} flowRate 流量[kg/s]
- * @param {number} a_t 始端温度[C]
- * @param {number} a_p 始端压力[MPaA]
+ * @param {number} a_t 始端温度[k]
+ * @param {number} a_p 始端压力[Pa]
  * @param {number} di 管道内径[m]
  * @param {number} d0 管道外径[m]
  * @param {number} d1 绝热外径[m]
@@ -522,22 +527,24 @@ function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
  * @param {number} delta2 保温厚度[m]
  * @param {number[]} lambdaArgs 绝热材料传热系数计算系数
  * @param {number} epsilon 绝热结构外面材料的黑度
- * @param {number} ta 环境温度[C]
+ * @param {number} ta 环境温度[k]
  * @param {number} w 风速[m/s]
  * @returns {object} 
  */
-function water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w) {
+export function water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w) {
+    a_p = a_p / 1e6 + 0.101325;
+    
     let lp = ll + lf;
 
-    let a_h = h_pT(a_p, a_t + 273.15);
-    let a_rho = rho_pT(a_p, a_t + 273.15);
+    let a_h = h_pT(a_p, a_t);
+    let a_rho = rho_pT(a_p, a_t);
     let a_x = x_ph(a_p, a_h);
     let a_f_gas = flowRate * a_x;
     let a_f_liquid = flowRate * (1 - a_x);
     let a_ve = pipe_velocity(flowRate / a_rho, di);
     let a_pd = pd(a_ve, 1 / a_rho);
 
-    let re = reynolds(di, a_ve, a_rho, my_pT(a_p, a_t + 273.15));
+    let re = reynolds(di, a_ve, a_rho, my_pT(a_p, a_t));
     let resis = resistace(re, di, rough);
     let kt0 = kt(resis, lp, di);
 
@@ -551,13 +558,13 @@ function water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, e
     let q = insul_q(Q, d1);
 
     let b_h = insul_bH(a_h, flowRate, q * li);
-    let b_t = T_ph(b_p, b_h) - 273.15;
+    let b_t = T_ph(b_p, b_h);
     let b_rho = rho_ph(b_p, b_h);
     let b_x = x_ph(b_p, b_h);
     let b_f_gas = flowRate * b_x;
     let b_f_liquid = flowRate * (1 - b_x);
     let b_ve = pipe_velocity(flowRate / b_rho, di);
 
-    return {dp: a_p - b_p, dt: a_t - b_t, lambda: lambda, alpha: alpha, ts: ts, Q: Q, q: q, tq: q * li, b_p: b_p, b_t: b_t, a_f_gas: a_f_gas,
+    return {dp: (a_p - b_p) * 1e6 - 101325, dt: a_t - b_t, lambda: lambda, alpha: alpha, ts: ts, Q: Q, q: q, tq: q * li, b_p: b_p * 1e6 - 101325, b_t: b_t, a_f_gas: a_f_gas,
         a_f_liquid: a_f_liquid, b_f_gas: b_f_gas, b_f_liquid: b_f_liquid, a_ve: a_ve, b_ve: b_ve, a_h: a_h, b_h: b_h, a_x: a_x, b_x: b_x};
 }
