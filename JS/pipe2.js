@@ -532,39 +532,41 @@ export function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
  * @returns {object} 
  */
 export function water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w) {
-    a_p = a_p / 1e6 + 0.101325;
-    
+    let a_p_a = a_p / 1e6 + 0.101325;
+    console.log(a_p_a);
     let lp = ll + lf;
 
-    let a_h = h_pT(a_p, a_t);
-    let a_rho = rho_pT(a_p, a_t);
-    let a_x = x_ph(a_p, a_h);
+    let a_h = h_pT(a_p_a, a_t);
+    let a_rho = rho_pT(a_p_a, a_t);
+    let a_x = x_ph(a_p_a, a_h);
+
     let a_f_gas = flowRate * a_x;
     let a_f_liquid = flowRate * (1 - a_x);
     let a_ve = pipe_velocity(flowRate / a_rho, di);
     let a_pd = pd(a_ve, 1 / a_rho);
 
-    let re = reynolds(di, a_ve, a_rho, my_pT(a_p, a_t));
+    let re = reynolds(di, a_ve, a_rho, my_pT(a_p_a, a_t));
     let resis = resistace(re, di, rough);
     let kt0 = kt(resis, lp, di);
 
-    let b_p = p2(a_pd, a_p * 1e6, kt0) / 1e6;
+    let b_p = p2(a_pd, a_p, kt0);
+    let b_p_a = b_p / 1e6 + 0.101325;
 
     let lambda = insul_lambda(a_t, ta, lambdaArgs);
     let ts = insul_ts(a_t, ta, w, d0, d1, lambda, epsilon);
     let alpha = insul_alpha(ts, ta, w, d1, epsilon);
-    let t0 = insul_t0(flowRate, d0, d1, li, a_t, a_p, b_p, ta, lambda, alpha);
+    let t0 = insul_t0(flowRate, d0, d1, ll, a_t, a_p, b_p, ta, lambda, alpha);
     let Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
     let q = insul_q(Q, d1);
 
-    let b_h = insul_bH(a_h, flowRate, q * li);
-    let b_t = T_ph(b_p, b_h);
-    let b_rho = rho_ph(b_p, b_h);
-    let b_x = x_ph(b_p, b_h);
+    let b_h = insul_bH(a_h, flowRate, q * ll);
+    let b_t = T_ph(b_p_a, b_h);
+    let b_rho = rho_ph(b_p_a, b_h);
+    let b_x = x_ph(b_p_a, b_h);
     let b_f_gas = flowRate * b_x;
     let b_f_liquid = flowRate * (1 - b_x);
     let b_ve = pipe_velocity(flowRate / b_rho, di);
 
-    return {dp: (a_p - b_p) * 1e6 - 101325, dt: a_t - b_t, lambda: lambda, alpha: alpha, ts: ts, Q: Q, q: q, tq: q * li, b_p: b_p * 1e6 - 101325, b_t: b_t, a_f_gas: a_f_gas,
+    return {dp: (a_p - b_p), dt: a_t - b_t, lambda: lambda, alpha: alpha, ts: ts, Q: Q, q: q, tq: q * ll, b_p: b_p, b_t: b_t, a_f_gas: a_f_gas,
         a_f_liquid: a_f_liquid, b_f_gas: b_f_gas, b_f_liquid: b_f_liquid, a_ve: a_ve, b_ve: b_ve, a_h: a_h, b_h: b_h, a_x: a_x, b_x: b_x};
 }

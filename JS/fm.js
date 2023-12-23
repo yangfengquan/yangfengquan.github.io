@@ -21,6 +21,9 @@ export default class Fm {
         }
         return false;
     }
+    getSiValue(key){
+        return unitConverter(this.getValue(key), this.getUnit(key));
+    }
     getUnit(key){
         let d = this._form.concat(this._result);
         for (let i = 0; i < d.length; i++) {
@@ -49,6 +52,16 @@ export default class Fm {
             }
         }
         return false;
+    }
+    setValueWithSi(key, value){
+        this.setValue(key, unitConverter(value, "SI", this.getUnit(key)));
+    }
+    setValuesWithSi(valuesObj){
+        for (const key in valuesObj) {
+            if (Object.hasOwnProperty.call(valuesObj, key)) {
+                this.setValueWithSi(key, valuesObj[key]);
+            }
+        }
     }
     setUnit(key, unit){
         for (let i = 0; i < this._form.length; i++) {
@@ -86,14 +99,14 @@ export default class Fm {
         });
     }
     pipeDiameter() {
-        let flowRate = unitConverter(this.getValue("flowRate"), this.getUnit("flowRate"), "SI");
-        let v = unitConverter(this.getValue("v"), this.getUnit("v"), "SI");
-        this.setValue("di", unitConverter(pipe_diameter(flowRate, v), 'SI', this.getUnit("di"),));    
+        let flowRate = this.getSiValue("flowRate");
+        let v = this.getSiValue("v");
+        this.setValueWithSi("di", pipe_diameter(flowRate, v));
     }
     pipeVelocity() {
-        let flowRate = unitConverter(this.getValue("flowRate"), this.getUnit("flowRate"), "SI");
-        let di = unitConverter(this.getValue("di"), this.getUnit("di"), "SI");
-        this.setValue("v", unitConverter(pipe_velocity(flowRate, di), 'm/s', this.getUnit("v")));
+        let flowRate = this.getSiValue("flowRate");
+        let di = this.getSiValue("di");
+        this.setValue("v", pipe_velocity(flowRate, di));
     }
     pipeWeight() {
         let d = unitConverter(this.getValue("d"), this.getUnit("d"), "SI", );
@@ -190,12 +203,8 @@ export default class Fm {
         let di = d0 - 2 * delta;
         let d1 = d0 + 2 * insuldelta;
         let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w);
-        
-        for (const key in wp) {
-            if (Object.hasOwnProperty.call(wp, key)) {
-                this.setValue(unitConverter(wp[key], "SI", this.getUnit(key)));
-            }
-        }
+
+        this.setValuesWithSi(wp);
     }
     pumpPower() {
 
