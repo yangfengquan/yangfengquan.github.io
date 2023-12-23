@@ -3723,48 +3723,51 @@ function Surface_Tension_T(T) {
 }
 
 function pT(p, T) {
-	let fn_return_value = {}
-	fn_return_value.p = p
-	fn_return_value.T = T
-	fn_return_value.h = h_pT(p, T)
-	fn_return_value.v = v_pT(p, T)
-	fn_return_value.rho = rho_pT(p, T)
-	fn_return_value.s = s_pT(p, T)
-	fn_return_value.u = u_pT(p, T)
-	fn_return_value.Cp = Cp_pT(p, T)
-	fn_return_value.Cv = Cv_pT(p, T)
-	fn_return_value.w = w_pT(p, T)
-	fn_return_value.my = my_pT(p, T)
-	fn_return_value.tc = tc_pT(p, T)
-	fn_return_value.st = st_T(T)
-	fn_return_value.x = x_ph(p, fn_return_value.h)
-	fn_return_value.vx = vx_ph(p, fn_return_value.h)
-	return fn_return_value
+	p /= 1e6;
+	let fn_return_value = {};
+	fn_return_value.p = p * 1e6;
+	fn_return_value.T = T;
+	fn_return_value.h = h_pT(p, T);
+	fn_return_value.v = v_pT(p, T);
+	fn_return_value.rho = rho_pT(p, T);
+	fn_return_value.s = s_pT(p, T);
+	fn_return_value.u = u_pT(p, T);
+	fn_return_value.Cp = Cp_pT(p, T);
+	fn_return_value.Cv = Cv_pT(p, T);
+	fn_return_value.w = w_pT(p, T);
+	fn_return_value.my = my_pT(p, T);
+	fn_return_value.tc = tc_pT(p, T);
+	fn_return_value.st = st_T(T);
+	fn_return_value.x = x_ph(p, fn_return_value.h);
+	fn_return_value.vx = vx_ph(p, fn_return_value.h);
+	return fn_return_value;
 }
 
 function ph(p, h) {
-	let fn_return_value = {}
-	fn_return_value.p = p
-	fn_return_value.h = h
-	fn_return_value.T = T_ph(p, h)
-	fn_return_value.v = v_ph(p, h)
-	fn_return_value.rho = rho_ph(p, h)
-	fn_return_value.s = s_ph(p, h)
-	fn_return_value.u = u_ph(p, h)
-	fn_return_value.Cp = Cp_ph(p, h)
-	fn_return_value.Cv = Cv_ph(p, h)
-	fn_return_value.w = w_ph(p, h)
-	fn_return_value.my = my_ph(p, h)
-	fn_return_value.tc = tc_ph(p, h)
-	fn_return_value.st = st_T(fn_return_value.T)
-	fn_return_value.x = x_ph(p, fn_return_value.h)
-	fn_return_value.vx = vx_ph(p, fn_return_value.h)
+	p /= 1e6;
+	let fn_return_value = {};
+	fn_return_value.p = p * 1e6;
+	fn_return_value.h = h;
+	fn_return_value.T = T_ph(p, h);
+	fn_return_value.v = v_ph(p, h);
+	fn_return_value.rho = rho_ph(p, h);
+	fn_return_value.s = s_ph(p, h);
+	fn_return_value.u = u_ph(p, h);
+	fn_return_value.Cp = Cp_ph(p, h);
+	fn_return_value.Cv = Cv_ph(p, h);
+	fn_return_value.w = w_ph(p, h);
+	fn_return_value.my = my_ph(p, h);
+	fn_return_value.tc = tc_ph(p, h);
+	fn_return_value.st = st_T(fn_return_value.T);
+	fn_return_value.x = x_ph(p, fn_return_value.h);
+	fn_return_value.vx = vx_ph(p, fn_return_value.h);
 	return fn_return_value
 }
 
 function ps(p, s) {
+	p /= 1e6;
 	let fn_return_value = {}
-	fn_return_value.p = p
+	fn_return_value.p = p * 1e6;
 	fn_return_value.s = s
 	fn_return_value.T = T_ps(p, s)
 	fn_return_value.h = h_ps(p, s)
@@ -3783,8 +3786,9 @@ function ps(p, s) {
 }
 
 function prho(p, rho) {
+	p /= 1e6;
 	let fn_return_value = {}
-	fn_return_value.p = p
+	fn_return_value.p = p * 1e6;
 	fn_return_value.rho = rho
 	fn_return_value.h = h_prho(p, rho)
 	fn_return_value.T = T_ph(p, fn_return_value.h)
@@ -3803,8 +3807,9 @@ function prho(p, rho) {
 }
 
 function px(p, x) {
+	p /= 1e6;
 	let fn_return_value = {}
-	fn_return_value.p = p
+	fn_return_value.p = p * 1e6;
 	fn_return_value.x = x
 	fn_return_value.T = Tsat_p(p)
 	fn_return_value.h = h_px(p, x)
@@ -3826,19 +3831,20 @@ function Tx(T, x) {
 	let fn_return_value = {}
 	fn_return_value.T = T
 	fn_return_value.x = x
-	fn_return_value.p = psat_T(T)
+	let p = psat_T(T)
 	fn_return_value.h = h_Tx(T, x)
-	fn_return_value.v = v_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.rho = rho_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.s = s_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.u = u_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.Cp = Cp_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.Cv = Cv_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.w = w_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.my = my_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.tc = tc_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.v = v_ph(p, fn_return_value.h)
+	fn_return_value.rho = rho_ph(p, fn_return_value.h)
+	fn_return_value.s = s_ph(p, fn_return_value.h)
+	fn_return_value.u = u_ph(p, fn_return_value.h)
+	fn_return_value.Cp = Cp_ph(p, fn_return_value.h)
+	fn_return_value.Cv = Cv_ph(p, fn_return_value.h)
+	fn_return_value.w = w_ph(p, fn_return_value.h)
+	fn_return_value.my = my_ph(p, fn_return_value.h)
+	fn_return_value.tc = tc_ph(p, fn_return_value.h)
 	fn_return_value.st = st_T(fn_return_value.T)
-	fn_return_value.vx = vx_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.vx = vx_ph(p, fn_return_value.h)
+	fn_return_value.p = p * 1e6;
 	return fn_return_value
 }
 
@@ -3847,18 +3853,19 @@ function hs(h, s) {
 	fn_return_value.h = h
 	fn_return_value.s = s
 	fn_return_value.T = T_hs(h, s)
-	fn_return_value.p = p_hs(h, s)
-	fn_return_value.v = v_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.rho = rho_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.u = u_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.Cp = Cp_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.Cv = Cv_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.w = w_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.my = my_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.tc = tc_ph(fn_return_value.p, fn_return_value.h)
+	let p = p_hs(h, s)
+	fn_return_value.v = v_ph(p, fn_return_value.h)
+	fn_return_value.rho = rho_ph(p, fn_return_value.h)
+	fn_return_value.u = u_ph(p, fn_return_value.h)
+	fn_return_value.Cp = Cp_ph(p, fn_return_value.h)
+	fn_return_value.Cv = Cv_ph(p, fn_return_value.h)
+	fn_return_value.w = w_ph(p, fn_return_value.h)
+	fn_return_value.my = my_ph(p, fn_return_value.h)
+	fn_return_value.tc = tc_ph(p, fn_return_value.h)
 	fn_return_value.st = st_T(fn_return_value.T)
-	fn_return_value.x = x_ph(fn_return_value.p, h)
-	fn_return_value.vx = vx_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.x = x_ph(p, h)
+	fn_return_value.vx = vx_ph(p, fn_return_value.h)
+	fn_return_value.p = p * 1e6;
 	return fn_return_value
 }
 
@@ -3866,18 +3873,21 @@ function hrho(h, rho) {
 	let fn_return_value = {}
 	fn_return_value.h = h
 	fn_return_value.rho = rho
-	fn_return_value.p = p_hrho(h, rho)
-	fn_return_value.T = T_ph(fn_return_value.p, h)
-	fn_return_value.v = v_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.s = s_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.u = u_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.Cp = Cp_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.Cv = Cv_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.w = w_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.my = my_ph(fn_return_value.p, fn_return_value.h)
-	fn_return_value.tc = tc_ph(fn_return_value.p, fn_return_value.h)
+	let p = p_hrho(h, rho)
+	fn_return_value.T = T_ph(p, h)
+	fn_return_value.v = v_ph(p, fn_return_value.h)
+	fn_return_value.s = s_ph(p, fn_return_value.h)
+	fn_return_value.u = u_ph(p, fn_return_value.h)
+	fn_return_value.Cp = Cp_ph(p, fn_return_value.h)
+	fn_return_value.Cv = Cv_ph(p, fn_return_value.h)
+	fn_return_value.w = w_ph(p, fn_return_value.h)
+	fn_return_value.my = my_ph(p, fn_return_value.h)
+	fn_return_value.tc = tc_ph(p, fn_return_value.h)
 	fn_return_value.st = st_T(fn_return_value.T)
-	fn_return_value.x = x_ph(fn_return_value.p, h)
-	fn_return_value.vx = vx_ph(fn_return_value.p, fn_return_value.h)
+	fn_return_value.x = x_ph(p, h)
+	fn_return_value.vx = vx_ph(p, fn_return_value.h)
+	fn_return_value.p = p * 1e6
 	return fn_return_value
 }
+
+export {pT, ph, ps, prho, px, Tx, hs, hrho}

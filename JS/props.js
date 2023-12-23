@@ -2,17 +2,9 @@
  * 
  * @param {*} rows 
  */
-function waterprops(rows) {
-    let name1 = rows[1].value;
-    let name2 = rows[3].value;
-    let value1 = parseFloat(rows[2].value)
-    let value2 = parseFloat(rows[4].value)
-    if (name1 == 'T') {
-        value1 += 273.15
-    }
-    if (name2 == 'T') {
-        value2 += 273.15
-    }
+
+
+function waterprops(name1, value1, name2, value2) {
     let res = eval(name1 + name2)(value1, value2);
     return [
         res.p,

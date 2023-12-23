@@ -1,12 +1,11 @@
+"use strict"
 /**
- * 
- * @param {*} flowRate 
- * @param {*} h 
- * @param {*} rho 
- * @param {*} eta 
- * @returns 
+ * 计算泵轴功率
+ * @param {number} flowRate 流量 kg/s
+ * @param {number} h 扬程 m
+ * @param {number} eta 效率 ＜1
+ * @returns {number} 轴功率 W
  */
-function pump_power(flowRate, h, rho, eta) {
-    eta /= 100;
-    return flowRate * h * 9.81 * rho / 3600 / eta / 1000;
+export function pump_power(flowRate, h, eta) {
+    return flowRate * h * 9.81  / eta;
 }

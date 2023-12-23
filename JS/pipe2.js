@@ -117,7 +117,7 @@ export function pipe_size(dn, sch) {
  * @param {number} y 计算系数
  * @param {number} w 焊接接头高温降低系数
  * @param {number} phi 焊件的纵向焊接接头系数或铸件质量系数
- * @param {number} c1 材料负厚度偏差 %
+ * @param {number} c1 材料负厚度偏差 ＜1 %
  * @param {number} c2 腐蚀、冲蚀裕量 m
  * @param {number} c3 机械加工深度 m
  * @returns {object} [直管计算厚度,直管名义厚度] [m,m]
@@ -125,7 +125,7 @@ export function pipe_size(dn, sch) {
 export function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
     p /= 1e6;
     let t = p * d / (2 * (s * phi * w + p * y));
-    let nt = t * (1 + c1 / 100) + c2 + c3;
+    let nt = t * (1 + c1) + c2 + c3;
 
     return {t: t, nt: nt};
 }

@@ -140,6 +140,9 @@ const massFlowRate_unit = {
     },
     "kg/h": {
         to_anchor: 1 / 3600
+    },
+    "t/h": {
+        to_anchor: 1 / 3.6
     }
 }
 const volumeFlowRate_unit = {

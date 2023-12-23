@@ -2,8 +2,8 @@
 <html>
 
   <head>
-    <script src="./docx/index.umd.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <script src="./js/docx/docx.umd.js"></script>
+    <script src="./js/docx/FileSaver.js"></script>
   </head>
 
   <body>
@@ -14,144 +14,165 @@
 
     <script>
       function generate() {
-        const doc = new Document({
-    sections: [
-        {
-            children: [new docx.Paragraph("Hello World")],
-        },
-        {
-            properties: {
-                page: {
-                    pageNumbers: {
-                        start: 1,
-                        formatType: docx.NumberFormat.DECIMAL,
+        const doc = new docx.Document({
+            creator: window.location.hostname,
+            title: "Report",
+            description: "yangshu.gitee.io",
+            styles: {
+            paragraphStyles: [
+                {
+                    id: "Heading1",
+                    name: "Heading 1",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    quickFormat: true,
+                    run: {
+                        size: 28,
+                        bold: true,
+                        italics: true,
+                    },
+                    paragraph: {
+                        spacing: {
+                            after: 120,
+                        },
                     },
                 },
-            },
-            headers: {
-                default: new docx.Header({
-                    children: [new docx.Paragraph("First Default Header on another page")],
-                }),
-            },
-            footers: {
-                default: new docx.Footer({
-                    children: [new docx.Paragraph("Footer on another page")],
-                }),
-            },
-
-            children: [new docx.Paragraph("hello")],
-        },
-        {
-            properties: {
-                page: {
-                    size: {
-                        orientation: docx.PageOrientation.LANDSCAPE,
+                {
+                    id: "Heading2",
+                    name: "Heading 2",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    quickFormat: true,
+                    run: {
+                        size: 26,
+                        bold: true,
+                        underline: {
+                            type: docx.UnderlineType.DOUBLE,
+                            color: "FF0000",
+                        },
                     },
-                    pageNumbers: {
-                        start: 1,
-                        formatType: docx.NumberFormat.DECIMAL,
+                    paragraph: {
+                        spacing: {
+                            before: 240,
+                            after: 120,
+                        },
                     },
                 },
-            },
-            headers: {
-                default: new docx.Header({
-                    children: [new docx.Paragraph("Second Default Header on another page")],
-                }),
-            },
-            footers: {
-                default: new docx.Footer({
-                    children: [new docx.Paragraph("Footer on another page")],
-                }),
-            },
-            children: [new docx.Paragraph("hello in landscape")],
-        },
-        {
-            properties: {
-                page: {
-                    size: {
-                        orientation: docx.PageOrientation.PORTRAIT,
+                {
+                    id: "content",
+                    name: "content",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        size: 13 * 2,
+                        font: "宋体"
+                    }
+                },
+                {
+                    id: "aside",
+                    name: "Aside",
+                    basedOn: "Normal",
+                    next: "Normal",
+                    run: {
+                        color: "999999",
+                        italics: true,
+                    },
+                    paragraph: {
+                        indent: {
+                            left: 720,
+                        },
+                        spacing: {
+                            line: 276,
+                        },
                     },
                 },
-            },
-            headers: {
-                default: new docx.Header({
-                    children: [
-                        new docx.Paragraph({
-                            children: [
-                                new docx.TextRun({
-                                    children: ["Page number: ", docx.PageNumber.CURRENT],
-                                }),
-                            ],
-                        }),
-                    ],
-                }),
-            },
-
-            children: [new docx.Paragraph("Page number in the header must be 2, because it continues from the previous section.")],
-        },
-        {
-            properties: {
-                page: {
-                    size: {
-                        orientation: docx.PageOrientation.PORTRAIT,
-                    },
-                    pageNumbers: {
-                        formatType: docx.NumberFormat.UPPER_ROMAN,
+                {
+                    id: "wellSpaced",
+                    name: "Well Spaced",
+                    basedOn: "Normal",
+                    quickFormat: true,
+                    paragraph: {
+                        spacing: { line: 276, before: 20 * 72 * 0.1, after: 20 * 72 * 0.05 },
                     },
                 },
-            },
-            headers: {
-                default: new docx.Header({
-                    children: [
-                        new docx.Paragraph({
-                            children: [
-                                new docx.TextRun({
-                                    children: ["Page number: ", docx.PageNumber.CURRENT],
-                                }),
-                            ],
-                        }),
-                    ],
-                }),
-            },
-            children: [
-                new docx.Paragraph(
-                    "Page number in the header must be III, because it continues from the previous section, but is defined as upper roman.",
-                ),
+                {
+                    id: "ListParagraph",
+                    name: "List Paragraph",
+                    basedOn: "Normal",
+                    quickFormat: true,
+                },
             ],
         },
-        {
-            properties: {
-                page: {
-                    size: {
-                        orientation: docx.PageOrientation.PORTRAIT,
-                    },
-                    pageNumbers: {
-                        start: 25,
-                        formatType: docx.NumberFormat.DECIMAL,
-                    },
-                },
-            },
-            headers: {
-                default: new docx.Header({
-                    children: [
-                        new docx.Paragraph({
-                            children: [
-                                new docx.TextRun({
-                                    children: ["Page number: ", docx.PageNumber.CURRENT],
-                                }),
-                            ],
-                        }),
+        numbering: {
+            config: [
+                {
+                    reference: "my-crazy-numbering",
+                    levels: [
+                        {
+                            level: 0,
+                            format: docx.LevelFormat.DECIMAL,//"lowerLetter",
+                            text: "%1.",
+                            alignment: docx.AlignmentType.LEFT,
+                        },
+                        {
+                            level: 1,
+                            format: docx.LevelFormat.DECIMAL,//"lowerLetter",
+                            text: "%1)",
+                            alignment: docx.AlignmentType.LEFT,
+                            style: {
+                                paragraph: {
+                                    indent: { left: 460 },
+                                },
+                            },
+                        },
                     ],
-                }),
-            },
-            // children: [
-            //     new docx.Pdocx.Paragraph(
-            //         "Page number in the header must be 25, because it is defined to start at 25 and to be decimal in this section.",
-            //     ),
-            // ],
+                },
+            ],
         },
-    ],
-});
+            sections: [{
+                header: {
+                    default: new docx.Header({
+                        children: [new docx.Paragraph("Header text")],
+                    })
+                },
+                footer: {
+                    default: new docx.Footer({
+                        children: [new docx.Paragraph("Footer Text")],
+                    })
+                },
+                children: [
+                    new docx.Paragraph({
+                        text: "Head 2",
+                        heading: docx.HeadingLevel.TITLE,
+                        alignment: docx.AlignmentType.CENTER,
+                    }),
+                    new docx.Paragraph({
+                        text: "Section",
+                        heading: docx.HeadingLevel.HEADING_1,
+                        numbering: {
+                            reference: "my-crazy-numbering",
+                            level: 0,
+                        }
+                    }),
+                    new docx.Paragraph({
+                        style: "content",
+                        children: [
+                            new docx.TextRun({
+                                text: "压力",
+                            }),
+                            new docx.TextRun({
+                                text: "\t1",
+                                
+                            }),
+                            new docx.TextRun({
+                                text: " MPa",
+                            }),
+                        ]
+                    }),
+                ]
+            }],
+            
+        });
 
         docx.Packer.toBlob(doc).then(blob => {
           console.log(blob);
@@ -159,7 +180,6 @@
           console.log("Document created successfully");
         });
       }
-
     </script>
 
   </body>
