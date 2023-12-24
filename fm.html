@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <script src="JS/link.js"></script>
+    <script src="js/link.js"></script>
+    <script src="js/coolprop.js"></script>
 </head>
 <body>
     <div class="wrap">
@@ -108,11 +109,23 @@
             inputEle.setAttribute('autocomplete', 'on')
             inputEle.type = inp.type
             inputEle.value = inp.value
-            inputEle.placeholder = inp.placeholder
+            if (inp.placeholder) {
+                inputEle.placeholder = inp.placeholder
+            }
             inputEle.required = inp.required
             inputEle.readOnly = inp.readonly
             inputEle.className = inp.class
             groupEle.appendChild(inputEle)
+            if (inp.hasOwnProperty("datalist")) {
+                inputEle.setAttribute("list", inp.id + "-datalist");
+                let datalistEle = document.createElement("datalist");
+                datalistEle.id = inp.id + "-datalist"
+                inp.datalist.forEach(v => {
+                    datalistEle.appendChild(new Option(v));
+                });
+                groupEle.appendChild(datalistEle);
+            }
+            
         
             if (inp.hasOwnProperty("unitset")) {
                 groupEle.appendChild(createUnitSelect(inp.id, inp.unitset, inp.unit));
@@ -205,11 +218,11 @@
         var propObj = {
             T:   {name: "温度",         unit: "C",        unitset: "temperature_unit"},
             p:   {name: "压力",         unit: "MPaA",     unitset: "pressure_unit"},
-            h:   {name: "比焓",         unit: "kJ/kg",    unitset: "*"},
-            v:   {name: "比体积",       unit: "m3/kg",    unitset: "specificVolume_unit"},
-            rho: {name: "密度",         unit: "kg/m3",    unitset: "density_unit"},
-            s:   {name: "比熵",         unit: "kJ/kg",    unitset: "*"},
-            u:   {name: "内能",         unit: "kJ/kg",    unitset: "*"},
+            h:   {name: "质量比焓",         unit: "kJ/kg",    unitset: "*"},
+            v:   {name: "质量比体积",       unit: "m3/kg",    unitset: "specificVolume_unit"},
+            rho: {name: "质量密度",         unit: "kg/m3",    unitset: "density_unit"},
+            s:   {name: "质量比熵",         unit: "kJ/(kg.K)",    unitset: "*"},
+            u:   {name: "质量内能",         unit: "kJ/kg",    unitset: "*"},
             Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)", unitset: "*"},
             Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)", unitset: "*"},
             w:   {name: "声速",         unit: "m/s",      unitset: "speed_unit"},
@@ -219,8 +232,17 @@
             x:   {name: "干度",         unit: "",},
             vx:  {name: "气态体积分数", unit: "",}
         }
-
-        var modes = [
+        propObj["P"] = propObj.p;
+        propObj["DMOLAR"] = {name: "摩尔密度", unit: "mol/m3", unitset: "*"};
+        propObj["D"] = propObj.rho;
+        propObj["HMOLAR"] = {name: "摩尔比焓", unit: "J/mol", unitset: "*"};
+        propObj["H"] = {name: "摩尔比焓", unit: "J/kg", unitset: "*"};;
+        propObj["SMOLAR"] = {name: "摩尔比熵", unit: "J/(mol.K)", unitset: "*"};
+        propObj["S"] = {name: "质量比熵", unit: "J/(kg.K)", unitset: "*"};
+        propObj["UMOLAR"] = {name: "摩尔内能", unit: "J/mol", unitset: "*"};
+        propObj["U"] = {name: "质量内能", unit: "J/kg", unitset: "*"};
+        propObj["Q"] = {name: "气体比率", unit: "mol/mol", unitset: "*"};
+        const modes = [
                 ['p','T'],
                 ['p','h'],
                 ['p','s'],
@@ -230,37 +252,47 @@
                 ['h','s'],
                 ['h','rho']
             ]
-        window.onWaterArg1Change = function() {
-            let arg1 = document.getElementById('waterArg1').value;
+        const coolModes = ["P","T","DMOLAR", "D", "HMOLAR", "H","SMOLAR","S","UMOLAR","U","Q",];
+        window.onPropArg1Change = function() {
+            let arg1 = document.getElementById('propArg1').value;
 
-            let arg2_ele = document.getElementById("waterArg2");
+            let arg2_ele = document.getElementById("propArg2");
             arg2_ele.innerHTML = "";
-            modes.forEach(item => {
+
+            if (url_fm === "pureProps") {
+                let arg2s = coolModes.filter(v => v != arg1);
+                arg2s.forEach(v => {
+                    arg2_ele.options.add(new Option(propObj[v].name, v));
+                }); 
+            } else {
+                modes.forEach(item => {
                 if (item[0] == arg1) {
                     arg2_ele.options.add(new Option(propObj[item[1]].name, item[1]));
                 }
             });
-
-            if (document.getElementById('waterValue1-unit')) {
-                document.getElementById('waterValue1-unit').remove();
             }
-            if (document.getElementById('waterValue2-unit')) {
-                document.getElementById('waterValue2-unit').remove();
+            
+
+            if (document.getElementById('propValue1-unit')) {
+                document.getElementById('propValue1-unit').remove();
+            }
+            if (document.getElementById('propValue2-unit')) {
+                document.getElementById('propValue2-unit').remove();
             }
             if (propObj[arg1].unitset) {
-                document.getElementById('waterValue1').parentNode.appendChild(createUnitSelect("waterValue1", propObj[arg1].unitset, propObj[arg1].unit))
+                document.getElementById('propValue1').parentNode.appendChild(createUnitSelect("propValue1", propObj[arg1].unitset, propObj[arg1].unit))
             }
             if (propObj[arg2_ele.value].unitset) {
-                document.getElementById('waterValue2').parentNode.appendChild(createUnitSelect("waterValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
+                document.getElementById('propValue2').parentNode.appendChild(createUnitSelect("propValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
             }
         }
-        window.onWaterArg2Change = function() {
-            let arg2_ele = document.getElementById("waterArg2");
-            if (document.getElementById('waterValue2-unit')) {
-                document.getElementById('waterValue2-unit').remove();
+        window.onPropArg2Change = function() {
+            let arg2_ele = document.getElementById("propArg2");
+            if (document.getElementById('propValue2-unit')) {
+                document.getElementById('propValue2-unit').remove();
             }
             if (propObj[arg2_ele.value].unitset) {
-                document.getElementById('waterValue2').parentNode.appendChild(createUnitSelect("waterValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
+                document.getElementById('propValue2').parentNode.appendChild(createUnitSelect("propValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
             }
         }
     </script>

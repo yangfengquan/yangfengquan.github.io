@@ -3,6 +3,8 @@ import unitConverter from "./unitConverter.js"
 import { pipe_diameter, pipe_velocity, pipe_weight, pipe_size, pipe_strength, bend_strength, pipe_insultion, water_pipe } from "./pipe2.js"
 import { pump_power } from "./equipment.js";
 import { pT, ph, ps, prho, px, Tx, hs, hrho } from "./xsteam.js"
+//import { Module } from "./coolprop.js"
+
 export default class Fm {
     constructor(form, result){
         this._form = [...form];
@@ -201,10 +203,10 @@ export default class Fm {
         this.setValueWithSi("p", pump_power(flowRate, h, eta));
     }
     waterProps() {
-        let name1 = this.getValue("waterArg1");
-        let value1 = this.getSiValue("waterValue1");
-        let name2 = this.getValue("waterArg2");
-        let value2 = this.getSiValue("waterValue2");
+        let name1 = this.getValue("propArg1");
+        let value1 = this.getSiValue("propValue1");
+        let name2 = this.getValue("propArg2");
+        let value2 = this.getSiValue("propValue2");
         let mode = name1 + name2;
         console.log(name1);
         switch (mode) {
@@ -236,5 +238,21 @@ export default class Fm {
                 break;
         }
         console.log(this);
-    } 
+    }
+    pureProps() {
+        let fluidName = this.getValue("fluidName");
+        let arg1 = this.getValue("propArg1");
+        let v1 = this.getSiValue("propValue1");
+        let arg2 = this.getValue("propArg2");
+        let v2 = this.getSiValue("propValue2");
+        v1 = arg1 === "P" ? v1 + 101325 : v1;
+        v2 = arg2 === "P" ? v2 + 101325 : v2;
+        this._result.forEach(item => {
+            this.setValueWithSi(item.id, Module.PropsSI(item.id, arg1, v1, arg2, v2, fluidName));
+            //item.
+        })
+        console.log(this);
+        console.log(Module);
+        //console.log(Module.PropsSI(item.id, arg1, v1, arg2, v2, fluidName));
+    }
 }
