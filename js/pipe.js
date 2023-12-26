@@ -1,5 +1,5 @@
 "use strict"
-
+import { T_ph, h_pT, rho_pT, x_ph, rho_ph, my_pT } from "./xsteam.js";
 /**
  * 已知体积流量、流速，计算管径
  * @param {number} flowRate 体积流量 m3/s
@@ -533,7 +533,6 @@ export function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
  */
 export function water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w) {
     let a_p_a = a_p / 1e6 + 0.101325;
-    console.log(a_p_a);
     let lp = ll + lf;
 
     let a_h = h_pT(a_p_a, a_t);

@@ -3890,4 +3890,4 @@ function hrho(h, rho) {
 	return fn_return_value
 }
 
-export {pT, ph, ps, prho, px, Tx, hs, hrho}
+export {pT, ph, ps, prho, px, Tx, hs, hrho, T_ph, h_pT, rho_pT, x_ph, rho_ph, my_pT}
