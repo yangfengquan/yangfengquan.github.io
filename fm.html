@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <script src="js/link.js"></script>
     <script src="js/coolprop.js"></script>
-    <script src="./JS/docx/docx.umd.js"></script>
-    <script src="./docx/FileSaver.js"></script>
+    <script src="./js/docx/docx.umd.js"></script>
+    <script src="./js/docx/FileSaver.js"></script>
     <script src="./js/docx/docGenerate.js"></script>
 </head>
 <body>
@@ -44,9 +44,9 @@
         </div> 
     </div>
     <script type="module">
-        import * as unit from "./JS/unitConverter.js"
-        import Fm from "./JS/fm.js";
-        import db from "../data.js"
+        import * as unit from "./js/unitConverter.js"
+        import Fm from "./js/fm.js";
+        import db from "./js/data.js";
 
         const urlSearchParams = new URLSearchParams(window.location.search);
         let url_fm = urlSearchParams.get('fm');
