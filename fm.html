@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="js/link.js"></script>
     <script src="js/coolprop.js"></script>
+    <script src="./JS/docx/docx.umd.js"></script>
+    <script src="./docx/FileSaver.js"></script>
+    <script src="./js/docx/docGenerate.js"></script>
 </head>
 <body>
     <div class="wrap">
@@ -34,7 +37,7 @@
             <p id="warning"></p>
             <p>
                 <button onclick="calc()">运算</button>
-                <button onclick="pdf()">计算书</button>
+                <button onclick="doc()">计算书</button>
             </p>
             <h2>结果：</h2>
             <div id="result"></div>
@@ -43,38 +46,57 @@
     <script type="module">
         import * as unit from "./JS/unitConverter.js"
         import Fm from "./JS/fm.js";
+        import db from "../data.js"
 
         const urlSearchParams = new URLSearchParams(window.location.search);
         let url_fm = urlSearchParams.get('fm');
-        const dataPath = 'data.json';
-        let response, fm;
+        //const dataPath = 'data.json';
+        //let response;
+        let fm
         (function () {    
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', dataPath, true);
-            xhr.send();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    response = JSON.parse(xhr.responseText);
+            // const xhr = new XMLHttpRequest();
+            // xhr.open('GET', dataPath, true);
+            // xhr.send();
+            // xhr.onreadystatechange = function() {
+            //     if (xhr.readyState === 4 && xhr.status === 200) {
+            //         response = JSON.parse(xhr.responseText);
                     
-                    createLinkEle(response);
+            //         createLinkEle(response);
                     
-                    if (url_fm != '' && url_fm != null) {
-                        fm = new Fm(response[url_fm].form, response[url_fm].result);
-                        document.title = response[url_fm].text;
+            //         if (url_fm != '' && url_fm != null) {
+            //             fm = new Fm(response[url_fm].form, response[url_fm].result);
+            //             document.title = response[url_fm].text;
 
-                        let formEle = document.getElementById("form");
-                        createFormEle(response[url_fm].form, formEle);
-                        let resultEle = document.getElementById("result");
-                        createFormEle(response[url_fm].result, resultEle);
-                        if (document.getElementsByClassName("br").length > 0) {
-                            document.getElementsByClassName("br")[0].parentNode.insertBefore(
-                                document.createElement("br"),
-                                document.getElementsByClassName("br")[0]);
-                        }
-                    } else {
-                        window.location.href='./';
-                    }
+            //             let formEle = document.getElementById("form");
+            //             createFormEle(response[url_fm].form, formEle);
+            //             let resultEle = document.getElementById("result");
+            //             createFormEle(response[url_fm].result, resultEle);
+            //             if (document.getElementsByClassName("br").length > 0) {
+            //                 document.getElementsByClassName("br")[0].parentNode.insertBefore(
+            //                     document.createElement("br"),
+            //                     document.getElementsByClassName("br")[0]);
+            //             }
+            //         } else {
+            //             window.location.href='./';
+            //         }
+            //     }
+            // }
+            createLinkEle(db);
+            if (url_fm != '' && url_fm != null) {
+                fm = new Fm(db[url_fm].form, db[url_fm].result);
+                document.title = db[url_fm].text;
+
+                let formEle = document.getElementById("form");
+                createFormEle(db[url_fm].form, formEle);
+                let resultEle = document.getElementById("result");
+                createFormEle(db[url_fm].result, resultEle);
+                if (document.getElementsByClassName("br").length > 0) {
+                    document.getElementsByClassName("br")[0].parentNode.insertBefore(
+                        document.createElement("br"),
+                        document.getElementsByClassName("br")[0]);
                 }
+            } else {
+                window.location.href='./';
             }
             if (window.screen.width <= 600) {
                 document.getElementById('nav').style.display = 'none'
@@ -212,9 +234,35 @@
                 document.getElementById("warning").style.display = "none";
                 fm[url_fm]();
                 fm.render();
-            } 
+            }
         }
-        function pdf(){}
+        window.doc = () => {console.log(fm);
+            let f = fm.fillFormValue();
+            if (f != 0) {
+                document.getElementById("warning").innerText = "警告：“" + f + "” 未正确填写！" ;
+                document.getElementById("warning").style.display = "block";
+            } else {
+                document.getElementById("warning").style.display = "none";
+                fm[url_fm]();
+            }
+
+            let form = [], result = [];
+            fm._form.forEach(item => {
+                form.push({name: item.name, value: item.value, unit: item.unit, other: item.other});
+            })
+
+            if (url_fm === "waterProps" || url_fm === "pureProps") {
+                form.splice(1, 1);
+                form.splice(2, 1);
+                form[1].name = propObj[fm._form[1].value].name;
+                form[2].name = propObj[fm._form[3].value].name;
+            }
+            
+            fm._result.forEach(item => {
+                result.push({name: item.name, value: item.value, unit: item.unit, other: item.other});
+            })
+            doc_generate(db[url_fm].text, form, result);
+        }
         var propObj = {
             T:   {name: "温度",         unit: "C",        unitset: "temperature_unit"},
             p:   {name: "压力",         unit: "MPaA",     unitset: "pressure_unit"},

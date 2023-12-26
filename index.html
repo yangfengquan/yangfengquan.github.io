@@ -88,89 +88,27 @@
 			</div>
         </div>
     </div>
-    <script>
+    <script type="module">
+        import db from "./data.js";
+        createLinkEle(db);
         (function () {
-            const dataPath = 'data.json';
-            const urlSearchParams = new URLSearchParams(window.location.search)
-            const xhr = new XMLHttpRequest()
-            xhr.open('GET', dataPath, true)
-            xhr.send()
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    response = JSON.parse(xhr.responseText)
+            // const dataPath = 'data.json';
+            // const urlSearchParams = new URLSearchParams(window.location.search)
+            // const xhr = new XMLHttpRequest()
+            // xhr.open('GET', dataPath, true)
+            // xhr.send()
+            // xhr.onreadystatechange = function() {
+            //     if (xhr.readyState === 4 && xhr.status === 200) {
+            //         response = JSON.parse(xhr.responseText)
                     
-                    createLinkEle(response);
-                }
-            }
+            //         createLinkEle(response);
+            //     }
+            // }
+            
             if (window.screen.width <= 600) {
                 document.getElementById('nav').style.display = 'none'
             }
         })();
-        function calc() {
-            if (getFormValue()) {
-                let r = eval(fm)(curFormDataObj.form)
-                r.forEach((v, i) => {
-                    curFormDataObj.result[i].value = v
-                });
-                curFormDataObj.result.forEach(item => {
-                document.getElementById(item.id).value = item.value
-                });
-                return true
-            }
-            return false  
-        }
-        function pdf() {
-            if (calc()) {
-                window.data1 = [], window.data2 = []
-                if (fm == 'pipeHInsultion' || fm == 'pipeCInsultion' || fm == 'waterpipe') {
-                    let name = '', value = ''
-                    curFormDataObj.form.forEach(item => {
-                        if (item.id == 'a' || item.id == 'b' || item.id == 'c' || item.id == 'd' || item.id == 'e' || item.id == 'f') {
-                            name += item.name
-                            value += item.value + item.other
-                        } else if (item.id == 'g') {
-                            value += item.value + item.other
-                            window.data1.push({name: name, value: value, other: ''})
-                        } else {
-                            window.data1.push({name: item.name, value: item.value, other: item.other})
-                        }
-                    });
-                } else {
-                    curFormDataObj.form.forEach(item => {
-                        if (item.tag == 'select') {
-                            let text = ''
-                            item.opts.forEach(opt => {
-                                if (opt.value == item.value) {
-                                    text = opt.text
-                                }
-                            })
-                            window.data1.push({name: item.name, value: text, other: item.other})
-                        } else {
-                            window.data1.push({name: item.name, value: item.value, other: item.other})
-                        }
-                        
-                    });
-                }
-
-                if (fm == 'waterprops') {
-                    window.data1[1].name = window.data1[1].value
-                    window.data1[1].value = window.data1[2].value
-                    window.data1[1].other = window.data1[2].other
-                    window.data1[3].name = window.data1[3].value
-                    window.data1[3].value = window.data1[4].value
-                    window.data1[3].other = window.data1[4].other
-                    window.data1.splice(2,1)
-                    window.data1.splice(3,1)
-                }
-
-                curFormDataObj.result.forEach(item => {
-                    window.data2.push({name: item.name, value: item.value, other: item.other})
-                });
-
-                window.open('pdf.html')
-            }
-            
-        }
     </script>
     
 <script>
