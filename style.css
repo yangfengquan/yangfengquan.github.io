@@ -104,3 +104,6 @@ textarea {
     border-radius: .25rem;
     display: none;
 }
+#waiting {
+	display: block;
+}
