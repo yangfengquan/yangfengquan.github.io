@@ -35,11 +35,11 @@
             <h1 id="main-title"></h1>
             <div id="form"></div>
             <p id="warning" class="warning"></p>
-            <p>
+            <p id="btn" style={display:none;}>
                 <button onclick="calc()">运算</button>
                 <button onclick="doc()">计算书</button>
             </p>
-            <h2>结果：</h2>
+            <h2 id="res-title" style={display:none;}>结果：</h2>
             <div id="result"></div>
         </div> 
     </div>
@@ -47,7 +47,13 @@
         import * as unit from "./js/unitConverter.js"
         import Fm from "./js/fm.js";
         import db from "./js/data.js";
-		window.onload = () => { document.getElementById("waiting").style.display = "none"; }
+		
+		//网页加载完成后，隐藏等待提示，并显示隐藏内容。
+		window.onload = () => { 
+			document.getElementById("waiting").style.display = "none";
+			document.getElementById("btn").style.display = "block";
+			document.getElementById("res-title").style.display = "block";
+		}
         const urlSearchParams = new URLSearchParams(window.location.search);
         let url_fm = urlSearchParams.get('fm');
         //const dataPath = 'data.json';
