@@ -93,7 +93,7 @@ textarea {
 .unit {
     margin-left: 5px;
 }
-#warning {
+.warning {
     color: #856404;
     background-color: #fff3cd;
     border-color: #ffeeba;

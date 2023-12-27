@@ -6,7 +6,6 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="./js/link.js"></script>
-    
     <script src="./js/docx/docx.umd.js"></script>
     <script src="./js/docx/FileSaver.js"></script>
     <script src="./js/docx/docGenerate.js"></script>
@@ -32,9 +31,10 @@
             </div> 
         </div>
         <div id="main">
+		    <p id="waiting" class="warning">页面正在加载...</p>
             <h1 id="main-title"></h1>
             <div id="form"></div>
-            <p id="warning"></p>
+            <p id="warning" class="warning"></p>
             <p>
                 <button onclick="calc()">运算</button>
                 <button onclick="doc()">计算书</button>
@@ -47,7 +47,7 @@
         import * as unit from "./js/unitConverter.js"
         import Fm from "./js/fm.js";
         import db from "./js/data.js";
-
+		window.onload = () => { document.getElementById("waiting").style.display = "none"; alert("1") }
         const urlSearchParams = new URLSearchParams(window.location.search);
         let url_fm = urlSearchParams.get('fm');
         //const dataPath = 'data.json';
