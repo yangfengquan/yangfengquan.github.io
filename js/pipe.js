@@ -123,7 +123,8 @@ export function pipe_size(dn, sch) {
  * @returns {object} [直管计算厚度,直管名义厚度] [m,m]
  */
 export function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
-    p /= 1e6;
+    //p /= 1e6; s 
+    console.log(d, p, s, y, w, phi, c1, c2, c3);
     let t = p * d / (2 * (s * phi * w + p * y));
     let nt = t * (1 + c1) + c2 + c3;
 
@@ -145,7 +146,7 @@ export function pipe_strength(d, p, s, y, w, phi, c1, c2, c3) {
  * @returns {object} [内侧计算厚度,内侧名义厚度,外侧计算厚度,外侧名义厚度,中心侧计算厚度,中心侧名义厚度] [m,m,m,m,m,m]
  */
 export function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
-    p /= 1e6;
+    //p /= 1e6;
     let tw = function (i) {
         return p * d / (2 * (s * phi * w / i + p * y));
     }
@@ -179,7 +180,7 @@ export function bend_strength(d, p, s, y, w, phi, c1, c2, c3, r) {
  * @param {number} mu Dynamic viscosity [Ps.s]
  * @returns {number} reynolds number
  */
-function reynolds(di, ve, rho, mu) {
+export function reynolds(di, ve, rho, mu) {
     return di * ve * rho / mu;
 }
 
@@ -190,7 +191,7 @@ function reynolds(di, ve, rho, mu) {
  * @param {number} e Roughness [m]
  * @returns {number} resistance coefficient
  */
-function resistace(re, di, e) {
+export function resistace(re, di, e) {
     var lambda;
     if (re <= 2000) {
         lambda = 64 / re;
@@ -232,16 +233,16 @@ function resistace(re, di, e) {
  * @param {number} flowRate flow rate [m3/s]
  * @param {number} e Roughness [m]
  * @param {number} di Pipe Internal diameter [m]
- * @param {number} l length [m]
+ * @param {number} len length [m]
  * @param {number} rho density [kg/m3]
  * @param {number} mu Dynamic viscosity [Ps.s]
  * @returns {number} pressure drop [Pa]
  */
-function pipe_lDp(flowRate, e, di, l, rho, mu) {
+export function pipe_lDp(flowRate, e, di, len, rho, mu) {
     var ve = pipe_velocity(flowRate, di);
     var re = reynolds(di, ve, rho, mu);
     var lambda = resistace(re, di, e);
-    return lambda * (l / di) * (rho * Math.pow(ve, 2) / 2);
+    return lambda * (len / di) * (rho * Math.pow(ve, 2) / 2);
 }
 
 /**
@@ -252,7 +253,7 @@ function pipe_lDp(flowRate, e, di, l, rho, mu) {
  * @param {number} rho density [kg/m3]
  * @returns {number} [pa]
  */
-function pipe_fDpK(flowRate, di, ksum, rho) {
+export function pipe_fDpK(flowRate, di, ksum, rho) {
     var ve = pipe_velocity(flowRate, di);
     return ksum * rho * Math.pow(ve, 2) / 2;
 }
@@ -260,16 +261,17 @@ function pipe_fDpK(flowRate, di, ksum, rho) {
 /**
  * 局部阻力 当量长度法 SHT3035-2018
  * @param {number} flowRate flow rate [m3/s]
+ * @param {number} e Roughness [m]
  * @param {number} di Pipe Internal diameter [m]
- * @param {number} le 当量长度总和 [m]
+ * @param {number} len 当量长度总和 [m]
  * @param {number} rho density [kg/m3]
  * @returns {number} [Pa]
  */
-function pipe_fDpl(flowRate, di, le, rho, mu) {
+export function pipe_fDpl(flowRate, e, di, len, rho, mu) {
     var ve = pipe_velocity(flowRate, di);
     var re = reynolds(di, ve, rho, mu);
     var lambda = resistace(re, di, e);
-    return lambda * le / di * rho * Math.pow(ve, 2) / 2;
+    return lambda * len / di * rho * Math.pow(ve, 2) / 2;
 }
 
 /**
@@ -421,12 +423,10 @@ function insul_q(Q, d1) {
  * @returns {number} 对流换热系数 [W/(m2*K)]
  */
 function insul_alpha(ts, ta, w, d1, epsilon) {
-    ts -= 273.15;
-    ta -= 273.15;
-	let alpha_r = 5.669 * epsilon / (ts - ta) * (Math.pow((273 + ts) / 100, 4) - Math.pow((273 + ta) / 100, 4));
+	let alpha_r = 5.669 * epsilon / (ts - ta) * (Math.pow((ts) / 100, 4) - Math.pow((ta) / 100, 4));
 	let alpha_c;
 	if (w == 0) {
-		alpha_c = 26.4 / Math.pow(297 + 0.5 * (ts + ta), 0.5) * Math.pow((ts - ta) / d1, 0.25);
+		alpha_c = 26.4 / Math.pow(24 + 0.5 * (ts + ta), 0.5) * Math.pow((ts - ta) / d1, 0.25);
 	}
 	else {
 		if (w * d1 < 0.8) {	
@@ -436,7 +436,6 @@ function insul_alpha(ts, ta, w, d1, epsilon) {
 			alpha_c = 4.53 * Math.pow(w, 0.805) / Math.pow(d1, 0.195);
 		}
 	}
-
 	return alpha_r + alpha_c
 }
 
@@ -502,14 +501,12 @@ function insul_t0(flowRate, d0, d1, l, a_t, a_p, b_p, ta, lambda, alpha) {
  * @returns {object} [绝热材料传热系数,表面对流换热系数,表面温度,单位面积传热量,单位长度传热量] [W/(m*K),W/(m2*K),C,W/m2,w/m]
  */
 export function pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon) {
-    let r = {};
-    r.lambda = insul_lambda(t0, ta, lambdaArgs);
-    r.ts = insul_ts(t0, ta, w, d0, d1, lambda, epsilon);
-    r.alpha = insul_alpha(ts, ta, w, d1, epsilon);
-    r.Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
-    r.q = insul_q(Q, d1);
-
-    return r;
+    let lambda = insul_lambda(t0, ta, lambdaArgs);
+    let ts = insul_ts(t0, ta, w, d0, d1, lambda, epsilon);
+    let alpha = insul_alpha(ts, ta, w, d1, epsilon);
+    let Q = insul_Q(t0, ta, d0, d1, lambda, alpha);
+    let q = insul_q(Q, d1);
+    return {lambda: lambda, alpha: alpha, ts: ts, Q: Q, q: q};
 }
 
 /**

@@ -33,7 +33,6 @@
         </div>
         <div id="main">
             <h1 id="main-title"></h1>
-            
             <div id="form"></div>
             <p id="warning"></p>
             <p>
@@ -87,6 +86,7 @@
                 fm = new Fm(db[url_fm].form, db[url_fm].result);
                 document.title = db[url_fm].text;
 
+                document.getElementById("main-title").innerText = db[url_fm].text;
                 let formEle = document.getElementById("form");
                 createFormEle(db[url_fm].form, formEle);
                 let resultEle = document.getElementById("result");
@@ -258,7 +258,22 @@
                 form[1].name = propObj[fm._form[1].value].name;
                 form[2].name = propObj[fm._form[3].value].name;
             }
-            
+
+            if (url_fm === "pipeHInsultion" || url_fm === "pipeCInsultion" || url_fm === "waterPipe") {
+                let i = 0;
+                for (; i < form.length; i++) {
+                    if (form[i].name === "导热系数 λ=") {
+                        break;
+                    }
+                }
+                form[i].name = "导热系数";
+                form[i].value = "λ=" + form[i].value + form[i].other;
+                for (let j = i + 1; j < i + 7; j++) {
+                    form[i].value = form[i].value + form[j].value + form[j].other;
+                }
+                form.splice(i + 1, 6);
+            }
+            console.log(form);
             fm._result.forEach(item => {
                 result.push({name: item.name, value: item.value, unit: item.unit, other: item.other});
             })

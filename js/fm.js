@@ -1,6 +1,6 @@
 "use strict"
 import unitConverter from "./unitConverter.js"
-import { pipe_diameter, pipe_velocity, pipe_weight, pipe_size, pipe_strength, bend_strength, pipe_insultion, water_pipe } from "./pipe.js"
+import { pipe_diameter, pipe_velocity, pipe_weight, pipe_size, pipe_strength, bend_strength, resistace, reynolds, pipe_lDp, pipe_fDpl, pipe_insultion, water_pipe } from "./pipe.js"
 import { pump_power } from "./equipment.js";
 import { pT, ph, ps, prho, px, Tx, hs, hrho } from "./xsteam.js"
 //import { Module } from "./coolprop.js"
@@ -142,6 +142,38 @@ export default class Fm {
         this.setValuesWithSi(l);
         this.setValuesWithSi(b);
     }
+    pipeResistance() {
+        let fluidName = this.getValue("fluidName");
+        let flowRate = this.getSiValue("flowRate");
+        let a_p = this.getSiValue("a_p");
+        let t = this.getSiValue("t");
+        let d0 = this.getSiValue("d0");
+        let delta = this.getSiValue("delta");
+        let llen = this.getSiValue("llen");
+        let flen = this.getSiValue("flen");
+        let rough = this.getSiValue("rough");
+        
+        let di = d0 - 2 * delta;
+
+        let rho = Module.PropsSI("D", "P", a_p, "T", t, fluidName);
+        let mu = Module.PropsSI("VISCOSITY", "P", a_p, "T", t, fluidName);
+
+        let ve = pipe_velocity(flowRate, di);
+        let ldp = pipe_lDp(flowRate, rough, di, llen, rho, mu);
+        let fdp = pipe_fDpl(flowRate, rough, di, flen, rho, mu);
+        let dp = ldp + fdp;
+        let b_p = a_p - dp;
+        let re = reynolds(di, ve, rho, mu);
+        let lambda = resistace(re, di, rough);
+        this.setValueWithSi("dp", dp);
+        this.setValueWithSi("ldp", ldp);
+        this.setValueWithSi("fdp", fdp);
+        this.setValueWithSi("b_p", b_p);
+        this.setValueWithSi("ve", ve);
+        this.setValueWithSi("re", re);
+        this.setValueWithSi("lambda", lambda);
+
+    }
     pipeHInsultion() {
         let d0 = this.getSiValue("d0");
         let t0 = this.getSiValue("t0");
@@ -171,8 +203,8 @@ export default class Fm {
         let a_p = this.getSiValue("a_p");
         let d0 = this.getSiValue("d0");
         let delta = this.getSiValue("delta");
-        let ll = this.getSiValue("ll");
-        let lf = this.getSiValue("lf");
+        let llen = this.getSiValue("llen");
+        let flen = this.getSiValue("flen");
         let rough = this.getSiValue("rough");
         let insuldelta = this.getSiValue("insuldelta");
         
@@ -192,7 +224,7 @@ export default class Fm {
         
         let di = d0 - 2 * delta;
         let d1 = d0 + 2 * insuldelta;
-        let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, lf, rough, lambdaArgs, epsilon, ta, w);
+        let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, llen, lfen, rough, lambdaArgs, epsilon, ta, w);
 
         this.setValuesWithSi(wp);
     }
