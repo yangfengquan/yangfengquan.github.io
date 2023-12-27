@@ -4,6 +4,7 @@ https://yangshu.gitee.io/fm.html?fm=pipeVelocity
 https://yangshu.gitee.io/fm.html?fm=pipeWeight
 https://yangshu.gitee.io/fm.html?fm=pipeSize
 https://yangshu.gitee.io/fm.html?fm=pipeStrength
+https://yangshu.gitee.io/fm.html?fm=pipeResistance
 https://yangshu.gitee.io/fm.html?fm=pipeHInsultion
 https://yangshu.gitee.io/fm.html?fm=pipeCInsultion
 https://yangshu.gitee.io/fm.html?fm=waterpipe
