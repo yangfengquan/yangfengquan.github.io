@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="insul.js"></script>
+</head>
+<body>
+    <script>
+        function xlnxdc(x, c) {
+            return x * Math.log(x / c);
+        }
+        for (let i = 1; i < 100; i++) {
+            console.log(i, xlnxdc(i,1));
+        }
+
+        //console.log(xlnxdc_(19, 1));
+
+        let x = Math.pow(Math.E, 0.7);
+        let y = Math.exp(0.7);
+        console.log("x ",x);console.log("y ", y);console.log("e ",Math.E);
+    </script>
+</body>
+</html>
