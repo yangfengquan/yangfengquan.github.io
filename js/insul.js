@@ -127,7 +127,7 @@ function d1_qmax(qmax, d0, t0, ta, lambda, alphas) {
  * @returns {number} 外层绝热层外径 m
  */
 function d2_Qmax_2(Qmax, d0, t0, t1, ta, lambda1, lambda2, alphas) {
-    let = 2 * ((lambda1 * (t0 - t1) + lambda2 * (t1 - ta)) / Qmax - lambda2 / alphas);
+    let y = 2 * ((lambda1 * (t0 - t1) + lambda2 * (t1 - ta)) / Qmax - lambda2 / alphas);
     return xlnxdc_(y, d0);
 }
 
@@ -367,23 +367,120 @@ function delta_ts(t0, ts, ta, lambda, alphas) {
 }
 
 /**
- * 
- * @param {*} d0 
- * @param {*} t0 
- * @param {*} tfr 
- * @param {*} ta 
- * @param {*} lambda 
- * @param {*} alphas 
- * @param {*} v 
- * @param {*} rho 
- * @param {*} c 
- * @param {*} vp 
- * @param {*} rhop 
- * @param {*} cp 
- * @param {*} kr 
- * @returns 
+ * 延迟管道内介质冻结、凝固、结晶的保温厚度，GB50264-2013 式5.3.13
+ * @param {number} d0 管道或设备外径 m
+ * @param {number} timefr 介质在管道内不出现冻结的停留时间 s
+ * @param {number} t0 管道或设备的外表面温度 K
+ * @param {number} tfr 介质凝固点 K
+ * @param {number} ta 环境温度 K，室外温度应取冬季极端平均最低温度
+ * @param {number} lambda 绝热材料导热系数 W/(m.K) 
+ * @param {number} alphas 冬季最多风向平均风速下绝热层外表面与周围空气的换热系数 W/(m2.K)
+ * @param {number} v 介质单位长度体积单位长度体积 m3/m
+ * @param {number} rho 介质密度和管壁密度kg/m3
+ * @param {number} c 介质热容 J/(kg.K)
+ * @param {number} vp 管壁单位长度体积 m3/m
+ * @param {number} rhop 管壁密度 kg/m3
+ * @param {number} cp 管壁热容 J/(kg.K
+ * @param {number} kr 管道通过吊架处的热损失附加系数，K =l.l~l.2，大管取值应靠下限，小管取值应靠上限
+ * @returns {number} 保温外径 m
  */
-function d1_freeze(d0, t0, tfr, ta, lambda, alphas, v, rho, c, vp, rhop, cp, kr) {
-    let y = 7200 * kr * Math.PI * lambda * tfr / (v * rho * c + vp) * Math.log((t0 - ta) / (tfr - ta));
-    return lnxdcpax_(y, d0, 2 * lambda);
+function d1_freeze(d0, timefr, t0, tfr, ta, lambda, alphas, v, rho, c, vp, rhop, cp, kr) {
+    let y = 2 * kr * Math.PI * lambda * timefr / (v * rho * c + vp) * Math.log((t0 - ta) / (tfr - ta));
+    return lnxdcpax_(y, d0, 2 * lambda / alphas);
+}
+
+/**
+ * 给定液体管道允许温度降的保温厚度，GB50264-2013 式5.3.14-1
+ * @param {number} di 管道内径 m
+ * @param {number} d0 管道或设备外径 m
+ * @param {number} l_AB A、B之间管道的实际长度 m
+ * @param {number} t_A 介质在（上游）A点处的温度 K
+ * @param {number} t_B 介质在（下游）B点处的温度 K
+ * @param {number} ta 环境温度 K，室外温度应取冬季极端平均最低温度
+ * @param {number} lambda 绝热材料导热系数 W/(m.K) 
+ * @param {number} alphas 冬季最多风向平均风速下绝热层外表面与周围空气的换热系数 W/(m2.K)
+ * @param {number} w 介质流速 m/s
+ * @param {number} rho 介质密度 kg/m3
+ * @param {number} c 介质热容 J/(kg.K)
+ * @param {number} kr 管道通过吊架处的热损失附加系数，K =l.l~l.2，大管取值应靠下限，小管取值应靠上限
+ * @returns {number} 保温外径 m
+ */
+function d1_dt(di, d0, l_AB, t_A, t_B, ta, lambda, alphas, w, rho, c, kr) {
+    let y = 8 * lambda * l_AB * kr / (di * di * w * rho * c * Math.log((t_A - ta) / (t_B - ta)));
+    return lnxdcpax_(y, d0, 2 * lambda / alphas);
+}
+
+/**
+ * 球形容器保冷层厚度，GB50264-2013 式5.3.15
+ * @param {number} d0 设备直径 m
+ * @param {number} t0 设备的外表面温度 K
+ * @param {number} ts 绝热层表面温度 K
+ * @param {number} ta 环境温度 K
+ * @param {number} lambda 绝热材料导热系数 W/(m.K)
+ * @param {number} alphas 绝热层外表面与周围空气的换热系数 W/(m2.K)
+ * @returns {number} 保冷层外径 m
+ */
+function d1_ball(d0, t0, ts, ta, lambda, alphas) {
+    return (0.5 + Math.sqrt(0.25 + 2 / d0 * (lambda / alphas * (t0 - ts) / (ts - ta)))) / (1 / d0);
+}
+
+function Qmax_hot(t0, tt) {
+    switch (tt) {
+        case yearly:
+            if (t0 < 50) {
+               return 52; 
+            }
+            else if (t0 > 50 && t0 < 100) {
+                return 84;
+            }
+            else if (t0 > 100 && t0 < 150) {
+                return 104;
+            }
+            else if (t0 > 150 && t0 < 200) {
+                return 106;
+            }
+            else if (t0 > 200 && t0 < 250) {
+                return 147;
+            }
+            else if (t0 > 250 && t0 < 300) {
+                return 167;
+            }
+            else if (t0 > 300 && t0 < 350) {
+                return 188;
+            }
+            else if (t0 > 350 && t0 < 400) {
+                return 204;
+            }
+            else if (t0 > 400 && t0 < 450) {
+                return 220;
+            }
+            else if (t0 > 450 && t0 < 500) {
+                return 236;
+            }
+            else if (t0 > 500 && t0 < 550) {
+                return 251;
+            }
+            else if (t0 > 550 && t0 < 600) {
+                return 266;
+            }
+            else if (t0 > 600 && t0 < 650) {
+                return 283;
+            }
+            else if (t0 > 650 && t0 < 700) {
+                return 297;
+            }
+            else if (t0 > 700 && t0 < 750) {
+                return 311;
+            }
+            else if (t0 > 750 && t0 < 800) {
+                return 324;
+            }
+            else if (t0 > 800 && t0 < 850) {
+                return 338;
+            }
+            break;
+    
+        default:
+            break;
+    }
 }
