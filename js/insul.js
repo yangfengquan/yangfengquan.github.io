@@ -679,3 +679,20 @@ function t1(d0, d1, d2, t0, ts, lambda1, lambda2) {
 function t1_flat(delta1, delta2, t0, ts, lambda1, lambda2) {
     return (lambda1 * t0 * delta2 + lambda2 * ts * lambda1) / (lambda1 * delta2 + lambda2 * lambda1);
 }
+
+/**
+ * 热价，应按实际购价或生产成本取值，也可按下式计算，GB50264-2013 式5.7.1
+ * @param {number} pf 燃料到厂价 元/kg 
+ * @param {number} qf 燃料收到基低位发热量 J/kg
+ * @param {number} etab 锅炉热效率(eatb=0.76~0.92)，对大容量、高参数锅炉etab取值应靠上限，对小容量、低参数锅炉etab取值应靠下限
+ * @param {number} c1 工况系数, c1 =1.2~1.4
+ * @param {number} c2 佣值系数, GB50264-2013 表5.7.1
+ * @returns {number} 热价(元/J)
+ */
+function p_h(pf, qf, etab, c1, c2) {
+    return c1 * c2 * pf / (qf * etab);
+}
+
+function name(params) {
+    beta 
+}

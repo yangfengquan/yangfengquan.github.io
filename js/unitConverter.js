@@ -172,6 +172,9 @@ export default function unitConverter(value, originalUnit = "SI", destUnit = "SI
     if (originalUnit === destUnit) {
         return value;
     }
+    if (originalUnit === '' || destUnit === '') {
+        return value;
+    }
     
     let unit = Object.assign({}, length_unit, mass_unit, time_unit, temperature_unit, 
         pressure_unit, energy_unit, power_unit, force_unit, speed_unit, density_unit,

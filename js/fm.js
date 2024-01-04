@@ -89,7 +89,11 @@ export default class Fm {
             } else {
                 this._form[i].value = document.getElementById(this._form[i].id).value;
                 if (this._form[i].hasOwnProperty("unit")) {
-                    this._form[i].unit = document.getElementById(this._form[i].id + "-unit").value;
+                    if (document.getElementById(this._form[i].id + "-unit")) {
+                        this._form[i].unit = document.getElementById(this._form[i].id + "-unit").value;
+                    } else {
+                        this._form[i].unit = '';
+                    }                   
                 }
             }
         }
@@ -203,8 +207,8 @@ export default class Fm {
         let a_p = this.getSiValue("a_p");
         let d0 = this.getSiValue("d0");
         let delta = this.getSiValue("delta");
-        let llen = this.getSiValue("llen");
-        let flen = this.getSiValue("flen");
+        let ll = this.getSiValue("llen");
+        let le = this.getSiValue("flen");
         let rough = this.getSiValue("rough");
         let insuldelta = this.getSiValue("insuldelta");
         
@@ -224,7 +228,7 @@ export default class Fm {
         
         let di = d0 - 2 * delta;
         let d1 = d0 + 2 * insuldelta;
-        let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, llen, lfen, rough, lambdaArgs, epsilon, ta, w);
+        let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, le, rough, lambdaArgs, epsilon, ta, w);
 
         this.setValuesWithSi(wp);
     }
@@ -239,7 +243,8 @@ export default class Fm {
         let value1 = this.getSiValue("propValue1");
         let name2 = this.getValue("propArg2");
         let value2 = this.getSiValue("propValue2");
-        let mode = name1 + name2;
+        let mode = name1 + name2;console.log(mode, value1,value2);
+        console.log(px(value1, value2));
         switch (mode) {
             case "pT":
                 this.setValuesWithSi(pT(value1, value2));

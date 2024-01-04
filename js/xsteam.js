@@ -572,14 +572,14 @@ function h_ps(p, s) {
 	}
 	return fn_return_value;
 }
-function h_px(p, x) {
+function h_px(p, x) {console.log("p",p);
 	let fn_return_value, hL, hV;
 	if ((((x > 1) || (x < 0)) || (p >= 22.064))) {
 		fn_return_value = Number.NaN;
 		return fn_return_value;
 	}
 	hL = h4L_p(p);
-	hV = h4V_p(p);
+	hV = h4V_p(p);console.log(h4V_p(p));
 	fn_return_value = (hL + (x * (hV - hL)));
 	return fn_return_value;
 }
@@ -3723,9 +3723,9 @@ function Surface_Tension_T(T) {
 }
 
 function pT(p, T) {
-	p /= 1e6;
+	p += 101325; p /= 1e6;
 	let fn_return_value = {};
-	fn_return_value.p = p * 1e6;
+	fn_return_value.p = p * 1e6 - 101325;
 	fn_return_value.T = T;
 	fn_return_value.h = h_pT(p, T);
 	fn_return_value.v = v_pT(p, T);
@@ -3744,9 +3744,9 @@ function pT(p, T) {
 }
 
 function ph(p, h) {
-	p /= 1e6;
+	p += 101325; p /= 1e6;
 	let fn_return_value = {};
-	fn_return_value.p = p * 1e6;
+	fn_return_value.p = p * 1e6 - 101325;
 	fn_return_value.h = h;
 	fn_return_value.T = T_ph(p, h);
 	fn_return_value.v = v_ph(p, h);
@@ -3765,9 +3765,9 @@ function ph(p, h) {
 }
 
 function ps(p, s) {
-	p /= 1e6;
+	p += 101325; p /= 1e6;
 	let fn_return_value = {}
-	fn_return_value.p = p * 1e6;
+	fn_return_value.p = p * 1e6 - 101325;
 	fn_return_value.s = s
 	fn_return_value.T = T_ps(p, s)
 	fn_return_value.h = h_ps(p, s)
@@ -3786,9 +3786,9 @@ function ps(p, s) {
 }
 
 function prho(p, rho) {
-	p /= 1e6;
+	p += 101325; p /= 1e6;
 	let fn_return_value = {}
-	fn_return_value.p = p * 1e6;
+	fn_return_value.p = p * 1e6 - 101325;
 	fn_return_value.rho = rho
 	fn_return_value.h = h_prho(p, rho)
 	fn_return_value.T = T_ph(p, fn_return_value.h)
@@ -3807,12 +3807,12 @@ function prho(p, rho) {
 }
 
 function px(p, x) {
-	p /= 1e6;
+	p += 101325; p /= 1e6;
 	let fn_return_value = {}
-	fn_return_value.p = p * 1e6;
+	fn_return_value.p = p * 1e6 - 101325;
 	fn_return_value.x = x
-	fn_return_value.T = Tsat_p(p)
-	fn_return_value.h = h_px(p, x)
+	fn_return_value.T = Tsat_p(p);
+	fn_return_value.h = h_px(p, x); 
 	fn_return_value.v = v_ph(p, fn_return_value.h)
 	fn_return_value.rho = rho_ph(p, fn_return_value.h)
 	fn_return_value.s = s_ph(p, fn_return_value.h)
