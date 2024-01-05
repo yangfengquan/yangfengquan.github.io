@@ -60,33 +60,6 @@
         //let response;
         let fm
         (function () {    
-            // const xhr = new XMLHttpRequest();
-            // xhr.open('GET', dataPath, true);
-            // xhr.send();
-            // xhr.onreadystatechange = function() {
-            //     if (xhr.readyState === 4 && xhr.status === 200) {
-            //         response = JSON.parse(xhr.responseText);
-                    
-            //         createLinkEle(response);
-                    
-            //         if (url_fm != '' && url_fm != null) {
-            //             fm = new Fm(response[url_fm].form, response[url_fm].result);
-            //             document.title = response[url_fm].text;
-
-            //             let formEle = document.getElementById("form");
-            //             createFormEle(response[url_fm].form, formEle);
-            //             let resultEle = document.getElementById("result");
-            //             createFormEle(response[url_fm].result, resultEle);
-            //             if (document.getElementsByClassName("br").length > 0) {
-            //                 document.getElementsByClassName("br")[0].parentNode.insertBefore(
-            //                     document.createElement("br"),
-            //                     document.getElementsByClassName("br")[0]);
-            //             }
-            //         } else {
-            //             window.location.href='./';
-            //         }
-            //     }
-            // }
             createLinkEle(db);
             if (url_fm != '' && url_fm != null) {
                 fm = new Fm(db[url_fm].form, db[url_fm].result);
@@ -203,44 +176,77 @@
             
             return groupEle;
         }
-        function createUnitSelect(id, unitsetName, seld) {
+        function createUnitSelect(id, unitsetName, selected) {
             let unitset = {}
             if (unitsetName === "*") {//unitConverter缺少的单位集合
-                unitset[seld] = "";
+                unitset[selected] = '';//将当前“单位”添加至单位集合
             } else {
-                unitset = unit[unitsetName]
-            }     
+                unitset = unit[unitsetName];
+            }
+
             let selectEle = document.createElement("select");
             selectEle.setAttribute('id', id + "-unit");
             selectEle.className = "unit";
+
             Object.keys(unitset).forEach(unit => {
                 selectEle.add(new Option(unit, unit));
             });
-            selectEle.value = seld;
-            selectEle.addEventListener("change", function () {
-                let preUnit = fm.getUnit(id);
-                let curUnit = this.value;
-                fm.setUnit(id, this.value);
 
-                let preValue = document.getElementById(id).value;
-                if (preValue) {
-                    let curValue = unit.default(preValue, preUnit, curUnit);
-                    fm.setValue(id, curValue);
-                    document.getElementById(id).value = curValue;
+            selectEle.value = selected;
+            selectEle.setAttribute("data-last-val", selected);
+
+            selectEle.addEventListener("change", function () {
+                let lastUnit = this.dataset.lastVal;
+                this.dataset.lastVal = this.value;
+                let curUnit = this.value;
+
+                let lastValue = document.getElementById(id).value;
+                if (lastValue) {
+                    document.getElementById(id).value = unit.default(lastValue, lastUnit, curUnit);
                 }
             });
             
             return selectEle;
         }
+        function inputForm() {
+            let form = [];
+            for (let i = 0; i < db[url_fm].form.length; i++) {
+                if (db[url_fm].form[i].required && !document.getElementById(db[url_fm].form[i].id).value) {
+                    return db[url_fm].form[i].name;
+                }
+                form.push({
+                    id: db[url_fm].form[i].id,
+                    value: document.getElementById(db[url_fm].form[i].id).value,
+                    unit: document.getElementById(db[url_fm].form[i].id + "-unit") ? document.getElementById(db[url_fm].form[i].id + "-unit").value : ''
+                })
+            }
+            return form;
+        }
+        function resultForm() {
+            let result = [];
+            db[url_fm].result.forEach(item => {
+                result.push({
+                    id: item.id,
+                    value: '',
+                    unit: document.getElementById(item.id + "-unit") ? document.getElementById(item.id + "-unit").value : ''
+                });
+            });
+            return result;
+        }
+        function showResult(result) {
+            result.forEach(item => {
+                document.getElementById(item.id).value = item.value;
+            });
+        }
         window.calc = function() {
-            let f = fm.fillFormValue();
-            if (f != 0) {
-                document.getElementById("warning").innerText = "警告：“" + f + "” 未正确填写！" ;
+            if (!Array.isArray(inputForm())) {
+                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;
                 document.getElementById("warning").style.display = "block";
             } else {
                 document.getElementById("warning").style.display = "none";
+                let fm = new Fm(inputForm(), resultForm());
                 fm[url_fm]();
-                fm.render();
+                showResult(fm._result);
             }
         }
         window.doc = () => {console.log(fm);

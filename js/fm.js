@@ -3,7 +3,6 @@ import unitConverter from "./unitConverter.js"
 import { pipe_diameter, pipe_velocity, pipe_weight, pipe_size, pipe_strength, bend_strength, resistace, reynolds, pipe_lDp, pipe_fDpl, pipe_insultion, water_pipe } from "./pipe.js"
 import { pump_power } from "./equipment.js";
 import { pT, ph, ps, prho, px, Tx, hs, hrho } from "./xsteam.js"
-//import { Module } from "./coolprop.js"
 
 export default class Fm {
     constructor(form, result){
@@ -24,8 +23,8 @@ export default class Fm {
         }
         return false;
     }
-    getSiValue(key){
-        return unitConverter(this.getValue(key), this.getUnit(key));
+    getBaseUnitValue(key){
+        return unitConverter(this.getValue(key), this.getUnit(key), "baseUnit");
     }
     getUnit(key){
         let d = this._form.concat(this._result);
@@ -56,13 +55,13 @@ export default class Fm {
         }
         return false;
     }
-    setValueWithSi(key, value){
-        this.setValue(key, unitConverter(value, "SI", this.getUnit(key)));
+    setValueWithBaseUnit(key, value){
+        this.setValue(key, unitConverter(value, "baseUnit", this.getUnit(key)));
     }
-    setValuesWithSi(valuesObj){
+    setValuesWithBaseUnit(valuesObj){
         for (const key in valuesObj) {
             if (Object.hasOwnProperty.call(valuesObj, key)) {
-                this.setValueWithSi(key, valuesObj[key]);
+                this.setValueWithBaseUnit(key, valuesObj[key]);
             }
         }
     }
@@ -82,80 +81,59 @@ export default class Fm {
         }
         return false;
     }
-    fillFormValue(){
-        for (let i = 0; i < this._form.length; i++) {
-            if (this._form[i].required && !document.getElementById(this._form[i].id).value) {
-                return this._form[i].name;
-            } else {
-                this._form[i].value = document.getElementById(this._form[i].id).value;
-                if (this._form[i].hasOwnProperty("unit")) {
-                    if (document.getElementById(this._form[i].id + "-unit")) {
-                        this._form[i].unit = document.getElementById(this._form[i].id + "-unit").value;
-                    } else {
-                        this._form[i].unit = '';
-                    }                   
-                }
-            }
-        }
-        return 0;
-    }
-    render(){
-        this._result.forEach(item => {
-            document.getElementById(item.id).value = item.value;
-        });
-    }
+    
     pipeDiameter() {
-        let flowRate = this.getSiValue("flowRate");
-        let v = this.getSiValue("v");
-        this.setValueWithSi("di", pipe_diameter(flowRate, v));
+        let flowRate = this.getBaseUnitValue("flowRate");
+        let v = this.getBaseUnitValue("v");
+        this.setValueWithBaseUnit("di", pipe_diameter(flowRate, v));
     }
     pipeVelocity() {
-        let flowRate = this.getSiValue("flowRate");
-        let di = this.getSiValue("di");
-        this.setValueWithSi("v", pipe_velocity(flowRate, di));
+        let flowRate = this.getBaseUnitValue("flowRate");
+        let di = this.getBaseUnitValue("di");
+        this.setValueWithBaseUnit("v", pipe_velocity(flowRate, di));
     }
     pipeWeight() {
-        let d = this.getSiValue("d");
-        let delta = this.getSiValue("delta");
-        let len = this.getSiValue("len");
-        let rho = this.getSiValue("rho");
+        let d = this.getBaseUnitValue("d");
+        let delta = this.getBaseUnitValue("delta");
+        let len = this.getBaseUnitValue("len");
+        let rho = this.getBaseUnitValue("rho");
         let w = pipe_weight(d, delta, rho);
-        this.setValuesWithSi(w);    
+        this.setValuesWithBaseUnit(w);    
     }
     pipeSize() {
         let dn = this.getValue("dn");
         let sch = this.getValue("sch");
         let p = pipe_size(dn, sch);
-        this.setValuesWithSi(p);
+        this.setValuesWithBaseUnit(p);
     }
     pipeStrength() {
-        let d = this.getSiValue("d");
-        let p = this.getSiValue("p");
-        let s = this.getSiValue("s");
+        let d = this.getBaseUnitValue("d");
+        let p = this.getBaseUnitValue("p");
+        let s = this.getBaseUnitValue("s");
         let y = this.getValue("y");
         let w = this.getValue("w");
         let phi = this.getValue("phi");
         let c1 = this.getValue("c1") / 100;
-        let c2 = this.getSiValue("c2");
-        let c3 = this.getSiValue("c3");
-        let r = this.getSiValue("r");
+        let c2 = this.getBaseUnitValue("c2");
+        let c3 = this.getBaseUnitValue("c3");
+        let r = this.getBaseUnitValue("r");
     
         let l = pipe_strength(d, p, s, y, w, phi, c1, c2, c3);
         let b = bend_strength(d, p, s, y, w, phi, c1, c2, c3, r);
     
-        this.setValuesWithSi(l);
-        this.setValuesWithSi(b);
+        this.setValuesWithBaseUnit(l);
+        this.setValuesWithBaseUnit(b);
     }
     pipeResistance() {
         let fluidName = this.getValue("fluidName");
-        let flowRate = this.getSiValue("flowRate");
-        let a_p = this.getSiValue("a_p");
-        let t = this.getSiValue("t");
-        let d0 = this.getSiValue("d0");
-        let delta = this.getSiValue("delta");
-        let llen = this.getSiValue("llen");
-        let flen = this.getSiValue("flen");
-        let rough = this.getSiValue("rough");
+        let flowRate = this.getBaseUnitValue("flowRate");
+        let a_p = this.getBaseUnitValue("a_p");
+        let t = this.getBaseUnitValue("t");
+        let d0 = this.getBaseUnitValue("d0");
+        let delta = this.getBaseUnitValue("delta");
+        let llen = this.getBaseUnitValue("llen");
+        let flen = this.getBaseUnitValue("flen");
+        let rough = this.getBaseUnitValue("rough");
         
         let di = d0 - 2 * delta;
 
@@ -169,21 +147,21 @@ export default class Fm {
         let b_p = a_p - dp;
         let re = reynolds(di, ve, rho, mu);
         let lambda = resistace(re, di, rough);
-        this.setValueWithSi("dp", dp);
-        this.setValueWithSi("ldp", ldp);
-        this.setValueWithSi("fdp", fdp);
-        this.setValueWithSi("b_p", b_p);
-        this.setValueWithSi("ve", ve);
-        this.setValueWithSi("re", re);
-        this.setValueWithSi("lambda", lambda);
+        this.setValueWithBaseUnit("dp", dp);
+        this.setValueWithBaseUnit("ldp", ldp);
+        this.setValueWithBaseUnit("fdp", fdp);
+        this.setValueWithBaseUnit("b_p", b_p);
+        this.setValueWithBaseUnit("ve", ve);
+        this.setValueWithBaseUnit("re", re);
+        this.setValueWithBaseUnit("lambda", lambda);
 
     }
     pipeHInsultion() {
-        let d0 = this.getSiValue("d0");
-        let t0 = this.getSiValue("t0");
-        let ta = this.getSiValue("ta");
-        let w = this.getSiValue("w");
-        let delta = this.getSiValue("delta");
+        let d0 = this.getBaseUnitValue("d0");
+        let t0 = this.getBaseUnitValue("t0");
+        let ta = this.getBaseUnitValue("ta");
+        let w = this.getBaseUnitValue("w");
+        let delta = this.getBaseUnitValue("delta");
         let d1 = d0 + 2 * delta;
         let epsilon = this.getValue("epsilon");
         
@@ -198,19 +176,19 @@ export default class Fm {
 
         let insul = pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon);
 
-        this.setValuesWithSi(insul);
+        this.setValuesWithBaseUnit(insul);
     }
     pipeCInsultion = this.pipeHInsultion;
     waterPipe() {
-        let flowRate = this.getSiValue("flowRate");
-        let a_t = this.getSiValue("a_t");
-        let a_p = this.getSiValue("a_p");
-        let d0 = this.getSiValue("d0");
-        let delta = this.getSiValue("delta");
-        let ll = this.getSiValue("llen");
-        let le = this.getSiValue("flen");
-        let rough = this.getSiValue("rough");
-        let insuldelta = this.getSiValue("insuldelta");
+        let flowRate = this.getBaseUnitValue("flowRate");
+        let a_t = this.getBaseUnitValue("a_t");
+        let a_p = this.getBaseUnitValue("a_p");
+        let d0 = this.getBaseUnitValue("d0");
+        let delta = this.getBaseUnitValue("delta");
+        let ll = this.getBaseUnitValue("llen");
+        let le = this.getBaseUnitValue("flen");
+        let rough = this.getBaseUnitValue("rough");
+        let insuldelta = this.getBaseUnitValue("insuldelta");
         
         let lambdaArgs = [];
         lambdaArgs.push(this.getValue("a"));
@@ -223,52 +201,52 @@ export default class Fm {
         
         let epsilon = this.getValue("epsilon");
 
-        let ta = this.getSiValue("ta");
-        let w = this.getSiValue("w");
+        let ta = this.getBaseUnitValue("ta");
+        let w = this.getBaseUnitValue("w");
         
         let di = d0 - 2 * delta;
         let d1 = d0 + 2 * insuldelta;
         let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, le, rough, lambdaArgs, epsilon, ta, w);
 
-        this.setValuesWithSi(wp);
+        this.setValuesWithBaseUnit(wp);
     }
     pumpPower() {
-        let flowRate = this.getSiValue("flowRate");
-        let h = this.getSiValue("h");
-        let eta = this.getSiValue("eta") / 100;
-        this.setValueWithSi("p", pump_power(flowRate, h, eta));
+        let flowRate = this.getBaseUnitValue("flowRate");
+        let h = this.getBaseUnitValue("h");
+        let eta = this.getBaseUnitValue("eta") / 100;
+        this.setValueWithBaseUnit("p", pump_power(flowRate, h, eta));
     }
     waterProps() {
         let name1 = this.getValue("propArg1");
-        let value1 = this.getSiValue("propValue1");
+        let value1 = this.getBaseUnitValue("propValue1");
         let name2 = this.getValue("propArg2");
-        let value2 = this.getSiValue("propValue2");
+        let value2 = this.getBaseUnitValue("propValue2");
         let mode = name1 + name2;console.log(mode, value1,value2);
         console.log(px(value1, value2));
         switch (mode) {
             case "pT":
-                this.setValuesWithSi(pT(value1, value2));
+                this.setValuesWithBaseUnit(pT(value1, value2));
                 break;
             case "ph":
-                this.setValuesWithSi(ph(value1, value2));
+                this.setValuesWithBaseUnit(ph(value1, value2));
                 break;
             case "ps":
-                this.setValuesWithSi(ps(value1, value2));
+                this.setValuesWithBaseUnit(ps(value1, value2));
                 break;
             case "prho":
-                this.setValuesWithSi(prho(value1, value2));
+                this.setValuesWithBaseUnit(prho(value1, value2));
                 break;
             case "px":
-                this.setValuesWithSi(px(value1, value2));
+                this.setValuesWithBaseUnit(px(value1, value2));
                 break;
             case "Tx":
-                this.setValuesWithSi(Tx(value1, value2));
+                this.setValuesWithBaseUnit(Tx(value1, value2));
                 break;
             case "hs":
-                this.setValuesWithSi(hs(value1, value2));
+                this.setValuesWithBaseUnit(hs(value1, value2));
                 break;
             case "hrho":
-                this.setValuesWithSi(hrho(value1, value2));
+                this.setValuesWithBaseUnit(hrho(value1, value2));
                 break;
             default:
                 break;
@@ -277,16 +255,16 @@ export default class Fm {
     pureProps() {
         let fluidName = this.getValue("fluidName");
         let arg1 = this.getValue("propArg1");
-        let v1 = this.getSiValue("propValue1");
+        let v1 = this.getBaseUnitValue("propValue1");
         let arg2 = this.getValue("propArg2");
-        let v2 = this.getSiValue("propValue2");
-        v1 = arg1 === "P" ? unitConverter(v1, "SI", "PaA") : v1;
-        v2 = arg2 === "P" ? unitConverter(v2, "SI", "PaA") + 101325 : v2;
+        let v2 = this.getBaseUnitValue("propValue2");
+        v1 = arg1 === "P" ? unitConverter(v1, "base", "PaA") : v1;
+        v2 = arg2 === "P" ? unitConverter(v2, "base", "PaA") + 101325 : v2;
         this._result.forEach(item => {
             if (item.id === "P") {
-                this.setValueWithSi(item.id, unitConverter(Module.PropsSI(item.id, arg1, v1, arg2, v2, fluidName), "PaA", "SI"))
+                this.setValueWithBaseUnit(item.id, unitConverter(Module.PropsSI(item.id, arg1, v1, arg2, v2, fluidName), "PaA", "base"))
             } else {
-                this.setValueWithSi(item.id, Module.PropsSI(item.id, arg1, v1, arg2, v2, fluidName));
+                this.setValueWithBaseUnit(item.id, Module.PropsSI(item.id, arg1, v1, arg2, v2, fluidName));
             }    
         })       
     }

@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="insul.js"></script>
-    <script src="xsteam.js"></script>
+
 </head>
 <body>
+    <select name="" id="et">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
     <script>
-        let p = 1, x=1
-        console.log(h4V_p(p));
-        console.log(h_px(p,x));
+        let sel = document.getElementById("et");
+        sel.value = "1";
+        sel.setAttribute("lastval", "1")
+        sel.dataset.lastval = "1";
+        sel.addEventListener("change", function(){
+            this.dataset.lastval = this.value
+            console.log("pre",this.dataset.lastval,"cur",this.value);
+            console.log(this.dataset);
+        })
     </script>
 </body>
 </html>

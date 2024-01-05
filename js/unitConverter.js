@@ -155,8 +155,8 @@ const volumeFlowRate_unit = {
 }
 
 //基础单位
-const SI_unit = {
-    "SI": {
+const base_unit = {
+    "baseUnit": {
         to_anchor: 1,
         anchor_shift: 0
     }
@@ -168,7 +168,7 @@ const SI_unit = {
  * @param {string} destUnit 
  * @returns {number}
  */
-export default function unitConverter(value, originalUnit = "SI", destUnit = "SI") { 
+export default function unitConverter(value, originalUnit = "baseUnit", destUnit = "baseUnit") { 
     if (originalUnit === destUnit) {
         return value;
     }
@@ -178,7 +178,7 @@ export default function unitConverter(value, originalUnit = "SI", destUnit = "SI
     
     let unit = Object.assign({}, length_unit, mass_unit, time_unit, temperature_unit, 
         pressure_unit, energy_unit, power_unit, force_unit, speed_unit, density_unit,
-        specificVolume_unit, massFlowRate_unit, volumeFlowRate_unit, SI_unit);
+        specificVolume_unit, massFlowRate_unit, volumeFlowRate_unit, base_unit);
     
     //缺少的单位，直接返回原数值。
     if (!unit.hasOwnProperty(originalUnit) || !unit.hasOwnProperty(destUnit)) {
