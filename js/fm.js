@@ -97,8 +97,9 @@ export default class Fm {
         let delta = this.getBaseUnitValue("delta");
         let len = this.getBaseUnitValue("len");
         let rho = this.getBaseUnitValue("rho");
-        let w = pipe_weight(d, delta, rho);
-        this.setValuesWithBaseUnit(w);    
+        let w = pipe_weight(d, delta, rho);console.log(w);
+        this.setValueWithBaseUnit("pw", w);
+        this.setValueWithBaseUnit("tw", w * len);   
     }
     pipeSize() {
         let dn = this.getValue("dn");

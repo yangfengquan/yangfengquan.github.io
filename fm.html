@@ -8,8 +8,7 @@
     <script src="./js/link.js"></script>
     <script src="./js/docx/docx.umd.js"></script>
     <script src="./js/docx/FileSaver.js"></script>
-    <script src="./js/docx/docGenerate.js"></script>
-    <!-- <script src="./js/xsteam.js"></script> -->
+    <script src="./js/docx/docGenerator.js"></script>
 </head>
 <body>
     <div class="wrap">
@@ -56,13 +55,10 @@
 		}
         const urlSearchParams = new URLSearchParams(window.location.search);
         let url_fm = urlSearchParams.get('fm');
-        //const dataPath = 'data.json';
-        //let response;
-        let fm
+
         (function () {    
             createLinkEle(db);
             if (url_fm != '' && url_fm != null) {
-                fm = new Fm(db[url_fm].form, db[url_fm].result);
                 document.title = db[url_fm].text;
 
                 document.getElementById("main-title").innerText = db[url_fm].text;
@@ -249,48 +245,44 @@
                 showResult(fm._result);
             }
         }
-        window.doc = () => {console.log(fm);
-            let f = fm.fillFormValue();
-            if (f != 0) {
-                document.getElementById("warning").innerText = "警告：“" + f + "” 未正确填写！" ;
+        window.doc = () => {
+            if (!Array.isArray(inputForm())) {
+                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;
                 document.getElementById("warning").style.display = "block";
             } else {
                 document.getElementById("warning").style.display = "none";
+                
+                let fm = new Fm(inputForm(), resultForm());
                 fm[url_fm]();
-            }
+                
+                let form = fm._form, result = fm._result;
+                
+                if (url_fm === "waterProps" || url_fm === "pureProps") {
+                    form.splice(1, 1);
+                    form.splice(2, 1);
+                    form[1].name = propObj[fm._form[1].value].name;
+                    form[2].name = propObj[fm._form[3].value].name;
+                }
 
-            let form = [], result = [];
-            fm._form.forEach(item => {
-                form.push({name: item.name, value: item.value, unit: item.unit, other: item.other});
-            })
-
-            if (url_fm === "waterProps" || url_fm === "pureProps") {
-                form.splice(1, 1);
-                form.splice(2, 1);
-                form[1].name = propObj[fm._form[1].value].name;
-                form[2].name = propObj[fm._form[3].value].name;
-            }
-
-            if (url_fm === "pipeHInsultion" || url_fm === "pipeCInsultion" || url_fm === "waterPipe") {
-                let i = 0;
-                for (; i < form.length; i++) {
-                    if (form[i].name === "导热系数 λ=") {
-                        break;
+                if (url_fm === "pipeHInsultion" || url_fm === "pipeCInsultion" || url_fm === "waterPipe") {
+                    let i = 0;
+                    for (; i < form.length; i++) {
+                        if (form[i].name === "导热系数 λ=") {
+                            break;
+                        }
                     }
+                    form[i].name = "导热系数";
+                    form[i].value = "λ=" + form[i].value + form[i].other;
+                    for (let j = i + 1; j < i + 7; j++) {
+                        form[i].value = form[i].value + form[j].value + form[j].other;
+                    }
+                    form.splice(i + 1, 6);
                 }
-                form[i].name = "导热系数";
-                form[i].value = "λ=" + form[i].value + form[i].other;
-                for (let j = i + 1; j < i + 7; j++) {
-                    form[i].value = form[i].value + form[j].value + form[j].other;
-                }
-                form.splice(i + 1, 6);
-            }
-            console.log(form);
-            fm._result.forEach(item => {
-                result.push({name: item.name, value: item.value, unit: item.unit, other: item.other});
-            })
-            doc_generate(db[url_fm].text, form, result);
+
+                doc_generate(db[url_fm].text, form, result);
+            }         
         }
+
         var propObj = {
             T:   {name: "温度",         unit: "C",        unitset: "temperature_unit"},
             p:   {name: "压力",         unit: "MPaA",     unitset: "pressure_unit"},
