@@ -255,8 +255,21 @@
                 let fm = new Fm(inputForm(), resultForm());
                 fm[url_fm]();
                 
-                let form = fm._form, result = fm._result;
-                
+                let form = [...fm._form], result = [...fm._result];
+                form.forEach(item => {
+                    for (let i = 0; i < db[url_fm].form.length; i++) {
+                        if (item.id === db[url_fm].form[i].id) {
+                            item.name = db[url_fm].form[i].name;
+                        }
+                    }
+                });
+                result.forEach(item => {
+                    for (let i = 0; i < db[url_fm].result.length; i++) {
+                        if (item.id === db[url_fm].result[i].id) {
+                            item.name = db[url_fm].result[i].name;
+                        }
+                    }
+                });
                 if (url_fm === "waterProps" || url_fm === "pureProps") {
                     form.splice(1, 1);
                     form.splice(2, 1);
@@ -365,5 +378,19 @@
         }
     </script>
 </body>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  if (window.location.hostname == "yangshu.gitee.io") {
+    hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";
+  } 
+  if (window.location.hostname == "yangfengquan.github.io") {
+    hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";
+  }
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
 <script src="./js/coolprop.js"></script>
 </html>
