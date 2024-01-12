@@ -229,7 +229,7 @@
             });
             return result;
         }
-        function showResult(result) {
+        function showResult(result) {console.log(result);
             result.forEach(item => {
                 document.getElementById(item.id).value = item.value;
             });

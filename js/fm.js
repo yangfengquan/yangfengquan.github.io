@@ -167,13 +167,13 @@ export default class Fm {
         let epsilon = this.getValue("epsilon");
         
         let lambdaArgs = [];
-        lambdaArgs.push(this.getValue("a"));
-        lambdaArgs.push(this.getValue("b"));
-        lambdaArgs.push(this.getValue("c"));
-        lambdaArgs.push(this.getValue("d"));
-        lambdaArgs.push(this.getValue("e"));
-        lambdaArgs.push(this.getValue("f"));
-        lambdaArgs.push(this.getValue("g"));
+        lambdaArgs.push(Number(this.getValue("a")));
+        lambdaArgs.push(Number(this.getValue("b")));
+        lambdaArgs.push(Number(this.getValue("c")));
+        lambdaArgs.push(Number(this.getValue("d")));
+        lambdaArgs.push(Number(this.getValue("e")));
+        lambdaArgs.push(Number(this.getValue("f")));
+        lambdaArgs.push(Number(this.getValue("g")));
 
         let insul = pipe_insultion(t0, ta, w, d0, d1, lambdaArgs, epsilon);
 
@@ -192,13 +192,13 @@ export default class Fm {
         let insuldelta = this.getBaseUnitValue("insuldelta");
         
         let lambdaArgs = [];
-        lambdaArgs.push(this.getValue("a"));
-        lambdaArgs.push(this.getValue("b"));
-        lambdaArgs.push(this.getValue("c"));
-        lambdaArgs.push(this.getValue("d"));
-        lambdaArgs.push(this.getValue("e"));
-        lambdaArgs.push(this.getValue("f"));
-        lambdaArgs.push(this.getValue("g"));
+        lambdaArgs.push(Number(this.getValue("a")));
+        lambdaArgs.push(Number(this.getValue("b")));
+        lambdaArgs.push(Number(this.getValue("c")));
+        lambdaArgs.push(Number(this.getValue("d")));
+        lambdaArgs.push(Number(this.getValue("e")));
+        lambdaArgs.push(Number(this.getValue("f")));
+        lambdaArgs.push(Number(this.getValue("g")));
         
         let epsilon = this.getValue("epsilon");
 
@@ -208,7 +208,7 @@ export default class Fm {
         let di = d0 - 2 * delta;
         let d1 = d0 + 2 * insuldelta;
         let wp = water_pipe(flowRate, a_t, a_p, di, d0, d1, ll, le, rough, lambdaArgs, epsilon, ta, w);
-
+console.log(wp);
         this.setValuesWithBaseUnit(wp);
     }
     pumpPower() {
