@@ -1,5 +1,4 @@
 function doc_generate(title, form, result) {
-    console.log(result);
     let rows = [];
     let head_row = new docx.TableRow({
         children: [

@@ -322,7 +322,7 @@ function p2(pd1, p1, kt) {
  * @param {number[]} coefArgs 绝热材料系数
  * @returns {number} [W/(m*K)]
  */
-function insul_lambda(t0, ta, coefArgs) {
+function insul_lambda(t0, ta, coefArgs) {console.log(coefArgs);
 	let tm = 0.5 * (t0 + ta) - 273.15;
     return coefArgs[0] + coefArgs[1] * (tm - coefArgs[2]) + coefArgs[3] * Math.pow(tm - coefArgs[4], 2) + coefArgs[5] * Math.pow(tm - coefArgs[6], 3);
 }

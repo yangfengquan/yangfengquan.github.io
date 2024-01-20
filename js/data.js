@@ -4,28 +4,6 @@ const db =
         "text": "管径计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "体积流量",
                 "tag": "input",
                 "id": "flowRate",
@@ -73,29 +51,7 @@ const db =
     "pipeVelocity": {
         "text": "管道流速计算",
         "form": [
-            {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
+           {
                 "name": "体积流量",
                 "tag": "input",
                 "id": "flowRate",
@@ -144,28 +100,6 @@ const db =
         "text": "管子重量计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "管子外径",
                 "tag": "input",
                 "id": "d",
@@ -448,28 +382,6 @@ const db =
         "text": "管子强度[壁厚]计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "管子外径",
                 "tag": "input",
                 "id": "d",
@@ -706,28 +618,6 @@ const db =
         "text": "不可压缩流体管道阻力计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "流体名称",
                 "tag": "input",
                 "id": "fluidName",
@@ -942,28 +832,6 @@ const db =
         "text": "管道保温计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "管子外径",
                 "tag": "input",
                 "id": "d0",
@@ -1198,28 +1066,6 @@ const db =
         "text": "管道保冷计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "管子外径",
                 "tag": "input",
                 "id": "d0",
@@ -1454,28 +1300,6 @@ const db =
         "text": "水和水蒸汽管道计算",
         "form": [
             {
-                "name": "管线编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "PI1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "管线名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入管线名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "流量",
                 "tag": "input",
                 "id": "flowRate",
@@ -1979,28 +1803,6 @@ const db =
         "text": "泵轴功率计算",
         "form": [
             {
-                "name": "编号",
-                "tag": "input",
-                "id": "pcode",
-                "type": "text",
-                "placeholder": "",
-                "value": "P1",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
-                "name": "名称",
-                "tag": "input",
-                "id": "pname",
-                "type": "text",
-                "placeholder": "输入名称",
-                "value": "",
-                "required": false,
-                "readonly": false,
-                "pclass": "form-group",
-                "class": ""
-            },{
                 "name": "质量流量",
                 "tag": "input",
                 "id": "flowRate",
