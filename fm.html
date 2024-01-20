@@ -249,21 +249,18 @@
                 showResult(fm._result);
             }
         }
-        window.doc = () => {console.log(fm);
-            let f = fm.fillFormValue();
-            if (f != 0) {
-                document.getElementById("warning").innerText = "警告：“" + f + "” 未正确填写！" ;
+        window.doc = () => {
+            //let f = fm.fillFormValue();//
+
+            if (!Array.isArray(inputForm())) {
+                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;
                 document.getElementById("warning").style.display = "block";
-            } else {
-                document.getElementById("warning").style.display = "none";
-                fm[url_fm]();
+                return;
             }
 
-            let form = [], result = [];
-            fm._form.forEach(item => {
-                form.push({name: item.name, value: item.value, unit: item.unit, other: item.other});
-            })
-
+            let fm = new Fm(inputForm(), resultForm());
+            fm[url_fm]();
+            
             if (url_fm === "waterProps" || url_fm === "pureProps") {
                 form.splice(1, 1);
                 form.splice(2, 1);
