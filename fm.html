@@ -1,3 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./js/link.js"></script>
+    <script src="./js/docx/docx.umd.js"></script>
+    <script src="./js/docx/FileSaver.js"></script>
+    <script src="./js/docx/docGenerator.js"></script>
+</head>
+<body>
+    <div class="wrap">
+        <div id="sidebar">
+            <h1><a href="./">TangYuan</a></h1>
+            <img src="./img/nav.png" width="30" height="30" onclick="onLinkToggleDisplay()" id="navimg">
+            <div id="nav">
+                <h2>目录</h2>
+                <ul id="list"></ul>
+                <h2>手机扫码访问</h2>
+                <img src="img/addr.png" alt="手机扫码访问" width="125" height="125">
+                <h2>微信公众号</h2>
+                <img src="img/gzh.bmp" alt="微信公众号" width="120" height="120">
+                <p>杨奉全</p>
+                <p>邮箱： <a href="mailto:yangfengquan@126.com">yangfengquan@126.com</a></p>
+				<p><a href="sitemap.html">网站地图</a></p>
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+                <p style="font-size: 14px; color: #ccc;"><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></p>
+            </div> 
+        </div>
+        <div id="main">
+		    <p id="waiting" class="warning">页面正在加载...</p>
+            <h1 id="main-title"></h1>
+            <div id="form"></div>
+            <p id="warning" class="warning"></p>
+            <p id="btn" style="display:none;">
+                <button onclick="calc()">运算</button>
+                <button onclick="doc()">计算书</button>
+            </p>
+            <h2 id="res-title" style="display:none;">结果：</h2>
+            <div id="result"></div>
+        </div> 
+    </div>
+    <script type="module">
+        import * as unit from "./js/unitConverter.js"
+        import Fm from "./js/fm.js";
+        import db from "./js/data.js";
+		
+		//网页加载完成后，隐藏等待提示，并显示隐藏内容。
+		window.onload = () => { 
+			document.getElementById("waiting").style.display = "none";
+			document.getElementById("btn").style.display = "block";
+			document.getElementById("res-title").style.display = "block";
+		}
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        let url_fm = urlSearchParams.get('fm');
 
-<!-- saved from url=(0048)https://yangshu.gitee.io/fm.html?fm=pipeDiameter -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="color-scheme" content="light dark"></head><body><div class="line-gutter-backdrop"></div><form autocomplete="off"><label class="line-wrap-control">自动换行<input type="checkbox" aria-label="自动换行"></label></form><table><tbody><tr><td class="line-number" value="1"></td><td class="line-content"><span class="html-doctype">&lt;!DOCTYPE html&gt;</span></td></tr><tr><td class="line-number" value="2"></td><td class="line-content"><span class="html-tag">&lt;html <span class="html-attribute-name">lang</span>="<span class="html-attribute-value">zh</span>"&gt;</span></td></tr><tr><td class="line-number" value="3"></td><td class="line-content"><span class="html-tag">&lt;head&gt;</span></td></tr><tr><td class="line-number" value="4"></td><td class="line-content">    <span class="html-tag">&lt;meta <span class="html-attribute-name">charset</span>="<span class="html-attribute-value">UTF-8</span>"&gt;</span></td></tr><tr><td class="line-number" value="5"></td><td class="line-content">    <span class="html-tag">&lt;meta <span class="html-attribute-name">name</span>="<span class="html-attribute-value">viewport</span>" <span class="html-attribute-name">content</span>="<span class="html-attribute-value">width=device-width, initial-scale=1.0</span>"&gt;</span></td></tr><tr><td class="line-number" value="6"></td><td class="line-content">    <span class="html-tag">&lt;title&gt;</span>Document<span class="html-tag">&lt;/title&gt;</span></td></tr><tr><td class="line-number" value="7"></td><td class="line-content">    <span class="html-tag">&lt;link <span class="html-attribute-name">rel</span>="<span class="html-attribute-value">stylesheet</span>" <span class="html-attribute-name">href</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/style.css" rel="noreferrer noopener">style.css</a>"&gt;</span></td></tr><tr><td class="line-number" value="8"></td><td class="line-content">    <span class="html-tag">&lt;script <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/js/link.js" rel="noreferrer noopener">./js/link.js</a>"&gt;</span><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="9"></td><td class="line-content">    <span class="html-tag">&lt;script <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/js/docx/docx.umd.js" rel="noreferrer noopener">./js/docx/docx.umd.js</a>"&gt;</span><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="10"></td><td class="line-content">    <span class="html-tag">&lt;script <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/js/docx/FileSaver.js" rel="noreferrer noopener">./js/docx/FileSaver.js</a>"&gt;</span><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="11"></td><td class="line-content">    <span class="html-tag">&lt;script <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/js/docx/docGenerator.js" rel="noreferrer noopener">./js/docx/docGenerator.js</a>"&gt;</span><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="12"></td><td class="line-content"><span class="html-tag">&lt;/head&gt;</span></td></tr><tr><td class="line-number" value="13"></td><td class="line-content"><span class="html-tag">&lt;body&gt;</span></td></tr><tr><td class="line-number" value="14"></td><td class="line-content">    <span class="html-tag">&lt;div <span class="html-attribute-name">class</span>="<span class="html-attribute-value">wrap</span>"&gt;</span></td></tr><tr><td class="line-number" value="15"></td><td class="line-content">        <span class="html-tag">&lt;div <span class="html-attribute-name">id</span>="<span class="html-attribute-value">sidebar</span>"&gt;</span></td></tr><tr><td class="line-number" value="16"></td><td class="line-content">            <span class="html-tag">&lt;h1&gt;</span><span class="html-tag">&lt;a <span class="html-attribute-name">href</span>="<a class="html-attribute-value html-external-link" target="_blank" href="https://yangshu.gitee.io/" rel="noreferrer noopener">./</a>"&gt;</span>TangYuan<span class="html-tag">&lt;/a&gt;</span><span class="html-tag">&lt;/h1&gt;</span></td></tr><tr><td class="line-number" value="17"></td><td class="line-content">            <span class="html-tag">&lt;img <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/img/nav.png" rel="noreferrer noopener">./img/nav.png</a>" <span class="html-attribute-name">width</span>="<span class="html-attribute-value">30</span>" <span class="html-attribute-name">height</span>="<span class="html-attribute-value">30</span>" <span class="html-attribute-name">onclick</span>="<span class="html-attribute-value">onLinkToggleDisplay()</span>" <span class="html-attribute-name">id</span>="<span class="html-attribute-value">navimg</span>"&gt;</span></td></tr><tr><td class="line-number" value="18"></td><td class="line-content">            <span class="html-tag">&lt;div <span class="html-attribute-name">id</span>="<span class="html-attribute-value">nav</span>"&gt;</span></td></tr><tr><td class="line-number" value="19"></td><td class="line-content">                <span class="html-tag">&lt;h2&gt;</span>目录<span class="html-tag">&lt;/h2&gt;</span></td></tr><tr><td class="line-number" value="20"></td><td class="line-content">                <span class="html-tag">&lt;ul <span class="html-attribute-name">id</span>="<span class="html-attribute-value">list</span>"&gt;</span><span class="html-tag">&lt;/ul&gt;</span></td></tr><tr><td class="line-number" value="21"></td><td class="line-content">                <span class="html-tag">&lt;h2&gt;</span>手机扫码访问<span class="html-tag">&lt;/h2&gt;</span></td></tr><tr><td class="line-number" value="22"></td><td class="line-content">                <span class="html-tag">&lt;img <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/img/addr.png" rel="noreferrer noopener">img/addr.png</a>" <span class="html-attribute-name">alt</span>="<span class="html-attribute-value">手机扫码访问</span>" <span class="html-attribute-name">width</span>="<span class="html-attribute-value">125</span>" <span class="html-attribute-name">height</span>="<span class="html-attribute-value">125</span>"&gt;</span></td></tr><tr><td class="line-number" value="23"></td><td class="line-content">                <span class="html-tag">&lt;h2&gt;</span>微信公众号<span class="html-tag">&lt;/h2&gt;</span></td></tr><tr><td class="line-number" value="24"></td><td class="line-content">                <span class="html-tag">&lt;img <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/img/gzh.bmp" rel="noreferrer noopener">img/gzh.bmp</a>" <span class="html-attribute-name">alt</span>="<span class="html-attribute-value">微信公众号</span>" <span class="html-attribute-name">width</span>="<span class="html-attribute-value">120</span>" <span class="html-attribute-name">height</span>="<span class="html-attribute-value">120</span>"&gt;</span></td></tr><tr><td class="line-number" value="25"></td><td class="line-content">                <span class="html-tag">&lt;p&gt;</span>杨奉全<span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="26"></td><td class="line-content">                <span class="html-tag">&lt;p&gt;</span>邮箱： <span class="html-tag">&lt;a <span class="html-attribute-name">href</span>="<a class="html-attribute-value html-external-link" target="_blank" href="mailto:yangfengquan@126.com" rel="noreferrer noopener">mailto:yangfengquan@126.com</a>"&gt;</span>yangfengquan@126.com<span class="html-tag">&lt;/a&gt;</span><span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="27"></td><td class="line-content">				<span class="html-tag">&lt;p&gt;</span><span class="html-tag">&lt;a <span class="html-attribute-name">href</span>="<a class="html-attribute-value html-external-link" target="_blank" href="https://yangshu.gitee.io/sitemap.html" rel="noreferrer noopener">sitemap.html</a>"&gt;</span>网站地图<span class="html-tag">&lt;/a&gt;</span><span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="28"></td><td class="line-content">                <span class="html-tag">&lt;script <span class="html-attribute-name">async</span> <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" rel="noreferrer noopener">//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js</a>"&gt;</span><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="29"></td><td class="line-content">                <span class="html-tag">&lt;p <span class="html-attribute-name">style</span>="<span class="html-attribute-value">font-size: 14px; color: #ccc;</span>"&gt;</span><span class="html-tag">&lt;span <span class="html-attribute-name">id</span>="<span class="html-attribute-value">busuanzi_container_site_pv</span>"&gt;</span>本站总访问量<span class="html-tag">&lt;span <span class="html-attribute-name">id</span>="<span class="html-attribute-value">busuanzi_value_site_pv</span>"&gt;</span><span class="html-tag">&lt;/span&gt;</span>次<span class="html-tag">&lt;/span&gt;</span><span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="30"></td><td class="line-content">            <span class="html-tag">&lt;/div&gt;</span> </td></tr><tr><td class="line-number" value="31"></td><td class="line-content">        <span class="html-tag">&lt;/div&gt;</span></td></tr><tr><td class="line-number" value="32"></td><td class="line-content">        <span class="html-tag">&lt;div <span class="html-attribute-name">id</span>="<span class="html-attribute-value">main</span>"&gt;</span></td></tr><tr><td class="line-number" value="33"></td><td class="line-content">		    <span class="html-tag">&lt;p <span class="html-attribute-name">id</span>="<span class="html-attribute-value">waiting</span>" <span class="html-attribute-name">class</span>="<span class="html-attribute-value">warning</span>"&gt;</span>页面正在加载...<span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="34"></td><td class="line-content">            <span class="html-tag">&lt;h1 <span class="html-attribute-name">id</span>="<span class="html-attribute-value">main-title</span>"&gt;</span><span class="html-tag">&lt;/h1&gt;</span></td></tr><tr><td class="line-number" value="35"></td><td class="line-content">            <span class="html-tag">&lt;div <span class="html-attribute-name">id</span>="<span class="html-attribute-value">form</span>"&gt;</span><span class="html-tag">&lt;/div&gt;</span></td></tr><tr><td class="line-number" value="36"></td><td class="line-content">            <span class="html-tag">&lt;p <span class="html-attribute-name">id</span>="<span class="html-attribute-value">warning</span>" <span class="html-attribute-name">class</span>="<span class="html-attribute-value">warning</span>"&gt;</span><span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="37"></td><td class="line-content">            <span class="html-tag">&lt;p <span class="html-attribute-name">id</span>="<span class="html-attribute-value">btn</span>" <span class="html-attribute-name">style</span>="<span class="html-attribute-value">display:none;</span>"&gt;</span></td></tr><tr><td class="line-number" value="38"></td><td class="line-content">                <span class="html-tag">&lt;button <span class="html-attribute-name">onclick</span>="<span class="html-attribute-value">calc()</span>"&gt;</span>运算<span class="html-tag">&lt;/button&gt;</span></td></tr><tr><td class="line-number" value="39"></td><td class="line-content">                <span class="html-tag">&lt;button <span class="html-attribute-name">onclick</span>="<span class="html-attribute-value">doc()</span>"&gt;</span>计算书<span class="html-tag">&lt;/button&gt;</span></td></tr><tr><td class="line-number" value="40"></td><td class="line-content">            <span class="html-tag">&lt;/p&gt;</span></td></tr><tr><td class="line-number" value="41"></td><td class="line-content">            <span class="html-tag">&lt;h2 <span class="html-attribute-name">id</span>="<span class="html-attribute-value">res-title</span>" <span class="html-attribute-name">style</span>="<span class="html-attribute-value">display:none;</span>"&gt;</span>结果：<span class="html-tag">&lt;/h2&gt;</span></td></tr><tr><td class="line-number" value="42"></td><td class="line-content">            <span class="html-tag">&lt;div <span class="html-attribute-name">id</span>="<span class="html-attribute-value">result</span>"&gt;</span><span class="html-tag">&lt;/div&gt;</span></td></tr><tr><td class="line-number" value="43"></td><td class="line-content">        <span class="html-tag">&lt;/div&gt;</span> </td></tr><tr><td class="line-number" value="44"></td><td class="line-content">    <span class="html-tag">&lt;/div&gt;</span></td></tr><tr><td class="line-number" value="45"></td><td class="line-content">    <span class="html-tag">&lt;script <span class="html-attribute-name">type</span>="<span class="html-attribute-value">module</span>"&gt;</span></td></tr><tr><td class="line-number" value="46"></td><td class="line-content">        import * as unit from "./js/unitConverter.js"</td></tr><tr><td class="line-number" value="47"></td><td class="line-content">        import Fm from "./js/fm.js";</td></tr><tr><td class="line-number" value="48"></td><td class="line-content">        import db from "./js/data.js";</td></tr><tr><td class="line-number" value="49"></td><td class="line-content">		</td></tr><tr><td class="line-number" value="50"></td><td class="line-content">		//网页加载完成后，隐藏等待提示，并显示隐藏内容。</td></tr><tr><td class="line-number" value="51"></td><td class="line-content">		window.onload = () =&gt; { </td></tr><tr><td class="line-number" value="52"></td><td class="line-content">			document.getElementById("waiting").style.display = "none";</td></tr><tr><td class="line-number" value="53"></td><td class="line-content">			document.getElementById("btn").style.display = "block";</td></tr><tr><td class="line-number" value="54"></td><td class="line-content">			document.getElementById("res-title").style.display = "block";</td></tr><tr><td class="line-number" value="55"></td><td class="line-content">		}</td></tr><tr><td class="line-number" value="56"></td><td class="line-content">        const urlSearchParams = new URLSearchParams(window.location.search);</td></tr><tr><td class="line-number" value="57"></td><td class="line-content">        let url_fm = urlSearchParams.get('fm');</td></tr><tr><td class="line-number" value="58"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="59"></td><td class="line-content">        (function () {    </td></tr><tr><td class="line-number" value="60"></td><td class="line-content">            createLinkEle(db);</td></tr><tr><td class="line-number" value="61"></td><td class="line-content">            if (url_fm != '' &amp;&amp; url_fm != null) {</td></tr><tr><td class="line-number" value="62"></td><td class="line-content">                document.title = db[url_fm].text;</td></tr><tr><td class="line-number" value="63"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="64"></td><td class="line-content">                document.getElementById("main-title").innerText = db[url_fm].text;</td></tr><tr><td class="line-number" value="65"></td><td class="line-content">                let formEle = document.getElementById("form");</td></tr><tr><td class="line-number" value="66"></td><td class="line-content">                createFormEle(db[url_fm].form, formEle);</td></tr><tr><td class="line-number" value="67"></td><td class="line-content">                let resultEle = document.getElementById("result");</td></tr><tr><td class="line-number" value="68"></td><td class="line-content">                createFormEle(db[url_fm].result, resultEle);</td></tr><tr><td class="line-number" value="69"></td><td class="line-content">                if (document.getElementsByClassName("br").length &gt; 0) {</td></tr><tr><td class="line-number" value="70"></td><td class="line-content">                    document.getElementsByClassName("br")[0].parentNode.insertBefore(</td></tr><tr><td class="line-number" value="71"></td><td class="line-content">                        document.createElement("br"),</td></tr><tr><td class="line-number" value="72"></td><td class="line-content">                        document.getElementsByClassName("br")[0]);</td></tr><tr><td class="line-number" value="73"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="74"></td><td class="line-content">            } else {</td></tr><tr><td class="line-number" value="75"></td><td class="line-content">                window.location.href='./';</td></tr><tr><td class="line-number" value="76"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="77"></td><td class="line-content">            if (window.screen.width &lt;= 600) {</td></tr><tr><td class="line-number" value="78"></td><td class="line-content">                document.getElementById('nav').style.display = 'none'</td></tr><tr><td class="line-number" value="79"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="80"></td><td class="line-content">        })();</td></tr><tr><td class="line-number" value="81"></td><td class="line-content">        </td></tr><tr><td class="line-number" value="82"></td><td class="line-content">        function createFormEle(data, ele){</td></tr><tr><td class="line-number" value="83"></td><td class="line-content">            data.forEach(item =&gt; {</td></tr><tr><td class="line-number" value="84"></td><td class="line-content">                switch (item.tag) {</td></tr><tr><td class="line-number" value="85"></td><td class="line-content">                    case 'input':</td></tr><tr><td class="line-number" value="86"></td><td class="line-content">                        ele.appendChild(createInputEle(item));</td></tr><tr><td class="line-number" value="87"></td><td class="line-content">                        break;</td></tr><tr><td class="line-number" value="88"></td><td class="line-content">                    case 'select':</td></tr><tr><td class="line-number" value="89"></td><td class="line-content">                        ele.appendChild(createSelectEle(item));</td></tr><tr><td class="line-number" value="90"></td><td class="line-content">                    default:</td></tr><tr><td class="line-number" value="91"></td><td class="line-content">                        break;</td></tr><tr><td class="line-number" value="92"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="93"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="94"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="95"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="96"></td><td class="line-content">        function createInputEle(inp) {</td></tr><tr><td class="line-number" value="97"></td><td class="line-content">            let groupEle = document.createElement('div')</td></tr><tr><td class="line-number" value="98"></td><td class="line-content">            groupEle.className = inp.pclass</td></tr><tr><td class="line-number" value="99"></td><td class="line-content">            let labelEle = document.createElement('label')</td></tr><tr><td class="line-number" value="100"></td><td class="line-content">            labelEle.innerText = inp.name</td></tr><tr><td class="line-number" value="101"></td><td class="line-content">            labelEle.setAttribute('for', inp.id)</td></tr><tr><td class="line-number" value="102"></td><td class="line-content">            groupEle.appendChild(labelEle)</td></tr><tr><td class="line-number" value="103"></td><td class="line-content">        </td></tr><tr><td class="line-number" value="104"></td><td class="line-content">            let inputEle = document.createElement('input')</td></tr><tr><td class="line-number" value="105"></td><td class="line-content">            inputEle.setAttribute('name', inp.id)</td></tr><tr><td class="line-number" value="106"></td><td class="line-content">            inputEle.setAttribute('id', inp.id)</td></tr><tr><td class="line-number" value="107"></td><td class="line-content">            inputEle.setAttribute('autocomplete', 'on')</td></tr><tr><td class="line-number" value="108"></td><td class="line-content">            inputEle.type = inp.type</td></tr><tr><td class="line-number" value="109"></td><td class="line-content">            inputEle.value = inp.value</td></tr><tr><td class="line-number" value="110"></td><td class="line-content">            if (inp.placeholder) {</td></tr><tr><td class="line-number" value="111"></td><td class="line-content">                inputEle.placeholder = inp.placeholder</td></tr><tr><td class="line-number" value="112"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="113"></td><td class="line-content">            inputEle.required = inp.required</td></tr><tr><td class="line-number" value="114"></td><td class="line-content">            inputEle.readOnly = inp.readonly</td></tr><tr><td class="line-number" value="115"></td><td class="line-content">            inputEle.className = inp.class</td></tr><tr><td class="line-number" value="116"></td><td class="line-content">            groupEle.appendChild(inputEle)</td></tr><tr><td class="line-number" value="117"></td><td class="line-content">            if (inp.hasOwnProperty("datalist")) {</td></tr><tr><td class="line-number" value="118"></td><td class="line-content">                inputEle.setAttribute("list", inp.id + "-datalist");</td></tr><tr><td class="line-number" value="119"></td><td class="line-content">                let datalistEle = document.createElement("datalist");</td></tr><tr><td class="line-number" value="120"></td><td class="line-content">                datalistEle.id = inp.id + "-datalist"</td></tr><tr><td class="line-number" value="121"></td><td class="line-content">                inp.datalist.forEach(v =&gt; {</td></tr><tr><td class="line-number" value="122"></td><td class="line-content">                    datalistEle.appendChild(new Option(v));</td></tr><tr><td class="line-number" value="123"></td><td class="line-content">                });</td></tr><tr><td class="line-number" value="124"></td><td class="line-content">                groupEle.appendChild(datalistEle);</td></tr><tr><td class="line-number" value="125"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="126"></td><td class="line-content">            </td></tr><tr><td class="line-number" value="127"></td><td class="line-content">        </td></tr><tr><td class="line-number" value="128"></td><td class="line-content">            if (inp.hasOwnProperty("unitset")) {</td></tr><tr><td class="line-number" value="129"></td><td class="line-content">                groupEle.appendChild(createUnitSelect(inp.id, inp.unitset, inp.unit));</td></tr><tr><td class="line-number" value="130"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="131"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="132"></td><td class="line-content">            if (inp.other != '' &amp;&amp; inp.hasOwnProperty("other")) {</td></tr><tr><td class="line-number" value="133"></td><td class="line-content">                let spanEle = document.createElement('span');</td></tr><tr><td class="line-number" value="134"></td><td class="line-content">                spanEle.innerText = inp.other;</td></tr><tr><td class="line-number" value="135"></td><td class="line-content">                groupEle.appendChild(spanEle);</td></tr><tr><td class="line-number" value="136"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="137"></td><td class="line-content">            return groupEle</td></tr><tr><td class="line-number" value="138"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="139"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="140"></td><td class="line-content">        function createSelectEle(sel) {</td></tr><tr><td class="line-number" value="141"></td><td class="line-content">            let groupEle = document.createElement('div');</td></tr><tr><td class="line-number" value="142"></td><td class="line-content">            groupEle.className = sel.pclass;</td></tr><tr><td class="line-number" value="143"></td><td class="line-content">            let labelEle = document.createElement('label');</td></tr><tr><td class="line-number" value="144"></td><td class="line-content">            labelEle.innerText = sel.name;</td></tr><tr><td class="line-number" value="145"></td><td class="line-content">            labelEle.setAttribute('for', sel.id);</td></tr><tr><td class="line-number" value="146"></td><td class="line-content">            groupEle.appendChild(labelEle);</td></tr><tr><td class="line-number" value="147"></td><td class="line-content">        </td></tr><tr><td class="line-number" value="148"></td><td class="line-content">            let selectEle = document.createElement('select');</td></tr><tr><td class="line-number" value="149"></td><td class="line-content">            selectEle.setAttribute('name', sel.id);</td></tr><tr><td class="line-number" value="150"></td><td class="line-content">            selectEle.setAttribute('id', sel.id);</td></tr><tr><td class="line-number" value="151"></td><td class="line-content">            selectEle.setAttribute('autocomplete', 'on');</td></tr><tr><td class="line-number" value="152"></td><td class="line-content">            selectEle.required = sel.required</td></tr><tr><td class="line-number" value="153"></td><td class="line-content">            selectEle.readOnly = sel.readonly</td></tr><tr><td class="line-number" value="154"></td><td class="line-content">            selectEle.setAttribute('onchange', sel.listener);</td></tr><tr><td class="line-number" value="155"></td><td class="line-content">            sel.opts.forEach(opt =&gt; {</td></tr><tr><td class="line-number" value="156"></td><td class="line-content">                selectEle.add(new Option(opt.text, opt.value));</td></tr><tr><td class="line-number" value="157"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="158"></td><td class="line-content">            selectEle.value = sel.value;</td></tr><tr><td class="line-number" value="159"></td><td class="line-content">            groupEle.appendChild(selectEle);</td></tr><tr><td class="line-number" value="160"></td><td class="line-content">        </td></tr><tr><td class="line-number" value="161"></td><td class="line-content">            if (sel.unit != '' &amp;&amp; sel.hasOwnProperty("unit")) {</td></tr><tr><td class="line-number" value="162"></td><td class="line-content">                let spanEle = document.createElement('span');</td></tr><tr><td class="line-number" value="163"></td><td class="line-content">                spanEle.innerText = sel.unit;</td></tr><tr><td class="line-number" value="164"></td><td class="line-content">                groupEle.appendChild(spanEle);</td></tr><tr><td class="line-number" value="165"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="166"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="167"></td><td class="line-content">            if (sel.other != '' &amp;&amp; sel.hasOwnProperty("other")) {</td></tr><tr><td class="line-number" value="168"></td><td class="line-content">                let spanEle = document.createElement('span');</td></tr><tr><td class="line-number" value="169"></td><td class="line-content">                spanEle.innerText = sel.other;</td></tr><tr><td class="line-number" value="170"></td><td class="line-content">                groupEle.appendChild(spanEle);</td></tr><tr><td class="line-number" value="171"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="172"></td><td class="line-content">            </td></tr><tr><td class="line-number" value="173"></td><td class="line-content">            return groupEle;</td></tr><tr><td class="line-number" value="174"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="175"></td><td class="line-content">        function createUnitSelect(id, unitsetName, selected) {</td></tr><tr><td class="line-number" value="176"></td><td class="line-content">            let unitset = {}</td></tr><tr><td class="line-number" value="177"></td><td class="line-content">            if (unitsetName === "*") {//unitConverter缺少的单位集合</td></tr><tr><td class="line-number" value="178"></td><td class="line-content">                unitset[selected] = '';//将当前“单位”添加至单位集合</td></tr><tr><td class="line-number" value="179"></td><td class="line-content">            } else {</td></tr><tr><td class="line-number" value="180"></td><td class="line-content">                unitset = unit[unitsetName];</td></tr><tr><td class="line-number" value="181"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="182"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="183"></td><td class="line-content">            let selectEle = document.createElement("select");</td></tr><tr><td class="line-number" value="184"></td><td class="line-content">            selectEle.setAttribute('id', id + "-unit");</td></tr><tr><td class="line-number" value="185"></td><td class="line-content">            selectEle.className = "unit";</td></tr><tr><td class="line-number" value="186"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="187"></td><td class="line-content">            Object.keys(unitset).forEach(unit =&gt; {</td></tr><tr><td class="line-number" value="188"></td><td class="line-content">                selectEle.add(new Option(unit, unit));</td></tr><tr><td class="line-number" value="189"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="190"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="191"></td><td class="line-content">            selectEle.value = selected;</td></tr><tr><td class="line-number" value="192"></td><td class="line-content">            selectEle.setAttribute("data-last-val", selected);</td></tr><tr><td class="line-number" value="193"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="194"></td><td class="line-content">            selectEle.addEventListener("change", function () {</td></tr><tr><td class="line-number" value="195"></td><td class="line-content">                let lastUnit = this.dataset.lastVal;</td></tr><tr><td class="line-number" value="196"></td><td class="line-content">                this.dataset.lastVal = this.value;</td></tr><tr><td class="line-number" value="197"></td><td class="line-content">                let curUnit = this.value;</td></tr><tr><td class="line-number" value="198"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="199"></td><td class="line-content">                let lastValue = document.getElementById(id).value;</td></tr><tr><td class="line-number" value="200"></td><td class="line-content">                if (lastValue) {</td></tr><tr><td class="line-number" value="201"></td><td class="line-content">                    document.getElementById(id).value = unit.default(lastValue, lastUnit, curUnit);</td></tr><tr><td class="line-number" value="202"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="203"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="204"></td><td class="line-content">            </td></tr><tr><td class="line-number" value="205"></td><td class="line-content">            return selectEle;</td></tr><tr><td class="line-number" value="206"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="207"></td><td class="line-content">        function inputForm() {</td></tr><tr><td class="line-number" value="208"></td><td class="line-content">            let form = [];</td></tr><tr><td class="line-number" value="209"></td><td class="line-content">            for (let i = 0; i &lt; db[url_fm].form.length; i++) {</td></tr><tr><td class="line-number" value="210"></td><td class="line-content">                if (db[url_fm].form[i].required &amp;&amp; !document.getElementById(db[url_fm].form[i].id).value) {</td></tr><tr><td class="line-number" value="211"></td><td class="line-content">                    return db[url_fm].form[i].name;</td></tr><tr><td class="line-number" value="212"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="213"></td><td class="line-content">                form.push({</td></tr><tr><td class="line-number" value="214"></td><td class="line-content">                    id: db[url_fm].form[i].id,</td></tr><tr><td class="line-number" value="215"></td><td class="line-content">                    value: document.getElementById(db[url_fm].form[i].id).value,</td></tr><tr><td class="line-number" value="216"></td><td class="line-content">                    unit: document.getElementById(db[url_fm].form[i].id + "-unit") ? document.getElementById(db[url_fm].form[i].id + "-unit").value : ''</td></tr><tr><td class="line-number" value="217"></td><td class="line-content">                })</td></tr><tr><td class="line-number" value="218"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="219"></td><td class="line-content">            return form;</td></tr><tr><td class="line-number" value="220"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="221"></td><td class="line-content">        function resultForm() {</td></tr><tr><td class="line-number" value="222"></td><td class="line-content">            let result = [];</td></tr><tr><td class="line-number" value="223"></td><td class="line-content">            db[url_fm].result.forEach(item =&gt; {</td></tr><tr><td class="line-number" value="224"></td><td class="line-content">                result.push({</td></tr><tr><td class="line-number" value="225"></td><td class="line-content">                    id: item.id,</td></tr><tr><td class="line-number" value="226"></td><td class="line-content">                    value: '',</td></tr><tr><td class="line-number" value="227"></td><td class="line-content">                    unit: document.getElementById(item.id + "-unit") ? document.getElementById(item.id + "-unit").value : ''</td></tr><tr><td class="line-number" value="228"></td><td class="line-content">                });</td></tr><tr><td class="line-number" value="229"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="230"></td><td class="line-content">            return result;</td></tr><tr><td class="line-number" value="231"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="232"></td><td class="line-content">        function showResult(result) {console.log(result);</td></tr><tr><td class="line-number" value="233"></td><td class="line-content">            result.forEach(item =&gt; {</td></tr><tr><td class="line-number" value="234"></td><td class="line-content">                document.getElementById(item.id).value = item.value;</td></tr><tr><td class="line-number" value="235"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="236"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="237"></td><td class="line-content">        window.calc = function() {</td></tr><tr><td class="line-number" value="238"></td><td class="line-content">            if (!Array.isArray(inputForm())) {</td></tr><tr><td class="line-number" value="239"></td><td class="line-content">                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;</td></tr><tr><td class="line-number" value="240"></td><td class="line-content">                document.getElementById("warning").style.display = "block";</td></tr><tr><td class="line-number" value="241"></td><td class="line-content">            } else {</td></tr><tr><td class="line-number" value="242"></td><td class="line-content">                document.getElementById("warning").style.display = "none";</td></tr><tr><td class="line-number" value="243"></td><td class="line-content">                let fm = new Fm(inputForm(), resultForm());</td></tr><tr><td class="line-number" value="244"></td><td class="line-content">                fm[url_fm]();</td></tr><tr><td class="line-number" value="245"></td><td class="line-content">                showResult(fm._result);</td></tr><tr><td class="line-number" value="246"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="247"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="248"></td><td class="line-content">        window.doc = () =&gt; {</td></tr><tr><td class="line-number" value="249"></td><td class="line-content">            if (!Array.isArray(inputForm())) {</td></tr><tr><td class="line-number" value="250"></td><td class="line-content">                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;</td></tr><tr><td class="line-number" value="251"></td><td class="line-content">                document.getElementById("warning").style.display = "block";</td></tr><tr><td class="line-number" value="252"></td><td class="line-content">            } else {</td></tr><tr><td class="line-number" value="253"></td><td class="line-content">                document.getElementById("warning").style.display = "none";</td></tr><tr><td class="line-number" value="254"></td><td class="line-content">                </td></tr><tr><td class="line-number" value="255"></td><td class="line-content">                let fm = new Fm(inputForm(), resultForm());</td></tr><tr><td class="line-number" value="256"></td><td class="line-content">                fm[url_fm]();</td></tr><tr><td class="line-number" value="257"></td><td class="line-content">                </td></tr><tr><td class="line-number" value="258"></td><td class="line-content">                let form = [...fm._form], result = [...fm._result];</td></tr><tr><td class="line-number" value="259"></td><td class="line-content">                form.forEach(item =&gt; {</td></tr><tr><td class="line-number" value="260"></td><td class="line-content">                    for (let i = 0; i &lt; db[url_fm].form.length; i++) {</td></tr><tr><td class="line-number" value="261"></td><td class="line-content">                        if (item.id === db[url_fm].form[i].id) {</td></tr><tr><td class="line-number" value="262"></td><td class="line-content">                            item.name = db[url_fm].form[i].name;</td></tr><tr><td class="line-number" value="263"></td><td class="line-content">                        }</td></tr><tr><td class="line-number" value="264"></td><td class="line-content">                    }</td></tr><tr><td class="line-number" value="265"></td><td class="line-content">                });</td></tr><tr><td class="line-number" value="266"></td><td class="line-content">                result.forEach(item =&gt; {</td></tr><tr><td class="line-number" value="267"></td><td class="line-content">                    for (let i = 0; i &lt; db[url_fm].result.length; i++) {</td></tr><tr><td class="line-number" value="268"></td><td class="line-content">                        if (item.id === db[url_fm].result[i].id) {</td></tr><tr><td class="line-number" value="269"></td><td class="line-content">                            item.name = db[url_fm].result[i].name;</td></tr><tr><td class="line-number" value="270"></td><td class="line-content">                        }</td></tr><tr><td class="line-number" value="271"></td><td class="line-content">                    }</td></tr><tr><td class="line-number" value="272"></td><td class="line-content">                });</td></tr><tr><td class="line-number" value="273"></td><td class="line-content">                if (url_fm === "waterProps" || url_fm === "pureProps") {</td></tr><tr><td class="line-number" value="274"></td><td class="line-content">                    form.splice(1, 1);</td></tr><tr><td class="line-number" value="275"></td><td class="line-content">                    form.splice(2, 1);</td></tr><tr><td class="line-number" value="276"></td><td class="line-content">                    form[1].name = propObj[fm._form[1].value].name;</td></tr><tr><td class="line-number" value="277"></td><td class="line-content">                    form[2].name = propObj[fm._form[3].value].name;</td></tr><tr><td class="line-number" value="278"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="279"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="280"></td><td class="line-content">                if (url_fm === "pipeHInsultion" || url_fm === "pipeCInsultion" || url_fm === "waterPipe") {</td></tr><tr><td class="line-number" value="281"></td><td class="line-content">                    let i = 0;</td></tr><tr><td class="line-number" value="282"></td><td class="line-content">                    for (; i &lt; form.length; i++) {</td></tr><tr><td class="line-number" value="283"></td><td class="line-content">                        if (form[i].name === "导热系数 λ=") {</td></tr><tr><td class="line-number" value="284"></td><td class="line-content">                            break;</td></tr><tr><td class="line-number" value="285"></td><td class="line-content">                        }</td></tr><tr><td class="line-number" value="286"></td><td class="line-content">                    }</td></tr><tr><td class="line-number" value="287"></td><td class="line-content">                    form[i].name = "导热系数";</td></tr><tr><td class="line-number" value="288"></td><td class="line-content">                    form[i].value = "λ=" + form[i].value + form[i].other;</td></tr><tr><td class="line-number" value="289"></td><td class="line-content">                    for (let j = i + 1; j &lt; i + 7; j++) {</td></tr><tr><td class="line-number" value="290"></td><td class="line-content">                        form[i].value = form[i].value + form[j].value + form[j].other;</td></tr><tr><td class="line-number" value="291"></td><td class="line-content">                    }</td></tr><tr><td class="line-number" value="292"></td><td class="line-content">                    form.splice(i + 1, 6);</td></tr><tr><td class="line-number" value="293"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="294"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="295"></td><td class="line-content">                doc_generate(db[url_fm].text, form, result);</td></tr><tr><td class="line-number" value="296"></td><td class="line-content">            }         </td></tr><tr><td class="line-number" value="297"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="298"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="299"></td><td class="line-content">        var propObj = {</td></tr><tr><td class="line-number" value="300"></td><td class="line-content">            T:   {name: "温度",         unit: "C",        unitset: "temperature_unit"},</td></tr><tr><td class="line-number" value="301"></td><td class="line-content">            p:   {name: "压力",         unit: "MPaA",     unitset: "pressure_unit"},</td></tr><tr><td class="line-number" value="302"></td><td class="line-content">            h:   {name: "质量比焓",         unit: "kJ/kg",    unitset: "*"},</td></tr><tr><td class="line-number" value="303"></td><td class="line-content">            v:   {name: "质量比体积",       unit: "m3/kg",    unitset: "specificVolume_unit"},</td></tr><tr><td class="line-number" value="304"></td><td class="line-content">            rho: {name: "质量密度",         unit: "kg/m3",    unitset: "density_unit"},</td></tr><tr><td class="line-number" value="305"></td><td class="line-content">            s:   {name: "质量比熵",         unit: "kJ/(kg.K)",    unitset: "*"},</td></tr><tr><td class="line-number" value="306"></td><td class="line-content">            u:   {name: "质量内能",         unit: "kJ/kg",    unitset: "*"},</td></tr><tr><td class="line-number" value="307"></td><td class="line-content">            Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)", unitset: "*"},</td></tr><tr><td class="line-number" value="308"></td><td class="line-content">            Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)", unitset: "*"},</td></tr><tr><td class="line-number" value="309"></td><td class="line-content">            w:   {name: "声速",         unit: "m/s",      unitset: "speed_unit"},</td></tr><tr><td class="line-number" value="310"></td><td class="line-content">            my:  {name: "动力粘度",     unit: "Pa·s",     unitset: "*"},</td></tr><tr><td class="line-number" value="311"></td><td class="line-content">            tc:  {name: "导热系数",     unit: "W/(m·K)",  unitset: "*"},</td></tr><tr><td class="line-number" value="312"></td><td class="line-content">            st:  {name: "表面张力",     unit: "N/m",      unitset: "*"},</td></tr><tr><td class="line-number" value="313"></td><td class="line-content">            x:   {name: "干度",         unit: "",},</td></tr><tr><td class="line-number" value="314"></td><td class="line-content">            vx:  {name: "气态体积分数", unit: "",}</td></tr><tr><td class="line-number" value="315"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="316"></td><td class="line-content">        propObj["P"] = propObj.p;</td></tr><tr><td class="line-number" value="317"></td><td class="line-content">        propObj["DMOLAR"] = {name: "摩尔密度", unit: "mol/m3", unitset: "*"};</td></tr><tr><td class="line-number" value="318"></td><td class="line-content">        propObj["D"] = propObj.rho;</td></tr><tr><td class="line-number" value="319"></td><td class="line-content">        propObj["HMOLAR"] = {name: "摩尔比焓", unit: "J/mol", unitset: "*"};</td></tr><tr><td class="line-number" value="320"></td><td class="line-content">        propObj["H"] = {name: "摩尔比焓", unit: "J/kg", unitset: "*"};;</td></tr><tr><td class="line-number" value="321"></td><td class="line-content">        propObj["SMOLAR"] = {name: "摩尔比熵", unit: "J/(mol.K)", unitset: "*"};</td></tr><tr><td class="line-number" value="322"></td><td class="line-content">        propObj["S"] = {name: "质量比熵", unit: "J/(kg.K)", unitset: "*"};</td></tr><tr><td class="line-number" value="323"></td><td class="line-content">        propObj["UMOLAR"] = {name: "摩尔内能", unit: "J/mol", unitset: "*"};</td></tr><tr><td class="line-number" value="324"></td><td class="line-content">        propObj["U"] = {name: "质量内能", unit: "J/kg", unitset: "*"};</td></tr><tr><td class="line-number" value="325"></td><td class="line-content">        propObj["Q"] = {name: "气体比率", unit: "mol/mol", unitset: "*"};</td></tr><tr><td class="line-number" value="326"></td><td class="line-content">        const modes = [</td></tr><tr><td class="line-number" value="327"></td><td class="line-content">                ['p','T'],</td></tr><tr><td class="line-number" value="328"></td><td class="line-content">                ['p','h'],</td></tr><tr><td class="line-number" value="329"></td><td class="line-content">                ['p','s'],</td></tr><tr><td class="line-number" value="330"></td><td class="line-content">                ['p','rho'],</td></tr><tr><td class="line-number" value="331"></td><td class="line-content">                ['p','x'],</td></tr><tr><td class="line-number" value="332"></td><td class="line-content">                ['T','x'],</td></tr><tr><td class="line-number" value="333"></td><td class="line-content">                ['h','s'],</td></tr><tr><td class="line-number" value="334"></td><td class="line-content">                ['h','rho']</td></tr><tr><td class="line-number" value="335"></td><td class="line-content">            ]</td></tr><tr><td class="line-number" value="336"></td><td class="line-content">        const coolModes = ["P","T","DMOLAR", "D", "HMOLAR", "H","SMOLAR","S","UMOLAR","U","Q",];</td></tr><tr><td class="line-number" value="337"></td><td class="line-content">        window.onPropArg1Change = function() {</td></tr><tr><td class="line-number" value="338"></td><td class="line-content">            let arg1 = document.getElementById('propArg1').value;</td></tr><tr><td class="line-number" value="339"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="340"></td><td class="line-content">            let arg2_ele = document.getElementById("propArg2");</td></tr><tr><td class="line-number" value="341"></td><td class="line-content">            arg2_ele.innerHTML = "";</td></tr><tr><td class="line-number" value="342"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="343"></td><td class="line-content">            if (url_fm === "pureProps") {</td></tr><tr><td class="line-number" value="344"></td><td class="line-content">                let arg2s = coolModes.filter(v =&gt; v != arg1);</td></tr><tr><td class="line-number" value="345"></td><td class="line-content">                arg2s.forEach(v =&gt; {</td></tr><tr><td class="line-number" value="346"></td><td class="line-content">                    arg2_ele.options.add(new Option(propObj[v].name, v));</td></tr><tr><td class="line-number" value="347"></td><td class="line-content">                }); </td></tr><tr><td class="line-number" value="348"></td><td class="line-content">            } else {</td></tr><tr><td class="line-number" value="349"></td><td class="line-content">                modes.forEach(item =&gt; {</td></tr><tr><td class="line-number" value="350"></td><td class="line-content">                if (item[0] == arg1) {</td></tr><tr><td class="line-number" value="351"></td><td class="line-content">                    arg2_ele.options.add(new Option(propObj[item[1]].name, item[1]));</td></tr><tr><td class="line-number" value="352"></td><td class="line-content">                }</td></tr><tr><td class="line-number" value="353"></td><td class="line-content">            });</td></tr><tr><td class="line-number" value="354"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="355"></td><td class="line-content">            </td></tr><tr><td class="line-number" value="356"></td><td class="line-content"><br></td></tr><tr><td class="line-number" value="357"></td><td class="line-content">            if (document.getElementById('propValue1-unit')) {</td></tr><tr><td class="line-number" value="358"></td><td class="line-content">                document.getElementById('propValue1-unit').remove();</td></tr><tr><td class="line-number" value="359"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="360"></td><td class="line-content">            if (document.getElementById('propValue2-unit')) {</td></tr><tr><td class="line-number" value="361"></td><td class="line-content">                document.getElementById('propValue2-unit').remove();</td></tr><tr><td class="line-number" value="362"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="363"></td><td class="line-content">            if (propObj[arg1].unitset) {</td></tr><tr><td class="line-number" value="364"></td><td class="line-content">                document.getElementById('propValue1').parentNode.appendChild(createUnitSelect("propValue1", propObj[arg1].unitset, propObj[arg1].unit))</td></tr><tr><td class="line-number" value="365"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="366"></td><td class="line-content">            if (propObj[arg2_ele.value].unitset) {</td></tr><tr><td class="line-number" value="367"></td><td class="line-content">                document.getElementById('propValue2').parentNode.appendChild(createUnitSelect("propValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))</td></tr><tr><td class="line-number" value="368"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="369"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="370"></td><td class="line-content">        window.onPropArg2Change = function() {</td></tr><tr><td class="line-number" value="371"></td><td class="line-content">            let arg2_ele = document.getElementById("propArg2");</td></tr><tr><td class="line-number" value="372"></td><td class="line-content">            if (document.getElementById('propValue2-unit')) {</td></tr><tr><td class="line-number" value="373"></td><td class="line-content">                document.getElementById('propValue2-unit').remove();</td></tr><tr><td class="line-number" value="374"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="375"></td><td class="line-content">            if (propObj[arg2_ele.value].unitset) {</td></tr><tr><td class="line-number" value="376"></td><td class="line-content">                document.getElementById('propValue2').parentNode.appendChild(createUnitSelect("propValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))</td></tr><tr><td class="line-number" value="377"></td><td class="line-content">            }</td></tr><tr><td class="line-number" value="378"></td><td class="line-content">        }</td></tr><tr><td class="line-number" value="379"></td><td class="line-content">    <span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="380"></td><td class="line-content"><span class="html-tag">&lt;/body&gt;</span></td></tr><tr><td class="line-number" value="381"></td><td class="line-content"><span class="html-tag">&lt;script&gt;</span></td></tr><tr><td class="line-number" value="382"></td><td class="line-content">var _hmt = _hmt || [];</td></tr><tr><td class="line-number" value="383"></td><td class="line-content">(function() {</td></tr><tr><td class="line-number" value="384"></td><td class="line-content">  var hm = document.createElement("script");</td></tr><tr><td class="line-number" value="385"></td><td class="line-content">  if (window.location.hostname == "yangshu.gitee.io") {</td></tr><tr><td class="line-number" value="386"></td><td class="line-content">    hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";</td></tr><tr><td class="line-number" value="387"></td><td class="line-content">  } </td></tr><tr><td class="line-number" value="388"></td><td class="line-content">  if (window.location.hostname == "yangfengquan.github.io") {</td></tr><tr><td class="line-number" value="389"></td><td class="line-content">    hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";</td></tr><tr><td class="line-number" value="390"></td><td class="line-content">  }</td></tr><tr><td class="line-number" value="391"></td><td class="line-content">  var s = document.getElementsByTagName("script")[0]; </td></tr><tr><td class="line-number" value="392"></td><td class="line-content">  s.parentNode.insertBefore(hm, s);</td></tr><tr><td class="line-number" value="393"></td><td class="line-content">})();</td></tr><tr><td class="line-number" value="394"></td><td class="line-content"><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="395"></td><td class="line-content"><span class="html-tag">&lt;script <span class="html-attribute-name">src</span>="<a class="html-attribute-value html-resource-link" target="_blank" href="https://yangshu.gitee.io/js/coolprop.js" rel="noreferrer noopener">./js/coolprop.js</a>"&gt;</span><span class="html-tag">&lt;/script&gt;</span></td></tr><tr><td class="line-number" value="396"></td><td class="line-content"><span class="html-tag">&lt;/html&gt;</span><span class="html-end-of-file"></span></td></tr></tbody></table></body></html>
+        (function () {    
+            createLinkEle(db);
+            if (url_fm != '' && url_fm != null) {
+                document.title = db[url_fm].text;
+
+                document.getElementById("main-title").innerText = db[url_fm].text;
+                let formEle = document.getElementById("form");
+                createFormEle(db[url_fm].form, formEle);
+                let resultEle = document.getElementById("result");
+                createFormEle(db[url_fm].result, resultEle);
+                if (document.getElementsByClassName("br").length > 0) {
+                    document.getElementsByClassName("br")[0].parentNode.insertBefore(
+                        document.createElement("br"),
+                        document.getElementsByClassName("br")[0]);
+                }
+            } else {
+                window.location.href='./';
+            }
+            if (window.screen.width <= 600) {
+                document.getElementById('nav').style.display = 'none'
+            }
+        })();
+        
+        function createFormEle(data, ele){
+            data.forEach(item => {
+                switch (item.tag) {
+                    case 'input':
+                        ele.appendChild(createInputEle(item));
+                        break;
+                    case 'select':
+                        ele.appendChild(createSelectEle(item));
+                    default:
+                        break;
+                }
+            });
+        }
+
+        function createInputEle(inp) {
+            let groupEle = document.createElement('div')
+            groupEle.className = inp.pclass
+            let labelEle = document.createElement('label')
+            labelEle.innerText = inp.name
+            labelEle.setAttribute('for', inp.id)
+            groupEle.appendChild(labelEle)
+        
+            let inputEle = document.createElement('input')
+            inputEle.setAttribute('name', inp.id)
+            inputEle.setAttribute('id', inp.id)
+            inputEle.setAttribute('autocomplete', 'on')
+            inputEle.type = inp.type
+            inputEle.value = inp.value
+            if (inp.placeholder) {
+                inputEle.placeholder = inp.placeholder
+            }
+            inputEle.required = inp.required
+            inputEle.readOnly = inp.readonly
+            inputEle.className = inp.class
+            groupEle.appendChild(inputEle)
+            if (inp.hasOwnProperty("datalist")) {
+                inputEle.setAttribute("list", inp.id + "-datalist");
+                let datalistEle = document.createElement("datalist");
+                datalistEle.id = inp.id + "-datalist"
+                inp.datalist.forEach(v => {
+                    datalistEle.appendChild(new Option(v));
+                });
+                groupEle.appendChild(datalistEle);
+            }
+            
+        
+            if (inp.hasOwnProperty("unitset")) {
+                groupEle.appendChild(createUnitSelect(inp.id, inp.unitset, inp.unit));
+            }
+
+            if (inp.other != '' && inp.hasOwnProperty("other")) {
+                let spanEle = document.createElement('span');
+                spanEle.innerText = inp.other;
+                groupEle.appendChild(spanEle);
+            }
+            return groupEle
+        }
+
+        function createSelectEle(sel) {
+            let groupEle = document.createElement('div');
+            groupEle.className = sel.pclass;
+            let labelEle = document.createElement('label');
+            labelEle.innerText = sel.name;
+            labelEle.setAttribute('for', sel.id);
+            groupEle.appendChild(labelEle);
+        
+            let selectEle = document.createElement('select');
+            selectEle.setAttribute('name', sel.id);
+            selectEle.setAttribute('id', sel.id);
+            selectEle.setAttribute('autocomplete', 'on');
+            selectEle.required = sel.required
+            selectEle.readOnly = sel.readonly
+            selectEle.setAttribute('onchange', sel.listener);
+            sel.opts.forEach(opt => {
+                selectEle.add(new Option(opt.text, opt.value));
+            });
+            selectEle.value = sel.value;
+            groupEle.appendChild(selectEle);
+        
+            if (sel.unit != '' && sel.hasOwnProperty("unit")) {
+                let spanEle = document.createElement('span');
+                spanEle.innerText = sel.unit;
+                groupEle.appendChild(spanEle);
+            }
+
+            if (sel.other != '' && sel.hasOwnProperty("other")) {
+                let spanEle = document.createElement('span');
+                spanEle.innerText = sel.other;
+                groupEle.appendChild(spanEle);
+            }
+            
+            return groupEle;
+        }
+        function createUnitSelect(id, unitsetName, selected) {
+            let unitset = {}
+            if (unitsetName === "*") {//unitConverter缺少的单位集合
+                unitset[selected] = '';//将当前“单位”添加至单位集合
+            } else {
+                unitset = unit[unitsetName];
+            }
+
+            let selectEle = document.createElement("select");
+            selectEle.setAttribute('id', id + "-unit");
+            selectEle.className = "unit";
+
+            Object.keys(unitset).forEach(unit => {
+                selectEle.add(new Option(unit, unit));
+            });
+
+            selectEle.value = selected;
+            selectEle.setAttribute("data-last-val", selected);
+
+            selectEle.addEventListener("change", function () {
+                let lastUnit = this.dataset.lastVal;
+                this.dataset.lastVal = this.value;
+                let curUnit = this.value;
+
+                let lastValue = document.getElementById(id).value;
+                if (lastValue) {
+                    document.getElementById(id).value = unit.default(lastValue, lastUnit, curUnit);
+                }
+            });
+            
+            return selectEle;
+        }
+        function inputForm() {
+            let form = [];
+            for (let i = 0; i < db[url_fm].form.length; i++) {
+                if (db[url_fm].form[i].required && !document.getElementById(db[url_fm].form[i].id).value) {
+                    return db[url_fm].form[i].name;
+                }
+                form.push({
+                    id: db[url_fm].form[i].id,
+                    value: document.getElementById(db[url_fm].form[i].id).value,
+                    unit: document.getElementById(db[url_fm].form[i].id + "-unit") ? document.getElementById(db[url_fm].form[i].id + "-unit").value : ''
+                })
+            }
+            return form;
+        }
+        function resultForm() {
+            let result = [];
+            db[url_fm].result.forEach(item => {
+                result.push({
+                    id: item.id,
+                    value: '',
+                    unit: document.getElementById(item.id + "-unit") ? document.getElementById(item.id + "-unit").value : ''
+                });
+            });
+            return result;
+        }
+        function showResult(result) {console.log(result);
+            result.forEach(item => {
+                document.getElementById(item.id).value = item.value;
+            });
+        }
+        window.calc = function() {
+            if (!Array.isArray(inputForm())) {
+                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;
+                document.getElementById("warning").style.display = "block";
+            } else {
+                document.getElementById("warning").style.display = "none";
+                let fm = new Fm(inputForm(), resultForm());
+                fm[url_fm]();
+                showResult(fm._result);
+            }
+        }
+        window.doc = () => {
+            if (!Array.isArray(inputForm())) {
+                document.getElementById("warning").innerText = "警告：“" + inputForm() + "” 未正确填写！" ;
+                document.getElementById("warning").style.display = "block";
+            } else {
+                document.getElementById("warning").style.display = "none";
+                
+                let fm = new Fm(inputForm(), resultForm());
+                fm[url_fm]();
+                
+                let form = [...fm._form], result = [...fm._result];
+                form.forEach(item => {
+                    for (let i = 0; i < db[url_fm].form.length; i++) {
+                        if (item.id === db[url_fm].form[i].id) {
+                            item.name = db[url_fm].form[i].name;
+                        }
+                    }
+                });
+                result.forEach(item => {
+                    for (let i = 0; i < db[url_fm].result.length; i++) {
+                        if (item.id === db[url_fm].result[i].id) {
+                            item.name = db[url_fm].result[i].name;
+                        }
+                    }
+                });
+                if (url_fm === "waterProps" || url_fm === "pureProps") {
+                    form.splice(1, 1);
+                    form.splice(2, 1);
+                    form[1].name = propObj[fm._form[1].value].name;
+                    form[2].name = propObj[fm._form[3].value].name;
+                }
+
+                if (url_fm === "pipeHInsultion" || url_fm === "pipeCInsultion" || url_fm === "waterPipe") {
+                    let i = 0;
+                    for (; i < form.length; i++) {
+                        if (form[i].name === "导热系数 λ=") {
+                            break;
+                        }
+                    }
+                    form[i].name = "导热系数";
+                    form[i].value = "λ=" + form[i].value + form[i].other;
+                    for (let j = i + 1; j < i + 7; j++) {
+                        form[i].value = form[i].value + form[j].value + form[j].other;
+                    }
+                    form.splice(i + 1, 6);
+                }
+
+                doc_generate(db[url_fm].text, form, result);
+            }         
+        }
+
+        var propObj = {
+            T:   {name: "温度",         unit: "C",        unitset: "temperature_unit"},
+            p:   {name: "压力",         unit: "MPaA",     unitset: "pressure_unit"},
+            h:   {name: "质量比焓",         unit: "kJ/kg",    unitset: "*"},
+            v:   {name: "质量比体积",       unit: "m3/kg",    unitset: "specificVolume_unit"},
+            rho: {name: "质量密度",         unit: "kg/m3",    unitset: "density_unit"},
+            s:   {name: "质量比熵",         unit: "kJ/(kg.K)",    unitset: "*"},
+            u:   {name: "质量内能",         unit: "kJ/kg",    unitset: "*"},
+            Cp:  {name: "定压比热容",   unit: "kJ/(kg·K)", unitset: "*"},
+            Cv:  {name: "定容比热容",   unit: "kJ/(kg·K)", unitset: "*"},
+            w:   {name: "声速",         unit: "m/s",      unitset: "speed_unit"},
+            my:  {name: "动力粘度",     unit: "Pa·s",     unitset: "*"},
+            tc:  {name: "导热系数",     unit: "W/(m·K)",  unitset: "*"},
+            st:  {name: "表面张力",     unit: "N/m",      unitset: "*"},
+            x:   {name: "干度",         unit: "",},
+            vx:  {name: "气态体积分数", unit: "",}
+        }
+        propObj["P"] = propObj.p;
+        propObj["DMOLAR"] = {name: "摩尔密度", unit: "mol/m3", unitset: "*"};
+        propObj["D"] = propObj.rho;
+        propObj["HMOLAR"] = {name: "摩尔比焓", unit: "J/mol", unitset: "*"};
+        propObj["H"] = {name: "摩尔比焓", unit: "J/kg", unitset: "*"};;
+        propObj["SMOLAR"] = {name: "摩尔比熵", unit: "J/(mol.K)", unitset: "*"};
+        propObj["S"] = {name: "质量比熵", unit: "J/(kg.K)", unitset: "*"};
+        propObj["UMOLAR"] = {name: "摩尔内能", unit: "J/mol", unitset: "*"};
+        propObj["U"] = {name: "质量内能", unit: "J/kg", unitset: "*"};
+        propObj["Q"] = {name: "气体比率", unit: "mol/mol", unitset: "*"};
+        const modes = [
+                ['p','T'],
+                ['p','h'],
+                ['p','s'],
+                ['p','rho'],
+                ['p','x'],
+                ['T','x'],
+                ['h','s'],
+                ['h','rho']
+            ]
+        const coolModes = ["P","T","DMOLAR", "D", "HMOLAR", "H","SMOLAR","S","UMOLAR","U","Q",];
+        window.onPropArg1Change = function() {
+            let arg1 = document.getElementById('propArg1').value;
+
+            let arg2_ele = document.getElementById("propArg2");
+            arg2_ele.innerHTML = "";
+
+            if (url_fm === "pureProps") {
+                let arg2s = coolModes.filter(v => v != arg1);
+                arg2s.forEach(v => {
+                    arg2_ele.options.add(new Option(propObj[v].name, v));
+                }); 
+            } else {
+                modes.forEach(item => {
+                if (item[0] == arg1) {
+                    arg2_ele.options.add(new Option(propObj[item[1]].name, item[1]));
+                }
+            });
+            }
+            
+
+            if (document.getElementById('propValue1-unit')) {
+                document.getElementById('propValue1-unit').remove();
+            }
+            if (document.getElementById('propValue2-unit')) {
+                document.getElementById('propValue2-unit').remove();
+            }
+            if (propObj[arg1].unitset) {
+                document.getElementById('propValue1').parentNode.appendChild(createUnitSelect("propValue1", propObj[arg1].unitset, propObj[arg1].unit))
+            }
+            if (propObj[arg2_ele.value].unitset) {
+                document.getElementById('propValue2').parentNode.appendChild(createUnitSelect("propValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
+            }
+        }
+        window.onPropArg2Change = function() {
+            let arg2_ele = document.getElementById("propArg2");
+            if (document.getElementById('propValue2-unit')) {
+                document.getElementById('propValue2-unit').remove();
+            }
+            if (propObj[arg2_ele.value].unitset) {
+                document.getElementById('propValue2').parentNode.appendChild(createUnitSelect("propValue2", propObj[arg2_ele.value].unitset, propObj[arg2_ele.value].unit))
+            }
+        }
+    </script>
+</body>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  if (window.location.hostname == "yangshu.gitee.io") {
+    hm.src = "https://hm.baidu.com/hm.js?f21a3bcbd68f3fda366faacbd5cb7c4d";
+  } 
+  if (window.location.hostname == "yangfengquan.github.io") {
+    hm.src = "https://hm.baidu.com/hm.js?c601c0ade979f55c4e2d64e5eb0eac59";
+  }
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script src="./js/coolprop.js"></script>
+</html>

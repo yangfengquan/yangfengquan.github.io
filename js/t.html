@@ -4,24 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
+<script src="formDb.js"></script>
 </head>
 <body>
-    <select name="" id="et">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-    </select>
+    <div id="a12"></div>
     <script>
-        let sel = document.getElementById("et");
-        sel.value = "1";
-        sel.setAttribute("lastval", "1")
-        sel.dataset.lastval = "1";
-        sel.addEventListener("change", function(){
-            this.dataset.lastval = this.value
-            console.log("pre",this.dataset.lastval,"cur",this.value);
-            console.log(this.dataset);
-        })
+        document.getElementById("a12").appendChild( createInputGroupEle("pip","volume_flowrate"))
+        console.log(form.pipeDiameter);
     </script>
 </body>
 </html>
