@@ -1,20 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 <body>
-<input id="required-code" type="text" size="60"/></br>
-<input id="code" type="text" size="60"/></br>
-<button onclick="getCode()">提交</button>
+    <p>Application Code:<input id="application-code" type="text" size="60"/></p>
+    <p>Activation Code:<input id="activation-code" type="text" size="60"/></p>
+    <p><button onclick="getCode()">Submit</button></p>
 </body>
 <script>
 function getCode(){
-var required_code = document.getElementById("required-code").value;
-generateActivationCode("B2A414C9-70A36B4D-1872021D-16226CEF", "Ypipe2025")
-    .then(activationCode => {
-        console.log(activationCode);
-document.getElementById("code").value = activationCode
-    })
-
+    var required_code = document.getElementById("application-code").value;
+    generateActivationCode(required_code, "Ypipe2025")
+        .then(activationCode => {
+            console.log(activationCode);
+            document.getElementById("activation-code").value = activationCode
+        })
 }
-required_code = document.getE
+
 async function generateActivationCode(requestCode, secretKey) {
     const combined = `${requestCode}-${secretKey}`;
     
@@ -37,8 +41,5 @@ async function generateActivationCode(requestCode, secretKey) {
     
     return activationCode.join('-').toUpperCase();
 }
-
-// 使用示例
-
 </script>
 </html>
