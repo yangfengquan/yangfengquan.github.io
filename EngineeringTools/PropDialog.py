@@ -110,6 +110,7 @@ class PropDialog:
         res_tree_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.properties = {
+            'Phase':('相态', ''),
             'P': ('压力', 'MPa'),
             'T': ('温度', 'C'),
             'Q': ('干度', ''),
@@ -254,8 +255,18 @@ class PropDialog:
 
         if _param2 == 'T':
             value2 += 273.15
+        
+        try:
+            phase = CoolProp.PhaseSI(_param1, value1, _param2, value2, _create_mixture_string())
+        except ValueError:
+            phase = None
+        item_id = self.res_tree.get_children()[0]
+        self.res_tree.set(item_id, 'value', phase)
+        
 
         for i, param in enumerate(self.properties.keys()):
+            if i == 0:
+                continue
             try:
                 v = CoolProp.PropsSI(param, _param1, value1, _param2, value2, _create_mixture_string())
                 if param == 'P':

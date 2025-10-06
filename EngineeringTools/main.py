@@ -9,6 +9,8 @@ from PipeThicknessDialog import PipeThicknessDialog
 from PipeLoadDialog import PipeLoadDialog
 from PipeResistanceDialog import PipeResistanceDialog
 from SafetyValveDialog import SafetyValveDialog
+from PumpPowerDialog import PumpCalculatorDialog
+from SteelPipeSizeSeries import PipeSizeSeriesDialog
 
 class App(tk.Frame):
     def __init__(self, root):
@@ -27,19 +29,24 @@ class App(tk.Frame):
 
         # 创建文件菜单
         file_menu = tk.Menu(menubar, tearoff=0)  # tearoff=0 防止菜单被撕下
-        new_menu = tk.Menu(file_menu, tearoff=0)
-        new_menu.add_command(label="物质物性", command=self.open_propDialog)
-        new_menu.add_command(label="管径计算", command=self.open_pipeFlowDialog)
-        new_menu.add_command(label="管道阻力", command=self.open_pipeResistanceDialog)
-        new_menu.add_command(label="管子重量", command=self.open_pipeWeightDialog)
-        new_menu.add_command(label="管子壁厚", command=self.open_pipeThicknessDialog)
-        new_menu.add_command(label="管道荷载", command=self.open_pipeLoadDialog)
-        new_menu.add_command(label="安全阀", command=self.open_safetyValveDialog)
-        file_menu.add_cascade(label="新建", menu=new_menu)
-        #file_menu.add_command(label="打开", command=self.open_file, accelerator="Ctrl+O")
         file_menu.add_separator()  # 添加分隔线
         file_menu.add_command(label="退出", command=self.root.quit, accelerator="Ctrl+Q")
 
+        material_menu = tk.Menu(menubar, tearoff=0)
+        material_menu.add_command(label="物质物性", command=self.open_propDialog)
+        
+
+        pipe_menu = tk.Menu(menubar, tearoff=0)
+        pipe_menu.add_command(label="管径计算", command=self.open_pipeFlowDialog)
+        pipe_menu.add_command(label="管道阻力", command=self.open_pipeResistanceDialog)
+        pipe_menu.add_command(label="管子重量", command=self.open_pipeWeightDialog)
+        pipe_menu.add_command(label="管子壁厚", command=self.open_pipeThicknessDialog)
+        pipe_menu.add_command(label="管子尺寸系列", command=self.open_pipeSizeSeriesDialog)
+        pipe_menu.add_command(label="管道荷载", command=self.open_pipeLoadDialog)
+
+        equipment_menu = tk.Menu(menubar, tearoff=0)
+        equipment_menu.add_command(label="安全阀泄放面积", command=self.open_safetyValveDialog)
+        equipment_menu.add_command(label="泵轴功率", command=self.open_pumpPowerDialog)
 
         # 创建帮助菜单
         help_menu = tk.Menu(menubar, tearoff=0)
@@ -49,6 +56,9 @@ class App(tk.Frame):
 
         # 将子菜单添加到主菜单栏
         menubar.add_cascade(label="文件", menu=file_menu)
+        menubar.add_cascade(label="物质", menu=material_menu)
+        menubar.add_cascade(label="管道", menu=pipe_menu)
+        menubar.add_cascade(label="设备", menu=equipment_menu)
         menubar.add_cascade(label="帮助", menu=help_menu)
 
         # 将菜单栏设置到窗口
@@ -78,10 +88,10 @@ QQ群：816103114"""
         webbrowser.open_new("https://gitee.com/yangshu/design-tool/releases")
 
     def app_help(self):
-        messagebox.showinfo("帮助", "文件--新建，进入相应功能模块。")
+        messagebox.showinfo("帮助", "点击菜单栏，进入相应功能模块。")
 
     def about(self):
-        messagebox.showinfo("关于", "工程设计工具集\n版本：v0.1\n作者：杨奉全\nQQ群：816103114")
+        messagebox.showinfo("关于", "工程设计工具集\n版本：v0.2\n作者：杨奉全\nQQ群：816103114")
     
     def open_propDialog(self):
         PropDialog(parent=self.root)
@@ -103,6 +113,13 @@ QQ群：816103114"""
     
     def open_safetyValveDialog(self):
         SafetyValveDialog(parent=self.root)
+
+    def open_pumpPowerDialog(self):
+        dlg = PumpCalculatorDialog(parent=self.root)
+        dlg.grab_set()
+
+    def open_pipeSizeSeriesDialog(self):
+        PipeSizeSeriesDialog(parent=self.root)
 
 if __name__ == "__main__":
     root = tk.Tk()

@@ -1,0 +1,1 @@
+nuitka --standalone --enable-plugin=tk-inter --onefile --windows-console-mode=disable --windows-icon-from-ico=../favicon.ico main.py
