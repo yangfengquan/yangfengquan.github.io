@@ -7,7 +7,7 @@ class ActivationCodeGenerator:
     def __init__(self, root):
         self.root = root
         self.root.title("激活码生成工具")
-        self.root.geometry("500x300")
+        self.root.geometry("500x400")
         self.root.resizable(False, False)
         
         # 配置样式
@@ -17,7 +17,8 @@ class ActivationCodeGenerator:
         self.style.configure("Header.TLabel", font=("Arial", 14, "bold"))
         
         # 与主程序相同的密钥，必须保持一致
-        self.secret_key = "Ypipe2025"
+        #self.secret_key = "Ypipe2025"
+        #self.secret_key = "YTools2025"
         
         self.create_widgets()
     
@@ -32,9 +33,13 @@ class ActivationCodeGenerator:
         
         # 申请码输入区域
         ttk.Label(main_frame, text="请输入申请码:").pack(anchor=tk.W, pady=(10, 5))
-        
         self.request_code_var = tk.StringVar()
         request_entry = ttk.Entry(main_frame, textvariable=self.request_code_var, width=50)
+        request_entry.pack(fill=tk.X, pady=(0, 10))
+
+        ttk.Label(main_frame, text="请输入密钥:").pack(anchor=tk.W, pady=(10, 5))
+        self.secret_key_var = tk.StringVar()
+        request_entry = ttk.Entry(main_frame, textvariable=self.secret_key_var, width=50)
         request_entry.pack(fill=tk.X, pady=(0, 10))
         
         # 生成按钮
@@ -59,7 +64,7 @@ class ActivationCodeGenerator:
     def generate_activation_code(self):
         """根据申请码生成激活码"""
         request_code = self.request_code_var.get().strip()
-        
+        secret_key = self.secret_key_var.get().strip()
         if not request_code:
             messagebox.showerror("错误", "请输入申请码")
             return
@@ -72,7 +77,7 @@ class ActivationCodeGenerator:
         
         try:
             # 使用与主程序相同的算法生成激活码
-            combined = f"{request_code}-{self.secret_key}"
+            combined = f"{request_code}-{secret_key}"
             hash_obj = hashlib.sha512(combined.encode('utf-8'))
             hash_hex = hash_obj.hexdigest()
             activation_code = '-'.join([hash_hex[i:i+8] for i in range(0, 48, 8)]).upper()

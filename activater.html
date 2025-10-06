@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <p>Application Code:<input id="application-code" type="text" size="60"/></p>
-    <p>Activation Code:<input id="activation-code" type="text" size="60"/></p>
+    <p>Application Code: <input id="application-code" type="text" size="60"/></p>
+    <p>Secret &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Key: <input id="secret-key" type="text" size="60"/></p>
+    <p>Activation &nbsp;&nbsp;Code: <input id="activation-code" type="text" size="60"/></p>
     <p><button onclick="getCode()">Submit</button></p>
 </body>
 <script>
 function getCode(){
     var required_code = document.getElementById("application-code").value;
-    generateActivationCode(required_code, "Ypipe2025")
+    var secret_key = document.getElementById("secret-key").value;
+    generateActivationCode(required_code, secret_key)
         .then(activationCode => {
             console.log(activationCode);
             document.getElementById("activation-code").value = activationCode
