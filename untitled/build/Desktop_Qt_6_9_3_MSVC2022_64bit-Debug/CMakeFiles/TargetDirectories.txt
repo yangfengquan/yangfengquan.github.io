@@ -1,5 +1,0 @@
-F:/Tools/untitled/build/Desktop_Qt_6_9_3_MSVC2022_64bit-Debug/CMakeFiles/CoolPropQtDemo.dir
-F:/Tools/untitled/build/Desktop_Qt_6_9_3_MSVC2022_64bit-Debug/CMakeFiles/edit_cache.dir
-F:/Tools/untitled/build/Desktop_Qt_6_9_3_MSVC2022_64bit-Debug/CMakeFiles/rebuild_cache.dir
-F:/Tools/untitled/build/Desktop_Qt_6_9_3_MSVC2022_64bit-Debug/CMakeFiles/CoolPropQtDemo_autogen_timestamp_deps.dir
-F:/Tools/untitled/build/Desktop_Qt_6_9_3_MSVC2022_64bit-Debug/CMakeFiles/CoolPropQtDemo_autogen.dir
