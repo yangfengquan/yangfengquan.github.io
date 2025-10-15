@@ -54,7 +54,7 @@ private:
         }
 
         if (!std::isdigit(getCurrentCharacter())) {
-            throw std::invalid_argument("±í´ïÊ½ÖĞÈ±ÉÙÊı×Ö×Ö·û");
+            throw std::invalid_argument("è¡¨è¾¾å¼ä¸­ç¼ºå°‘æ•°å­—å­—ç¬¦");
         }
         while (std::isdigit(getCurrentCharacter())) {
             currentPosition++;
@@ -63,7 +63,7 @@ private:
         if (getCurrentCharacter() == '.') {
             currentPosition++;
             if (!std::isdigit(getCurrentCharacter())) {
-                throw std::invalid_argument("±í´ïÊ½ÖĞĞ¡ÊıµãºóÈ±ÉÙÊı×Ö");
+                throw std::invalid_argument("è¡¨è¾¾å¼ä¸­å°æ•°ç‚¹åç¼ºå°‘æ•°å­—");
             }
             while (std::isdigit(getCurrentCharacter())) {
                 currentPosition++;
@@ -77,12 +77,12 @@ private:
         skipWhitespace();
 
         if (!hasMoreCharacters()) {
-            throw std::invalid_argument("±í´ïÊ½ÖĞÈ±ÉÙÔËËã·û");
+            throw std::invalid_argument("è¡¨è¾¾å¼ä¸­ç¼ºå°‘è¿ç®—ç¬¦");
         }
 
         char firstChar = getCurrentCharacter();
         if (firstChar != '<' && firstChar != '>' && firstChar != '=') {
-            throw std::invalid_argument("ÎŞĞ§µÄÔËËã·û: " + std::string(1, firstChar));
+            throw std::invalid_argument("æ— æ•ˆçš„è¿ç®—ç¬¦: " + std::string(1, firstChar));
         }
 
         currentPosition++;
@@ -95,14 +95,14 @@ private:
         return std::string(1, firstChar);
     }
 
-    // Ö´ĞĞµ¥´Î±È½Ï
+    // æ‰§è¡Œå•æ¬¡æ¯”è¾ƒ
     bool compare(double left, const std::string& op, double right) {
         if (op == "<")      return left < right;
         if (op == ">")      return left > right;
         if (op == "=" || op == "==") return left == right;
         if (op == "<=")     return left <= right;
         if (op == ">=")     return left >= right;
-        throw std::invalid_argument("Î´ÖªµÄÔËËã·û: " + op);
+        throw std::invalid_argument("æœªçŸ¥çš„è¿ç®—ç¬¦: " + op);
     }
 
 public:
@@ -112,41 +112,41 @@ public:
         expression.erase(end, expression.end());
 
         if (variableName.empty()) {
-            throw std::invalid_argument("±äÁ¿Ãû²»ÄÜÎª¿Õ");
+            throw std::invalid_argument("å˜é‡åä¸èƒ½ä¸ºç©º");
         }
     }
 
     bool evaluate(double variableValue) {
         currentPosition = 0;
 
-        // ÖÁÉÙĞèÒª½âÎöÒ»¸ö×óÖµ
+        // è‡³å°‘éœ€è¦è§£æä¸€ä¸ªå·¦å€¼
         if (!hasMoreCharacters()) {
-            throw std::invalid_argument("±í´ïÊ½Îª¿Õ£¬È±ÉÙ±È½ÏÔËËã");
+            throw std::invalid_argument("è¡¨è¾¾å¼ä¸ºç©ºï¼Œç¼ºå°‘æ¯”è¾ƒè¿ç®—");
         }
 
         double currentValue = parseValue(variableValue);
         bool hasComparison = false;
 
-        // Ñ­»·½âÎöÔËËã·ûºÍÓÒÖµ£¨Ö§³ÖÁ¬Ğø±È½Ï£©
+        // å¾ªç¯è§£æè¿ç®—ç¬¦å’Œå³å€¼ï¼ˆæ”¯æŒè¿ç»­æ¯”è¾ƒï¼‰
         while (hasMoreCharacters()) {
             std::string op = parseOperator();
             double nextValue = parseValue(variableValue);
             hasComparison = true;
 
-            // Ö´ĞĞµ±Ç°±È½Ï
+            // æ‰§è¡Œå½“å‰æ¯”è¾ƒ
             if (op == "<" && !(currentValue < nextValue)) return false;
             if (op == ">" && !(currentValue > nextValue)) return false;
             if ((op == "=" || op == "==") && !(currentValue == nextValue)) return false;
             if (op == "<=" && !(currentValue <= nextValue)) return false;
             if (op == ">=" && !(currentValue >= nextValue)) return false;
 
-            // Á¬Ğø±È½ÏÊ±£¬ÓÃÓÒÖµ×÷ÎªÏÂÒ»ÂÖµÄ×óÖµ£¨Èç a < b < c ÖĞ£¬b ×÷ÎªÏÂÒ»ÂÖ×óÖµ£©
+            // è¿ç»­æ¯”è¾ƒæ—¶ï¼Œç”¨å³å€¼ä½œä¸ºä¸‹ä¸€è½®çš„å·¦å€¼ï¼ˆå¦‚ a < b < c ä¸­ï¼Œb ä½œä¸ºä¸‹ä¸€è½®å·¦å€¼ï¼‰
             currentValue = nextValue;
         }
 
-        // È·±£ÖÁÉÙÓĞÒ»´Î±È½Ï
+        // ç¡®ä¿è‡³å°‘æœ‰ä¸€æ¬¡æ¯”è¾ƒ
         if (!hasComparison) {
-            throw std::invalid_argument("±í´ïÊ½¸ñÊ½´íÎó£¬È±ÉÙ±È½ÏÔËËã");
+            throw std::invalid_argument("è¡¨è¾¾å¼æ ¼å¼é”™è¯¯ï¼Œç¼ºå°‘æ¯”è¾ƒè¿ç®—");
         }
 
         return true;

@@ -9,69 +9,61 @@
 #include <QDir>
 #include <cmath>
 #include <QRegularExpression>
-
-/*
+#include "ConditionParser.h"
+#include "FormulaParser.h"
 // 保温材料导热系数计算
-double InsulationMaterial::calculateConductivity(double tm_K) const
+double InsulationMaterial::calculateConductivity(double tm) const
 {
-    const double tmC = tmK - 273.15;  // 转换为摄氏度
+    const double tm_C = tm - 273.15;  // 转换为摄氏度
 
     try {
         // 处理方程1
         if (!conductivityEq1.isEmpty()) {
-            const int colonIndex = conductivityEq1.indexOf(':');
-            if (colonIndex != -1) {
-                // 分离方程和条件
-                const QString equation = conductivityEq1.left(colonIndex).trimmed();
-                const QString condition = conductivityEq1.mid(colonIndex + 1).trimmed();
-
-                if (MaterialManager::evaluateCondition(condition, tmC)) {
-                    return MaterialManager::evaluateExpression(equation, tmC);
-                }
+            ConditionParser condition(range1.toStdString(), "tm");
+            if (condition.evaluate(tm_C)) {
+                FormulaParser formula(conductivityEq1.toStdString(), "tm");
+                return formula.evaluate(tm_C);
             } else {
                 // 无条件方程
-                return MaterialManager::evaluateExpression(conductivityEq1, tmC);
+                FormulaParser formula(conductivityEq1.toStdString(), "tm");
+                return formula.evaluate(tm_C);
             }
         }
 
         // 处理方程2
         if (!conductivityEq2.isEmpty()) {
-            const int colonIndex = conductivityEq2.indexOf(':');
-            if (colonIndex != -1) {
-                const QString equation = conductivityEq2.left(colonIndex).trimmed();
-                const QString condition = conductivityEq2.mid(colonIndex + 1).trimmed();
-
-                if (MaterialManager::evaluateCondition(condition, tmC)) {
-                    return MaterialManager::evaluateExpression(equation, tmC);
-                }
+            ConditionParser condition(range2.toStdString(), "tm");
+            if (condition.evaluate(tm_C)) {
+                FormulaParser formula(conductivityEq2.toStdString(), "tm");
+                return formula.evaluate(tm_C);
             } else {
-                return MaterialManager::evaluateExpression(conductivityEq2, tmC);
+                // 无条件方程
+                FormulaParser formula(conductivityEq2.toStdString(), "tm");
+                return formula.evaluate(tm_C);
             }
         }
 
         // 处理方程3
         if (!conductivityEq3.isEmpty()) {
-            const int colonIndex = conductivityEq3.indexOf(':');
-            if (colonIndex != -1) {
-                const QString equation = conductivityEq3.left(colonIndex).trimmed();
-                const QString condition = conductivityEq3.mid(colonIndex + 1).trimmed();
-
-                if (MaterialManager::evaluateCondition(condition, tmC)) {
-                    return MaterialManager::evaluateExpression(equation, tmC);
-                }
+            ConditionParser condition(range3.toStdString(), "tm");
+            if (condition.evaluate(tm_C)) {
+                FormulaParser formula(conductivityEq3.toStdString(), "tm");
+                return formula.evaluate(tm_C);
             } else {
-                return MaterialManager::evaluateExpression(conductivityEq3, tmC);
+                // 无条件方程
+                FormulaParser formula(conductivityEq3.toStdString(), "tm");
+                return formula.evaluate(tm_C);
             }
         }
 
     } catch (const std::exception& e) {
         qWarning() << "导热系数计算错误:" << e.what()
-                   << "材料:" << name << "温度:" << tmK << "K";
+                   << "材料:" << name << "温度:" << tm << "K";
     }
 
     return 0.04;  // 默认值
 }
-*/
+
 // 材料管理器构造函数
 MaterialManager::MaterialManager(QObject *parent)
     : QObject(parent)
@@ -131,8 +123,8 @@ void MaterialManager::addInsulationMaterial(const QString& name, const QString& 
     material.conductivityEq2 = eq2;
     material.conductivityEq3 = eq3;
     material.range1 = range1;
-    material.range1 = range2;
-    material.range1 = range3;
+    material.range2 = range2;
+    material.range3 = range3;
     material.density = density;
     material.description = description;
 
@@ -180,7 +172,7 @@ bool MaterialManager::saveMaterialsToFile()
 {
     try {
         // 确保材料目录存在
-        const QString dataDir = QApplication::applicationDirPath() + "/materials";
+        const QString dataDir = QApplication::applicationDirPath() + "/data";
         if (!QDir().mkpath(dataDir)) {
             qWarning() << "无法创建材料目录:" << dataDir;
             return false;
@@ -200,6 +192,9 @@ bool MaterialManager::saveMaterialsToFile()
             obj["conductivity_eq1"] = material.conductivityEq1;
             obj["conductivity_eq2"] = material.conductivityEq2;
             obj["conductivity_eq3"] = material.conductivityEq3;
+            obj["range1"] = material.range1;
+            obj["range2"] = material.range2;
+            obj["range3"] = material.range3;
             obj["density"] = material.density;
             obj["description"] = material.description;
             insulationData[key] = obj;
@@ -540,7 +535,7 @@ void MaterialManager::createDefaultMaterialFiles()
 // 获取材料文件路径
 QString MaterialManager::getMaterialFilePath(const QString& fileName)
 {
-    return QApplication::applicationDirPath() + "/materials/" + fileName;
+    return QApplication::applicationDirPath() + "/data/" + fileName;
 }
 
 /*

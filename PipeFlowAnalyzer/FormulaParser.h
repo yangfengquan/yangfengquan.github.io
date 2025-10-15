@@ -9,32 +9,32 @@
 
 class FormulaParser {
 private:
-    std::string expr;       // ±í´ïÊ½×Ö·û´®
-    std::string varName;    // ±äÁ¿Ãû£¨Èç"x"¡¢"t"µÈ£©
-    size_t pos;             // µ±Ç°½âÎöÎ»ÖÃ
+    std::string expr;       // è¡¨è¾¾å¼å­—ç¬¦ä¸²
+    std::string varName;    // å˜é‡åï¼ˆå¦‚"x"ã€"t"ç­‰ï¼‰
+    size_t pos;             // å½“å‰è§£æä½ç½®
 
-    // Ìø¹ı¿Õ°××Ö·û
+    // è·³è¿‡ç©ºç™½å­—ç¬¦
     void skipWhitespace() {
         while (pos < expr.size() && std::isspace(expr[pos])) {
             pos++;
         }
     }
 
-    // ¼ì²éÊÇ·ñ»¹ÓĞ×Ö·û
+    // æ£€æŸ¥æ˜¯å¦è¿˜æœ‰å­—ç¬¦
     bool hasMoreChars() {
         return pos < expr.size();
     }
 
-    // »ñÈ¡µ±Ç°×Ö·û
+    // è·å–å½“å‰å­—ç¬¦
     char currentChar() {
         return (pos < expr.size()) ? expr[pos] : '\0';
     }
 
-    // ½âÎöÊı×Ö
+    // è§£ææ•°å­—
     double parseNumber() {
         size_t start = pos;
 
-        // ´¦ÀíÕı¸ººÅ
+        // å¤„ç†æ­£è´Ÿå·
         if (currentChar() == '+' || currentChar() == '-') {
             if (pos == 0 || expr[pos - 1] == '+' || expr[pos - 1] == '-' ||
                 expr[pos - 1] == '*' || expr[pos - 1] == '/' || expr[pos - 1] == '^' ||
@@ -46,12 +46,12 @@ private:
             }
         }
 
-        // ÕûÊı²¿·Ö
+        // æ•´æ•°éƒ¨åˆ†
         while (hasMoreChars() && std::isdigit(currentChar())) {
             pos++;
         }
 
-        // Ğ¡Êı²¿·Ö
+        // å°æ•°éƒ¨åˆ†
         if (hasMoreChars() && currentChar() == '.') {
             pos++;
             while (hasMoreChars() && std::isdigit(currentChar())) {
@@ -59,7 +59,7 @@ private:
             }
         }
 
-        // Ö¸Êı²¿·Ö (e»òE)
+        // æŒ‡æ•°éƒ¨åˆ† (eæˆ–E)
         if (hasMoreChars() && (currentChar() == 'e' || currentChar() == 'E')) {
             pos++;
             if (hasMoreChars() && (currentChar() == '+' || currentChar() == '-')) {
@@ -70,28 +70,28 @@ private:
             }
         }
 
-        // ×ª»»ÎªÊı×Ö
+        // è½¬æ¢ä¸ºæ•°å­—
         std::string numStr = expr.substr(start, pos - start);
         try {
             return std::stod(numStr);
         }
         catch (...) {
-            throw std::invalid_argument("ÎŞĞ§µÄÊı×Ö¸ñÊ½: " + numStr);
+            throw std::invalid_argument("æ— æ•ˆçš„æ•°å­—æ ¼å¼: " + numStr);
         }
     }
 
-    // ¼ì²éÊÇ·ñÆ¥Åä±äÁ¿Ãû
+    // æ£€æŸ¥æ˜¯å¦åŒ¹é…å˜é‡å
     bool matchVariable() {
         if (pos + varName.size() > expr.size()) {
             return false;
         }
-        // ¼ì²é±äÁ¿ÃûÊÇ·ñÆ¥Åä
+        // æ£€æŸ¥å˜é‡åæ˜¯å¦åŒ¹é…
         for (size_t i = 0; i < varName.size(); ++i) {
             if (expr[pos + i] != varName[i]) {
                 return false;
             }
         }
-        // È·±£±äÁ¿ÃûºóÃæ²»ÊÇ×ÖÄ¸»òÊı×Ö£¨±ÜÃâ²¿·ÖÆ¥Åä£©
+        // ç¡®ä¿å˜é‡ååé¢ä¸æ˜¯å­—æ¯æˆ–æ•°å­—ï¼ˆé¿å…éƒ¨åˆ†åŒ¹é…ï¼‰
         size_t nextPos = pos + varName.size();
         if (nextPos < expr.size() && (std::isalnum(expr[nextPos]))) {
             return false;
@@ -99,50 +99,50 @@ private:
         return true;
     }
 
-    // ½âÎöÒò×Ó
+    // è§£æå› å­
     double parseFactor(double varValue) {
         skipWhitespace();
 
         if (!hasMoreChars()) {
-            throw std::invalid_argument("±í´ïÊ½²»ÍêÕû");
+            throw std::invalid_argument("è¡¨è¾¾å¼ä¸å®Œæ•´");
         }
 
-        // ´¦ÀíÀ¨ºÅ
+        // å¤„ç†æ‹¬å·
         if (currentChar() == '(') {
-            pos++;  // Ìø¹ı '('
-            double result = parseExpression(varValue);  // µİ¹é½âÎöÀ¨ºÅÄÚµÄ±í´ïÊ½
+            pos++;  // è·³è¿‡ '('
+            double result = parseExpression(varValue);  // é€’å½’è§£ææ‹¬å·å†…çš„è¡¨è¾¾å¼
             skipWhitespace();
 
             if (!hasMoreChars() || currentChar() != ')') {
-                throw std::invalid_argument("À¨ºÅ²»Æ¥Åä: È±ÉÙ ')'");
+                throw std::invalid_argument("æ‹¬å·ä¸åŒ¹é…: ç¼ºå°‘ ')'");
             }
-            pos++;  // Ìø¹ı ')'
+            pos++;  // è·³è¿‡ ')'
             return result;
         }
-        // ´¦Àí±äÁ¿
+        // å¤„ç†å˜é‡
         else if (matchVariable()) {
-            pos += varName.size();  // Ìø¹ı±äÁ¿Ãû
-            // ¼ì²éÊÇ·ñĞèÒª´¦ÀíÒşÊ½³Ë·¨
+            pos += varName.size();  // è·³è¿‡å˜é‡å
+            // æ£€æŸ¥æ˜¯å¦éœ€è¦å¤„ç†éšå¼ä¹˜æ³•
             if (hasMoreChars() && (currentChar() == '(' || matchVariable() || std::isdigit(currentChar()))) {
-                pos -= varName.size();  // »ØÍË±äÁ¿ÃûÎ»ÖÃ£¬ÈÃparseTerm´¦Àí³Ë·¨
+                pos -= varName.size();  // å›é€€å˜é‡åä½ç½®ï¼Œè®©parseTermå¤„ç†ä¹˜æ³•
             }
             return varValue;
         }
-        // ´¦ÀíÊı×Ö
+        // å¤„ç†æ•°å­—
         else if (std::isdigit(currentChar()) || currentChar() == '+' || currentChar() == '-') {
             return parseNumber();
         }
 
-        throw std::invalid_argument("ÎŞĞ§×Ö·û: " + std::string(1, currentChar()));
+        throw std::invalid_argument("æ— æ•ˆå­—ç¬¦: " + std::string(1, currentChar()));
     }
 
-    // ½âÎöÃİÔËËã(^)
+    // è§£æå¹‚è¿ç®—(^)
     double parsePower(double varValue) {
         double result = parseFactor(varValue);
         skipWhitespace();
 
         while (hasMoreChars() && currentChar() == '^') {
-            pos++;  // Ìø¹ı '^'
+            pos++;  // è·³è¿‡ '^'
             skipWhitespace();
             double exponent = parseFactor(varValue);
             result = std::pow(result, exponent);
@@ -152,16 +152,16 @@ private:
         return result;
     }
 
-    // ½âÎö³Ë³ıÔËËã
+    // è§£æä¹˜é™¤è¿ç®—
     double parseTerm(double varValue) {
         double result = parsePower(varValue);
         skipWhitespace();
 
         while (hasMoreChars()) {
-            // ´¦ÀíÏÔÊ½³Ë³ı
+            // å¤„ç†æ˜¾å¼ä¹˜é™¤
             if (currentChar() == '*' || currentChar() == '/') {
                 char op = currentChar();
-                pos++;  // Ìø¹ıÔËËã·û
+                pos++;  // è·³è¿‡è¿ç®—ç¬¦
                 skipWhitespace();
 
                 double factor = parsePower(varValue);
@@ -171,31 +171,31 @@ private:
                 }
                 else {  // '/'
                     if (factor == 0) {
-                        throw std::domain_error("³ıÒÔÁã´íÎó");
+                        throw std::domain_error("é™¤ä»¥é›¶é”™è¯¯");
                     }
                     result /= factor;
                 }
                 skipWhitespace();
             }
-            // ´¦ÀíÒşÊ½³Ë·¨ (Èç var(...) »ò number(...) »ò (...) (...) )
+            // å¤„ç†éšå¼ä¹˜æ³• (å¦‚ var(...) æˆ– number(...) æˆ– (...) (...) )
             else if (currentChar() == '(' || matchVariable() || std::isdigit(currentChar())) {
                 double factor = parsePower(varValue);
                 result *= factor;
                 skipWhitespace();
             }
             else {
-                break;  // ÍË³öÑ­»·
+                break;  // é€€å‡ºå¾ªç¯
             }
         }
 
         return result;
     }
 
-    // ½âÎö¼Ó¼õÔËËã
+    // è§£æåŠ å‡è¿ç®—
     double parseExpression(double varValue) {
         skipWhitespace();
         if (!hasMoreChars()) {
-            throw std::invalid_argument("±í´ïÊ½Îª¿Õ");
+            throw std::invalid_argument("è¡¨è¾¾å¼ä¸ºç©º");
         }
 
         double result = parseTerm(varValue);
@@ -203,7 +203,7 @@ private:
 
         while (hasMoreChars() && (currentChar() == '+' || currentChar() == '-')) {
             char op = currentChar();
-            pos++;  // Ìø¹ıÔËËã·û
+            pos++;  // è·³è¿‡è¿ç®—ç¬¦
             skipWhitespace();
 
             double term = parseTerm(varValue);
@@ -221,29 +221,29 @@ private:
     }
 
 public:
-    // ¹¹Ôìº¯Êı£º½ÓÊÕ±í´ïÊ½ºÍ±äÁ¿Ãû£¨Ä¬ÈÏ±äÁ¿ÃûÎª"x"£©
+    // æ„é€ å‡½æ•°ï¼šæ¥æ”¶è¡¨è¾¾å¼å’Œå˜é‡åï¼ˆé»˜è®¤å˜é‡åä¸º"x"ï¼‰
     FormulaParser(const std::string& expression, const std::string& variableName = "x")
         : expr(expression), varName(variableName), pos(0) {
-        // ÑéÖ¤±äÁ¿ÃûÊÇ·ñÓĞĞ§
+        // éªŒè¯å˜é‡åæ˜¯å¦æœ‰æ•ˆ
         if (varName.empty()) {
-            throw std::invalid_argument("±äÁ¿Ãû²»ÄÜÎª¿Õ");
+            throw std::invalid_argument("å˜é‡åä¸èƒ½ä¸ºç©º");
         }
         for (char c : varName) {
             if (!std::isalnum(c)) {
-                throw std::invalid_argument("ÎŞĞ§µÄ±äÁ¿Ãû: " + varName);
+                throw std::invalid_argument("æ— æ•ˆçš„å˜é‡å: " + varName);
             }
         }
-        // ÒÆ³ı±í´ïÊ½ÖĞµÄËùÓĞ¿Õ°×
+        // ç§»é™¤è¡¨è¾¾å¼ä¸­çš„æ‰€æœ‰ç©ºç™½
         expr.erase(std::remove_if(expr.begin(), expr.end(), ::isspace), expr.end());
     }
 
-    // ¼ÆËã±í´ïÊ½Öµ£¬½ÓÊÕ±äÁ¿Öµ×÷Îª²ÎÊı
+    // è®¡ç®—è¡¨è¾¾å¼å€¼ï¼Œæ¥æ”¶å˜é‡å€¼ä½œä¸ºå‚æ•°
     double evaluate(double varValue = 0.0) {
-        pos = 0;  // ÖØÖÃ½âÎöÎ»ÖÃ
+        pos = 0;  // é‡ç½®è§£æä½ç½®
         double result = parseExpression(varValue);
 
         if (pos != expr.size()) {
-            throw std::invalid_argument("±í´ïÊ½Ä©Î²ÓĞÎŞĞ§×Ö·û: " +
+            throw std::invalid_argument("è¡¨è¾¾å¼æœ«å°¾æœ‰æ— æ•ˆå­—ç¬¦: " +
                 expr.substr(pos));
         }
 

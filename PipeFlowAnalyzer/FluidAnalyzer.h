@@ -11,15 +11,79 @@ public:
     FluidAnalyzer();
     ~FluidAnalyzer();
 
-    struct AnalysisResult {
-        QList<QVariantMap> segmentResults;
-        QVariantMap summary;
+    //struct AnalysisResult {
+        //QList<QVariantMap> segmentResults;
+        //QVariantMap summary;
         //QChart* chart;
+    //};
+
+    struct AnalysisResult
+    {
+        double massFlow;
+        double volumetricFlow;
+
+        double inletPressure;
+        double inletTemperature;
+        double inletEnthalpy;
+        double inletQuality;
+        double inletVelocity;
+        double inletDensity;
+        double inletVaporFlow;
+        double inletLiquidFlow;
+        double inletFrictionFactor;
+
+        double outletPressure;
+        double outletTemperature;
+        double outletEnthalpy;
+        double outletQuality;
+        double outletVelocity;
+        double outletDensity;
+        double outletVaporFlow;
+        double outletLiquidFlow;
+        double outletFrictionFactor;
+
+        double totalPressureDrop;
+        double frictionPressureDrop;
+        double fittingsPressureDrop;
+        double accelerationPressureDrop;
+        double maxVelocity;
+        //double minVelocity;
+        double avgVelocity;
+
+        double TemperatureDrop;
+        double EnthalpyDrop;
+        double totalHeatLoss;
+        double avgHeatLossPerM;
+        double avgHeatLossPerArea;
+        double maxSurfaceTemperature;
+        //double minSurfaceTemperature;
+        double avgSurfaceTemperature;
+
+        double pipeOd;
+        double pipeId;
+        double length;
+        std::string pipeTypeName;
+        double roughness;
+        double totalFittingsResistance;
+        std::string insulationMaterialName;
+        double insulationThickness;
+        std::string protectionMaterialName;
+        double emissivity;
+        double ambientTemperature;
+        double windSpeed;
+
+        std::vector<std::map<std::string, double>> segmentResults;
     };
 
-    AnalysisResult analyzePipe(const QVariantMap& params);
-    bool generateReport(const QVariantMap& params, const AnalysisResult& result,
-                        const QString& filename);
+    AnalysisResult analyzePipe(const char *fluid, double massFlow,
+                       double inletPressure, double inletTemperature,
+                       double length, double pipeOd,
+                       double pipeWallThickness, double insulationThickness,
+                       std::string pipeTypeName, std::string insulationMaterialName,
+                       std::string protectionMaterialName, double ambientTemperature,
+                       double windSpeed, double segmentLength,
+                       std::map<std::string, int> fittingsData,
+                       double inletQuality = -1);
 
 private:
     MaterialManager *materialManager;
@@ -30,21 +94,21 @@ private:
                                                           double viscosity, /*PaS*/
                                                           double diameter, double length,
                                                           double roughness, double fittingsResistance = 0);
-    std::map<std::string, double> heatLossCalculation(double fluidTemp, double ambientTemp,
+    std::map<std::string, double> heatLossCalculation(double fluidTemperature, double ambientTemperature,
                                                       double pipeOd, double insulationThickness,
                                                       const InsulationMaterial& insulationMaterial,
                                                       const OuterProtection& protectionMaterial,
                                                       double length, double windSpeed);
     std::map<std::string, double> analyzePipeSegment(
-        double massFlow, double inletP,
-        double inletT, double inletDensity,
+        double massFlow, double inletPressure,
+        double inletTemperature, double inletDensity,
         double inletViscosity, double inletEnthalpy,
         double pipeOd, double wallThickness, double length,
         const PipeType& pipeType, double insulationThickness,
         const InsulationMaterial& insulationMaterial,
         const OuterProtection& protectionMaterial,
-        double ambientTemp, double fittingsResistance,
-        double windSpeed, const char* fluid)
+        double ambientTemperature, double fittingsResistance,
+        double windSpeed, const char* fluid);
 
     double calculateExternalHeatTransfer(double surfaceTemp, double ambientTemp,
                                          double windSpeed, double emissivity,
@@ -54,13 +118,13 @@ private:
                                     double dOuter = -1);
     double calculateRadiationCoeff(double surfaceTemp, double ambientTemp,
                                    double emissivity);
-
+/*
     QVariantMap comprehensiveResultsAnalysis(const QList<QVariantMap>& results,
                                              const QVariantMap& inletProps,
                                              double totalLength, double massFlow,
                                              const QString& pipeName, const QString& fluid,
                                              double fittingsResistance, double inletVelocity,
-                                             double roughness);
+                                             double roughness);*/
 };
 
 #endif // FLUIDANALYZER_H
