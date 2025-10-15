@@ -20,7 +20,7 @@ HEADERS += \
     FormulaParser.h \
     MaterialManager.h \
     mainwindow.h \
-    thirdparty/include/CoolPropLib.h
+    report.h
 
 # 第三方库头文件路径
 INCLUDEPATH += $$PWD/thirdparty/include

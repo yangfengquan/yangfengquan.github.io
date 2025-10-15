@@ -20,7 +20,6 @@ public:
     struct AnalysisResult
     {
         double massFlow;
-        double volumetricFlow;
 
         double inletPressure;
         double inletTemperature;
@@ -45,7 +44,7 @@ public:
         double totalPressureDrop;
         double frictionPressureDrop;
         double fittingsPressureDrop;
-        double accelerationPressureDrop;
+        //double accelerationPressureDrop;//未考虑动压变化
         double maxVelocity;
         //double minVelocity;
         double avgVelocity;
