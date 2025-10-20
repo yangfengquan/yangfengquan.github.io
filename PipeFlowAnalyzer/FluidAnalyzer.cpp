@@ -10,6 +10,10 @@ extern "C" {
 #include <QString>
 #include <QMessageBox>
 #include <QDebug>
+#include <QFile>
+#include <QTextStream>
+#include <QProcess>
+#include <QCoreApplication>
 // 使用标准库函数
 using std::exp;
 using std::log;
@@ -59,13 +63,12 @@ std::map<std::string, double> FluidAnalyzer::pressureDropCalculation(
     double diameter, double length,
     double roughness, double fittingsResistance)
 {
-    qDebug()<<"massFlow"<<massFlow<<"density"<<density<<"viscosity"<<viscosity<<"diameter"<<diameter<<"length"<<length<<"roughness"<<roughness;
     double area = M_PI * pow(diameter/2, 2);
 
     double velocity = massFlow / (density * area);
     double Re = (density * velocity * diameter) / viscosity;
     double f = frictionFactor(Re, roughness, diameter);
-    qDebug()<<"velocity"<<velocity<<"f"<<f;
+
     // 沿程阻力损失
     double frictionPressureDrop = f * (length / diameter) * (density * pow(velocity, 2)) / 2;
 
@@ -73,12 +76,12 @@ std::map<std::string, double> FluidAnalyzer::pressureDropCalculation(
     double fittingsPressureDrop = fittingsResistance * (density * pow(velocity, 2)) / 2;
 
     double totalPressureDrop = frictionPressureDrop + fittingsPressureDrop;
-    qDebug()<<"totalPressureDrop"<<totalPressureDrop<<"frictionPressureDrop"<<frictionPressureDrop<<"fittingsPressureDrop"<<fittingsPressureDrop;
+
     std::map<std::string, double> results;
 
     results["velocity"] = velocity;
     results["reynolds"] = Re;
-    results["friction"] = f;
+    results["frictionFactor"] = f;
     results["pressureDrop"] = totalPressureDrop;
     results["frictionPressureDrop"] = frictionPressureDrop;
     results["fittingsPressureDrop"] = fittingsPressureDrop;
@@ -254,7 +257,7 @@ std::map<std::string, double> FluidAnalyzer::analyzePipeSegment(
         );
 
     double outletPressure = inletPressure - dpResults["pressureDrop"];
-    qDebug()<<"pressureDrop"<<dpResults["pressureDrop"];
+
     // 2. 热损失计算
     std::map<std::string, double> heatLossResults = heatLossCalculation(
         inletTemperature, ambientTemperature, pipeOd,
@@ -268,7 +271,7 @@ std::map<std::string, double> FluidAnalyzer::analyzePipeSegment(
     // 4. 出口状态
     double outletQuality = PropsSI("Q", "P", outletPressure, "H", outletEnthalpy, fluid);
     double outletTemperature = PropsSI("T", "P", outletPressure, "H", outletEnthalpy, fluid);
-qDebug()<<"delta_h"<<delta_h<<"outletTemperature"<<outletTemperature;
+
     // 5. 计算气相和液相流量
     double vaporFlow = massFlow * outletQuality;
     double liquidFlow = massFlow * (1 - outletQuality);
@@ -276,13 +279,13 @@ qDebug()<<"delta_h"<<delta_h<<"outletTemperature"<<outletTemperature;
     std::map<std::string, double> results;
     // 组装结果
     results["velocity"] = dpResults["velocity"];//inlet
-    results["reynoldsr"] = dpResults["reynoldsr"];
+    results["reynolds"] = dpResults["reynolds"];
     results["frictionFactor"] = dpResults["frictionFactor"];
     results["pressureDrop"] = dpResults["pressureDrop"];
     results["frictionPressureDrop"] = dpResults["frictionPressureDrop"];
     results["fittingsPressureDrop"] = dpResults["fittingsPressureDrop"];
     results["totalHeatLoss"] = heatLossResults["totalHeatLoss"];
-    results["heatLossPerM"] = heatLossResults["heat_loss_per"];
+    results["heatLossPerM"] = heatLossResults["heatLossPerM"];
     results["heatLossPerArea"] = heatLossResults["heatLossPerArea"];
     results["overallHeatTransferCoeff"] = heatLossResults["overallHeatTransferCoeff"];
     results["convectionCoeff"] = heatLossResults["convectionCoeff"];
@@ -308,7 +311,7 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
     double windSpeed, double segmentLength,
     std::map<std::string, int> fittingsData,
     double inletQuality)
-{qDebug()<<"massFlow"<<10000/3600;
+{
     AnalysisResult result;
     try {    
         // 获取材料
@@ -460,119 +463,158 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
             result.segmentResults = segmentResults;
         }
     } catch (const std::exception& e) {
-        qDebug() << "管道分析错误:" << e.what();
         QMessageBox::critical(nullptr, "错误", QString("管道分析失败: %1").arg(e.what()));
     }
 
+    generateReport(result, "Pipe.tmp");
     return result;
 }
-/*
-QVariantMap FluidAnalyzer::comprehensiveResultsAnalysis(const QList<QVariantMap>& results,
-                                                        const QVariantMap& inletPressurerops,
-                                                        double totalLength, double massFlow,
-                                                        const QString& pipeName, const QString& fluid,
-                                                        double fittingsResistance, double inletVelocity,
-                                                        double roughness)
+
+bool FluidAnalyzer::generateReport(const FluidAnalyzer::AnalysisResult& result, const std::string fileName)
 {
-    QVariantMap analysis;
+    // 获取程序运行目录
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString reportFullPath = appDir + "/" + QString::fromStdString(fileName);
 
-    if (results.isEmpty()) {
-        return analysis;
+    // 打开文件并写入报告内容
+    QFile reportFile(reportFullPath);
+    if (!reportFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::critical(nullptr, "错误", "报告文件创建失败：" + reportFile.errorString());
+        return false;
     }
 
-    const QVariantMap& final_result = results.last();
+    // Qt 6中设置UTF-8编码
+    QTextStream out(&reportFile);
+    out.setEncoding(QStringConverter::Utf8);
 
-    double final_pressure_pa = final_result["pressure_pa"].toDouble();
-    double final_temperature_k = final_result["temperature_k"].toDouble();
-    double final_quality = final_result["quality"].toDouble();
-    double final_velocity = final_result["velocity_m_s"].toDouble();
-    double final_vaporFlow = final_result["vaporFlow_kg_s"].toDouble();
-    double final_liquidFlow = final_result["liquidFlow_kg_s"].toDouble();
+    // 报告头部
+    out << "===================================================================================\n";
+    out << "                          管道压力损失与热损失分析报告\n";
+    out << "===================================================================================\n";
 
-    double total_pressureDropa = inletPressurerops["pressure_pa"].toDouble() - final_pressure_pa;
-    double total_temperature_drop = inletPressurerops["temperature_k"].toDouble() - final_temperature_k;
+    // 1. 操作参数（标签宽度28，数值宽度20）
+    out << "操作参数\n";
+    out << "-----------------------------------------------------------------------------------\n";
+    out << QString("%1: %2\n").arg("质量流量（kg/hr）", -28).arg(result.massFlow * 3600, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("总压力损失（kPa）", -27).arg(result.totalPressureDrop / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("摩擦压力损失（kPa）", -26).arg(result.frictionPressureDrop / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("管件压力损失（kPa）", -26).arg(result.fittingsPressureDrop / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("最大流速（m/sec）", -28).arg(result.maxVelocity, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("平均流速（m/sec）", -28).arg(result.avgVelocity, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("温度降（C）", -29).arg(result.TemperatureDrop -273.15, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("焓降（kJ/kg）", -30).arg(result.EnthalpyDrop / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("总热损失（kW）", -28).arg(result.totalHeatLoss / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("每米平均热损失（W/m）", -25).arg(result.avgHeatLossPerM, 20, 'f', 4);
+    out << QString("%1: %2\n\n").arg("每平方米平均热损失（W/m2）", -23).arg(result.avgHeatLossPerArea, 20, 'f', 4);
 
-    double totalHeatLoss_w = 0;
-    double total_frictionPressureDropa = 0;
-    double total_fittingsPressureDropa = 0;
+    // 2. 进口和出口流体特性
+    out << "流体特性参数\n";
+    out << "-----------------------------------------------------------------------------------\n";
+    out << QString("%1%2%3\n").arg("", -32).arg("进口", 20).arg("出口", 18);
+    out << QString("%1%2%3\n").arg("", -34).arg("---------", 20).arg("---------", 20);
+    out << QString("%1%2%3\n").arg("压力（kPa）", -30).arg(result.inletPressure / 1000, 20, 'f', 2).arg(result.outletPressure / 1000, 20, 'f', 2);
+    out << QString("%1%2%3\n").arg("温度（C）", -30).arg(result.inletTemperature - 273.15, 20, 'f', 2).arg(result.outletTemperature - 273.15, 20, 'f', 2);
+    out << QString("%1%2%3\n").arg("焓值（kJ/kg）", -30).arg(result.inletEnthalpy / 1000, 20, 'f', 2).arg(result.outletEnthalpy / 1000, 20, 'f', 2);
+    out << QString("%1%2%3\n").arg("干度（-）", -30).arg(result.inletQuality, 20, 'f', 4).arg(result.outletQuality, 20, 'f', 4);
+    out << QString("%1%2%3\n").arg("流速（m/sec）", -30).arg(result.inletVelocity, 20, 'f', 4).arg(result.outletVelocity, 20, 'f', 4);
+    out << QString("%1%2%3\n").arg("密度（kg/m3）", -30).arg(result.inletDensity, 20, 'f', 4).arg(result.outletDensity, 20, 'f', 4);
+    out << QString("%1%2%3\n").arg("气相流量（kg/hr）", -28).arg(result.inletVaporFlow * 3600, 20, 'f', 2).arg(result.outletVaporFlow * 3600, 20, 'f', 2);
+    out << QString("%1%2%3\n").arg("液相流量（kg/hr）", -28).arg(result.inletLiquidFlow * 3600, 20, 'f', 2).arg(result.outletLiquidFlow * 3600, 20, 'f', 2);
+    out << QString("%1%2%3\n\n").arg("摩擦系数（-）", -28).arg(result.inletFrictionFactor, 20, 'f', 4).arg(result.outletFrictionFactor, 20, 'f', 4);
 
-    double max_surfaceTemperature = 0;
-    double min_velocity = final_velocity;
-    double max_velocity = final_velocity;
-    double total_reynolds = 0;
-    double total_friction = 0;
+    // 3. 其它参数
+    out << "其它参数\n";
+    out << "-----------------------------------------------------------------------------------\n";
+    out << QString("%1: %2\n").arg("管道外径（mm）", -28).arg(result.pipeOd * 1000, 20, 'f', 2);
+    out << QString("%1: %2\n").arg("管道内径（mm）", -28).arg(result.pipeId * 1000, 20, 'f', 2);
+    out << QString("%1: %2\n").arg("管道长度（m）", -28).arg(result.length, 20, 'f', 2);
+    out << QString("%1: %2\n").arg("管道粗糙度（mm）", -27).arg(result.roughness * 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("管件总阻力系数", -27).arg(result.totalFittingsResistance, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("保温厚度（mm）", -28).arg(result.insulationThickness * 1000, 20, 'f', 2);
+    out << QString("%1: %2\n").arg("保护层黑度", -29).arg(result.emissivity, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("环境温度（C）", -28).arg(result.ambientTemperature - 273.15, 20, 'f', 2);
+    out << QString("%1: %2\n").arg("风速（m/sec）", -30).arg(result.windSpeed, 20, 'f', 2);
+    out << QString("%1: %2\n").arg("管道类型", -30).arg(QString::fromStdString(result.pipeTypeName), 20);
+    out << QString("%1: %2\n").arg("保温材料", -30).arg(QString::fromStdString(result.insulationMaterialName), 19);
+    out << QString("%1: %2\n\n").arg("保护层材料", -29).arg(QString::fromStdString(result.protectionMaterialName), 12);
 
-    for (const QVariantMap& segment : results) {
-        totalHeatLoss_w += segment["totalHeatLoss_w"].toDouble();
-        total_frictionPressureDropa += segment["frictionPressureDropa"].toDouble();
-        total_fittingsPressureDropa += segment["fittingsPressureDropa"].toDouble();
 
-        max_surfaceTemperature = std::max(max_surfaceTemperature, segment["surfaceTemperature_k"].toDouble());
-        min_velocity = std::min(min_velocity, segment["velocity_m_s"].toDouble());
-        max_velocity = std::max(max_velocity, segment["velocity_m_s"].toDouble());
 
-        total_reynolds += segment["reynolds_number"].toDouble();
-        total_friction += segment["frictionFactor"].toDouble();
+    // 4. 分段计算结果
+    out << "分段计算结果\n";
+    out << "-----------------------------------------------------------------------------------\n";
+    out << QString("%1  %2  %3  %4  %5  %6  %7  %8\n")
+               .arg("分段序号", -2)
+               .arg("流速", -5)
+               .arg("压力", -6)
+               .arg("温度", -6)
+               //.arg("焓值", -6)
+               //.arg("压力损失", -4)
+               //.arg("热损失", -4)
+               .arg("表面温度", -4)
+               .arg("保温导热系数", -4)
+               .arg("气相流量", -6)
+               .arg("液相流量", -6);
+    out << QString("%1  %2  %3  %4  %5  %6  %7  %8\n")
+               .arg("--------", -8)
+               .arg("(m/s)", -7)
+               .arg("(kPa)", -8)
+               .arg("(C)", -8)
+               //.arg("(kJ/kg)", -8)
+               //.arg("(kPa)", -8)
+               //.arg("(kW)", -7)
+               .arg("(C)", -8)
+               .arg("(W/(m·K))", -12)
+               .arg("(kg/hr)", -10)
+               .arg("(kg/hr)", -10);
+    out << "-----------------------------------------------------------------------------------\n";
+
+    // 写入分段数据
+    for (int i = 0; i < result.segmentResults.size(); ++i)
+    {
+        const auto& seg = result.segmentResults[i];
+        out << QString("%1  %2  %3  %4  %5  %6  %7  %8\n")
+                   .arg(i + 1, -8)
+                   .arg(seg.at("velocity"), -7, 'f', 2)
+                   .arg(seg.at("outletPressure") / 1000, -8, 'f', 2)
+                   .arg(seg.at("outletTemperature") - 273.15, -8, 'f', 2)
+                   //.arg(seg.at("outletEnthalpy") / 1000, -9, 'f', 2)
+                   //.arg(seg.at("pressureDrop") / 1000, -7, 'f', 2)
+                   //.arg(seg.at("totalHeatLoss") / 1000, -7, 'f', 2)
+                   .arg(seg.at("surfaceTemperature") - 273.15, -8, 'f', 2)
+                   .arg(seg.at("insulationConductivity"), -12, 'f', 4)
+                   .arg(-seg.at("vaporFlow") * 3600, -10, 'f', 2)
+                   .arg(seg.at("liquidFlow") * 3600, -8, 'f', 2);
     }
 
-    double pressureDropa_m = total_pressureDropa / totalLength;
-    double pressure_ratio = total_pressureDropa / inletPressurerops["pressure_pa"].toDouble();
+    // 报告尾部
+    out << "===================================================================================\n";
+    out << "报告生成工具：汤圆管道分析\n";
+    out << "作者：杨奉全，qq交流群：816103114\n";
+    out << "===================================================================================\n";
 
-    // 热损失参数
-    double avg_heatLossPerM = totalHeatLoss_w / totalLength;
-    double avg_heatLossPerArea = 0;
-    for (const QVariantMap& segment : results) {
-        avg_heatLossPerArea += segment["heatLossPerArea_w"].toDouble();
+    reportFile.close();
+
+    // 调用Notepad3.exe打开报告
+    QString notepad3Path = appDir + "/Notepad++.exe";
+    if (!QFile::exists(notepad3Path))
+    {
+        QMessageBox::warning(nullptr, "警告", "未在程序目录找到Notepad++.exe，路径：\n" + notepad3Path);
+        return false;
     }
-    avg_heatLossPerArea /= results.size();
 
-    double avg_surfaceTemperature = 0;
-    for (const QVariantMap& segment : results) {
-        avg_surfaceTemperature += segment["surfaceTemperature_k"].toDouble();
+    QProcess* notepadProcess = new QProcess();
+    QObject::connect(notepadProcess, &QProcess::finished,
+                     notepadProcess, &QObject::deleteLater);
+    notepadProcess->start(notepad3Path, {reportFullPath});
+
+    if (!notepadProcess->waitForStarted(1000))
+    {
+        QMessageBox::critical(nullptr, "错误", "Notepad++.exe启动失败：" + notepadProcess->errorString());
+        notepadProcess->deleteLater();
+        return false;
     }
-    avg_surfaceTemperature /= results.size();
 
-    // 流动参数
-    double avg_velocity = 0;
-    for (const QVariantMap& segment : results) {
-        avg_velocity += segment["velocity_m_s"].toDouble();
-    }
-    avg_velocity /= results.size();
-
-    double avg_reynolds = total_reynolds / results.size();
-    double avg_friction = total_friction / results.size();
-
-    analysis["pipe_name"] = pipeName;
-    analysis["fluid"] = fluid;
-    analysis["inletPressure_pa"] = inletPressurerops["pressure_pa"];
-    analysis["inletTemperature_k"] = inletPressurerops["temperature_k"];
-    analysis["inlet_quality"] = inletPressurerops["quality"];
-    analysis["inlet_velocity_m_s"] = inletVelocity;
-    analysis["outletPressure_pa"] = final_pressure_pa;
-    analysis["outletTemperature_k"] = final_temperature_k;
-    analysis["outletQuality"] = final_quality;
-    analysis["outlet_velocity_m_s"] = final_velocity;
-    analysis["outlet_vaporFlow_kg_s"] = final_vaporFlow;
-    analysis["outlet_liquidFlow_kg_s"] = final_liquidFlow;
-    analysis["total_pressureDropa"] = total_pressureDropa;
-    analysis["pressureDropa_m"] = pressureDropa_m;
-    analysis["pressure_ratio"] = pressure_ratio;
-    analysis["total_temperature_drop_k"] = total_temperature_drop;
-    analysis["totalHeatLoss_w"] = totalHeatLoss_w;
-    analysis["total_frictionPressureDropa"] = total_frictionPressureDropa;
-    analysis["total_fittingsPressureDropa"] = total_fittingsPressureDropa;
-    analysis["fittings_resistance"] = fittingsResistance;
-    analysis["pipe_roughness_m"] = roughness;
-    analysis["avg_heatLossPerM_w"] = avg_heatLossPerM;
-    analysis["avg_heatLossPerArea_w"] = avg_heatLossPerArea;
-    analysis["max_surfaceTemperature_k"] = max_surfaceTemperature;
-    analysis["avg_surfaceTemperature_k"] = avg_surfaceTemperature;
-    analysis["max_velocity_m_s"] = max_velocity;
-    analysis["min_velocity_m_s"] = min_velocity;
-    analysis["avg_velocity_m_s"] = avg_velocity;
-    analysis["avg_reynolds"] = avg_reynolds;
-    analysis["avg_friction"] = avg_friction;
-
-    return analysis;
+    return true;
 }
-*/

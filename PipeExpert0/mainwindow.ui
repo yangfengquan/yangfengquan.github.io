@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>汤圆</string>
+  </property>
+  <property name="toolTip">
+   <string>分段计算的长度。</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>10</y>
+      <width>746</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>环境温度（C）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>风速（m/sec）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QLineEdit" name="ambientTemperatureEdit"/>
+     </item>
+     <item row="0" column="6">
+      <widget class="QLineEdit" name="inletArg2Edit"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>管道类型</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4">
+      <widget class="QLineEdit" name="windSpeedEdit"/>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLineEdit" name="inletPressureEdit">
+       <property name="toolTip">
+        <string>绝对压力</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="6">
+      <widget class="QLineEdit" name="segmentLengthEdit">
+       <property name="toolTip">
+        <string>分段计算的长度，值越小，计算精度越高。</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLineEdit" name="pipeWallThicknessEdit"/>
+     </item>
+     <item row="4" column="5">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>外保护层</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QComboBox" name="flowRateComboBox">
+       <item>
+        <property name="text">
+         <string>质量流量（kg/hr）</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>体积流量（Nm3/hr）</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QComboBox" name="inletArg2ComboBox">
+       <item>
+        <property name="text">
+         <string>温度（C）</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>干度（0-1）</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="insultNameComboBox"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="PipeTypeComboBox"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>管道外径（mm）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="4">
+      <widget class="QLineEdit" name="insultThicknessEdit"/>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>管道壁厚（m）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>分段长度（m)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="pipeOdEdit"/>
+     </item>
+     <item row="4" column="3">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>保温厚度（mm）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLineEdit" name="flowRateEdit"/>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>管道长度（m）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>保温材料</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>压力（kPaA）</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QLineEdit" name="lengthEdit"/>
+     </item>
+     <item row="4" column="6">
+      <widget class="QComboBox" name="cladNameComboBox"/>
+     </item>
+     <item row="3" column="0" colspan="7">
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>管道元件</string>
+       </property>
+       <widget class="QTableWidget" name="tableWidget">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>20</y>
+          <width>271</width>
+          <height>101</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>新建列</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>数量</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QPushButton" name="addFittingButton">
+        <property name="geometry">
+         <rect>
+          <x>310</x>
+          <y>20</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>添加</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="removeFittingButton">
+        <property name="geometry">
+         <rect>
+          <x>310</x>
+          <y>50</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>删除</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>材料</string>
+    </property>
+    <addaction name="actionPipe"/>
+    <addaction name="actionFitting"/>
+    <addaction name="actionInsulation"/>
+    <addaction name="actionClad"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>关于</string>
+    </property>
+    <addaction name="actionAction"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>运行</string>
+    </property>
+    <addaction name="actionrun"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionPipe">
+   <property name="text">
+    <string>管道类型</string>
+   </property>
+  </action>
+  <action name="actionFitting">
+   <property name="text">
+    <string>Fitting</string>
+   </property>
+  </action>
+  <action name="actionInsulation">
+   <property name="text">
+    <string>Insulation</string>
+   </property>
+  </action>
+  <action name="actionClad">
+   <property name="text">
+    <string>Clad</string>
+   </property>
+  </action>
+  <action name="actionAction">
+   <property name="text">
+    <string>Activation</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionrun">
+   <property name="text">
+    <string>run</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

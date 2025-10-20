@@ -1,29 +1,27 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PIPEFLOW_H
+#define PIPEFLOW_H
 
-#include <QMainWindow>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QTableWidget>
-class MainWindow : public QMainWindow
+class QWidget;
+class QComboBox;
+class QLineEdit;
+class  QTableWidget;
+class QPushButton;
+
+class PipeFlow
 {
-    Q_OBJECT
-
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    PipeFlow();
+    void setupUi(QWidget *parentWidget);
+    void run();
 
 private:
-    void setupUI();
-    void createMenu();
-
     QComboBox *fluidCombo;
-    QComboBox *pipeTypeCombo;
     QComboBox *flowRateCombo;
     QLineEdit *flowRateEdit;
     QLineEdit *inletPressureEdit;
     QComboBox *inletArg2Combo;
     QLineEdit *inletArg2Edit;
+    QComboBox *pipeTypeCombo;
     QLineEdit *lengthEdit;
     QLineEdit *pipeOdEdit;
     QLineEdit *pipeWallThicknessEdit;
@@ -35,10 +33,8 @@ private:
     QLineEdit *ambientTempEdit;
     QLineEdit *windSpeedEdit;
 
-private slots:
-    void save();
-    void open();
-    void openMaterialDialog(const QString& type);
-    void openActivationDialog();
+    QPushButton *addFittingButton;
+    QPushButton *removeFittingButton;
 };
-#endif // MAINWINDOW_H
+
+#endif // PIPEFLOW_H

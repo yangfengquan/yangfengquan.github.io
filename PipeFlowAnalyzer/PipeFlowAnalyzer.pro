@@ -19,8 +19,7 @@ HEADERS += \
     FluidAnalyzer.h \
     FormulaParser.h \
     MaterialManager.h \
-    mainwindow.h \
-    report.h
+    mainwindow.h
 
 # 第三方库头文件路径
 INCLUDEPATH += $$PWD/thirdparty/include

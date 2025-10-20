@@ -117,13 +117,7 @@ private:
                                     double dOuter = -1);
     double calculateRadiationCoeff(double surfaceTemp, double ambientTemp,
                                    double emissivity);
-/*
-    QVariantMap comprehensiveResultsAnalysis(const QList<QVariantMap>& results,
-                                             const QVariantMap& inletProps,
-                                             double totalLength, double massFlow,
-                                             const QString& pipeName, const QString& fluid,
-                                             double fittingsResistance, double inletVelocity,
-                                             double roughness);*/
+    bool generateReport(const AnalysisResult& result, const std::string fileName);
 };
 
 #endif // FLUIDANALYZER_H
