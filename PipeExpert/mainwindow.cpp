@@ -115,7 +115,7 @@ void MainWindow::run()
 
 void MainWindow::openMaterialDialog(const QString& type)
 {
-    MaterialsDialog *dlg = new MaterialsDialog(type, this);
+    MaterialDialog *dlg = new MaterialDialog(type, this);
     dlg->exec();
 }
 

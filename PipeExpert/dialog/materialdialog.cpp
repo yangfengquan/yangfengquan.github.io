@@ -176,8 +176,7 @@ void MaterialDialog::addMaterial()
 {
     MaterialEditDialog dialog(this, materialManager, materialType);
     if (dialog.exec() == QDialog::Accepted) {
-        loadMaterials();
-        refreshMaterialCombos();
+        refreshTable();
     }
 }
 
@@ -194,8 +193,7 @@ void MaterialDialog::editMaterial()
 
     MaterialEditDialog dialog(this, materialManager, materialType, materialName);
     if (dialog.exec() == QDialog::Accepted) {
-        loadMaterials();
-        refreshMaterialCombos();
+        refreshTable();
     }
 }
 
@@ -227,7 +225,6 @@ void MaterialDialog::deleteMaterial()
         }
 
         materialManager->saveMaterialsToFile();
-        loadMaterials();
-        refreshMaterialCombos();
+        refreshTable();
     }
 }

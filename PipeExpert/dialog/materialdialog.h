@@ -6,6 +6,7 @@
 class QTableWidget;
 class QLineEdit;
 class QPushButton;
+class QGridLayout;
 class MaterialManager;
 
 class MaterialDialog : public QDialog
@@ -48,6 +49,22 @@ private:
      */
     QStringList getColumns() const;
     void refreshTable();
+
+private slots:
+    /**
+     * @brief 添加新材料
+     */
+    void addMaterial();
+
+    /**
+     * @brief 编辑选中的材料
+     */
+    void editMaterial();
+
+    /**
+     * @brief 删除选中的材料
+     */
+    void deleteMaterial();
 };
 
 
@@ -118,7 +135,7 @@ private:
 
     // UI组件 - 公共字段
     QLineEdit *nameEdit;
-    QTextEdit *descriptionEdit;
+    QLineEdit *descriptionEdit;
 
     // UI组件 - 保温材料字段
     QLineEdit *conductivityEq1Edit;
