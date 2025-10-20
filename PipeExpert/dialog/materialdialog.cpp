@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include <QTableWidget>
 #include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
 #include <QMap>
 #include <QMessageBox>
 #include "MaterialManager.h"
@@ -11,9 +13,8 @@
 MaterialDialog::MaterialDialog(const QString& type, QWidget *parent)
     : QDialog(parent)
     , materialType(type)
-{
-
-
+{qDebug()<<materialType;
+    setupUi();
     refreshTable();
 }
 
@@ -48,8 +49,8 @@ void MaterialDialog::setupUi()
     editButton = new QPushButton("编辑", this);
     btnlayout->addWidget(editButton);
 
-    removeButton = new QPushButton("删除", this);
-    btnlayout->addWidget(removeButton);
+    deleteButton = new QPushButton("删除", this);
+    btnlayout->addWidget(deleteButton);
 
     btnlayout->addStretch();
 
@@ -63,6 +64,8 @@ void MaterialDialog::setupUi()
     connect(editButton, &QPushButton::clicked, this, &MaterialDialog::editMaterial);
     connect(deleteButton, &QPushButton::clicked, this, &MaterialDialog::deleteMaterial);
     connect(closeButton, &QPushButton::clicked, this, &QDialog::accept);
+
+    materialManager = new MaterialManager();
 }
 
 
@@ -72,9 +75,9 @@ QString MaterialDialog::getTitle() const
         return "保温材料";
     } else if (materialType == "protection") {
         return "外保护层";
-    } else if (materialType == "fittings") {
+    } else if (materialType == "fitting") {
         return "管道元件";
-    } else if (materialType == "pipe_types") {
+    } else if (materialType == "pipeType") {
         return "管道类型";
     } else {
         return "材料";
@@ -126,8 +129,8 @@ void MaterialDialog::refreshTable()
             //materialTable->setItem(row, 1, new QTableWidgetItem(material.conductivityEq1));
             //materialTable->setItem(row, 2, new QTableWidgetItem(material.conductivityEq2));
             //materialTable->setItem(row, 3, new QTableWidgetItem(material.conductivityEq3));
-            materialTable->setItem(row, 4, new QTableWidgetItem(QString::number(material.density)));
-            materialTable->setItem(row, 5, new QTableWidgetItem(material.description));
+            materialTable->setItem(row, 1, new QTableWidgetItem(QString::number(material.density)));
+            materialTable->setItem(row, 2, new QTableWidgetItem(material.description));
 
             row++;
         }
@@ -143,7 +146,7 @@ void MaterialDialog::refreshTable()
 
             row++;
         }
-    } else if (materialType == "fittings") {
+    } else if (materialType == "fitting") {
         int row = 0;
         for (auto it = pipeFittings.begin(); it != pipeFittings.end(); ++it) {
             const PipeFitting &fitting = it.value();
@@ -155,7 +158,7 @@ void MaterialDialog::refreshTable()
 
             row++;
         }
-    } else if (materialType == "pipe_types") {
+    } else if (materialType == "pipeType") {
         int row = 0;
         for (auto it = pipeTypes.begin(); it != pipeTypes.end(); ++it) {
             const PipeType &pipeType = it.value();
@@ -218,13 +221,315 @@ void MaterialDialog::deleteMaterial()
             materialManager->getInsulationMaterials().remove(materialName);
         } else if (materialType == "protection") {
             materialManager->getProtectionMaterials().remove(materialName);
-        } else if (materialType == "fittings") {
+        } else if (materialType == "fitting") {
             materialManager->getPipeFittings().remove(materialName);
-        } else if (materialType == "pipe_types") {
+        } else if (materialType == "pipeType") {
             materialManager->getPipeTypes().remove(materialName);
         }
 
         materialManager->saveMaterialsToFile();
         refreshTable();
+    }
+}
+
+// MaterialEditDialog 实现
+MaterialEditDialog::MaterialEditDialog(QWidget *parent,
+                                       MaterialManager *materialManager,
+                                       const QString &materialType,
+                                       const QString &materialName)
+    : QDialog(parent)
+    , materialManager(materialManager)
+    , materialType(materialType)
+    , materialName(materialName)
+    , isEditMode(!materialName.isEmpty())
+{
+    setupUI();
+
+    if (isEditMode) {
+        loadMaterialData();
+    }
+}
+
+MaterialEditDialog::~MaterialEditDialog()
+{
+}
+
+void MaterialEditDialog::setupUI()
+{
+    QString title = isEditMode ? "编辑" : "添加";
+    if (materialType == "insulation") {
+        title += "保温材料";
+    } else if (materialType == "protection") {
+        title += "外保护层";
+    } else if (materialType == "fitting") {
+        title += "管道元件";
+    } else if (materialType == "pipeType") {
+        title += "管道类型";
+    } else {
+        title += "材料";
+    }
+
+    setWindowTitle(title);
+    setFixedSize(500, 200);
+
+    // 主布局
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+    // 字段布局
+    QGridLayout *fieldsLayout = new QGridLayout();
+
+    // 名称字段
+    fieldsLayout->addWidget(new QLabel("名称:"), 0, 0);
+    nameEdit = new QLineEdit();
+    fieldsLayout->addWidget(nameEdit, 0, 1);
+
+    int currentRow = 1;
+
+    // 根据材料类型创建特定字段
+    if (materialType == "insulation") {
+        createInsulationFields(fieldsLayout);
+        currentRow = 8; // 保温材料有5行字段
+    } else if (materialType == "protection") {
+        createProtectionFields(fieldsLayout);
+        currentRow = 2; // 外保护层有2行字段
+    } else if (materialType == "fitting") {
+        createFittingsFields(fieldsLayout);
+        currentRow = 2; // 管道元件有2行字段
+    } else if (materialType == "pipeType") {
+        createPipeTypeFields(fieldsLayout);
+        currentRow = 2; // 管道类型有2行字段
+    }
+
+    // 描述字段
+    fieldsLayout->addWidget(new QLabel("描述:"), currentRow, 0);
+    descriptionEdit = new QLineEdit();
+    fieldsLayout->addWidget(descriptionEdit, currentRow, 1);
+
+    mainLayout->addLayout(fieldsLayout);
+
+    // 按钮布局
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+
+    saveButton = new QPushButton("保存");
+    cancelButton = new QPushButton("取消");
+
+    buttonLayout->addWidget(saveButton);
+    buttonLayout->addWidget(cancelButton);
+
+    mainLayout->addLayout(buttonLayout);
+
+    // 连接信号槽
+    connect(saveButton, &QPushButton::clicked, this, &MaterialEditDialog::saveMaterial);
+    connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+
+    // 设置列拉伸
+    fieldsLayout->setColumnStretch(1, 1);
+}
+
+void MaterialEditDialog::createInsulationFields(QGridLayout *layout)
+{
+    int row = 1;
+    layout->addWidget(new QLabel("导热系数方程一:"), row, 0);
+    conductivityEq1Edit = new QLineEdit();
+    layout->addWidget(conductivityEq1Edit, row, 1);
+
+    layout->addWidget(new QLabel("tm取值范围:"), row, 2);
+    range1Edit = new QLineEdit();
+    layout->addWidget(range1Edit, row, 3);
+
+    ++row;
+
+    layout->addWidget(new QLabel("导热系数方程二:"), row, 0);
+    conductivityEq2Edit = new QLineEdit();
+    layout->addWidget(conductivityEq2Edit, row, 1);
+
+    layout->addWidget(new QLabel("tm取值范围:"), row, 2);
+    range2Edit = new QLineEdit();
+    layout->addWidget(range2Edit, row, 3);
+
+    ++row;
+
+    layout->addWidget(new QLabel("导热系数方程三:"), row, 0);
+    conductivityEq3Edit = new QLineEdit();
+    layout->addWidget(conductivityEq3Edit, row, 1);
+
+    layout->addWidget(new QLabel("tm取值范围:"), row, 2);
+    range3Edit = new QLineEdit();
+    layout->addWidget(range3Edit, row, 3);
+
+    ++row;
+
+    layout->addWidget(new QLabel("密度(kg/m³):"), row, 0);
+    densityEdit = new QLineEdit("100");
+    layout->addWidget(densityEdit, row, 1);
+}
+
+void MaterialEditDialog::createProtectionFields(QGridLayout *layout)
+{
+    layout->addWidget(new QLabel("黑度:"), 1, 0);
+    emissivityEdit = new QLineEdit("0.3");
+    layout->addWidget(emissivityEdit, 1, 1);
+}
+
+void MaterialEditDialog::createFittingsFields(QGridLayout *layout)
+{
+    layout->addWidget(new QLabel("阻力系数:"), 1, 0);
+    resistanceEdit = new QLineEdit("0.3");
+    layout->addWidget(resistanceEdit, 1, 1);
+}
+
+void MaterialEditDialog::createPipeTypeFields(QGridLayout *layout)
+{
+    layout->addWidget(new QLabel("粗糙度(m):"), 1, 0);
+    roughnessEdit = new QLineEdit("0.0002");
+    layout->addWidget(roughnessEdit, 1, 1);
+}
+
+void MaterialEditDialog::loadMaterialData()
+{
+    if (materialType == "insulation") {
+        auto materials = materialManager->getInsulationMaterials();
+        if (materials.contains(materialName)) {
+            InsulationMaterial material = materials[materialName];
+            nameEdit->setText(material.name);
+            conductivityEq1Edit->setText(material.conductivityEq1);
+            conductivityEq2Edit->setText(material.conductivityEq2);
+            conductivityEq3Edit->setText(material.conductivityEq3);
+            densityEdit->setText(QString::number(material.density));
+            descriptionEdit->setText(material.description);
+        }
+    } else if (materialType == "protection") {
+        auto materials = materialManager->getProtectionMaterials();
+        if (materials.contains(materialName)) {
+            OuterProtection material = materials[materialName];
+            nameEdit->setText(material.name);
+            emissivityEdit->setText(QString::number(material.emissivity));
+            descriptionEdit->setText(material.description);
+        }
+    } else if (materialType == "fitting") {
+        auto fittings = materialManager->getPipeFittings();
+        if (fittings.contains(materialName)) {
+            PipeFitting fitting = fittings[materialName];
+            nameEdit->setText(fitting.name);
+            resistanceEdit->setText(QString::number(fitting.resistanceCoef));
+            descriptionEdit->setText(fitting.description);
+        }
+    } else if (materialType == "pipeType") {
+        auto pipeTypes = materialManager->getPipeTypes();
+        if (pipeTypes.contains(materialName)) {
+            PipeType pipeType = pipeTypes[materialName];
+            nameEdit->setText(pipeType.name);
+            roughnessEdit->setText(QString::number(pipeType.roughness));
+            descriptionEdit->setText(pipeType.description);
+        }
+    }
+}
+
+bool MaterialEditDialog::validateInput()
+{
+    QString name = nameEdit->text().trimmed();
+    if (name.isEmpty()) {
+        QMessageBox::warning(this, "警告", "请输入材料名称");
+        return false;
+    }
+
+    // 检查数值字段
+    if (materialType == "insulation") {
+        bool ok;
+        double density = densityEdit->text().toDouble(&ok);
+        if (!ok || density <= 0) {
+            QMessageBox::warning(this, "警告", "请输入有效的密度值");
+            return false;
+        }
+    } else if (materialType == "protection") {
+        bool ok;
+        double emissivity = emissivityEdit->text().toDouble(&ok);
+        if (!ok || emissivity < 0 || emissivity > 1) {
+            QMessageBox::warning(this, "警告", "请输入有效的黑度值（0-1）");
+            return false;
+        }
+    } else if (materialType == "fitting") {
+        bool ok;
+        double resistance = resistanceEdit->text().toDouble(&ok);
+        if (!ok || resistance < 0) {
+            QMessageBox::warning(this, "警告", "请输入有效的阻力系数");
+            return false;
+        }
+    } else if (materialType == "pipeType") {
+        bool ok;
+        double roughness = roughnessEdit->text().toDouble(&ok);
+        if (!ok || roughness <= 0) {
+            QMessageBox::warning(this, "警告", "请输入有效的粗糙度值");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void MaterialEditDialog::saveMaterial()
+{
+    if (!validateInput()) {
+        return;
+    }
+
+    QString name = nameEdit->text().trimmed();
+    QString description = descriptionEdit->text().trimmed();
+
+    try {
+        if (materialType == "insulation") {
+            QString eq1 = conductivityEq1Edit->text().trimmed();
+            QString eq2 = conductivityEq2Edit->text().trimmed();
+            QString eq3 = conductivityEq3Edit->text().trimmed();
+            QString range1 = range1Edit->text().trimmed();
+            QString range2 = range1Edit->text().trimmed();
+            QString range3 = range1Edit->text().trimmed();
+            double density = densityEdit->text().toDouble();
+
+            if (isEditMode && name != materialName) {
+                // 名称改变，删除旧记录
+                materialManager->getInsulationMaterials().remove(materialName);
+            }
+
+            materialManager->addInsulationMaterial(name, eq1, eq2, eq3, range1, range2, range3, density, description);
+
+        } else if (materialType == "protection") {
+            double emissivity = emissivityEdit->text().toDouble();
+
+            if (isEditMode && name != materialName) {
+                materialManager->getProtectionMaterials().remove(materialName);
+            }
+
+            materialManager->addProtectionMaterial(name, emissivity, description);
+
+        } else if (materialType == "fitting") {
+            double resistance = resistanceEdit->text().toDouble();
+
+            if (isEditMode && name != materialName) {
+                materialManager->getPipeFittings().remove(materialName);
+            }
+
+            materialManager->addPipeFitting(name, resistance, description);
+
+        } else if (materialType == "pipeType") {
+            double roughness = roughnessEdit->text().toDouble();
+
+            if (isEditMode && name != materialName) {
+                materialManager->getPipeTypes().remove(materialName);
+            }
+
+            materialManager->addPipeType(name, roughness, description);
+        }
+
+        // 保存到文件
+        if (materialManager->saveMaterialsToFile()) {
+            QMessageBox::information(this, "成功", QString("材料 '%1' 已保存").arg(name));
+            accept();
+        } else {
+            QMessageBox::critical(this, "错误", "保存材料失败");
+        }
+
+    } catch (const std::exception &e) {
+        QMessageBox::critical(this, "错误", QString("保存材料时发生错误: %1").arg(e.what()));
     }
 }

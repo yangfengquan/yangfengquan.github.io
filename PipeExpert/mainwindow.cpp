@@ -8,7 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    setMinimumSize(940, 400);
+    setMinimumSize(940, 600);
     setupMenu();
 }
 
@@ -75,17 +75,17 @@ void MainWindow::setupMenu()
     helpMenu->addAction(aboutAction);
 
     connect(activationAction, &QAction::triggered, this, &MainWindow::openActivationDialog);
-    connect(aboutAction, &QAction::triggered, [this]() {
+    connect(aboutAction, &QAction::triggered, this, [this]() {
         QMessageBox::about(this, "关于", "管道分析软件\n版本：v1.0\n作者：杨奉全\nQQ群：816103114");
     });
 }
 
 void MainWindow::setupUi(const QString& module)
 {
-    qDebug() <<"12"<<module;
     this->module = module;
     QWidget *centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
+
     if(this->module == "pipeFlow")
     {
         pipeFlow = new PipeFlow();
@@ -96,6 +96,7 @@ void MainWindow::setupUi(const QString& module)
 
 void MainWindow::save()
 {
+
 
 }
 

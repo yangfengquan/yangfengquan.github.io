@@ -23,7 +23,6 @@ private:
     QTableWidget *materialTable;
     QPushButton *addButton;
     QPushButton *editButton;
-    QPushButton *removeButton;
     QPushButton *deleteButton;
     QPushButton *closeButton;
 
@@ -141,6 +140,9 @@ private:
     QLineEdit *conductivityEq1Edit;
     QLineEdit *conductivityEq2Edit;
     QLineEdit *conductivityEq3Edit;
+    QLineEdit *range1Edit;
+    QLineEdit *range2Edit;
+    QLineEdit *range3Edit;
     QLineEdit *densityEdit;
 
     // UI组件 - 外保护层字段
