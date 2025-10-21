@@ -13,7 +13,8 @@
 MaterialDialog::MaterialDialog(const QString& type, QWidget *parent)
     : QDialog(parent)
     , materialType(type)
-{qDebug()<<materialType;
+    , materialManager(new MaterialManager())
+{
     setupUi();
     refreshTable();
 }
@@ -64,8 +65,6 @@ void MaterialDialog::setupUi()
     connect(editButton, &QPushButton::clicked, this, &MaterialDialog::editMaterial);
     connect(deleteButton, &QPushButton::clicked, this, &MaterialDialog::deleteMaterial);
     connect(closeButton, &QPushButton::clicked, this, &QDialog::accept);
-
-    materialManager = new MaterialManager();
 }
 
 
@@ -129,7 +128,7 @@ void MaterialDialog::refreshTable()
             //materialTable->setItem(row, 1, new QTableWidgetItem(material.conductivityEq1));
             //materialTable->setItem(row, 2, new QTableWidgetItem(material.conductivityEq2));
             //materialTable->setItem(row, 3, new QTableWidgetItem(material.conductivityEq3));
-            materialTable->setItem(row, 1, new QTableWidgetItem(QString::number(material.density)));
+            materialTable->setItem(row, 1, new QTableWidgetItem(material.density));
             materialTable->setItem(row, 2, new QTableWidgetItem(material.description));
 
             row++;
@@ -180,6 +179,8 @@ void MaterialDialog::addMaterial()
     MaterialEditDialog dialog(this, materialManager, materialType);
     if (dialog.exec() == QDialog::Accepted) {
         refreshTable();
+
+        emit materialDataChanged();
     }
 }
 
@@ -197,6 +198,8 @@ void MaterialDialog::editMaterial()
     MaterialEditDialog dialog(this, materialManager, materialType, materialName);
     if (dialog.exec() == QDialog::Accepted) {
         refreshTable();
+
+        emit materialDataChanged();
     }
 }
 
@@ -218,17 +221,19 @@ void MaterialDialog::deleteMaterial()
 
     if (reply == QMessageBox::Yes) {
         if (materialType == "insulation") {
-            materialManager->getInsulationMaterials().remove(materialName);
+            materialManager->removeInsulationMaterial(materialName);
         } else if (materialType == "protection") {
-            materialManager->getProtectionMaterials().remove(materialName);
+            materialManager->removeProtectionMaterial(materialName);
         } else if (materialType == "fitting") {
-            materialManager->getPipeFittings().remove(materialName);
+            materialManager->removePipeFitting(materialName);
         } else if (materialType == "pipeType") {
-            materialManager->getPipeTypes().remove(materialName);
+            materialManager->removePipeType(materialName);
         }
 
         materialManager->saveMaterialsToFile();
         refreshTable();
+
+        emit materialDataChanged();
     }
 }
 
@@ -395,7 +400,7 @@ void MaterialEditDialog::loadMaterialData()
             conductivityEq1Edit->setText(material.conductivityEq1);
             conductivityEq2Edit->setText(material.conductivityEq2);
             conductivityEq3Edit->setText(material.conductivityEq3);
-            densityEdit->setText(QString::number(material.density));
+            densityEdit->setText(material.density);
             descriptionEdit->setText(material.description);
         }
     } else if (materialType == "protection") {
@@ -484,11 +489,11 @@ void MaterialEditDialog::saveMaterial()
             QString range1 = range1Edit->text().trimmed();
             QString range2 = range1Edit->text().trimmed();
             QString range3 = range1Edit->text().trimmed();
-            double density = densityEdit->text().toDouble();
+            QString density = densityEdit->text().trimmed();
 
             if (isEditMode && name != materialName) {
                 // 名称改变，删除旧记录
-                materialManager->getInsulationMaterials().remove(materialName);
+                materialManager->removeInsulationMaterial(materialName);
             }
 
             materialManager->addInsulationMaterial(name, eq1, eq2, eq3, range1, range2, range3, density, description);
@@ -497,7 +502,7 @@ void MaterialEditDialog::saveMaterial()
             double emissivity = emissivityEdit->text().toDouble();
 
             if (isEditMode && name != materialName) {
-                materialManager->getProtectionMaterials().remove(materialName);
+                materialManager->removeProtectionMaterial(materialName);
             }
 
             materialManager->addProtectionMaterial(name, emissivity, description);
@@ -506,7 +511,7 @@ void MaterialEditDialog::saveMaterial()
             double resistance = resistanceEdit->text().toDouble();
 
             if (isEditMode && name != materialName) {
-                materialManager->getPipeFittings().remove(materialName);
+                materialManager->removePipeFitting(materialName);
             }
 
             materialManager->addPipeFitting(name, resistance, description);
@@ -515,7 +520,7 @@ void MaterialEditDialog::saveMaterial()
             double roughness = roughnessEdit->text().toDouble();
 
             if (isEditMode && name != materialName) {
-                materialManager->getPipeTypes().remove(materialName);
+                materialManager->removePipeType(materialName);
             }
 
             materialManager->addPipeType(name, roughness, description);

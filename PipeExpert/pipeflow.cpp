@@ -1,5 +1,6 @@
 #include "pipeflow.h"
 #include "MaterialManager.h"
+#include "FluidAnalyzer.h"
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -13,12 +14,12 @@
 #include <QSpinBox>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QFileDialog>
-#include <QFile>
+
 #include <QMessageBox>
 #include <QDebug>
 PipeFlow::PipeFlow(QWidget *parent)
     : QWidget(parent)
+    , materialManager(new MaterialManager())
 {
 
 }
@@ -67,8 +68,7 @@ void PipeFlow::setupUi(QWidget *parent)
     ++row;
 
     basicLayout->addWidget(new QLabel("管道类型"), row, 0);
-    QComboBox *pipeTypeCombo = new QComboBox();
-    pipeTypeCombo->addItems({"无缝黄铜、铜及铅管","操作中基本无腐蚀的无缝钢管"});
+    pipeTypeCombo = new QComboBox();
     basicLayout->addWidget(pipeTypeCombo, row, 1);
 
     basicLayout->addWidget(new QLabel("管道长度（m）"), row, 2);
@@ -129,12 +129,42 @@ void PipeFlow::setupUi(QWidget *parent)
 
     connect(addFittingButton, &QPushButton::clicked, this, &PipeFlow::addFitting);
     connect(removeFittingButton, &QPushButton::clicked, this, &PipeFlow::removeFitting);
+
+    refreshMaterialCombos();
+}
+
+void PipeFlow::refreshMaterialCombos()
+{
+    // 获取最新的数据
+    materialManager->loadMaterialsFromFile();
+
+    // 更新保温材料下拉列表
+    insulationMaterialCombo->clear();
+    insulationMaterialCombo->addItems(materialManager->getInsulationMaterials().keys());
+    if (insulationMaterialCombo->count() > 0) {
+        insulationMaterialCombo->setCurrentIndex(0);
+    }
+
+    // 更新外保护层下拉列表
+    protectionMaterialCombo->clear();
+    protectionMaterialCombo->addItems(materialManager->getProtectionMaterials().keys());
+    if (protectionMaterialCombo->count() > 0) {
+        protectionMaterialCombo->setCurrentIndex(0);
+    }
+
+    // 更新管道类型下拉列表
+    pipeTypeCombo->clear();
+    pipeTypeCombo->addItems(materialManager->getPipeTypes().keys());
+    if (pipeTypeCombo->count() > 0) {
+        pipeTypeCombo->setCurrentIndex(0);
+    }
+
 }
 
 void PipeFlow::addFitting()
 {
     // 获取所有可用的管道元件
-    auto fittings = materialManager->getPipeFittings();
+    QMap<QString, PipeFitting> fittings = materialManager->getPipeFittings();
     if (fittings.isEmpty()) {
         QMessageBox::warning(this, "警告", "没有可用的管道元件，请先在材料管理中添加");
         return;
@@ -201,53 +231,122 @@ void PipeFlow::loadFittingsToTable()
 
 void PipeFlow::run()
 {
-    qDebug()<<"pipeflow run";
+    QByteArray byteArr = fluidCombo->currentText().toUtf8();
+    //const char* fluid = fluidCombo->currentText().toUtf8().constData();
+    const char* fluid = byteArr.constData();
+    QString flowRateType = flowRateCombo->currentText();
+    double flowRate = flowRateEdit->text().toDouble() / 3600;
+    double inletPressure = inletPressureEdit->text().toDouble() * 1e6;
+    QString inletArg2Para = inletArg2Combo->currentText();
+    double inletArg2 = inletArg2Edit->text().toDouble();
+    std::string pipeTypeName = pipeTypeCombo->currentText().toUtf8().constData();
+    double length = lengthEdit->text().toDouble();
+    double segmentLength = segmentLengthEdit->text().toDouble();
+    double pipeOd = pipeOdEdit->text().toDouble() / 1000;
+    double pipeWallThickness = pipeWallThicknessEdit->text().toDouble() / 1000;
+    std::string insulationMaterialName = insulationMaterialCombo->currentText().toUtf8().toStdString();
+    double insulationThickness = insulationThicknessEdit->text().toDouble() / 1000;
+    std::string protectionMaterialName = protectionMaterialCombo->currentText().toUtf8().toStdString();
+    double ambientTemperature = ambientTempEdit->text().toDouble() + 273.15;
+    double windSpeed = windSpeedEdit->text().toDouble();
+    double inletTemperature, inletQuality;
+    if (inletArg2Para == "温度（C）") {
+        inletTemperature = inletArg2 + 273.15;
+        inletQuality = -1;
+    } else {
+        inletQuality = inletArg2;
+    }
+
+    std::map<std::string, int> stdfittingsData;
+
+    for (const auto& fitting : fittingsData) {
+        std::string name = fitting.first.toStdString();
+        int num = fitting.second;
+        stdfittingsData[name] = num;
+    }
+
+    FluidAnalyzer fluidAnalyzer;
+
+    if (flowRateType == "质量流量（kg/hr）") {
+        fluidAnalyzer.analyzePipe(fluid, flowRate, inletPressure, inletTemperature,
+                    length, pipeOd, pipeWallThickness, insulationThickness,
+                    pipeTypeName, insulationMaterialName,
+                    protectionMaterialName, ambientTemperature,
+                    windSpeed, segmentLength,
+                    stdfittingsData, inletQuality);
+    } else {
+        fluidAnalyzer.analyzePipe_volumeFlow(fluid, flowRate, inletPressure, inletTemperature,
+                                  length, pipeOd, pipeWallThickness, insulationThickness,
+                                  pipeTypeName, insulationMaterialName,
+                                  protectionMaterialName, ambientTemperature,
+                                  windSpeed, segmentLength,
+                                  stdfittingsData, inletQuality);
+    }
 }
 
-void PipeFlow::save()
+QVariantMap PipeFlow::save()
 {
-    try {
-        QVariantMap data;
-        data["fluid"] = fluidCombo->currentText();
-        data["massFlow"] = flowRateEdit->text();
-        data["inletPressure"] = inletPressureEdit->text();
-        data["inletArg2Combo"] = inletArg2Combo->currentText();
-        data["inletArg2Edit"] = inletArg2Edit->text();
-        data["pipeType"] = pipeTypeCombo->currentText();
-        data["length"] = lengthEdit->text();
-        data["segment_length"] = segmentLengthEdit->text();
-        data["pipeOd"] = pipeOdEdit->text();
-        data["pipeWallThickness"] = pipeWallThicknessEdit->text();
-        data["insulationMaterial"] = insulationMaterialCombo->currentText();
-        data["insulationThickness"] = insulationThicknessEdit->text();
-        data["protectionMaterial"] = protectionMaterialCombo->currentText();
-        data["ambientTemperature"] = ambientTempEdit->text();
-        data["windSpeed"] = windSpeedEdit->text();
+    QVariantMap data;
+    data["module"] = "pipeFlow";
+    data["fluid"] = fluidCombo->currentText();
+    data["flowRateType"] = flowRateCombo->currentText();
+    data["flowRate"] = flowRateEdit->text();
+    data["inletPressure"] = inletPressureEdit->text();
+    data["inletArg2Combo"] = inletArg2Combo->currentText();
+    data["inletArg2Edit"] = inletArg2Edit->text();
+    data["pipeType"] = pipeTypeCombo->currentText();
+    data["length"] = lengthEdit->text();
+    data["segmentLength"] = segmentLengthEdit->text();
+    data["pipeOd"] = pipeOdEdit->text();
+    data["pipeWallThickness"] = pipeWallThicknessEdit->text();
+    data["insulationMaterial"] = insulationMaterialCombo->currentText();
+    data["insulationThickness"] = insulationThicknessEdit->text();
+    data["protectionMaterial"] = protectionMaterialCombo->currentText();
+    data["ambientTemperature"] = ambientTempEdit->text();
+    data["windSpeed"] = windSpeedEdit->text();
 
-        // 保存管道元件数据
-        QJsonArray fittingsArray;
-        for (const auto& fitting : fittingsData) {
-            QJsonObject fittingObj;
-            fittingObj["name"] = fitting.first;
-            fittingObj["count"] = fitting.second;
-            fittingsArray.append(fittingObj);
-        }
-        data["fittings_data"] = fittingsArray;
-
-        QString filename = QFileDialog::getSaveFileName(
-            this, "保存数据", "", "Pipe文件 (*.pipe);;所有文件 (*.*)");
-
-        if (!filename.isEmpty()) {
-            QFile file(filename);
-            if (file.open(QIODevice::WriteOnly)) {
-                QJsonDocument doc(QJsonObject::fromVariantMap(data));
-                file.write(doc.toJson());
-                file.close();
-                QMessageBox::information(this, "成功", QString("数据已保存到: %1").arg(filename));
-            }
-        }
-
-    } catch (const std::exception& e) {
-        QMessageBox::critical(this, "错误", QString("保存数据失败: %1").arg(e.what()));
+    // 保存管道元件数据
+    QJsonArray fittingsArray;
+    for (const auto& fitting : fittingsData) {
+        QJsonObject fittingObj;
+        fittingObj["name"] = fitting.first;
+        fittingObj["count"] = fitting.second;
+        fittingsArray.append(fittingObj);
     }
+    data["fittingsData"] = fittingsArray;
+
+    return data;
+}
+
+void PipeFlow::open(QVariantMap data)
+{
+
+    // 恢复数据到界面
+    fluidCombo->setCurrentText(data["fluid"].toString());
+    flowRateCombo->setCurrentText(data["flowRateType"].toString());
+    flowRateEdit->setText(data["flowRate"].toString());
+    inletPressureEdit->setText(data["inletPressure"].toString());
+    inletArg2Combo->setCurrentText(data["inletArg2Combo"].toString());
+    inletArg2Edit->setText(data["inletArg2Edit"].toString());
+    pipeTypeCombo->setCurrentText(data["pipeType"].toString());
+
+    lengthEdit->setText(data["length"].toString());
+    pipeOdEdit->setText(data["pipeOd"].toString());
+    pipeWallThicknessEdit->setText(data["pipeWallThickness"].toString());
+    segmentLengthEdit->setText(data["segmentLength"].toString());
+
+    insulationMaterialCombo->setCurrentText(data["insulationMaterial"].toString());
+    insulationThicknessEdit->setText(data["insulationThickness"].toString());
+    protectionMaterialCombo->setCurrentText(data["protectionMaterial"].toString());
+    ambientTempEdit->setText(data["ambientTemperature"].toString());
+    windSpeedEdit->setText(data["windSpeed"].toString());
+
+    // 恢复管道元件数据
+    fittingsData.clear();
+    QJsonArray fittingsArray = data["fittingsData"].toJsonArray();
+    for (const QJsonValue& value : fittingsArray) {
+        QJsonObject obj = value.toObject();
+        fittingsData.append(qMakePair(obj["name"].toString(), obj["count"].toInt()));
+    }
+    loadFittingsToTable();
 }

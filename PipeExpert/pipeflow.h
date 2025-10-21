@@ -19,7 +19,8 @@ public:
     ~PipeFlow();
     void setupUi(QWidget *parent);
     void run();
-    void save();
+    QVariantMap save();
+    void open(QVariantMap data);
 
 private:
     QComboBox *fluidCombo;
@@ -47,8 +48,10 @@ private:
     MaterialManager *materialManager;
 
     void loadFittingsToTable();
-
+public slots:
+    void refreshMaterialCombos();
 private slots:
+
     void addFitting();
     void removeFitting();
 };

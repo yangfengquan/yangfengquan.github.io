@@ -17,6 +17,12 @@ public:
     MaterialDialog(const QString& type, QWidget *parent = nullptr);
     ~MaterialDialog();
 
+signals:
+    /**
+     * @brief 材料数据改变信号
+     */
+    void materialDataChanged();
+
 private:
     QString materialType;
     MaterialManager *materialManager;

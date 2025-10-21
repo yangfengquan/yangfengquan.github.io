@@ -31,7 +31,7 @@ public:
     QString range1;            // 导热系数方程1 变量取值范围
     QString range2;            // 导热系数方程2 变量取值范围
     QString range3;            // 导热系数方程3 变量取值范围
-    double density;             // 密度(kg/m³)
+    QString density;             // 密度(kg/m³)
     QString description;        // 描述
 
     // 计算导热系数(W/(m·K))
@@ -65,7 +65,7 @@ public:
     void addInsulationMaterial(const QString& name, const QString& eq1,
                                const QString& eq2, const QString& eq3,
                                const QString& range1, const QString& range2,
-                               const QString& range3, double density,
+                               const QString& range3, const QString& density,
                                 const QString& description);
     void addProtectionMaterial(const QString& name, double emissivity,
                                const QString& description);
@@ -74,11 +74,16 @@ public:
     void addPipeType(const QString& name, double roughness,
                      const QString& description);
 
+    void removeInsulationMaterial(const QString& name);
+    void removeProtectionMaterial(const QString& name);
+    void removePipeFitting(const QString& name);
+    void removePipeType(const QString& name);
+
     // 文件操作
     bool saveMaterialsToFile();
     bool loadMaterialsFromFile();
     void initDefaultMaterials();
-    void createDefaultMaterialFiles();
+    //void createDefaultMaterialFiles();
 
     // 获取材料路径
     static QString getMaterialFilePath(const QString& fileName);

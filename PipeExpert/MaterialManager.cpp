@@ -19,10 +19,12 @@ double InsulationMaterial::calculateConductivity(double tm) const
     try {
         // 处理方程1
         if (!conductivityEq1.isEmpty()) {
-            ConditionParser condition(range1.toStdString(), "tm");
-            if (condition.evaluate(tm_C)) {
-                FormulaParser formula(conductivityEq1.toStdString(), "tm");
-                return formula.evaluate(tm_C);
+            if(!range1.isEmpty()){
+                ConditionParser condition(range1.toStdString(), "tm");
+                if (condition.evaluate(tm_C)) {
+                    FormulaParser formula(conductivityEq1.toStdString(), "tm");
+                    return formula.evaluate(tm_C);
+                }
             } else {
                 // 无条件方程
                 FormulaParser formula(conductivityEq1.toStdString(), "tm");
@@ -32,10 +34,12 @@ double InsulationMaterial::calculateConductivity(double tm) const
 
         // 处理方程2
         if (!conductivityEq2.isEmpty()) {
-            ConditionParser condition(range2.toStdString(), "tm");
-            if (condition.evaluate(tm_C)) {
-                FormulaParser formula(conductivityEq2.toStdString(), "tm");
-                return formula.evaluate(tm_C);
+            if(!range2.isEmpty()){
+                ConditionParser condition(range2.toStdString(), "tm");
+                if (condition.evaluate(tm_C)) {
+                    FormulaParser formula(conductivityEq2.toStdString(), "tm");
+                    return formula.evaluate(tm_C);
+                }
             } else {
                 // 无条件方程
                 FormulaParser formula(conductivityEq2.toStdString(), "tm");
@@ -45,10 +49,12 @@ double InsulationMaterial::calculateConductivity(double tm) const
 
         // 处理方程3
         if (!conductivityEq3.isEmpty()) {
-            ConditionParser condition(range3.toStdString(), "tm");
-            if (condition.evaluate(tm_C)) {
-                FormulaParser formula(conductivityEq3.toStdString(), "tm");
-                return formula.evaluate(tm_C);
+            if(!range3.isEmpty()){
+                ConditionParser condition(range3.toStdString(), "tm");
+                if (condition.evaluate(tm_C)) {
+                    FormulaParser formula(conductivityEq3.toStdString(), "tm");
+                    return formula.evaluate(tm_C);
+                }
             } else {
                 // 无条件方程
                 FormulaParser formula(conductivityEq3.toStdString(), "tm");
@@ -114,7 +120,7 @@ QMap<QString, PipeType> MaterialManager::getPipeTypes() const
 void MaterialManager::addInsulationMaterial(const QString& name, const QString& eq1,
                                             const QString& eq2, const QString& eq3,
                                             const QString& range1, const QString& range2,
-                                            const QString& range3, double density,
+                                            const QString& range3, const QString& density,
                                             const QString& description)
 {
     InsulationMaterial material;
@@ -165,6 +171,30 @@ void MaterialManager::addPipeType(const QString& name, double roughness,
     pipeType.description = description;
 
     pipeTypes[name] = pipeType;
+}
+
+// 删除保温材料
+void MaterialManager::removeInsulationMaterial(const QString& name)
+{
+    insulationMaterials.remove(name);
+}
+
+// 删除外保护层
+void MaterialManager::removeProtectionMaterial(const QString& name)
+{
+    protectionMaterials.remove(name);
+}
+
+// 删除管道元件
+void MaterialManager::removePipeFitting(const QString& name)
+{
+    pipeFittings.remove(name);
+}
+
+// 删除管道类型
+void MaterialManager::removePipeType(const QString& name)
+{
+    pipeTypes.remove(name);
 }
 
 // 保存材料到文件
@@ -296,7 +326,7 @@ bool MaterialManager::loadMaterialsFromFile()
                 obj["range1"].toString(),
                 obj["range2"].toString(),
                 obj["range3"].toString(),
-                obj["density"].toDouble(),
+                obj["density"].toString(),
                 obj["description"].toString()
                 );
         }
@@ -377,7 +407,18 @@ void MaterialManager::initDefaultMaterials()
         "tm<800",
         "",
         "",
-        170,
+        "170",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸钙制品-II型-170",
+        "0.0479+0.00010185*tm+9.65015e-11*tm^3",
+        "",
+        "",
+        "tm<800",
+        "",
+        "",
+        "170",
         "引自GB/50264-2013 附录A 表A.0.1"
         );
     addInsulationMaterial(
@@ -388,7 +429,62 @@ void MaterialManager::initDefaultMaterials()
         "tm<500",
         "500<=tm<=800",
         "",
-        220,
+        "220",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸钙制品-II型-220",
+        "0.0564+0.00007786*tm+7.8571e-8*tm^2",
+        "0.0937+1.67397E-10*tm^3",
+        "",
+        "tm<500",
+        "500<=tm<=800",
+        "",
+        "220",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "复合硅酸盐制品-涂料-180-200",
+        "0.065+0.00017*(tm-70)",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "180-200",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "复合硅酸盐制品-毡-60-80",
+        "0.043+0.00015*(tm-70)",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "60-80",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "复合硅酸盐制品-毡-81-130",
+        "0.044+0.00015*(tm-70)",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "81-130",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "复合硅酸盐制品-管壳-80-180",
+        "0.048",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "80-180",
         "引自GB/50264-2013 附录A 表A.0.1"
         );
     addInsulationMaterial(
@@ -399,29 +495,342 @@ void MaterialManager::initDefaultMaterials()
         "-20<=tm<=100",
         "100<tm<=600",
         "",
-        80,
+        "80",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "岩棉制品-缝毡-80-130",
+        "0.0337+0.000128*tm",
+        "0.0407+2.52e-5*tm+3.34e-7*tm^2",
+        "",
+        "-20<=tm<=100",
+        "100<tm<=600",
+        "",
+        "80-130",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "岩棉制品-板-60-100",
+        "0.0337+0.000151*tm",
+        "0.0395+4.71e-5*tm+5.03e-7*tm^2",
+        "",
+        "-20<=tm<=100",
+        "100<tm<=600",
+        "",
+        "60-100",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "岩棉制品-板-101-160",
+        "0.0337+0.000128*tm",
+        "0.0407+2.52e-5*tm+3.34e-7*tm^2",
+        "",
+        "-20<=tm<=100",
+        "100<tm<=600",
+        "",
+        "101-160",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "岩棉制品-管壳-100-150",
+        "0.0314+0.000174*tm",
+        "0.0384+7.13e-5*tm+3.51e-7*tm^2",
+        "",
+        "-20<=tm<=100",
+        "100<tm<=600",
+        "",
+        "100-150",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-毯-24-40",
+        "0.046+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "24-40",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-毯-41-120",
+        "0.041+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "41-120",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-板-24",
+        "0.047+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "24",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-板-32",
+        "0.044+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "32",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-板-40",
+        "0.042+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "40",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-板-48",
+        "0.041+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "48",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-板-64",
+        "0.040+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "64",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-毡-24",
+        "0.046+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "24",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-毡-32",
+        "0.046+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "32",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-毡-40",
+        "0.046+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "40",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-毡-48",
+        "0.041+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "48",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "玻璃棉制品-管壳-48",
+        "0.041+0.00017*tm",
+        "",
+        "",
+        "-20<=tm<=220",
+        "",
+        "",
+        "48",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-1#毯-96",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "96",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-1#毯-128",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "128",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-2#毯-96",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "96",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-2#毯-128",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "128",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-1#毡-200",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "≤200",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-2#毡-200",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "≤200",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-板-220",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "≤220",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-管壳-220",
+        "0.044+0.0002*(tm-70)",
+        "0.11+0.00036*(tm-400)",
+        "",
+        "tm<=400",
+        "tm>400",
+        "",
+        "≤220",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸铝棉及其制品-树脂结合毡-128",
+        "0.044+0.0002*(tm-70)",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "128",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸镁纤维毯-100",
+        "0.0397-2.741e-6*tm+4.526e-7*tm^2",
+        "",
+        "",
+        "70<=tm<=500",
+        "",
+        "",
+        "100±10",
+        "引自GB/50264-2013 附录A 表A.0.1"
+        );
+    addInsulationMaterial(
+        "硅酸镁纤维毯-130",
+        "0.0397-2.741e-6*tm+4.526e-7*tm^2",
+        "",
+        "",
+        "70<=tm<=500",
+        "",
+        "",
+        "130±10",
         "引自GB/50264-2013 附录A 表A.0.1"
         );
 
     addProtectionMaterial("铝合金薄板", 0.3, "引自GB/50264-2013 表5.8.9");
     addProtectionMaterial("不锈钢薄板", 0.4, "引自GB/50264-2013 表5.8.9");
     addProtectionMaterial("有光泽的镀钵薄钢板", 0.27, "引自GB/50264-2013 表5.8.9");
+    addProtectionMaterial("已氧化的镀钵薄钢板", 0.32, "引自GB/50264-2013 表5.8.9");
+    addProtectionMaterial("纤维织物", 0.8, "引自GB/50264-2013 表5.8.9");
+    addProtectionMaterial("水泥砂浆", 0.69, "引自GB/50264-2013 表5.8.9");
+    addProtectionMaterial("铝粉漆", 0.41, "引自GB/50264-2013 表5.8.9");
+    addProtectionMaterial("黑漆(有光泽)", 0.88, "引自GB/50264-2013 表5.8.9");
+    addProtectionMaterial("黑漆(无光泽)", 0.96, "引自GB/50264-2013 表5.8.9");
     addProtectionMaterial("油漆", 0.9, "引自GB/50264-2013 表5.8.9");
 
     addPipeFitting("45°标准弯头", 0.35, "引自SH/3035-2018 表6.2.5");
     addPipeFitting("90°标准弯头", 0.75, "引自SH/3035-2018 表6.2.5");
     addPipeFitting("90°斜接弯头", 1.3, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("180°标准弯头", 1.5, "引自SH/3035-2018 表6.2.5");
     addPipeFitting("等径三通(流出)", 1.2, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("等径三通(流入)", 1.8, "引自SH/3035-2018 表6.2.5");
     addPipeFitting("截止阀(全开)", 6.0, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("角阀(全开)", 3.0, "引自SH/3035-2018 表6.2.5");
     addPipeFitting("闸阀(全开)", 0.17, "引自SH/3035-2018 表6.2.5");
-
+    addPipeFitting("旋塞阀(全开)", 0.05, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("蝶阀(全开)", 0.24, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("旋启式止回阀", 2.0, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("升降式止回阀", 10.0, "引自SH/3035-2018 表6.2.5");
+    addPipeFitting("底阀", 15.0, "引自SH/3035-2018 表6.2.5");
     addPipeType("无缝黄铜、铜及铅管", 0.00001, "引自SH/3035-2018 表6.2.4");
     addPipeType("操作中基本无腐蚀的无缝钢管", 0.0001, "引自SH/3035-2018 表6.2.4");
     addPipeType("操作中有轻度腐蚀的无缝钢管",  0.0002, "引自SH/3035-2018 表6.2.4");
     addPipeType("操作中有显著腐蚀的无缝钢管", 0.0005, "引自SH/3035-2018 表6.2.4");
+    addPipeType("铜板卷管", 0.00033, "引自SH/3035-2018 表6.2.4");
     addPipeType("铸铁管", 0.00085, "引自SH/3035-2018 表6.2.4");
+    addPipeType("干净的玻璃管",  0.00001, "引自SH/3035-2018 表6.2.4");
 }
 
+/*
 // 创建默认材料文件
 void MaterialManager::createDefaultMaterialFiles()
 {
@@ -531,94 +940,9 @@ void MaterialManager::createDefaultMaterialFiles()
         qCritical() << "创建默认材料文件失败:" << e.what();
     }
 }
-
+*/
 // 获取材料文件路径
 QString MaterialManager::getMaterialFilePath(const QString& fileName)
 {
     return QApplication::applicationDirPath() + "/data/" + fileName;
 }
-
-/*
-// 解析条件表达式
-bool MaterialManager::evaluateCondition(const QString& condition, double tmC)
-{
-    // 支持的条件格式: tm<value, tm<=value, tm>value, tm>=value, a<=tm<=b
-    static QRegularExpression re(R"(^\s*tm\s*([<>]=?|=)\s*([+-]?\d+(\.\d+)?)\s*$)");
-    static QRegularExpression rangeRe(R"(^\s*([+-]?\d+(\.\d+)?)\s*<=?\s*tm\s*<=?\s*([+-]?\d+(\.\d+)?)\s*$)");
-
-    if (rangeRe.match(condition).hasMatch()) {
-        const auto& match = rangeRe.match(condition);
-        const double minVal = match.captured(1).toDouble();
-        const double maxVal = match.captured(3).toDouble();
-        const bool leftInclusive = condition.contains("<=");
-        const bool rightInclusive = condition.contains("<=", condition.indexOf("tm") + 2);
-
-        if (leftInclusive && rightInclusive) return (tmC >= minVal && tmC <= maxVal);
-        if (leftInclusive && !rightInclusive) return (tmC >= minVal && tmC < maxVal);
-        if (!leftInclusive && rightInclusive) return (tmC > minVal && tmC <= maxVal);
-        return (tmC > minVal && tmC < maxVal);
-    }
-
-    if (re.match(condition).hasMatch()) {
-        const auto& match = re.match(condition);
-        const QString op = match.captured(1);
-        const double val = match.captured(2).toDouble();
-
-        if (op == "<") return tmC < val;
-        if (op == "<=") return tmC <= val;
-        if (op == ">") return tmC > val;
-        if (op == ">=") return tmC >= val;
-        if (op == "=") return qFuzzyCompare(tmC, val);
-    }
-
-    qWarning() << "无法解析条件表达式:" << condition;
-    return false;
-}
-
-// 解析数学表达式
-double MaterialManager::evaluateExpression(const QString& expr, double tmC)
-{
-    // 替换表达式中的tm变量
-    QString processedExpr = expr;
-    processedExpr.replace("tm", QString::number(tmC));
-    processedExpr.replace("^", "**");  // 将^转换为pow函数格式
-
-    // 简单表达式解析器（实际应用中可考虑使用更完善的表达式解析库）
-    try {
-        // 处理常数和运算符
-        if (processedExpr.contains("+")) {
-            const auto parts = processedExpr.split("+");
-            return evaluateExpression(parts[0], tmC) + evaluateExpression(parts[1], tmC);
-        }
-        if (processedExpr.contains("-") && processedExpr.indexOf("-") > 0) {
-            const auto parts = processedExpr.split("-");
-            return evaluateExpression(parts[0], tmC) - evaluateExpression(parts[1], tmC);
-        }
-        if (processedExpr.contains("*")) {
-            const auto parts = processedExpr.split("*");
-            return evaluateExpression(parts[0], tmC) * evaluateExpression(parts[1], tmC);
-        }
-        if (processedExpr.contains("/")) {
-            const auto parts = processedExpr.split("/");
-            const double denominator = evaluateExpression(parts[1], tmC);
-            if (qFuzzyIsNull(denominator)) throw std::runtime_error("除零错误");
-            return evaluateExpression(parts[0], tmC) / denominator;
-        }
-        if (processedExpr.contains("**")) {
-            const auto parts = processedExpr.split("**");
-            return pow(evaluateExpression(parts[0], tmC), evaluateExpression(parts[1], tmC));
-        }
-
-        // 纯数字
-        bool ok = false;
-        const double result = processedExpr.toDouble(&ok);
-        if (ok) return result;
-
-    } catch (const std::exception& e) {
-        qWarning() << "表达式计算错误:" << e.what() << "表达式:" << expr;
-        throw;
-    }
-
-    throw std::runtime_error("无法解析表达式: " + expr.toStdString());
-}
-*/

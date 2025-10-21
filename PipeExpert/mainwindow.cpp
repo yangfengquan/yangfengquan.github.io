@@ -4,10 +4,15 @@
 #include <QApplication>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QFileDialog>
+#include <QFile>
 #include <QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    setWindowTitle("汤圆工具集");
     setMinimumSize(940, 600);
     setupMenu();
 }
@@ -96,13 +101,61 @@ void MainWindow::setupUi(const QString& module)
 
 void MainWindow::save()
 {
+    if (this->module.isEmpty()){
+        QMessageBox::warning(this, "警告", "请先在菜单栏中选择功能。");
+        return;
+    }
+
+    QVariantMap data;
+
+    if (this->module == "pipeFlow"){
+        data = pipeFlow->save();
+    }
+
+    try {
+        QString filename = QFileDialog::getSaveFileName(
+            this, "保存数据", "", "Pipe文件 (*.pipe);;所有文件 (*.*)");
+
+        if (!filename.isEmpty()) {
+            QFile file(filename);
+            if (file.open(QIODevice::WriteOnly)) {
+                QJsonDocument doc(QJsonObject::fromVariantMap(data));
+                file.write(doc.toJson());
+                file.close();
+                QMessageBox::information(this, "成功", QString("数据已保存到: %1").arg(filename));
+            }
+        }
+
+    } catch (const std::exception& e) {
+        QMessageBox::critical(this, "错误", QString("保存数据失败: %1").arg(e.what()));
+    }
 
 
 }
 
 void MainWindow::open()
 {
+    try {
+        QString filename = QFileDialog::getOpenFileName(
+            this, "读取数据", "", "Pipe文件 (*.pipe);;所有文件 (*.*)");
 
+        if (!filename.isEmpty()) {
+            QFile file(filename);
+            if (file.open(QIODevice::ReadOnly)) {
+                QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+                QVariantMap data = doc.object().toVariantMap();
+
+                // 恢复数据到界面
+                if (data["module"] == "pipeFlow") {
+                    setupUi("pipeFlow");
+                    pipeFlow->open(data);
+                }
+            }
+        }
+
+    } catch (const std::exception& e) {
+        QMessageBox::critical(this, "错误", QString("读取数据失败: %1").arg(e.what()));
+    }
 }
 
 void MainWindow::run()
@@ -117,6 +170,9 @@ void MainWindow::run()
 void MainWindow::openMaterialDialog(const QString& type)
 {
     MaterialDialog *dlg = new MaterialDialog(type, this);
+    if (this->module == "pipeFlow"){
+        connect(dlg, &MaterialDialog::materialDataChanged, pipeFlow, &PipeFlow::refreshMaterialCombos);
+    }
     dlg->exec();
 }
 
