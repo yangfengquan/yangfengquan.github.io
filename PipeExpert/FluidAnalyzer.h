@@ -42,8 +42,8 @@ public:
         double outletFrictionFactor;
 
         double totalPressureDrop;
-        double frictionPressureDrop;
-        double fittingsPressureDrop;
+        double totalFrictionPressureDrop;
+        double totalFittingsPressureDrop;
         //double accelerationPressureDrop;//未考虑动压变化
         double maxVelocity;
         //double minVelocity;

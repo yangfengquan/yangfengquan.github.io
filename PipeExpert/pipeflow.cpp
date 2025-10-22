@@ -16,6 +16,11 @@
 #include <QJsonObject>
 
 #include <QMessageBox>
+
+extern "C" {
+#include "CoolPropLib.h"
+}
+
 #include <QDebug>
 PipeFlow::PipeFlow(QWidget *parent)
     : QWidget(parent)
@@ -47,7 +52,7 @@ void PipeFlow::setupUi(QWidget *parent)
 
     basicLayout->addWidget(new QLabel("流体"), row, 0);
     fluidCombo = new QComboBox();
-    fluidCombo->addItems({"Water", "Air", "Ammonia", "CarbonDioxide", "R134a"});
+    //fluidCombo->addItems({"Water", "Air", "Ammonia", "CarbonDioxide", "R134a"});
     basicLayout->addWidget(fluidCombo, row, 1);
 
     flowRateCombo = new QComboBox();
@@ -131,6 +136,57 @@ void PipeFlow::setupUi(QWidget *parent)
     connect(removeFittingButton, &QPushButton::clicked, this, &PipeFlow::removeFitting);
 
     refreshMaterialCombos();
+
+    loadFluidsToCombobox();
+    pipeTypeCombo->setCurrentText("操作中基本无腐蚀的无缝钢管");
+    protectionMaterialCombo->setCurrentText("铝合金薄板");
+
+}
+void PipeFlow::loadFluidsToCombobox()
+{
+
+    // 获取CoolProp支持的所有流体
+    char buffer[4096]; // 足够大的缓冲区
+    long return_val = get_global_param_string("fluids_list", buffer, sizeof(buffer));
+    qDebug()<<buffer;
+    if (return_val == 1) { // 成功
+        std::string fluids_str(buffer);
+
+        // 分割字符串，流体之间用逗号分隔
+        std::vector<std::string> fluids;
+        size_t start = 0;
+        size_t end = fluids_str.find(',');
+
+        while (end != std::string::npos) {
+            fluids.push_back(fluids_str.substr(start, end - start));
+            start = end + 1;
+            end = fluids_str.find(',', start);
+        }
+        // 添加最后一个流体
+        if (start < fluids_str.length()) {
+            fluids.push_back(fluids_str.substr(start));
+        }
+
+
+        for (const std::string& fluid : fluids) {
+            QString fluidName = QString::fromStdString(fluid).trimmed();
+            if (fluidName.isEmpty()) continue;
+
+            QString displayName;
+
+            // 如果有中文映射则使用中文，否则使用英文原名
+            if (fluidMap.contains(fluidName)) {
+                displayName = fluidMap[fluidName] + " (" + fluidName + ")";
+            } else {
+                displayName = fluidName;
+            }
+
+            fluidCombo->addItem(displayName, fluidName);
+        }
+
+        int waterIndex = fluidCombo->findData("Water");
+        fluidCombo->setCurrentIndex(waterIndex);
+    }
 }
 
 void PipeFlow::refreshMaterialCombos()
@@ -224,14 +280,14 @@ void PipeFlow::loadFittingsToTable()
         auto pipeFitting = materialManager->getPipeFittings().value(fitting.first);
 
         fittingsTable->setItem(i, 0, new QTableWidgetItem(fitting.first));
-        fittingsTable->setItem(i, 1, new QTableWidgetItem(QString::number(pipeFitting.resistanceCoef, 'f', 3)));
-        fittingsTable->setItem(i, 2, new QTableWidgetItem(QString::number(fitting.second)));
+        //fittingsTable->setItem(i, 1, new QTableWidgetItem(QString::number(pipeFitting.resistanceCoef, 'f', 3)));
+        fittingsTable->setItem(i, 1, new QTableWidgetItem(QString::number(fitting.second)));
     }
 }
 
 void PipeFlow::run()
 {
-    QByteArray byteArr = fluidCombo->currentText().toUtf8();
+    QByteArray byteArr = fluidCombo->currentData().toString().toUtf8();
     //const char* fluid = fluidCombo->currentText().toUtf8().constData();
     const char* fluid = byteArr.constData();
     QString flowRateType = flowRateCombo->currentText();

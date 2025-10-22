@@ -14,7 +14,8 @@ SOURCES += \
     dialog/materialdialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    pipeflow.cpp
+    pipeflow.cpp \
+    pipeline.cpp
 
 HEADERS += \
     ConditionParser.h \
@@ -24,6 +25,7 @@ HEADERS += \
     dialog/materialdialog.h \
     mainwindow.h \
     pipeflow.h \
+    pipeline.h \
     thirdparty/include/CoolPropLib.h
 
 # Default rules for deployment.

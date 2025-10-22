@@ -7,6 +7,7 @@ extern "C" {
 #include <algorithm>
 //#include <map>
 #include <string>
+#include <cstring>
 #include <QString>
 #include <QMessageBox>
 #include <QDebug>
@@ -90,89 +91,24 @@ std::map<std::string, double> FluidAnalyzer::pressureDropCalculation(
 }
 
 std::map<std::string, double> FluidAnalyzer::heatLossCalculation(
-    double fluidTemp, double ambientTemperature,
+    double fluidTemperature, double ambientTemperature,
     double pipeOd, double insulationThickness,
     const InsulationMaterial& insulationMaterial,
     const OuterProtection& protectionMaterial,
     double length, double windSpeed)
 {
+    qDebug()<<"insulationThickness"<<insulationThickness<<"ambientTemperature"<<ambientTemperature;
+    /*
+    if (insulationThickness <= 0) {
+        // 无保温情况
+        double d_outer = pipeOd;
+        double h_combined = calculateExternalHeatTransfer(
+            fluidTemperature, ambientTemperature, windSpeed, protectionMaterial.emissivity, pipeOd, d_outer);
 
-        if (insulationThickness <= 0) {
-            // 无保温情况
-            double d_outer = pipeOd;
-            double h_combined = calculateExternalHeatTransfer(
-                fluidTemp, ambientTemperature, windSpeed, protectionMaterial.emissivity, pipeOd, d_outer);
-
-            double surface_area = M_PI * pipeOd * length;
-            double Q_total = h_combined * surface_area * (fluidTemp - ambientTemperature);
-            double Q_per_m = Q_total / length;
-            double surfaceTemperature = ambientTemperature + 0.7 * (fluidTemp - ambientTemperature);
-
-            // 计算单位外表面积热损失
-            double surface_area_per_m = M_PI * d_outer;
-            double Q_per_area = (surface_area_per_m > 0) ? Q_per_m / surface_area_per_m : 0.0;
-
-            std::map<std::string, double> results;
-            results["totalHeatLoss"] = Q_total;
-            results["heatLossPerM"] = Q_per_m;
-            results["heatLossPerArea"] = Q_per_area;
-            results["overallHeatTransferCoeff"] = h_combined;
-            results["convectionCoeff"] = h_combined * 0.8;
-            results["surfaceTemperature_k"] = surfaceTemperature;
-            results["insulationConductivity"] = 0.0;
-
-            return results;
-        }
-
-        // 有保温情况 - 迭代计算
-        double d_outer = pipeOd + 2 * insulationThickness;
-
-        // 初始假设表面温度
-        double surfaceTemperature = ambientTemperature + 0.3 * (fluidTemp - ambientTemperature);
-        double insulation = 0.04; // 默认值
-        double h_external = 0.0;
-        double Q_per_m = 0.0;
-
-        for (int iteration = 0; iteration < 20; ++iteration) {
-            // 计算保温层平均温度
-            double tm_k = (fluidTemp + surfaceTemperature) / 2;
-
-            // 计算保温材料导热系数
-            insulation = insulationMaterial.calculateConductivity(tm_k);
-
-            // 计算保温层热阻
-            double R_insulation = log(d_outer / pipeOd) / (2 * M_PI * insulation);
-
-            // 计算外部换热系数
-            h_external = calculateExternalHeatTransfer(
-                surfaceTemperature, ambientTemperature, windSpeed, protectionMaterial.emissivity, pipeOd, d_outer);
-
-            // 计算外部热阻
-            double R_external = 1 / (h_external * M_PI * d_outer);
-
-            // 总热阻
-            double R_total = R_insulation + R_external;
-
-            // 单位长度热损失
-            Q_per_m = (fluidTemp - ambientTemperature) / R_total;
-
-            // 更新表面温度
-            double surfaceTemperature_new_k = ambientTemperature + Q_per_m * R_external;
-
-            // 收敛检查
-            if (fabs(surfaceTemperature_new_k - surfaceTemperature) < 0.1) {
-                surfaceTemperature = surfaceTemperature_new_k;
-                break;
-            }
-
-            surfaceTemperature = surfaceTemperature_new_k;
-        }
-
-        // 总热损失
-        double Q_total = Q_per_m * length;
-
-        // 计算对流换热系数
-        double h_convection = calculateConvectionCoeff(windSpeed, surfaceTemperature, ambientTemperature, pipeOd, d_outer);
+        double surface_area = M_PI * pipeOd * length;
+        double Q_total = h_combined * surface_area * (fluidTemperature - ambientTemperature);
+        double Q_per_m = Q_total / length;
+        double surfaceTemperature = ambientTemperature + 0.7 * (fluidTemperature - ambientTemperature);
 
         // 计算单位外表面积热损失
         double surface_area_per_m = M_PI * d_outer;
@@ -182,23 +118,89 @@ std::map<std::string, double> FluidAnalyzer::heatLossCalculation(
         results["totalHeatLoss"] = Q_total;
         results["heatLossPerM"] = Q_per_m;
         results["heatLossPerArea"] = Q_per_area;
-        results["overallHeatTransferCoeff"] = h_external;
-        results["convectionCoeff"] = h_convection;
+        results["overallHeatTransferCoeff"] = h_combined;
+        results["convectionCoeff"] = h_combined * 0.8;
         results["surfaceTemperature"] = surfaceTemperature;
-        results["insulationConductivity"] = insulation;
+        results["insulationConductivity"] = 0.0;
+
+        return results;
+    }
+*/
+    // 有保温情况 - 迭代计算
+    double d_outer = pipeOd + 2 * insulationThickness;
+
+    // 初始假设表面温度
+    double surfaceTemperature = ambientTemperature + 0.3 * (fluidTemperature - ambientTemperature);
+    double insulation = 0.04; // 默认值
+    double h_external = 0.0;
+    double Q_per_m = 0.0;
+
+    for (int iteration = 0; iteration < 20; ++iteration) {
+        // 计算保温层平均温度
+        double tm = (fluidTemperature + surfaceTemperature) / 2;
+
+        // 计算保温材料导热系数
+        insulation = insulationMaterial.calculateConductivity(tm);
+
+        // 计算保温层热阻
+        double R_insulation = log(d_outer / pipeOd) / (2 * M_PI * insulation);
+
+        // 计算外部换热系数
+        h_external = calculateExternalHeatTransfer(
+            surfaceTemperature, ambientTemperature, windSpeed, protectionMaterial.emissivity, pipeOd, d_outer);
+
+        // 计算外部热阻
+        double R_external = 1 / (h_external * M_PI * d_outer);
+
+        // 总热阻
+        double R_total = R_insulation + R_external;
+
+        // 单位长度热损失
+        Q_per_m = (fluidTemperature - ambientTemperature) / R_total;
+
+        // 更新表面温度
+        double surfaceTemperature_new_k = ambientTemperature + Q_per_m * R_external;
+
+        // 收敛检查
+        if (fabs(surfaceTemperature_new_k - surfaceTemperature) < 0.1) {
+            surfaceTemperature = surfaceTemperature_new_k;
+            break;
+        }
+
+        surfaceTemperature = surfaceTemperature_new_k;
+    }
+
+    // 总热损失
+    double Q_total = Q_per_m * length;
+
+    // 计算对流换热系数
+    double h_convection = calculateConvectionCoeff(windSpeed, surfaceTemperature, ambientTemperature, pipeOd, d_outer);
+
+    // 计算单位外表面积热损失
+    double surface_area_per_m = M_PI * d_outer;
+    double Q_per_area = (surface_area_per_m > 0) ? Q_per_m / surface_area_per_m : 0.0;
+
+    std::map<std::string, double> results;
+    results["totalHeatLoss"] = Q_total;
+    results["heatLossPerM"] = Q_per_m;
+    results["heatLossPerArea"] = Q_per_area;
+    results["overallHeatTransferCoeff"] = h_external;
+    results["convectionCoeff"] = h_convection;
+    results["surfaceTemperature"] = surfaceTemperature;
+    results["insulationConductivity"] = insulation;
 
     return results;
 }
 
-double FluidAnalyzer::calculateExternalHeatTransfer(double surfaceTemp, double ambientTemperature,
+double FluidAnalyzer::calculateExternalHeatTransfer(double surfaceTemperature, double ambientTemperature,
                                                     double windSpeed, double emissivity,
                                                     double pipeOd, double dOuter)
 {
     // 对流换热系数
-    double h_conv = calculateConvectionCoeff(windSpeed, surfaceTemp, ambientTemperature, pipeOd, dOuter);
+    double h_conv = calculateConvectionCoeff(windSpeed, surfaceTemperature, ambientTemperature, pipeOd, dOuter);
 
     // 辐射换热系数
-    double h_rad = calculateRadiationCoeff(surfaceTemp, ambientTemperature, emissivity);
+    double h_rad = calculateRadiationCoeff(surfaceTemperature, ambientTemperature, emissivity);
 
     return h_conv + h_rad;
 }
@@ -226,7 +228,7 @@ double FluidAnalyzer::calculateConvectionCoeff(double windSpeed, double surfaceT
 double FluidAnalyzer::calculateRadiationCoeff(double surfaceTemp, double ambientTemperature,
                                               double emissivity)
 {
-    double sigma = 5.669e-8; // Stefan-Boltzmann常数
+    double sigma = 5.669; // Stefan-Boltzmann常数
     double T_diff = surfaceTemp - ambientTemperature;
 
     if (T_diff <= 0) {
@@ -259,22 +261,41 @@ std::map<std::string, double> FluidAnalyzer::analyzePipeSegment(
     double outletPressure = inletPressure - dpResults["pressureDrop"];
 
     // 2. 热损失计算
-    std::map<std::string, double> heatLossResults = heatLossCalculation(
-        inletTemperature, ambientTemperature, pipeOd,
-        insulationThickness, insulationMaterial, protectionMaterial, length, windSpeed
+    std::map<std::string, double> heatLossResults;
+    double outletEnthalpy;
+    double outletTemperature = 0, outletTemperature_new = 0.9 * inletTemperature;
+    while (abs(outletTemperature - outletTemperature_new) > 0.01) {
+        outletTemperature = outletTemperature_new;
+        double avgTemperature = 0.5 * (inletTemperature + outletTemperature);
+
+        heatLossResults = heatLossCalculation(
+            avgTemperature, ambientTemperature, pipeOd,
+            insulationThickness, insulationMaterial, protectionMaterial, length, windSpeed
         );
 
-    // 3. 能量平衡
-    double delta_h = (massFlow > 0) ? heatLossResults["totalHeatLoss"] / massFlow : 0;
-    double outletEnthalpy = inletEnthalpy - delta_h;
+        double delta_h = (massFlow > 0) ? heatLossResults["totalHeatLoss"] / massFlow : 0;
+        outletEnthalpy = inletEnthalpy - delta_h;
 
-    // 4. 出口状态
+
+        outletTemperature_new = PropsSI("T", "P", outletPressure, "H", outletEnthalpy, fluid);
+    }
+
     double outletQuality = PropsSI("Q", "P", outletPressure, "H", outletEnthalpy, fluid);
-    double outletTemperature = PropsSI("T", "P", outletPressure, "H", outletEnthalpy, fluid);
 
     // 5. 计算气相和液相流量
-    double vaporFlow = massFlow * outletQuality;
-    double liquidFlow = massFlow * (1 - outletQuality);
+    char phase_str[256];
+    double vaporFlow = 0, liquidFlow = 0;
+    PhaseSI("P", outletPressure, "H", outletEnthalpy, fluid, phase_str, sizeof(phase_str));
+    if (outletQuality == -1) {
+        if(strcmp(phase_str, "gas") == 0 || strcmp(phase_str, "supercritical_gas") == 0) {
+            vaporFlow = massFlow;
+        } else {
+            liquidFlow = massFlow;
+        }
+    } else {
+        vaporFlow = massFlow * outletQuality;
+        liquidFlow = massFlow * (1 - outletQuality);
+    }
 
     std::map<std::string, double> results;
     // 组装结果
@@ -367,7 +388,7 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
             inletViscosity = PropsSI("V", "P", inletPressure, "Q", inletQuality, fluid);
             PhaseSI("P", inletPressure, "Q", inletQuality, fluid, phase_str, sizeof(phase_str));
         } else {
-            inletQuality = PropsSI("Q", "P", inletPressure, "T", inletTemperature, fluid);
+            //inletQuality = PropsSI("Q", "P", inletPressure, "T", inletTemperature, fluid);
             inletEnthalpy = PropsSI("H", "P", inletPressure, "T", inletTemperature, fluid);
             inletDensity = PropsSI("D", "P", inletPressure, "T", inletTemperature, fluid);
             inletViscosity = PropsSI("V", "P", inletPressure, "T", inletTemperature, fluid);
@@ -381,7 +402,9 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
         //QVariantMap current_props = inlet_props;
         //QList<QVariantMap> segment_results;
         std::vector<std::map<std::string, double>> segmentResults;
+        segmentLength = segmentLength ? segmentLength : length;
         int num_segments = std::max(1, (int)ceil(length / segmentLength));
+        qDebug()<<"segmentLength"<<segmentLength<<"num_segments"<<num_segments;
         double segmentFittingsResistance = totalFittingsResistance / num_segments;
         double currentPressure = inletPressure;
         double currentTemperature = inletTemperature;
@@ -410,10 +433,6 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
             currentViscosity = PropsSI("V", "P", currentPressure, "H", currentEnthalpy, fluid);
         }
 
-        if(!segmentResults.empty()){
-
-        }
-
         result.massFlow = massFlow;
         result.inletPressure = inletPressure;
         result.inletTemperature = inletTemperature;
@@ -421,8 +440,18 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
         result.inletQuality = inletQuality;
         result.inletVelocity = inletVelocity;
         result.inletDensity = inletDensity;
-        result.inletVaporFlow = massFlow * inletQuality;
-        result.inletLiquidFlow = massFlow * (1 - inletQuality);
+        qDebug()<<phase_str;
+        if (inletQuality == -1) {
+            if(strcmp(phase_str, "gas") == 0 ||strcmp(phase_str, "supercritical_gas") == 0) {
+                result.inletVaporFlow = massFlow;
+            } else {
+                result.inletLiquidFlow = massFlow;
+            }
+        } else {
+            result.inletVaporFlow = massFlow * inletQuality;
+            result.inletLiquidFlow = massFlow * (1 - inletQuality);
+        }
+
         if(!segmentResults.empty()){
             result.inletFrictionFactor = segmentResults.front()["frictionFactor"];
             result.outletPressure = segmentResults.back()["outletPressure"];
@@ -434,12 +463,17 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe(
             result.outletFrictionFactor = segmentResults.back()["frictionFactor"];//实际是最后一段入口
             result.outletDensity = PropsSI("D", "P", result.outletPressure, "H", result.outletEnthalpy, fluid);
             result.outletVelocity = massFlow / (result.outletDensity * area);
-            result.totalPressureDrop = result.outletPressure - result.inletPressure;
+            result.totalPressureDrop = result.inletPressure - result.outletPressure;
+            result.TemperatureDrop = result.inletTemperature - result.outletTemperature;
             result.maxVelocity = 0;
             result.maxSurfaceTemperature = 0;
+
             double velocitySum = 0;
             double surfaceTemperatureSum = 0;
+
             for (auto& segmentResult: segmentResults) {
+                result.totalFrictionPressureDrop += segmentResult["frictionPressureDrop"];
+                result.totalFittingsPressureDrop += segmentResult["fittingsPressureDrop"];
                 result.maxVelocity = std::max(result.maxVelocity, segmentResult["velocity"]);
                 result.maxSurfaceTemperature = std::max(result.maxVelocity, segmentResult["surfaceTemperature"]);
                 velocitySum += segmentResult["velocity"];
@@ -488,14 +522,12 @@ FluidAnalyzer::AnalysisResult FluidAnalyzer::analyzePipe_volumeFlow(
     std::map<std::string, int> fittingsData,
     double inletQuality)
 {
-    double inletDensity;
-    if (inletQuality != -1) {
-        inletDensity = PropsSI("D", "P", inletPressure, "Q", inletQuality, fluid);
-    } else {
-        inletDensity = PropsSI("D", "P", inletPressure, "T", inletTemperature, fluid);
-    }
+    double nDensity;// 温度 273.15 K、压力 101 325 Pa下的密度
 
-    double massFlow = volumeFlow * inletDensity;
+    nDensity = PropsSI("D", "P", 101325, "T", 273.15, fluid);
+
+
+    double massFlow = volumeFlow * nDensity;
 
     analyzePipe(fluid, massFlow, inletPressure, inletTemperature,
                 length, pipeOd, pipeWallThickness, insulationThickness,
@@ -533,11 +565,11 @@ bool FluidAnalyzer::generateReport(const FluidAnalyzer::AnalysisResult& result, 
     out << "-----------------------------------------------------------------------------------\n";
     out << QString("%1: %2\n").arg("质量流量（kg/hr）", -28).arg(result.massFlow * 3600, 20, 'f', 4);
     out << QString("%1: %2\n").arg("总压力损失（kPa）", -27).arg(result.totalPressureDrop / 1000, 20, 'f', 4);
-    out << QString("%1: %2\n").arg("摩擦压力损失（kPa）", -26).arg(result.frictionPressureDrop / 1000, 20, 'f', 4);
-    out << QString("%1: %2\n").arg("管件压力损失（kPa）", -26).arg(result.fittingsPressureDrop / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("摩擦压力损失（kPa）", -26).arg(result.totalFrictionPressureDrop / 1000, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("管件压力损失（kPa）", -26).arg(result.totalFittingsPressureDrop / 1000, 20, 'f', 4);
     out << QString("%1: %2\n").arg("最大流速（m/sec）", -28).arg(result.maxVelocity, 20, 'f', 4);
     out << QString("%1: %2\n").arg("平均流速（m/sec）", -28).arg(result.avgVelocity, 20, 'f', 4);
-    out << QString("%1: %2\n").arg("温度降（C）", -29).arg(result.TemperatureDrop -273.15, 20, 'f', 4);
+    out << QString("%1: %2\n").arg("温度降（C）", -29).arg(result.TemperatureDrop, 20, 'f', 4);
     out << QString("%1: %2\n").arg("焓降（kJ/kg）", -30).arg(result.EnthalpyDrop / 1000, 20, 'f', 4);
     out << QString("%1: %2\n").arg("总热损失（kW）", -28).arg(result.totalHeatLoss / 1000, 20, 'f', 4);
     out << QString("%1: %2\n").arg("每米平均热损失（W/m）", -25).arg(result.avgHeatLossPerM, 20, 'f', 4);
@@ -619,7 +651,7 @@ bool FluidAnalyzer::generateReport(const FluidAnalyzer::AnalysisResult& result, 
                    //.arg(seg.at("totalHeatLoss") / 1000, -7, 'f', 2)
                    .arg(seg.at("surfaceTemperature") - 273.15, -8, 'f', 2)
                    .arg(seg.at("insulationConductivity"), -12, 'f', 4)
-                   .arg(-seg.at("vaporFlow") * 3600, -10, 'f', 2)
+                   .arg(seg.at("vaporFlow") * 3600, -10, 'f', 2)
                    .arg(seg.at("liquidFlow") * 3600, -8, 'f', 2);
     }
 
