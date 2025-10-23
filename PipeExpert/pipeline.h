@@ -7,83 +7,47 @@
 class Pipeline
 {
 public:
+    Pipeline();
     Pipeline(const char *fluid,
-             double massFlow,
              double inletPressure,
              double inletTemperature,
-             double length,
              double pipeOd,
              double pipeWallThickness,
+             double length,
              double insulationThickness,
              std::string pipeTypeName,
              std::string insulationMaterialName,
              std::string cladMaterialName,
              double ambientTemperature,
              double windSpeed,
-             double segmentLength,
              std::map<std::string, int> fittingsData,
+             double segmentLength,
              double inletQuality = -1
             );
+    ~Pipeline();
+    void massFlowRate(double flowRate);
+    void volumetricFlowRate(double flowRate);
 
+private:
     const char *fluid;
-
     double massFlow;
-
     double inletPressure;
     double inletTemperature;
-    double inletEnthalpy;
-    double inletQuality;
-    double inletVelocity;
-    double inletDensity;
-    double inletVaporFlow;
-    double inletLiquidFlow;
-    double inletFrictionFactor;
-
-    double outletPressure;
-    double outletTemperature;
-    double outletEnthalpy;
-    double outletQuality;
-    double outletVelocity;
-    double outletDensity;
-    double outletVaporFlow;
-    double outletLiquidFlow;
-    double outletFrictionFactor;
-
-    double totalPressureDrop;
-    double totalFrictionPressureDrop;
-    double totalFittingsPressureDrop;
-    //double accelerationPressureDrop;//未考虑动压变化
-    double maxVelocity;
-    //double minVelocity;
-    double avgVelocity;
-
-    double TemperatureDrop;
-    double EnthalpyDrop;
-    double totalHeatLoss;
-    double avgHeatLossPerM;
-    double avgHeatLossPerArea;
-    double maxSurfaceTemperature;
-    //double minSurfaceTemperature;
-    double avgSurfaceTemperature;
-
     double pipeOd;
     double pipeId;
-    double length;
     double pipeWallThickness;
-    std::string pipeTypeName;
-    double roughness;
-    double totalFittingsResistance;
-    std::string insulationMaterialName;
+    double length;
     double insulationThickness;
+    std::string pipeTypeName;
+    std::string insulationMaterialName;
     std::string cladMaterialName;
-    double emissivity;
     double ambientTemperature;
     double windSpeed;
-
     std::map<std::string, int> fittingsData;
-
     double segmentLength;
-    struct segmentParameters
+    double inletQuality;
+
+    struct SegmentParameters
     {
         double pressure;
         double temperature;
@@ -94,10 +58,22 @@ public:
         double frictionFactor;
         double frictionPressureDrop;
         double fittingsPressureDrop;
-        segmentParameters* next;
-    };
+        struct SegmentParameters* prev;
+        struct SegmentParameters* next;
+    } *phead;
 
+    // 入口参数
+    SegmentParameters* getHead();
 
+    // 出口参数
+    SegmentParameters* getLast();
+
+    // 摩擦系数
+    double frictionFactor(double reynolds, double roughness);
+
+    // 定义科尔布鲁克-怀特方程的内部函数
+    // 该方程描述了过渡区和湍流状态下摩擦因子与雷诺数、相对粗糙度的关系
+    double colebrook_equation(double friction_factor, double reynolds, double relative_roughness);
 };
 
 #endif // PIPEFLOWCALCULATOR_H
