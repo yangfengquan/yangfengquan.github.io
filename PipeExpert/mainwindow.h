@@ -23,6 +23,7 @@ private slots:
     void save();
     void open();
     void run();
+    void reportFile(QString& content);
     void openMaterialDialog(const QString& type);
     void openActivationDialog();
 };

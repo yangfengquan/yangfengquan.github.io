@@ -4,6 +4,9 @@
 #include <string>
 #include <map>
 
+class InsulationMaterial;
+class QString;
+
 class Pipeline
 {
 public:
@@ -27,6 +30,8 @@ public:
     ~Pipeline();
     void massFlowRate(double flowRate);
     void volumetricFlowRate(double flowRate);
+    void calculate();
+    QString getReport();
 
 private:
     const char *fluid;
@@ -69,11 +74,41 @@ private:
     SegmentParameters* getLast();
 
     // 摩擦系数
-    double frictionFactor(double reynolds, double roughness);
+    double _frictionFactor(double reynolds, double roughness);
 
     // 定义科尔布鲁克-怀特方程的内部函数
     // 该方程描述了过渡区和湍流状态下摩擦因子与雷诺数、相对粗糙度的关系
     double colebrook_equation(double friction_factor, double reynolds, double relative_roughness);
+
+    void pressureDrop(
+        double length,
+        double roughness,
+        double fittingsResistance,
+        double density,
+        double viscosity,
+        double *frictionFactor,
+        double *frictionPressureDrop,
+        double *fittingsPressureDrop
+        );
+    double convectiveHeatTransferCoeff(double surfaceTemperature);
+    double radiationHeatTransferCoeffi(double surfaceTemperature, double emissivity);
+    double surfaceThermalResistance(double surfaceTemperature,double emissivity);
+    void heatLoss(
+        double fluidTemperature,
+        double length,
+        double emissivity,
+        const InsulationMaterial& insulationMaterial,
+        double* Q,
+        double* surfaceTemperature
+        );
+    Pipeline::SegmentParameters* segment(
+        SegmentParameters* pPrev,
+        double length,
+        double roughness,
+        double emissivity,
+        double fittingsResistance,
+        const InsulationMaterial& insulationMaterial
+        );
 };
 
 #endif // PIPEFLOWCALCULATOR_H

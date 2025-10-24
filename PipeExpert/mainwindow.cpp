@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QFileDialog>
 #include <QFile>
+#include <QProcess>
 #include <QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -163,7 +164,49 @@ void MainWindow::run()
     if (this->module.isEmpty()){
         QMessageBox::warning(this, "警告", "请先在菜单栏中选择功能。");
     } else if (this->module == "pipeFlow"){
-        pipeFlow->run();
+        QString content = pipeFlow->run();
+        qDebug()<<"m1";
+        reportFile(content);
+    }
+}
+
+void MainWindow::reportFile(QString& content)
+{
+    QString fileName = "report.tmp";
+    QString appDir = QCoreApplication::applicationDirPath();
+    QString reportFullPath = appDir + "/" + fileName;
+
+    // 打开文件并写入报告内容
+    QFile reportFile(reportFullPath);
+    if (!reportFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::critical(nullptr, "错误", "报告文件创建失败：" + reportFile.errorString());
+        return;
+    }
+
+    QTextStream stream(&reportFile);
+    stream << content;
+
+    reportFile.close();
+
+    // 调用Notepad3.exe打开报告
+    QString notepadPath = appDir + "/notepad++.exe";
+    if (!QFile::exists(notepadPath))
+    {
+        QMessageBox::warning(nullptr, "警告", "未在程序目录找到notepad++.exe，路径：\n" + notepadPath);
+        return;
+    }
+
+    QProcess* notepadProcess = new QProcess();
+    QObject::connect(notepadProcess, &QProcess::finished,
+                     notepadProcess, &QObject::deleteLater);
+    notepadProcess->start(notepadPath, {reportFullPath});
+
+    if (!notepadProcess->waitForStarted(1000))
+    {
+        QMessageBox::critical(nullptr, "错误", "notepad++.exe启动失败：" + notepadProcess->errorString());
+        notepadProcess->deleteLater();
+        return;
     }
 }
 

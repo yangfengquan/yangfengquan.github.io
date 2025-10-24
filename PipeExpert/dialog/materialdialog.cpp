@@ -72,7 +72,7 @@ QString MaterialDialog::getTitle() const
 {
     if (materialType == "insulation") {
         return "保温材料";
-    } else if (materialType == "protection") {
+    } else if (materialType == "clad") {
         return "外保护层";
     } else if (materialType == "fitting") {
         return "管道元件";
@@ -88,7 +88,7 @@ QStringList MaterialDialog::getColumns() const
     if (materialType == "insulation") {
         //return {"名称", "导热系数方程一", "导热系数方程二", "导热系数方程三", "密度(kg/m³)", "备注"};
         return {"名称","密度(kg/m³)", "备注"};
-    } else if (materialType == "protection") {
+    } else if (materialType == "clad") {
         return {"名称", "黑度", "备注"};
     } else if (materialType == "fitting") {
         return {"名称", "阻力系数", "备注"};
@@ -104,14 +104,14 @@ void MaterialDialog::refreshTable()
     materialTable->setRowCount(0);
 
     QMap<QString, InsulationMaterial> insulationMaterials;
-    QMap<QString, OuterProtection> protectionMaterials;
+    QMap<QString, CladMaterial> cladMaterials;
     QMap<QString, PipeFitting> pipeFittings;
     QMap<QString, PipeType> pipeTypes;
 
     if (materialType == "insulation") {
         insulationMaterials = materialManager->getInsulationMaterials();
-    } else if (materialType == "protection") {
-        protectionMaterials = materialManager->getProtectionMaterials();
+    } else if (materialType == "clad") {
+        cladMaterials = materialManager->getCladMaterials();
     } else if (materialType == "fitting") {
         pipeFittings = materialManager->getPipeFittings();
     } else if (materialType == "pipeType") {
@@ -133,10 +133,10 @@ void MaterialDialog::refreshTable()
 
             row++;
         }
-    } else if (materialType == "protection") {
+    } else if (materialType == "clad") {
         int row = 0;
-        for (auto it = protectionMaterials.begin(); it != protectionMaterials.end(); ++it) {
-            const OuterProtection &material = it.value();
+        for (auto it = cladMaterials.begin(); it != cladMaterials.end(); ++it) {
+            const CladMaterial &material = it.value();
             materialTable->insertRow(row);
 
             materialTable->setItem(row, 0, new QTableWidgetItem(material.name));
@@ -222,8 +222,8 @@ void MaterialDialog::deleteMaterial()
     if (reply == QMessageBox::Yes) {
         if (materialType == "insulation") {
             materialManager->removeInsulationMaterial(materialName);
-        } else if (materialType == "protection") {
-            materialManager->removeProtectionMaterial(materialName);
+        } else if (materialType == "clad") {
+            materialManager->removeCladMaterial(materialName);
         } else if (materialType == "fitting") {
             materialManager->removePipeFitting(materialName);
         } else if (materialType == "pipeType") {
@@ -264,7 +264,7 @@ void MaterialEditDialog::setupUI()
     QString title = isEditMode ? "编辑" : "添加";
     if (materialType == "insulation") {
         title += "保温材料";
-    } else if (materialType == "protection") {
+    } else if (materialType == "clad") {
         title += "外保护层";
     } else if (materialType == "fitting") {
         title += "管道元件";
@@ -294,8 +294,8 @@ void MaterialEditDialog::setupUI()
     if (materialType == "insulation") {
         createInsulationFields(fieldsLayout);
         currentRow = 8; // 保温材料有5行字段
-    } else if (materialType == "protection") {
-        createProtectionFields(fieldsLayout);
+    } else if (materialType == "clad") {
+        createCladFields(fieldsLayout);
         currentRow = 2; // 外保护层有2行字段
     } else if (materialType == "fitting") {
         createFittingsFields(fieldsLayout);
@@ -369,7 +369,7 @@ void MaterialEditDialog::createInsulationFields(QGridLayout *layout)
     layout->addWidget(densityEdit, row, 1);
 }
 
-void MaterialEditDialog::createProtectionFields(QGridLayout *layout)
+void MaterialEditDialog::createCladFields(QGridLayout *layout)
 {
     layout->addWidget(new QLabel("黑度:"), 1, 0);
     emissivityEdit = new QLineEdit("0.3");
@@ -403,10 +403,10 @@ void MaterialEditDialog::loadMaterialData()
             densityEdit->setText(material.density);
             descriptionEdit->setText(material.description);
         }
-    } else if (materialType == "protection") {
-        auto materials = materialManager->getProtectionMaterials();
+    } else if (materialType == "clad") {
+        auto materials = materialManager->getCladMaterials();
         if (materials.contains(materialName)) {
-            OuterProtection material = materials[materialName];
+            CladMaterial material = materials[materialName];
             nameEdit->setText(material.name);
             emissivityEdit->setText(QString::number(material.emissivity));
             descriptionEdit->setText(material.description);
@@ -446,7 +446,7 @@ bool MaterialEditDialog::validateInput()
             QMessageBox::warning(this, "警告", "请输入有效的密度值");
             return false;
         }
-    } else if (materialType == "protection") {
+    } else if (materialType == "clad") {
         bool ok;
         double emissivity = emissivityEdit->text().toDouble(&ok);
         if (!ok || emissivity < 0 || emissivity > 1) {
@@ -498,14 +498,14 @@ void MaterialEditDialog::saveMaterial()
 
             materialManager->addInsulationMaterial(name, eq1, eq2, eq3, range1, range2, range3, density, description);
 
-        } else if (materialType == "protection") {
+        } else if (materialType == "clad") {
             double emissivity = emissivityEdit->text().toDouble();
 
             if (isEditMode && name != materialName) {
-                materialManager->removeProtectionMaterial(materialName);
+                materialManager->removeCladMaterial(materialName);
             }
 
-            materialManager->addProtectionMaterial(name, emissivity, description);
+            materialManager->addCladMaterial(name, emissivity, description);
 
         } else if (materialType == "fitting") {
             double resistance = resistanceEdit->text().toDouble();

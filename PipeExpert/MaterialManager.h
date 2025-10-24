@@ -35,15 +35,15 @@ public:
     QString description;        // 描述
 
     // 计算导热系数(W/(m·K))
-    // 参数: tm_K - 平均温度(K)
-    double calculateConductivity(double tm_K) const;
+    // 参数: tm - 平均温度(K)
+    double getConductivity(double tm) const;
 };
 
 // 外保护材料类
-class OuterProtection {
+class CladMaterial {
 public:
     QString name;           // 名称
-    double emissivity;      // 发射率
+    double emissivity;      // 黑度
     QString description;    // 描述
 };
 
@@ -57,7 +57,7 @@ public:
 
     // 获取材料列表
     QMap<QString, InsulationMaterial> getInsulationMaterials() const;
-    QMap<QString, OuterProtection> getProtectionMaterials() const;
+    QMap<QString, CladMaterial> getCladMaterials() const;
     QMap<QString, PipeFitting> getPipeFittings() const;
     QMap<QString, PipeType> getPipeTypes() const;
 
@@ -67,7 +67,7 @@ public:
                                const QString& range1, const QString& range2,
                                const QString& range3, const QString& density,
                                 const QString& description);
-    void addProtectionMaterial(const QString& name, double emissivity,
+    void addCladMaterial(const QString& name, double emissivity,
                                const QString& description);
     void addPipeFitting(const QString& name, double resistanceCoef,
                         const QString& description);
@@ -75,7 +75,7 @@ public:
                      const QString& description);
 
     void removeInsulationMaterial(const QString& name);
-    void removeProtectionMaterial(const QString& name);
+    void removeCladMaterial(const QString& name);
     void removePipeFitting(const QString& name);
     void removePipeType(const QString& name);
 
@@ -90,7 +90,7 @@ public:
 
 public:
     QMap<QString, InsulationMaterial> insulationMaterials;  // 保温材料
-    QMap<QString, OuterProtection> protectionMaterials;     // 外保护材料
+    QMap<QString, CladMaterial> cladMaterials;     // 外保护材料
     QMap<QString, PipeFitting> pipeFittings;                // 管道配件
     QMap<QString, PipeType> pipeTypes;                      // 管道类型
 };

@@ -9,7 +9,6 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    FluidAnalyzer.cpp \
     MaterialManager.cpp \
     dialog/materialdialog.cpp \
     main.cpp \
@@ -19,7 +18,6 @@ SOURCES += \
 
 HEADERS += \
     ConditionParser.h \
-    FluidAnalyzer.h \
     FormulaParser.h \
     MaterialManager.h \
     dialog/materialdialog.h \

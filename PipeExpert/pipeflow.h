@@ -18,7 +18,7 @@ public:
     PipeFlow(QWidget *parent = nullptr);
     ~PipeFlow();
     void setupUi(QWidget *parent);
-    void run();
+    QString run();
     QVariantMap save();
     void open(QVariantMap data);
 
@@ -37,7 +37,7 @@ private:
     QTableWidget *fittingsTable;
     QComboBox *insulationMaterialCombo;
     QLineEdit *insulationThicknessEdit;
-    QComboBox *protectionMaterialCombo;
+    QComboBox *cladMaterialCombo;
     QLineEdit *ambientTempEdit;
     QLineEdit *windSpeedEdit;
 

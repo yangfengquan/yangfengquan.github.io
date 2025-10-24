@@ -113,7 +113,7 @@ private:
      * @brief 创建外保护层编辑字段
      * @param layout 父布局
      */
-    void createProtectionFields(QGridLayout *layout);
+    void createCladFields(QGridLayout *layout);
 
     /**
      * @brief 创建管道元件编辑字段

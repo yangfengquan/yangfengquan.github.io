@@ -12,7 +12,7 @@
 #include "ConditionParser.h"
 #include "FormulaParser.h"
 // 保温材料导热系数计算
-double InsulationMaterial::calculateConductivity(double tm) const
+double InsulationMaterial::getConductivity(double tm) const
 {
     const double tm_C = tm - 273.15;  // 转换为摄氏度
 
@@ -99,9 +99,9 @@ QMap<QString, InsulationMaterial> MaterialManager::getInsulationMaterials() cons
 }
 
 // 获取外保护材料列表
-QMap<QString, OuterProtection> MaterialManager::getProtectionMaterials() const
+QMap<QString, CladMaterial> MaterialManager::getCladMaterials() const
 {
-    return protectionMaterials;
+    return cladMaterials;
 }
 
 // 获取管道配件列表
@@ -138,15 +138,15 @@ void MaterialManager::addInsulationMaterial(const QString& name, const QString& 
 }
 
 // 添加外保护材料
-void MaterialManager::addProtectionMaterial(const QString& name, double emissivity,
+void MaterialManager::addCladMaterial(const QString& name, double emissivity,
                                             const QString& description)
 {
-    OuterProtection material;
+    CladMaterial material;
     material.name = name;
     material.emissivity = emissivity;
     material.description = description;
 
-    protectionMaterials[name] = material;
+    cladMaterials[name] = material;
 }
 
 // 添加管道配件
@@ -180,9 +180,9 @@ void MaterialManager::removeInsulationMaterial(const QString& name)
 }
 
 // 删除外保护层
-void MaterialManager::removeProtectionMaterial(const QString& name)
+void MaterialManager::removeCladMaterial(const QString& name)
 {
-    protectionMaterials.remove(name);
+    cladMaterials.remove(name);
 }
 
 // 删除管道元件
@@ -233,22 +233,22 @@ bool MaterialManager::saveMaterialsToFile()
         insulationFile.close();
 
         // 保存外保护材料
-        QFile protectionFile(getMaterialFilePath("protection_materials.json"));
-        if (!protectionFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            qWarning() << "无法打开外保护材料文件:" << protectionFile.errorString();
+        QFile cladFile(getMaterialFilePath("clad_materials.json"));
+        if (!cladFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qWarning() << "无法打开外保护材料文件:" << cladFile.errorString();
             return false;
         }
 
-        QJsonObject protectionData;
-        for (const auto& key : protectionMaterials.keys()) {
-            const auto& material = protectionMaterials[key];
+        QJsonObject cladData;
+        for (const auto& key : cladMaterials.keys()) {
+            const auto& material = cladMaterials[key];
             QJsonObject obj;
             obj["emissivity"] = material.emissivity;
             obj["description"] = material.description;
-            protectionData[key] = obj;
+            cladData[key] = obj;
         }
-        protectionFile.write(QJsonDocument(protectionData).toJson(QJsonDocument::Indented));
-        protectionFile.close();
+        cladFile.write(QJsonDocument(cladData).toJson(QJsonDocument::Indented));
+        cladFile.close();
 
         // 保存管道配件
         QFile fittingsFile(getMaterialFilePath("pipe_fittings.json"));
@@ -302,7 +302,7 @@ bool MaterialManager::loadMaterialsFromFile()
     try {
         // 清空现有数据
         insulationMaterials.clear();
-        protectionMaterials.clear();
+        cladMaterials.clear();
         pipeFittings.clear();
         pipeTypes.clear();
 
@@ -332,18 +332,18 @@ bool MaterialManager::loadMaterialsFromFile()
         }
 
         // 加载外保护材料
-        QFile protectionFile(getMaterialFilePath("protection_materials.json"));
-        if (!protectionFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qWarning() << "无法打开外保护材料文件:" << protectionFile.errorString();
+        QFile cladFile(getMaterialFilePath("clad_materials.json"));
+        if (!cladFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qWarning() << "无法打开外保护材料文件:" << cladFile.errorString();
             return false;
         }
 
-        QJsonObject protectionData = QJsonDocument::fromJson(protectionFile.readAll()).object();
-        protectionFile.close();
+        QJsonObject cladData = QJsonDocument::fromJson(cladFile.readAll()).object();
+        cladFile.close();
 
-        for (const auto& key : protectionData.keys()) {
-            const auto& obj = protectionData[key].toObject();
-            addProtectionMaterial(
+        for (const auto& key : cladData.keys()) {
+            const auto& obj = cladData[key].toObject();
+            addCladMaterial(
                 key,
                 obj["emissivity"].toDouble(),
                 obj["description"].toString()
@@ -796,16 +796,16 @@ void MaterialManager::initDefaultMaterials()
         "引自GB/50264-2013 附录A 表A.0.1"
         );
 
-    addProtectionMaterial("铝合金薄板", 0.3, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("不锈钢薄板", 0.4, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("有光泽的镀钵薄钢板", 0.27, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("已氧化的镀钵薄钢板", 0.32, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("纤维织物", 0.8, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("水泥砂浆", 0.69, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("铝粉漆", 0.41, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("黑漆(有光泽)", 0.88, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("黑漆(无光泽)", 0.96, "引自GB/50264-2013 表5.8.9");
-    addProtectionMaterial("油漆", 0.9, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("铝合金薄板", 0.3, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("不锈钢薄板", 0.4, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("有光泽的镀钵薄钢板", 0.27, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("已氧化的镀钵薄钢板", 0.32, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("纤维织物", 0.8, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("水泥砂浆", 0.69, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("铝粉漆", 0.41, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("黑漆(有光泽)", 0.88, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("黑漆(无光泽)", 0.96, "引自GB/50264-2013 表5.8.9");
+    addCladMaterial("油漆", 0.9, "引自GB/50264-2013 表5.8.9");
 
     addPipeFitting("45°标准弯头", 0.35, "引自SH/3035-2018 表6.2.5");
     addPipeFitting("90°标准弯头", 0.75, "引自SH/3035-2018 表6.2.5");
@@ -830,117 +830,6 @@ void MaterialManager::initDefaultMaterials()
     addPipeType("干净的玻璃管",  0.00001, "引自SH/3035-2018 表6.2.4");
 }
 
-/*
-// 创建默认材料文件
-void MaterialManager::createDefaultMaterialFiles()
-{
-    try {
-        // 创建材料目录
-        const QString dataDir = QApplication::applicationDirPath() + "/materials";
-        QDir().mkpath(dataDir);
-
-        // 创建默认保温材料
-        QJsonObject defaultInsulation;
-        defaultInsulation["硅酸钙制品-I型-170"] = QJsonObject({
-            {"conductivity_eq1", "0.0479+0.00010185*tm+9.65015e-11*tm^3"},
-            {"conductivity_eq2", ""},
-            {"conductivity_eq3", ""},
-            {"range1", "tm<800"},
-            {"range2", ""},
-            {"range3", ""},
-            {"density", 170},
-            {"description", "引自GB/50264-2013 附录A 表A.0.1"}
-        });
-
-        defaultInsulation["硅酸钙制品-I型-220"] = QJsonObject({
-            {"conductivity_eq1", "0.0564+0.00007786*tm+7.8571e-8*tm^2"},
-            {"conductivity_eq2", "0.0937+1.67397E-10*tm^3"},
-            {"conductivity_eq3", ""},
-            {"range1", "tm<500"},
-            {"range2", "500<=tm<=800"},
-            {"range3", ""},
-            {"density", 220},
-            {"description", "引自GB/50264-2013 附录A 表A.0.1"}
-        });
-
-        defaultInsulation["岩棉制品-毡-60-100"] = QJsonObject({
-            {"conductivity_eq1", "0.0337+0.000151*tm"},
-            {"conductivity_eq2", "0.0395+4.71e-5*tm+5.03e-7*tm^2"},
-            {"conductivity_eq3", ""},
-            {"range1", "-20<=tm<=100"},
-            {"range2", "100<tm<=600"},
-            {"range3", ""},
-            {"density", 80},
-            {"description", "引自GB/50264-2013 附录A 表A.0.1"}
-        });
-
-        QFile file_insulation_materials(getMaterialFilePath("insulation_materials.json"));
-        // Open the file for writing
-        if (file_insulation_materials.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            file_insulation_materials.write(QJsonDocument(defaultInsulation).toJson(QJsonDocument::Indented));
-            file_insulation_materials.close();
-        } else {
-            qDebug() << "Could not open file for writing:" << file_insulation_materials.errorString();
-        }
-
-        // 创建默认外保护层材料
-        QJsonObject defaultProtection;
-        defaultProtection["铝合金薄板"] = QJsonObject({{"emissivity", 0.3}, {"description", "引自GB/50264-2013 表5.8.9"}});
-        defaultProtection["不锈钢薄板"] = QJsonObject({{"emissivity", 0.4}, {"description", "引自GB/50264-2013 表5.8.9"}});
-        defaultProtection["有光泽的镀钵薄钢板"] = QJsonObject({{"emissivity", 0.27}, {"description", "引自GB/50264-2013 表5.8.9"}});
-        defaultProtection["油漆"] = QJsonObject({{"emissivity", 0.90}, {"description", "引自GB/50264-2013 表5.8.9"}});
-
-        QFile file_protection_materials(getMaterialFilePath("protection_materials.json"));
-        if (file_protection_materials.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            // Write your data here
-            file_protection_materials.write(QJsonDocument(defaultProtection).toJson(QJsonDocument::Indented));
-            file_protection_materials.close(); // Don't forget to close the file
-        } else {
-            qDebug() << "Could not open file for writing:" << file_protection_materials.errorString();
-        }
-
-        // 创建默认管道元件
-        QJsonObject defaultFittings;
-        defaultFittings["45°标准弯头"] = QJsonObject({{"resistance_coef", 0.35}, {"description", "引自SH/3035-2018 表6.2.5"}});
-        defaultFittings["90°标准弯头"] = QJsonObject({{"resistance_coef", 0.75}, {"description", "引自SH/3035-2018 表6.2.5"}});
-        defaultFittings["90°斜接弯头"] = QJsonObject({{"resistance_coef", 1.3}, {"description", "引自SH/3035-2018 表6.2.5"}});
-        defaultFittings["等径三通(流出)"] = QJsonObject({{"resistance_coef", 1.2}, {"description", "引自SH/3035-2018 表6.2.5"}});
-        defaultFittings["截止阀(全开)"] = QJsonObject({{"resistance_coef", 6.0}, {"description", "引自SH/3035-2018 表6.2.5"}});
-        defaultFittings["闸阀(全开)"] = QJsonObject({{"resistance_coef", 0.17}, {"description", "引自SH/3035-2018 表6.2.5"}});
-
-        QFile file_pipe_fittings(getMaterialFilePath("pipe_fittings.json"));
-        if (file_pipe_fittings.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            // Write your data here
-            file_pipe_fittings.write(QJsonDocument(defaultFittings).toJson(QJsonDocument::Indented));
-            file_pipe_fittings.close(); // Don't forget to close the file
-        } else {
-            qDebug() << "Could not open file for writing:" << file_pipe_fittings.errorString();
-        }
-
-        // 创建默认管道类型
-        QJsonObject defaultPipeTypes;
-        defaultPipeTypes["无缝黄铜、铜及铅管"] = QJsonObject({{"roughness", 0.00001}, {"description", "引自SH/3035-2018 表6.2.4"}});
-        defaultPipeTypes["操作中基本无腐蚀的无缝钢管"] = QJsonObject({{"roughness", 0.0001}, {"description", "引自SH/3035-2018 表6.2.4"}});
-        defaultPipeTypes["操作中有轻度腐蚀的无缝钢管"] = QJsonObject({{"roughness", 0.0002}, {"description", "引自SH/3035-2018 表6.2.4"}});
-        defaultPipeTypes["操作中有显著腐蚀的无缝钢管"] = QJsonObject({{"roughness", 0.0005}, {"description", "引自SH/3035-2018 表6.2.4"}});
-        defaultPipeTypes["铸铁管"] = QJsonObject({{"roughness", 0.00085}, {"description", "引自SH/3035-2018 表6.2.4"}});
-
-        QFile file_pipe_types(getMaterialFilePath("pipe_types.json"));
-        if (file_pipe_types.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            // Write your data here
-            file_pipe_types.write(QJsonDocument(defaultPipeTypes).toJson(QJsonDocument::Indented));
-            file_pipe_types.close(); // Don't forget to close the file
-        } else {
-            qDebug() << "Could not open file for writing:" << file_pipe_types.errorString();
-        }
-
-        qDebug() << "默认材料文件创建成功";
-
-    } catch (const std::exception& e) {
-        qCritical() << "创建默认材料文件失败:" << e.what();
-    }
-}
-*/
 // 获取材料文件路径
 QString MaterialManager::getMaterialFilePath(const QString& fileName)
 {

@@ -1,6 +1,6 @@
 #include "pipeflow.h"
 #include "MaterialManager.h"
-#include "FluidAnalyzer.h"
+#include "pipeline.h"
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -22,6 +22,7 @@ extern "C" {
 }
 
 #include <QDebug>
+
 PipeFlow::PipeFlow(QWidget *parent)
     : QWidget(parent)
     , materialManager(new MaterialManager())
@@ -120,8 +121,8 @@ void PipeFlow::setupUi(QWidget *parent)
     basicLayout->addWidget(insulationThicknessEdit, row, 3);
 
     basicLayout->addWidget(new QLabel("外保护层"), row, 4);
-    protectionMaterialCombo = new QComboBox();
-    basicLayout->addWidget(protectionMaterialCombo, row, 5);
+    cladMaterialCombo = new QComboBox();
+    basicLayout->addWidget(cladMaterialCombo, row, 5);
     ++row;
 
     basicLayout->addWidget(new QLabel("环境温度（C）"), row, 0);
@@ -139,7 +140,7 @@ void PipeFlow::setupUi(QWidget *parent)
 
     loadFluidsToCombobox();
     pipeTypeCombo->setCurrentText("操作中基本无腐蚀的无缝钢管");
-    protectionMaterialCombo->setCurrentText("铝合金薄板");
+    cladMaterialCombo->setCurrentText("铝合金薄板");
 
 }
 void PipeFlow::loadFluidsToCombobox()
@@ -148,7 +149,7 @@ void PipeFlow::loadFluidsToCombobox()
     // 获取CoolProp支持的所有流体
     char buffer[4096]; // 足够大的缓冲区
     long return_val = get_global_param_string("fluids_list", buffer, sizeof(buffer));
-    qDebug()<<buffer;
+    //qDebug()<<buffer;
     if (return_val == 1) { // 成功
         std::string fluids_str(buffer);
 
@@ -202,10 +203,10 @@ void PipeFlow::refreshMaterialCombos()
     }
 
     // 更新外保护层下拉列表
-    protectionMaterialCombo->clear();
-    protectionMaterialCombo->addItems(materialManager->getProtectionMaterials().keys());
-    if (protectionMaterialCombo->count() > 0) {
-        protectionMaterialCombo->setCurrentIndex(0);
+    cladMaterialCombo->clear();
+    cladMaterialCombo->addItems(materialManager->getCladMaterials().keys());
+    if (cladMaterialCombo->count() > 0) {
+        cladMaterialCombo->setCurrentIndex(0);
     }
 
     // 更新管道类型下拉列表
@@ -285,7 +286,7 @@ void PipeFlow::loadFittingsToTable()
     }
 }
 
-void PipeFlow::run()
+QString PipeFlow::run()
 {
     QByteArray byteArr = fluidCombo->currentData().toString().toUtf8();
     //const char* fluid = fluidCombo->currentText().toUtf8().constData();
@@ -302,7 +303,7 @@ void PipeFlow::run()
     double pipeWallThickness = pipeWallThicknessEdit->text().toDouble() / 1000;
     std::string insulationMaterialName = insulationMaterialCombo->currentText().toUtf8().toStdString();
     double insulationThickness = insulationThicknessEdit->text().toDouble() / 1000;
-    std::string protectionMaterialName = protectionMaterialCombo->currentText().toUtf8().toStdString();
+    std::string cladMaterialName = cladMaterialCombo->currentText().toUtf8().toStdString();
     double ambientTemperature = ambientTempEdit->text().toDouble() + 273.15;
     double windSpeed = windSpeedEdit->text().toDouble();
     double inletTemperature, inletQuality;
@@ -320,24 +321,35 @@ void PipeFlow::run()
         int num = fitting.second;
         stdfittingsData[name] = num;
     }
-
-    FluidAnalyzer fluidAnalyzer;
-
+    qDebug()<<"f1";
+    Pipeline *pipeline = new Pipeline(
+        fluid,
+        inletPressure,
+        inletTemperature,
+        pipeOd,
+        pipeWallThickness,
+        length,
+        insulationThickness,
+        pipeTypeName,
+        insulationMaterialName,
+        cladMaterialName,
+        ambientTemperature,
+        windSpeed,
+        stdfittingsData,
+        segmentLength,
+        inletQuality
+        );
+qDebug()<<"f2";
     if (flowRateType == "质量流量（kg/hr）") {
-        fluidAnalyzer.analyzePipe(fluid, flowRate, inletPressure, inletTemperature,
-                    length, pipeOd, pipeWallThickness, insulationThickness,
-                    pipeTypeName, insulationMaterialName,
-                    protectionMaterialName, ambientTemperature,
-                    windSpeed, segmentLength,
-                    stdfittingsData, inletQuality);
+        pipeline->massFlowRate(flowRate);
     } else {
-        fluidAnalyzer.analyzePipe_volumeFlow(fluid, flowRate, inletPressure, inletTemperature,
-                                  length, pipeOd, pipeWallThickness, insulationThickness,
-                                  pipeTypeName, insulationMaterialName,
-                                  protectionMaterialName, ambientTemperature,
-                                  windSpeed, segmentLength,
-                                  stdfittingsData, inletQuality);
+        pipeline->volumetricFlowRate(flowRate);
     }
+qDebug()<<"f3";
+    pipeline->calculate();
+qDebug()<<"f4";
+    return pipeline->getReport();
+qDebug()<<"f5";
 }
 
 QVariantMap PipeFlow::save()
@@ -357,7 +369,7 @@ QVariantMap PipeFlow::save()
     data["pipeWallThickness"] = pipeWallThicknessEdit->text();
     data["insulationMaterial"] = insulationMaterialCombo->currentText();
     data["insulationThickness"] = insulationThicknessEdit->text();
-    data["protectionMaterial"] = protectionMaterialCombo->currentText();
+    data["cladMaterial"] = cladMaterialCombo->currentText();
     data["ambientTemperature"] = ambientTempEdit->text();
     data["windSpeed"] = windSpeedEdit->text();
 
@@ -393,7 +405,7 @@ void PipeFlow::open(QVariantMap data)
 
     insulationMaterialCombo->setCurrentText(data["insulationMaterial"].toString());
     insulationThicknessEdit->setText(data["insulationThickness"].toString());
-    protectionMaterialCombo->setCurrentText(data["protectionMaterial"].toString());
+    cladMaterialCombo->setCurrentText(data["cladMaterial"].toString());
     ambientTempEdit->setText(data["ambientTemperature"].toString());
     windSpeedEdit->setText(data["windSpeed"].toString());
 
