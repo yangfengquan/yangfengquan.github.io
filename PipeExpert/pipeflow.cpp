@@ -288,68 +288,79 @@ void PipeFlow::loadFittingsToTable()
 
 QString PipeFlow::run()
 {
-    QByteArray byteArr = fluidCombo->currentData().toString().toUtf8();
-    //const char* fluid = fluidCombo->currentText().toUtf8().constData();
-    const char* fluid = byteArr.constData();
-    QString flowRateType = flowRateCombo->currentText();
-    double flowRate = flowRateEdit->text().toDouble() / 3600;
-    double inletPressure = inletPressureEdit->text().toDouble() * 1e6;
-    QString inletArg2Para = inletArg2Combo->currentText();
-    double inletArg2 = inletArg2Edit->text().toDouble();
-    std::string pipeTypeName = pipeTypeCombo->currentText().toUtf8().constData();
-    double length = lengthEdit->text().toDouble();
-    double segmentLength = segmentLengthEdit->text().toDouble();
-    double pipeOd = pipeOdEdit->text().toDouble() / 1000;
-    double pipeWallThickness = pipeWallThicknessEdit->text().toDouble() / 1000;
-    std::string insulationMaterialName = insulationMaterialCombo->currentText().toUtf8().toStdString();
-    double insulationThickness = insulationThicknessEdit->text().toDouble() / 1000;
-    std::string cladMaterialName = cladMaterialCombo->currentText().toUtf8().toStdString();
-    double ambientTemperature = ambientTempEdit->text().toDouble() + 273.15;
-    double windSpeed = windSpeedEdit->text().toDouble();
-    double inletTemperature, inletQuality;
-    if (inletArg2Para == "温度（C）") {
-        inletTemperature = inletArg2 + 273.15;
-        inletQuality = -1;
-    } else {
-        inletQuality = inletArg2;
+    // 先验证输入数据
+    QString errorMessage;
+    if (!validateInputs(errorMessage)) {
+        QMessageBox::critical(this, "输入数据错误", errorMessage);
+        return QString();
     }
 
-    std::map<std::string, int> stdfittingsData;
+    try {
+        QByteArray byteArr = fluidCombo->currentData().toString().toUtf8();
+        //const char* fluid = fluidCombo->currentText().toUtf8().constData();
+        const char* fluid = byteArr.constData();
+        QString flowRateType = flowRateCombo->currentText();
+        double flowRate = flowRateEdit->text().toDouble() / 3600;
+        double inletPressure = inletPressureEdit->text().toDouble() * 1e6;
+        QString inletArg2Para = inletArg2Combo->currentText();
+        double inletArg2 = inletArg2Edit->text().toDouble();
+        std::string pipeTypeName = pipeTypeCombo->currentText().toUtf8().constData();
+        double length = lengthEdit->text().toDouble();
+        double segmentLength = segmentLengthEdit->text().toDouble();
+        double pipeOd = pipeOdEdit->text().toDouble() / 1000;
+        double pipeWallThickness = pipeWallThicknessEdit->text().toDouble() / 1000;
+        std::string insulationMaterialName = insulationMaterialCombo->currentText().toUtf8().toStdString();
+        double insulationThickness = insulationThicknessEdit->text().toDouble() / 1000;
+        std::string cladMaterialName = cladMaterialCombo->currentText().toUtf8().toStdString();
+        double ambientTemperature = ambientTempEdit->text().toDouble() + 273.15;
+        double windSpeed = windSpeedEdit->text().toDouble();
+        double inletTemperature, inletQuality;
+        if (inletArg2Para == "温度（C）") {
+            inletTemperature = inletArg2 + 273.15;
+            inletQuality = -1;
+        } else {
+            inletQuality = inletArg2;
+        }
 
-    for (const auto& fitting : fittingsData) {
-        std::string name = fitting.first.toStdString();
-        int num = fitting.second;
-        stdfittingsData[name] = num;
+        std::map<std::string, int> stdfittingsData;
+
+        for (const auto& fitting : fittingsData) {
+            std::string name = fitting.first.toStdString();
+            int num = fitting.second;
+            stdfittingsData[name] = num;
+        }
+
+        Pipeline *pipeline = new Pipeline(
+            fluid,
+            inletPressure,
+            inletTemperature,
+            pipeOd,
+            pipeWallThickness,
+            length,
+            insulationThickness,
+            pipeTypeName,
+            insulationMaterialName,
+            cladMaterialName,
+            ambientTemperature,
+            windSpeed,
+            stdfittingsData,
+            segmentLength,
+            inletQuality
+            );
+
+        if (flowRateType == "质量流量（kg/hr）") {
+            pipeline->massFlowRate(flowRate);
+        } else {
+            pipeline->volumetricFlowRate(flowRate);
+        }
+
+        pipeline->calculate();
+
+        return pipeline->getReport();
+    } catch (const std::exception& e) {
+        QMessageBox::critical(this, "计算错误", QString("计算过程中发生错误: %1").arg(e.what()));
+        return QString();
     }
-    qDebug()<<"f1";
-    Pipeline *pipeline = new Pipeline(
-        fluid,
-        inletPressure,
-        inletTemperature,
-        pipeOd,
-        pipeWallThickness,
-        length,
-        insulationThickness,
-        pipeTypeName,
-        insulationMaterialName,
-        cladMaterialName,
-        ambientTemperature,
-        windSpeed,
-        stdfittingsData,
-        segmentLength,
-        inletQuality
-        );
-qDebug()<<"f2";
-    if (flowRateType == "质量流量（kg/hr）") {
-        pipeline->massFlowRate(flowRate);
-    } else {
-        pipeline->volumetricFlowRate(flowRate);
-    }
-qDebug()<<"f3";
-    pipeline->calculate();
-qDebug()<<"f4";
-    return pipeline->getReport();
-qDebug()<<"f5";
 }
 
 QVariantMap PipeFlow::save()
@@ -417,4 +428,129 @@ void PipeFlow::open(QVariantMap data)
         fittingsData.append(qMakePair(obj["name"].toString(), obj["count"].toInt()));
     }
     loadFittingsToTable();
+}
+
+bool PipeFlow::validateInputs(QString& errorMessage)
+{
+    errorMessage.clear();
+
+    // 验证流量
+    if (!validateNumber(flowRateEdit->text(), "流量", 0.001, 1e6, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证入口压力
+    if (!validateNumber(inletPressureEdit->text(), "入口压力", 0.0001, 100, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证入口温度/干度
+    QString inletArg2FieldName = inletArg2Combo->currentText().contains("温度") ? "入口温度" : "入口干度";
+    double minArg2 = inletArg2Combo->currentText().contains("温度") ? -273.15 : 0.0;
+    double maxArg2 = inletArg2Combo->currentText().contains("温度") ? 1000.0 : 1.0;
+
+    if (!validateNumber(inletArg2Edit->text(), inletArg2FieldName, minArg2, maxArg2, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证管道长度
+    if (!validateNumber(lengthEdit->text(), "管道长度", 0.1, 1e6, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证分段长度
+    if (!validateNumber(segmentLengthEdit->text(), "分段长度", 0.1, 1000, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证管道外径
+    if (!validateNumber(pipeOdEdit->text(), "管道外径", 0.1, 5000, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证管道壁厚
+    if (!validateNumber(pipeWallThicknessEdit->text(), "管道壁厚", 0.1, 100, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证壁厚小于外径的一半
+    double od = pipeOdEdit->text().toDouble();
+    double wallThickness = pipeWallThicknessEdit->text().toDouble();
+    if (wallThickness >= od / 2) {
+        errorMessage = "管道壁厚必须小于管道外径的一半";
+        return false;
+    }
+
+    // 验证保温厚度（如果有保温材料）
+    if (!insulationMaterialCombo->currentText().isEmpty() && !insulationThicknessEdit->text().isEmpty()) {
+        if (!validateNumber(insulationThicknessEdit->text(), "保温厚度", 0, 1000, false, errorMessage)) {
+            return false;
+        }
+    }
+
+    // 验证环境温度
+    if (!validateNumber(ambientTempEdit->text(), "环境温度", -100, 100, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证风速
+    if (!validateNumber(windSpeedEdit->text(), "风速", 0, 100, true, errorMessage)) {
+        return false;
+    }
+
+    // 验证管道元件
+    if (!validateFittingsData(errorMessage)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool PipeFlow::validateNumber(const QString& value, const QString& fieldName, double min, double max, bool required, QString& errorMessage)
+{
+    // 如果非必填且为空，直接通过
+    if (!required && value.trimmed().isEmpty()) {
+        return true;
+    }
+
+    // 检查是否为空
+    if (value.trimmed().isEmpty()) {
+        errorMessage = QString("%1 不能为空").arg(fieldName);
+        return false;
+    }
+
+    // 检查是否为有效数字
+    bool ok;
+    double num = value.toDouble(&ok);
+    if (!ok) {
+        errorMessage = QString("%1 必须是有效的数字").arg(fieldName);
+        return false;
+    }
+
+    // 检查范围
+    if (num < min || num > max) {
+        errorMessage = QString("%1 必须在 %2 到 %3 之间").arg(fieldName).arg(min).arg(max);
+        return false;
+    }
+
+    return true;
+}
+
+bool PipeFlow::validateFittingsData(QString& errorMessage)
+{
+    if (fittingsData.isEmpty()) {
+        // 允许没有管道元件
+        return true;
+    }
+
+    // 检查每个管道元件的数量
+    for (int i = 0; i < fittingsData.size(); ++i) {
+        const auto& fitting = fittingsData[i];
+        if (fitting.second < 0) {
+            errorMessage = QString("管道元件 '%1' 的数量小于0").arg(fitting.first);
+            return false;
+        }
+    }
+
+    return true;
 }

@@ -49,6 +49,9 @@ private:
 
     void loadFittingsToTable();
     void loadFluidsToCombobox();
+    bool validateInputs(QString& errorMessage);
+    bool validateNumber(const QString& value, const QString& fieldName, double min, double max, bool required, QString& errorMessage);
+    bool validateFittingsData(QString& errorMessage);
 
     QMap<QString, QString> fluidMap = {
         // 基础气体
@@ -279,6 +282,7 @@ private:
         {"R365MFC", "R365MFC制冷剂"},
         {"R40", "R40制冷剂（氯甲烷）"}
     };
+
 
 
 public slots:

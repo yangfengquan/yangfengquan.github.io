@@ -82,7 +82,7 @@ Pipeline::SegmentParameters* Pipeline::getHead()
     if (inletQuality == -1) {
         phead->temperature = inletTemperature;
         phead->enthalpy = PropsSI("H", "P", inletPressure, "T", inletTemperature, fluid);
-        quality = PropsSI("H", "P", inletPressure, "T", inletTemperature, fluid);
+        quality = PropsSI("Q", "P", inletPressure, "T", inletTemperature, fluid);
     } else {
         quality = inletQuality;
         phead->temperature = PropsSI("T", "P", inletPressure, "Q", quality, fluid);;
@@ -92,7 +92,8 @@ Pipeline::SegmentParameters* Pipeline::getHead()
     char phase_str[256];
     PhaseSI("P", inletPressure, "H", phead->enthalpy, fluid, phase_str, sizeof(phase_str));
 
-    if (quality == -1) {
+    if (fabs(quality + 1) <1e-10) {// 判断quality是否==-1
+
         if(strcmp(phase_str, "gas") == 0 || strcmp(phase_str, "supercritical_gas") == 0) {
             phead->vaporFlow = massFlow;
         } else {
@@ -401,6 +402,9 @@ Pipeline::SegmentParameters* Pipeline::segment(
     current->frictionFactor = frictionFactor;
     current->vaporFlow = vaporFlow;
     current->liquidFlow = liquidFlow;
+    current->surfaceTemperature = surfaceTemperature;
+    current->fittingsPressureDrop = fittingsPressureDrop;
+    current->frictionPressureDrop = frictionPressureDrop;
     current->prev = pprev;
     current->next = nullptr;
 
@@ -453,23 +457,18 @@ void Pipeline::calculate()
 }
 
 QString Pipeline::getReport()
-{qDebug()<<"l1";
+{
     SegmentParameters* ptail = getLast();
     double frictionPressureDrop = 0, fittingsPressureDrop = 0;
-qDebug()<<"l2";
-    if (phead == nullptr) {
-        qDebug()<<"phead == nullptr";
-    }
+
     SegmentParameters* seg = phead;
+    seg = seg->next;
     while (seg != nullptr) {
+        frictionPressureDrop += seg->frictionPressureDrop;
+        fittingsPressureDrop += seg->fittingsPressureDrop;
         seg = seg->next;
-        if (seg != nullptr) {
-            frictionPressureDrop += seg->frictionPressureDrop;
-            fittingsPressureDrop += seg->fittingsPressureDrop;
-            qDebug()<<"frictionPressureDrop"<<frictionPressureDrop;
-        }
     }
-qDebug()<<"l3";
+
     double Q = (phead->enthalpy - ptail->enthalpy) * massFlow;
     double Q_per_m = Q / length;
     double Q_per_m2 = Q / (M_PI * (pipeOd + 2 * insulationThickness) * length);
@@ -481,7 +480,7 @@ qDebug()<<"l3";
 
     double outletDensity = PropsSI("D", "P", ptail->pressure, "H", ptail->enthalpy, fluid);
     double outletVelocity = massFlow / (outletDensity * area);
-qDebug()<<"l4";
+
     // 获取材料
     MaterialManager* materialManager = new MaterialManager();
     PipeType pipeType;
@@ -508,7 +507,7 @@ qDebug()<<"l4";
     // Qt 6中设置UTF-8编码
     QTextStream out(&report);
     out.setEncoding(QStringConverter::Utf8);
-qDebug()<<"l5";
+
     // 报告头部
     out << "===================================================================================\n";
     out << "                          管道压力损失与热损失分析报告\n";
@@ -559,7 +558,7 @@ qDebug()<<"l5";
     out << QString("%1: %2\n").arg("管道类型", -30).arg(QString::fromStdString(pipeTypeName), 20);
     out << QString("%1: %2\n").arg("保温材料", -30).arg(QString::fromStdString(insulationMaterialName), 19);
     out << QString("%1: %2\n\n").arg("保护层材料", -29).arg(QString::fromStdString(cladMaterialName), 12);
-qDebug()<<"l6";
+
     // 4. 分段计算结果
     out << "分段计算结果\n";
     out << "-----------------------------------------------------------------------------------\n";
@@ -582,31 +581,29 @@ qDebug()<<"l6";
                .arg("(kg/hr)", -10)
                .arg("(kg/hr)", -10);
     out << "-----------------------------------------------------------------------------------\n";
-qDebug()<<"l7";
+
     // 写入分段数据
     seg = phead;
     int i = 1;
+    seg = seg->next;
     while (seg != nullptr) {
+        double pressure = 0.5 * (seg->prev->pressure + seg->pressure);
+        double temperature = 0.5 * (seg->prev->temperature + seg->temperature);
+        double enthalpy = 0.5 * (seg->prev->enthalpy + seg->enthalpy);
+        double density = PropsSI("D", "P", phead->pressure, "H", enthalpy, fluid);
+        double velocity = massFlow / (density * area);
+
+        out << QString("%1  %2  %3  %4  %5  %6  %7  %8\n")
+                   .arg(i, -8)
+                   .arg(pressure / 1000, -8, 'f', 2)
+                   .arg(temperature - 273.15, -8, 'f', 2)
+                   .arg(velocity, -7, 'f', 2)
+                   .arg(enthalpy / 1000, -9, 'f', 2)
+                   .arg(seg->surfaceTemperature - 273.15, -8, 'f', 2)
+                   .arg(seg ->vaporFlow* 3600, -10, 'f', 2)
+                   .arg(seg->liquidFlow * 3600, -8, 'f', 2);
         seg = seg->next;
-        if (seg != nullptr) {
-            double pressure = 0.5 * (seg->prev->pressure + seg->pressure);
-            double temperature = 0.5 * (seg->prev->temperature + seg->temperature);
-            double enthalpy = 0.5 * (seg->prev->enthalpy + seg->enthalpy);
-            double density = PropsSI("D", "P", phead->pressure, "H", enthalpy, fluid);
-            double velocity = massFlow / (density * area);
-
-            out << QString("%1  %2  %3  %4  %5  %6  %7  %8\n")
-                       .arg(i, -8)
-                       .arg(pressure / 1000, -8, 'f', 2)
-                       .arg(temperature - 273.15, -8, 'f', 2)
-                       .arg(velocity, -7, 'f', 2)
-                       .arg(enthalpy / 1000, -9, 'f', 2)
-                       .arg(seg->surfaceTemperature - 273.15, -8, 'f', 2)
-                       .arg(seg ->vaporFlow* 3600, -10, 'f', 2)
-                       .arg(seg->liquidFlow * 3600, -8, 'f', 2);
-
-            ++i;
-        }
+        ++i;
     }
 
     // 报告尾部

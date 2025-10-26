@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "dialog/materialdialog.h"
+#include "activationmanager.h"
+#include "dialog/ActivationDialog.h"
 #include "pipeflow.h"
 #include <QApplication>
 #include <QMenuBar>
@@ -8,17 +10,70 @@
 #include <QJsonObject>
 #include <QFileDialog>
 #include <QFile>
+#include <QRandomGenerator>
 #include <QProcess>
+#include <QTimer>
 #include <QDebug>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , activationManager(new ActivationManager(this))
 {
     setWindowTitle("汤圆工具集");
     setMinimumSize(940, 600);
-    setupMenu();
+    //setupMenu();
+    checkSoftwareStatus();
 }
 
 MainWindow::~MainWindow() {}
+
+void MainWindow::checkSoftwareStatus()
+{qDebug()<<activationManager->generateActivationCode("1169-8694-B53F-C816");
+    if (activationManager->isActivated()) {
+        setupMenu();
+        setupUi("pipeFlow");
+        return;
+    }
+
+    int trialCount = activationManager->getTrialCount();
+    if (trialCount < 5) {
+        activationManager->incrementTrialCount();
+        if (trialCount > 2) {
+            QMessageBox::information(this, "试用提示",
+                                     QString("这是您的第 %1 次试用，还剩 %2 次试用机会。\n"
+                                             "添加QQ群：816103114，免费获取激活码。")
+                                         .arg(trialCount + 1).arg(4 - trialCount));
+        }
+        setupMenu();
+        setupUi("pipeFlow");
+    } else {
+        openActivationDialog();
+    }
+}
+
+
+void MainWindow::openActivationDialog()
+{
+    if (activationManager->isActivated()) {
+        QMessageBox::information(this, "激活", "已激活。");
+        return;
+    }
+
+    ActivationDialog dialog(this, activationManager);
+    if (dialog.exec() == QDialog::Accepted) {
+        menuBar()->clear();
+        setupMenu();
+        setupUi("pipeFlow");
+
+    } else {
+        if (activationManager->getTrialCount() == 5){
+            //QApplication::quit();
+            //qApp->exit();
+            QTimer::singleShot(100, []() {
+                QApplication::quit();
+            });
+        }
+    }
+}
 
 void MainWindow::setupMenu()
 {
@@ -88,28 +143,27 @@ void MainWindow::setupMenu()
 
 void MainWindow::setupUi(const QString& module)
 {
-    this->module = module;
+    this->m_currentModule = module;
     QWidget *centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
 
-    if(this->module == "pipeFlow")
+    if(this->m_currentModule == "pipeFlow")
     {
         pipeFlow = new PipeFlow();
         pipeFlow->setupUi(centralWidget);
     }
-
 }
 
 void MainWindow::save()
 {
-    if (this->module.isEmpty()){
+    if (this->m_currentModule.isEmpty()){
         QMessageBox::warning(this, "警告", "请先在菜单栏中选择功能。");
         return;
     }
 
     QVariantMap data;
 
-    if (this->module == "pipeFlow"){
+    if (this->m_currentModule == "pipeFlow"){
         data = pipeFlow->save();
     }
 
@@ -130,8 +184,6 @@ void MainWindow::save()
     } catch (const std::exception& e) {
         QMessageBox::critical(this, "错误", QString("保存数据失败: %1").arg(e.what()));
     }
-
-
 }
 
 void MainWindow::open()
@@ -161,18 +213,29 @@ void MainWindow::open()
 
 void MainWindow::run()
 {
-    if (this->module.isEmpty()){
+    if (this->m_currentModule.isEmpty()){
         QMessageBox::warning(this, "警告", "请先在菜单栏中选择功能。");
-    } else if (this->module == "pipeFlow"){
+    } else if (this->m_currentModule == "pipeFlow"){
         QString content = pipeFlow->run();
-        qDebug()<<"m1";
+        if (content.isEmpty()) {
+            return;
+        }
         reportFile(content);
     }
 }
 
 void MainWindow::reportFile(QString& content)
 {
-    QString fileName = "report.tmp";
+    // 生成4位大写字母的随机文件名
+    const QString charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    QString fileName;
+
+    for (int i = 0; i < 4; ++i) {
+        int index = QRandomGenerator::global()->bounded(charset.length());
+        fileName.append(charset.at(index));
+    }
+
+    fileName += ".tmp";
     QString appDir = QCoreApplication::applicationDirPath();
     QString reportFullPath = appDir + "/" + fileName;
 
@@ -189,11 +252,11 @@ void MainWindow::reportFile(QString& content)
 
     reportFile.close();
 
-    // 调用Notepad3.exe打开报告
-    QString notepadPath = appDir + "/notepad++.exe";
+    // 调用TedNPad.exe打开报告
+    QString notepadPath = appDir + "/tnp/TedNPad.exe";
     if (!QFile::exists(notepadPath))
     {
-        QMessageBox::warning(nullptr, "警告", "未在程序目录找到notepad++.exe，路径：\n" + notepadPath);
+        QMessageBox::warning(nullptr, "警告", "未在程序目录找到TedNPad.exe，路径：\n" + notepadPath);
         return;
     }
 
@@ -204,7 +267,7 @@ void MainWindow::reportFile(QString& content)
 
     if (!notepadProcess->waitForStarted(1000))
     {
-        QMessageBox::critical(nullptr, "错误", "notepad++.exe启动失败：" + notepadProcess->errorString());
+        QMessageBox::critical(nullptr, "错误", "TedNPad.exe启动失败：" + notepadProcess->errorString());
         notepadProcess->deleteLater();
         return;
     }
@@ -213,13 +276,8 @@ void MainWindow::reportFile(QString& content)
 void MainWindow::openMaterialDialog(const QString& type)
 {
     MaterialDialog *dlg = new MaterialDialog(type, this);
-    if (this->module == "pipeFlow"){
+    if (this->m_currentModule == "pipeFlow"){
         connect(dlg, &MaterialDialog::materialDataChanged, pipeFlow, &PipeFlow::refreshMaterialCombos);
     }
     dlg->exec();
-}
-
-void MainWindow::openActivationDialog()
-{
-
 }

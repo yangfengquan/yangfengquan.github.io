@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "activationmanager.h"
 
 class PipeFlow;
 
@@ -16,8 +17,9 @@ public:
 private:
     void setupMenu();
     void setupUi(const QString& module);
-    QString module;
-    PipeFlow *pipeFlow;
+    QString m_currentModule;
+    PipeFlow* pipeFlow;
+    ActivationManager* activationManager;
 
 private slots:
     void save();
@@ -26,5 +28,6 @@ private slots:
     void reportFile(QString& content);
     void openMaterialDialog(const QString& type);
     void openActivationDialog();
+    void checkSoftwareStatus();
 };
 #endif // MAINWINDOW_H

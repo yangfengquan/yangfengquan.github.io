@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     MaterialManager.cpp \
+    activationmanager.cpp \
+    dialog/ActivationDialog.cpp \
     dialog/materialdialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -20,6 +22,8 @@ HEADERS += \
     ConditionParser.h \
     FormulaParser.h \
     MaterialManager.h \
+    activationmanager.h \
+    dialog/ActivationDialog.h \
     dialog/materialdialog.h \
     mainwindow.h \
     pipeflow.h \
