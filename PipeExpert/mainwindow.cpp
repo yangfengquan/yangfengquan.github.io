@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() {}
 
 void MainWindow::checkSoftwareStatus()
-{qDebug()<<activationManager->generateActivationCode("1169-8694-B53F-C816");
+{
     if (activationManager->isActivated()) {
         setupMenu();
         setupUi("pipeFlow");
@@ -35,13 +35,13 @@ void MainWindow::checkSoftwareStatus()
     }
 
     int trialCount = activationManager->getTrialCount();
-    if (trialCount < 5) {
+    if (trialCount < 10) {
         activationManager->incrementTrialCount();
-        if (trialCount > 2) {
+        if (trialCount > 8) {
             QMessageBox::information(this, "试用提示",
                                      QString("这是您的第 %1 次试用，还剩 %2 次试用机会。\n"
                                              "添加QQ群：816103114，免费获取激活码。")
-                                         .arg(trialCount + 1).arg(4 - trialCount));
+                                         .arg(trialCount + 1).arg(9 - trialCount));
         }
         setupMenu();
         setupUi("pipeFlow");
@@ -65,7 +65,7 @@ void MainWindow::openActivationDialog()
         setupUi("pipeFlow");
 
     } else {
-        if (activationManager->getTrialCount() == 5){
+        if (activationManager->getTrialCount() == 10){
             //QApplication::quit();
             //qApp->exit();
             QTimer::singleShot(100, []() {
