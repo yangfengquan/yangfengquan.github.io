@@ -1,0 +1,254 @@
+{
+  "硅酸钙制品-I型-170": {
+    "conductivity_eq1": "0.0479+0.00010185*tm+9.65015e-11*tm**3:(tm<800)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "170",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸钙制品-II型-170": {
+    "conductivity_eq1": "0.0479+0.00010185*tm+9.65015e-11*tm**3:(tm<800)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "170",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸钙制品-I型-220": {
+    "conductivity_eq1": "0.0564+0.00007786*tm+7.8571e-8*tm**2:(tm<500)",
+    "conductivity_eq2": "0.0937+1.67397E-10*tm**3:(500<=tm<=800)",
+    "conductivity_eq3": "",
+    "density": "220",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸钙制品-II型-220": {
+    "conductivity_eq1": "0.0564+0.00007786*tm+7.8571e-8*tm**2:(tm<500)",
+    "conductivity_eq2": "0.0937+1.67397E-10*tm**3:(500<=tm<=800)",
+    "conductivity_eq3": "",
+    "density": "220",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "复合硅酸盐制品-涂料-180-200": {
+    "conductivity_eq1": "0.065+0.00017*(tm-70)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "180-200",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "复合硅酸盐制品-毡-60-80": {
+    "conductivity_eq1": "0.043+0.00015*(tm-70)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "60-80",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "复合硅酸盐制品-毡-81-130": {
+    "conductivity_eq1": "0.044+0.00015*(tm-70)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "81-130",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "复合硅酸盐制品-管壳-80-180": {
+    "conductivity_eq1": "0.048",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "80-180",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "岩棉制品-毡-60-100": {
+    "conductivity_eq1": "0.0337+0.000151*tm:(-20<=tm<=100)",
+    "conductivity_eq2": "0.0395+4.71e-5*tm+5.03e-7*tm**2:(100<tm<=600)",
+    "conductivity_eq3": "",
+    "density": "60-100",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "岩棉制品-缝毡-80-130": {
+    "conductivity_eq1": "0.0337+0.000128*tm:(-20<=tm<=100)",
+    "conductivity_eq2": "0.0407+2.52e-5*tm+3.34e-7*tm**2:(100<tm<=600)",
+    "conductivity_eq3": "",
+    "density": "80-130",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "岩棉制品-板-60-100": {
+    "conductivity_eq1": "0.0337+0.000151*tm:(-20<=tm<=100)",
+    "conductivity_eq2": "0.0395+4.71e-5*tm+5.03e-7*tm**2:(100<tm<=600)",
+    "conductivity_eq3": "",
+    "density": "60-100",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "岩棉制品-板-101-160": {
+    "conductivity_eq1": "0.0337+0.000128*tm:(-20<=tm<=100)",
+    "conductivity_eq2": "0.0407+2.52e-5*tm+3.34e-7*tm**2:(100<tm<=600)",
+    "conductivity_eq3": "",
+    "density": "101-160",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "岩棉制品-管壳-100-150": {
+    "conductivity_eq1": "0.0314+0.000174*tm:(-20<=tm<=100)",
+    "conductivity_eq2": "0.0384+7.13e-5*tm+3.51e-7*tm**2:(100<tm<=600)",
+    "conductivity_eq3": "",
+    "density": "100-150",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-毯-24-40": {
+    "conductivity_eq1": "0.046+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "24-40",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-毯-41-120": {
+    "conductivity_eq1": "0.041+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "41-120",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-板-24": {
+    "conductivity_eq1": "0.047+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "24",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-板-32": {
+    "conductivity_eq1": "0.044+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "32",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-板-40": {
+    "conductivity_eq1": "0.042+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "40",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-板-48": {
+    "conductivity_eq1": "0.041+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "48",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-板-64": {
+    "conductivity_eq1": "0.040+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "64",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-毡-24": {
+    "conductivity_eq1": "0.046+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "24",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-毡-32": {
+    "conductivity_eq1": "0.046+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "32",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-毡-40": {
+    "conductivity_eq1": "0.046+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "40",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-毡-48": {
+    "conductivity_eq1": "0.041+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "48",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "玻璃棉制品-管壳-48": {
+    "conductivity_eq1": "0.041+0.000174*tm:(-20<=tm<=220)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": ">=48",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-1#毯-96": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "96",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-1#毯-128": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "128",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-2#毯-96": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "96",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-2#毯-128": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "128",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-1#毡-200": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "<=200",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-2#毡-200": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "<=200",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-板-220": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "<=220",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-管壳-220": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70):(tm<=400)",
+    "conductivity_eq2": "0.11+0.00036*(tm-400):(tm>400)",
+    "conductivity_eq3": "",
+    "density": "<=220",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸铝棉及其制品-树脂结合毡-128": {
+    "conductivity_eq1": "0.044+0.0002*(tm-70)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "128",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸镁纤维毯-100": {
+    "conductivity_eq1": "0.0397-2.741e-6*tm+4.526e-7*tm**2:(70<=tm<=500)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "100±10",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  },
+  "硅酸镁纤维毯-130": {
+    "conductivity_eq1": "0.0397-2.741e-6*tm+4.526e-7*tm**2:(70<=tm<=500)",
+    "conductivity_eq2": "",
+    "conductivity_eq3": "",
+    "density": "130±10",
+    "description": "引自GB/50264-2013 附录A 表A.0.1"
+  }
+}

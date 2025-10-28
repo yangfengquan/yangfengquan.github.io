@@ -1,0 +1,42 @@
+{
+  "铝合金薄板": {
+    "emissivity": 0.3,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "不锈钢薄板": {
+    "emissivity": 0.4,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "有光泽的镀钵薄钢板": {
+    "emissivity": 0.27,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "已氧化的镀钵薄钢板": {
+    "emissivity": 0.32,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "纤维织物": {
+    "emissivity": 0.8,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "水泥砂浆": {
+    "emissivity": 0.69,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "铝粉漆": {
+    "emissivity": 0.41,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "黑漆(有光泽)": {
+    "emissivity": 0.88,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "黑漆(无光泽)": {
+    "emissivity": 0.96,
+    "description": "引自GB/50264-2013 表5.8.9"
+  },
+  "油漆": {
+    "emissivity": 0.9,
+    "description": "引自GB/50264-2013 表5.8.9"
+  }
+}

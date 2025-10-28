@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <p>Application Code: <input id="application-code" type="text" size="60"/></p>
+    <p>Secret &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Key: <input id="secret-key" type="text" size="60"/></p>
+    <p>Activation &nbsp;&nbsp;Code: <input id="activation-code" type="text" size="60"/></p>
+    <p><button onclick="getCode()">Submit</button></p>
+</body>
+<script>
+function getCode(){
+    var required_code = document.getElementById("application-code").value;
+    var secret_key = document.getElementById("secret-key").value;
+    generateActivationCode(required_code, secret_key)
+        .then(activationCode => {
+            console.log(activationCode);
+            document.getElementById("activation-code").value = activationCode
+        })
+}
+
+async function generateActivationCode(requestCode, secretKey) {
+    const combined = `${requestCode}-${secretKey}`;
+    
+    // 编码字符串为 UTF-8
+    const encoder = new TextEncoder();
+    const data = encoder.encode(combined);
+    
+    // 计算 SHA-512 哈希
+    const hashBuffer = await crypto.subtle.digest('SHA-512', data);
+    
+    // 转换为十六进制字符串
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    // 格式化为激活码
+    const activationCode = [];
+    for (let i = 0; i < 48; i += 8) {
+        activationCode.push(hashHex.substring(i, i + 8));
+    }
+    
+    return activationCode.join('-').toUpperCase();
+}
+</script>
+</html>

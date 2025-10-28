@@ -1,0 +1,58 @@
+{
+  "45°标准弯头": {
+    "resistance_coef": 0.35,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "90°标准弯头": {
+    "resistance_coef": 0.75,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "90°斜接弯头": {
+    "resistance_coef": 1.3,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "180°标准弯头": {
+    "resistance_coef": 1.5,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "等径三通(流出)": {
+    "resistance_coef": 1.2,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "等径三通(流入)": {
+    "resistance_coef": 1.8,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "截止阀(全开)": {
+    "resistance_coef": 6.0,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "角阀(全开)": {
+    "resistance_coef": 3.0,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "闸阀(全开)": {
+    "resistance_coef": 0.17,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "旋塞阀(全开)": {
+    "resistance_coef": 0.05,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "蝶阀(全开)": {
+    "resistance_coef": 0.24,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "旋启式止回阀": {
+    "resistance_coef": 2.0,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "升降式止回阀": {
+    "resistance_coef": 10.0,
+    "description": "引自SH/3035-2018 表6.2.5"
+  },
+  "底阀": {
+    "resistance_coef": 15.0,
+    "description": "引自SH/3035-2018 表6.2.5"
+  }
+}
