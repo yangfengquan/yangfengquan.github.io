@@ -320,6 +320,7 @@ QString PipeFlow::run()
             inletQuality = -1;
         } else {
             inletQuality = inletArg2;
+            inletTemperature = -1;
         }
 
         std::map<std::string, int> stdfittingsData;

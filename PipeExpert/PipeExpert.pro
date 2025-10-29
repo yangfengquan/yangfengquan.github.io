@@ -28,6 +28,7 @@ HEADERS += \
     mainwindow.h \
     pipeflow.h \
     pipeline.h \
+    registerFileAssociation.h \
     thirdparty/include/CoolPropLib.h
 
 # Default rules for deployment.
@@ -40,3 +41,11 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/thirdparty/lib/ -llibCo
 
 INCLUDEPATH += $$PWD/thirdparty/include
 DEPENDPATH += $$PWD/thirdparty/include
+
+RESOURCES += \
+    resources.qrc
+
+# 直接指定图标文件（Windows）
+win32: {
+    RC_ICONS += app_icon.ico
+}

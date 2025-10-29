@@ -11,20 +11,22 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(const QString &filePath = QString(), QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
     void setupMenu();
     void setupUi(const QString& module);
     QString m_currentModule;
+    QString filename;
     PipeFlow* pipeFlow;
-    ActivationManager* activationManager;
+    ActivationManager* activationManager;   
 
 private slots:
     void save();
-    void open();
+    void saveAs();
     void run();
+    void open(const QString& filepath = QString());
     void reportFile(QString& content);
     void openMaterialDialog(const QString& type);
     void openActivationDialog();

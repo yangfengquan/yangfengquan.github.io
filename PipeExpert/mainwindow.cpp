@@ -10,11 +10,12 @@
 #include <QJsonObject>
 #include <QFileDialog>
 #include <QFile>
+#include <QStandardPaths>
 #include <QRandomGenerator>
 #include <QProcess>
 #include <QTimer>
 #include <QDebug>
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(const QString &filePath, QWidget *parent)
     : QMainWindow(parent)
     , activationManager(new ActivationManager(this))
 {
@@ -22,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent)
     setMinimumSize(940, 600);
     //setupMenu();
     checkSoftwareStatus();
+
+    if (!filePath.isEmpty()) {
+        open(filePath);
+    }
 }
 
 MainWindow::~MainWindow() {}
@@ -79,26 +84,30 @@ void MainWindow::setupMenu()
 {
     QMenu *fileMenu = menuBar()->addMenu("文件");
 
+    QAction *openAction = new QAction("打开", this);
     QAction *saveAction = new QAction("保存", this);
-    QAction *loadAction = new QAction("打开", this);
+    QAction *saveAsAction = new QAction("另存为", this);
     QAction *exitAction = new QAction("退出", this);
 
+    fileMenu->addAction(openAction);
     fileMenu->addAction(saveAction);
-    fileMenu->addAction(loadAction);
+    fileMenu->addAction(saveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction(exitAction);
 
+
+    connect(openAction, &QAction::triggered, this, [this]() {open();});
     connect(saveAction, &QAction::triggered, this, &MainWindow::save);
-    connect(loadAction, &QAction::triggered, this, &MainWindow::open);
+    connect(saveAsAction, &QAction::triggered, this, &MainWindow::saveAs);
     connect(exitAction, &QAction::triggered, this, &QApplication::quit);
 
-    QMenu *moduleMenu = menuBar()->addMenu("功能");
+    //QMenu *moduleMenu = menuBar()->addMenu("功能");
 
-    QAction *pipeFlowAction = new QAction("管道阻力和绝热", this);
+    //QAction *pipeFlowAction = new QAction("管道阻力和绝热", this);
 
-    moduleMenu->addAction(pipeFlowAction);
+    //moduleMenu->addAction(pipeFlowAction);
 
-    connect(pipeFlowAction, &QAction::triggered, this, [this]() {setupUi("pipeFlow");});
+    //connect(pipeFlowAction, &QAction::triggered, this, [this]() {setupUi("pipeFlow");});
 
     QMenu *runMenu = menuBar()->addMenu("运行");
 
@@ -168,8 +177,10 @@ void MainWindow::save()
     }
 
     try {
-        QString filename = QFileDialog::getSaveFileName(
-            this, "保存数据", "", "Pipe文件 (*.pipe);;所有文件 (*.*)");
+        if (filename.isEmpty()) {
+            filename = QFileDialog::getSaveFileName(
+                this, "保存数据", "", "Tang文件 (*.tang);;所有文件 (*.*)");
+        }
 
         if (!filename.isEmpty()) {
             QFile file(filename);
@@ -186,11 +197,23 @@ void MainWindow::save()
     }
 }
 
-void MainWindow::open()
+void MainWindow::saveAs()
 {
+    filename = QFileDialog::getSaveFileName(
+        this, "保存数据", "", "Tang文件 (*.tang);;所有文件 (*.*)");
+    save();
+}
+
+void MainWindow::open(const QString& filepath)
+{
+
     try {
-        QString filename = QFileDialog::getOpenFileName(
-            this, "读取数据", "", "Pipe文件 (*.pipe);;所有文件 (*.*)");
+        if (!filepath.isEmpty()) {
+            filename = filepath;
+        } else {
+            filename = QFileDialog::getOpenFileName(
+                this, "读取数据", "", "Tang文件 (*.tang);;所有文件 (*.*)");
+        }
 
         if (!filename.isEmpty()) {
             QFile file(filename);
@@ -237,7 +260,8 @@ void MainWindow::reportFile(QString& content)
 
     fileName += ".tmp";
     QString appDir = QCoreApplication::applicationDirPath();
-    QString reportFullPath = appDir + "/" + fileName;
+    QString tempPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+    QString reportFullPath = tempPath + "/" + fileName;
 
     // 打开文件并写入报告内容
     QFile reportFile(reportFullPath);
