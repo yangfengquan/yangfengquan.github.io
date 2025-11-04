@@ -16,7 +16,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     pipeflow.cpp \
-    pipeline.cpp
+    pipeline.cpp \
+    properties.cpp \
+    safetyvalve.cpp
 
 HEADERS += \
     ConditionParser.h \
@@ -28,7 +30,9 @@ HEADERS += \
     mainwindow.h \
     pipeflow.h \
     pipeline.h \
+    properties.h \
     registerFileAssociation.h \
+    safetyvalve.h \
     thirdparty/include/CoolPropLib.h
 
 # Default rules for deployment.

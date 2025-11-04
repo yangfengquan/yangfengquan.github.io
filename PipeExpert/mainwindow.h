@@ -5,6 +5,7 @@
 #include "activationmanager.h"
 
 class PipeFlow;
+class Properties;
 
 class MainWindow : public QMainWindow
 {
@@ -16,10 +17,11 @@ public:
 
 private:
     void setupMenu();
-    void setupUi(const QString& module);
+    void setupUi(const QString& module = QString());
     QString m_currentModule;
     QString filename;
     PipeFlow* pipeFlow;
+    Properties* props;
     ActivationManager* activationManager;   
 
 private slots:

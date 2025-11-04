@@ -7,7 +7,7 @@
 class QWidget;
 class QComboBox;
 class QLineEdit;
-class  QTableWidget;
+class QTableWidget;
 class QPushButton;
 class QString;
 class MaterialManager;

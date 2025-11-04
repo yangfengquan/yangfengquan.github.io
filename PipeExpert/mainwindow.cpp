@@ -2,6 +2,7 @@
 #include "dialog/materialdialog.h"
 #include "activationmanager.h"
 #include "dialog/ActivationDialog.h"
+#include "properties.h"
 #include "pipeflow.h"
 #include <QApplication>
 #include <QMenuBar>
@@ -35,7 +36,7 @@ void MainWindow::checkSoftwareStatus()
 {
     if (activationManager->isActivated()) {
         setupMenu();
-        setupUi("pipeFlow");
+        //setupUi("pipeFlow");
         return;
     }
 
@@ -49,7 +50,7 @@ void MainWindow::checkSoftwareStatus()
                                          .arg(trialCount + 1).arg(9 - trialCount));
         }
         setupMenu();
-        setupUi("pipeFlow");
+        //setupUi("pipeFlow");
     } else {
         openActivationDialog();
     }
@@ -101,13 +102,16 @@ void MainWindow::setupMenu()
     connect(saveAsAction, &QAction::triggered, this, &MainWindow::saveAs);
     connect(exitAction, &QAction::triggered, this, &QApplication::quit);
 
-    //QMenu *moduleMenu = menuBar()->addMenu("功能");
+    QMenu *moduleMenu = menuBar()->addMenu("功能");
 
-    //QAction *pipeFlowAction = new QAction("管道阻力和绝热", this);
+    QAction *propsAction = new QAction("物性", this);
+    QAction *pipeFlowAction = new QAction("管道阻力和绝热", this);
 
-    //moduleMenu->addAction(pipeFlowAction);
+    moduleMenu->addAction(propsAction);
+    moduleMenu->addAction(pipeFlowAction);
 
-    //connect(pipeFlowAction, &QAction::triggered, this, [this]() {setupUi("pipeFlow");});
+    connect(propsAction, &QAction::triggered, this, [this]() {setupUi("props");});
+    connect(pipeFlowAction, &QAction::triggered, this, [this]() {setupUi("pipeFlow");});
 
     QMenu *runMenu = menuBar()->addMenu("运行");
 
@@ -160,6 +164,11 @@ void MainWindow::setupUi(const QString& module)
     {
         pipeFlow = new PipeFlow();
         pipeFlow->setupUi(centralWidget);
+    }
+    if(this->m_currentModule == "props")
+    {
+        props = new Properties();
+        props->setupUi(centralWidget);
     }
 }
 
@@ -240,6 +249,12 @@ void MainWindow::run()
         QMessageBox::warning(this, "警告", "请先在菜单栏中选择功能。");
     } else if (this->m_currentModule == "pipeFlow"){
         QString content = pipeFlow->run();
+        if (content.isEmpty()) {
+            return;
+        }
+        reportFile(content);
+    } else if (this->m_currentModule == "props") {
+        QString content = props->run();
         if (content.isEmpty()) {
             return;
         }
