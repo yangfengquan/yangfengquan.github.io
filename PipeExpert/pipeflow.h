@@ -18,9 +18,9 @@ public:
     PipeFlow(QWidget *parent = nullptr);
     ~PipeFlow();
     void setupUi(QWidget *parent);
-    QString run();
-    QVariantMap save();
     void open(QVariantMap data);
+    QVariantMap save();
+    QString run();
 
 private:
     QComboBox *fluidCombo;

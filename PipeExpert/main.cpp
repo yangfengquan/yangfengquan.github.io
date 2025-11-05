@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationVersion("1.0");
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("简单的文本编辑器");
+    parser.setApplicationDescription("汤圆");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("file", "要打开的文件");

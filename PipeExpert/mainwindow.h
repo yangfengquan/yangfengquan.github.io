@@ -6,6 +6,7 @@
 
 class PipeFlow;
 class Properties;
+class SafetyValve;
 
 class MainWindow : public QMainWindow
 {
@@ -22,6 +23,7 @@ private:
     QString filename;
     PipeFlow* pipeFlow;
     Properties* props;
+    SafetyValve* safetyValve;
     ActivationManager* activationManager;   
 
 private slots:

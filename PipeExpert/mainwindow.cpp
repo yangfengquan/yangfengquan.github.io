@@ -4,6 +4,7 @@
 #include "dialog/ActivationDialog.h"
 #include "properties.h"
 #include "pipeflow.h"
+#include "safetyvalve.h"
 #include <QApplication>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -16,11 +17,12 @@
 #include <QProcess>
 #include <QTimer>
 #include <QDebug>
+
 MainWindow::MainWindow(const QString &filePath, QWidget *parent)
     : QMainWindow(parent)
     , activationManager(new ActivationManager(this))
 {
-    setWindowTitle("汤圆工具集");
+    setWindowTitle("汤圆工程设计工具");
     setMinimumSize(940, 600);
     //setupMenu();
     checkSoftwareStatus();
@@ -106,12 +108,15 @@ void MainWindow::setupMenu()
 
     QAction *propsAction = new QAction("物性", this);
     QAction *pipeFlowAction = new QAction("管道阻力和绝热", this);
+    QAction *safetyValveAction = new QAction("安全阀", this);
 
     moduleMenu->addAction(propsAction);
     moduleMenu->addAction(pipeFlowAction);
+    moduleMenu->addAction(safetyValveAction);
 
     connect(propsAction, &QAction::triggered, this, [this]() {setupUi("props");});
     connect(pipeFlowAction, &QAction::triggered, this, [this]() {setupUi("pipeFlow");});
+    connect(safetyValveAction, &QAction::triggered, this, [this]() {setupUi("safetyValve");});
 
     QMenu *runMenu = menuBar()->addMenu("运行");
 
@@ -169,6 +174,10 @@ void MainWindow::setupUi(const QString& module)
     {
         props = new Properties();
         props->setupUi(centralWidget);
+    }
+    if(this->m_currentModule == "safetyValve")
+    {
+        safetyValve = new SafetyValve(centralWidget);
     }
 }
 

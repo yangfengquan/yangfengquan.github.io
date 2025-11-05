@@ -12,20 +12,24 @@ SOURCES += \
     MaterialManager.cpp \
     activationmanager.cpp \
     dialog/ActivationDialog.cpp \
+    dialog/fluiddialog.cpp \
     dialog/materialdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     pipeflow.cpp \
     pipeline.cpp \
     properties.cpp \
-    safetyvalve.cpp
+    safetyvalve.cpp \
+    tymodule.cpp
 
 HEADERS += \
     ConditionParser.h \
     FormulaParser.h \
     MaterialManager.h \
     activationmanager.h \
+    common.h \
     dialog/ActivationDialog.h \
+    dialog/fluiddialog.h \
     dialog/materialdialog.h \
     mainwindow.h \
     pipeflow.h \
@@ -33,7 +37,8 @@ HEADERS += \
     properties.h \
     registerFileAssociation.h \
     safetyvalve.h \
-    thirdparty/include/CoolPropLib.h
+    thirdparty/include/CoolPropLib.h \
+    tymodule.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
