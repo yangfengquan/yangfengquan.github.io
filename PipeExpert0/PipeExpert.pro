@@ -17,6 +17,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     pipeflow.cpp \
+    pipeflowmodule.cpp \
     pipeline.cpp \
     properties.cpp \
     safetyvalve.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     dialog/materialdialog.h \
     mainwindow.h \
     pipeflow.h \
+    pipeflowmodule.h \
     pipeline.h \
     properties.h \
     registerFileAssociation.h \
