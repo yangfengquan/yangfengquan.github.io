@@ -11,3 +11,6 @@ https://yangshu.gitee.io/fm.html?fm=waterPipe
 https://yangshu.gitee.io/fm.html?fm=pumpPower
 https://yangshu.gitee.io/fm.html?fm=waterProps
 https://yangshu.gitee.io/fm.html?fm=pureProps.html
+
+https://github.com/yangfengquan/yangfengquan.github.io.git
+git remote set-url github git@github.com:yangfengquan/yangfengquan.github.io.git
